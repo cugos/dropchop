@@ -13,11 +13,17 @@
   </style>
 </head>
 <body>
+<form id="dropsite" style="height:100%;width:100%;">
+</form>
+<script type="text/javascript">
+    var dropsite = new Dropzone( "#dropsite", { url: "/" } );    
 
-<form action="/file-upload"
-      class="dropzone"
-      id="new-file-upload"></form>
+    dropsite
+        .on( "sending", function( xhr ) {
+            
+            xhr.xhr.abort();
 
-
+        })
+</script>
 </body>
 </html>
