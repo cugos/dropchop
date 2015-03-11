@@ -3,7 +3,7 @@
   <title>Drip. Drop.</title>
   <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
   <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-  <script src="static/dropzone.js"></script>
+  <script src="//api.tiles.mapbox.com/mapbox.js/plugins/turf/v1.4.0/turf.min.js"></script>
   <script src="static/site.js"></script>
   <style>
   body {
@@ -13,17 +13,32 @@
   </style>
 </head>
 <body>
-<form id="dropsite" style="height:100%;width:100%;">
+<form id="dropsite" 
+      style="height:100px;width:100%;background-color:grey;">
+
+  <input type="file" onchange="handleFiles(this.files)">
+
 </form>
+
+<a id="download" download="buffer.geojson">download buffer</a>
+
 <script type="text/javascript">
-    var dropsite = new Dropzone( "#dropsite", { url: "/" } );    
+  function handleFiles(files) {
+    fr = new FileReader();
+    fr.onloadend = function() {
+      var file = JSON.parse(fr.result);
+      console.log(file);
+      
+      var newFile = turf.buffer(file, 100, 'miles');
+      console.log(newFile);
 
-    dropsite
-        .on( "sending", function( xhr ) {
-            
-            xhr.xhr.abort();
+      var download = document.getElementById('download');
+      download.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(newFile));
+    }
+    fr.readAsText(files[0]);
+  }
 
-        })
+
 </script>
 </body>
 </html>
