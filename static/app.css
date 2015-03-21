@@ -1,0 +1,65 @@
+body {
+  padding:0;
+  margin:0;
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* MAP */
+#map {
+  position:absolute;
+  left:250px;
+  top:0;
+  bottom:0;
+  right:0;
+}
+
+/* DOWNLOAD */
+#download {
+  position:absolute;
+  top:0;
+  right:0;
+  width:100px;
+  height:100px;
+  background:#222;
+}
+
+/* NAV */
+#nav {
+  position:absolute;
+  bottom:50px;
+  right:0;
+}
+
+/* DROPZONE */
+#dropzone {
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:250px;
+  background:#f6f6f6;
+}
+#fileList {
+  margin:0;
+  list-style-type: none;
+  padding:0;
+}
+.layer-element {
+  border-bottom:1px solid #c0c0c0;
+}
+.layer-toggle {
+  margin:10px;
+}
+.layer-name {
+  display:inline-block;
+  border-left:1px solid #e5e5e5;
+  padding:8px;
+  font-size:.8em;
+}
+.layer-name:hover {
+  background:#e5e5e5;
+  cursor:pointer;
+}
+.layer-name.selected {
+  background:#444;
+  color:#f6f6f6;
+}
