@@ -1,2 +1,34 @@
-# drop-n-chop
-You drop. We chop.
+# Drop 'n Chop
+
+**You drop. We chop.**
+
+Drop 'n Chop tests the idea that GIS operations can be done in the browser, without a server. The concept in this repository is simple: drag a GeoJSON file into the browser and have it return a new file to download once the user has implemented a standard spatial operation.
+
+### Wait, how are you doing spatial operations on the web?
+
+Well now, that's a fantastic question. We're using [Turf.js](https://github.com/Turfjs/turf), a javascript library that can run spatial operations on GeoJSON objects and returns new objects for usage.
+
+### Haven't we been able to drag and drop files into the browser for, like, forever?
+
+Sure have! What happens when you drag and drop a file into your browser typically involves a server to handle the files. This project attempts to bypass the need for a server by using the [HTML5 File Reader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader) implementation to handle the file and convert into a usable object for Turf.
+
+### If I believe the above, will this do everything for me?
+
+No! Right now this project is a single implementation of Turf's `buffer()` function. If you're interested in expanding this to more spatial functions, let's talk in [the issues](https://github.com/cugos/drop-n-chop/issues).
+
+### Hm.
+
+That's good enough for us! You should stay tuned for any developments. Maybe we can make a completely self-contained GIS in the browser using concepts like this.
+
+### What's on the horizon?
+
+We're not much of a metaphor group here at [CUGOS](http://cugos.org/), but if you're watching the sunset just remember that it's rising somewhere else.
+
+### What's on the roadmap?
+
+Again, metaphors aren't our thing but we're looking at the following:
+
+* Convert `.shp` files to `.json` in the browser, without a server.
+* Allow the user to specify which Turf functions they'd like to run against their files.
+* Discuss the versatility of `<a href="data: ...">` as the main download constructor.
+* Develop an alpha prototype that allows users to upload multiple files, choose which they'd like to edit, and do some sweet GIS stuff, without downloading a single piece of software or writing any code.
