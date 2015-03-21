@@ -14,20 +14,47 @@ body {
 }
 
 /* DOWNLOAD */
-#download {
+/*#download {
   position:absolute;
   top:0;
   right:0;
   width:100px;
   height:100px;
   background:#222;
-}
+}*/
 
 /* NAV */
-#nav {
+#menu-bar {
   position:absolute;
-  bottom:50px;
+  top:0;
   right:0;
+  left:250px;
+}
+.menu {
+  display:none;
+}
+.menu.expanded {
+  display:block;
+}
+.menu-button .fa {
+  margin-left:10px;
+}
+.menu-button {
+  background:white;
+  border-radius:0;
+  border:none;
+  padding:10px;
+  font-size:.8em;
+  font-weight:100;
+  letter-spacing:.05em;
+  color:#999;
+}
+.menu-button.menu-expand {}
+.menu-button.menu-button-action {
+  display:block;
+  min-width:150px;
+  text-align:left;
+  border-top:1px solid #c0c0c0;
 }
 
 /* DROPZONE */

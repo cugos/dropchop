@@ -10,7 +10,9 @@ function init() {
 
 function setupMap() {
   L.mapbox.accessToken = 'pk.eyJ1Ijoic3ZtYXR0aGV3cyIsImEiOiJVMUlUR0xrIn0.NweS_AttjswtN5wRuWCSNA';
-  window.map = L.mapbox.map('map', 'svmatthews.hf8pfph5').setView([0,0], 3);
+  window.map = L.mapbox.map('map', 'svmatthews.hf8pfph5', {
+    zoomControl: false
+  }).setView([0,0], 3);
 }
 
 function addEventHandlers() {
@@ -36,6 +38,20 @@ function addEventHandlers() {
   buffer.addEventListener('click', function(e){
     operations.buffer(selection.list[0]._geojson);
   });
+
+  // menu expand
+  var menu = document.getElementsByClassName('menu-expand');
+  for (var m = 0; m < menu.length; m++) {
+    menu[m].addEventListener('click', function(e) {
+      var menuExpand = this.nextSibling.nextSibling;
+      if (menuExpand.className.indexOf('expanded') == -1) {
+        menuExpand.className += ' expanded';
+      } else {
+        menuExpand.className = 'menu';
+      }      
+    });
+  }
+  
 }
 
 function handleFiles(files) {
