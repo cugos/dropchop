@@ -34,3 +34,16 @@ Again, metaphors aren't our thing but we're looking at the following:
 * Allow the user to specify which Turf functions they'd like to run against their files.
 * Discuss the versatility of `<a href="data: ...">` as the main download constructor.
 * Develop an alpha prototype that allows users to upload multiple files, choose which they'd like to edit, and do some sweet GIS stuff, without downloading a single piece of software or writing any code.
+
+# Setup
+
+Install development dependencies
+```
+npm install
+```
+Install bower components
+```
+bower install
+```
+
+You're good to go.
