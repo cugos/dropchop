@@ -8,38 +8,27 @@ html, body, ul, ol { margin: 0; padding: 0; }
 a { text-decoration: none; }
 
 /* scaffolding & frameworks */
-section { -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; }
-
-nav { background-color: #111111; }
-
-/* holding all styles until we can port into sass */
 body { padding: 0; margin: 0; font-family: 'Open Sans', sans-serif; }
 
-/* MAP */
+/* NAV */
+#menu-bar { position: fixed; top: 0; right: 0; left: 250px; background: #fff; padding: 5px; height: 41px; }
+
+.nav { position: relative; }
+
+.menu { display: none; position: absolute; box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.3); }
+.menu.expanded { display: block; }
+
+.menu-button { background: #fff; border-radius: 0; border: none; padding: 8px; font-size: .8em; font-weight: 100; letter-spacing: .05em; color: #111111; cursor: pointer; }
+.menu-button:focus { outline: none; }
+.menu-button:hover { background: #e5e5e5; }
+.menu-button .fa { margin-left: 10px; }
+.menu-button.menu-button-action { display: block; min-width: 150px; text-align: left; border-top: 1px solid #c0c0c0; }
+
 #map { position: absolute; left: 250px; top: 0; bottom: 0; right: 0; }
 
 /* DOWNLOAD */
 /*#download { position:absolute; top:0; right:0; width:100px; height:100px; background:#222;
 }*/
-/* NAV */
-#menu-bar { position: fixed; top: 0; right: 0; left: 250px; background: white; padding: 5px; height: 31px; }
-
-.nav { position: relative; }
-
-.menu { display: none; position: absolute; box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.3); }
-
-.menu.expanded { display: block; }
-
-.menu-button .fa { margin-left: 10px; }
-
-.menu-button { background: white; border-radius: 0; border: none; padding: 8px; font-size: .8em; font-weight: 100; letter-spacing: .05em; color: #999; cursor: pointer; }
-
-.menu-button:focus { outline: none; }
-
-.menu-button:hover { background: #f6f6f6; }
-
-.menu-button.menu-button-action { display: block; min-width: 150px; text-align: left; border-top: 1px solid #c0c0c0; }
-
 /* DROPZONE */
 #dropzone { position: absolute; top: 0; bottom: 0; width: 250px; background: #f6f6f6; }
 
@@ -53,6 +42,6 @@ body { padding: 0; margin: 0; font-family: 'Open Sans', sans-serif; }
 
 .layer-name:hover { background: #e5e5e5; cursor: pointer; }
 
-.layer-name.selected { background: #444; color: #f6f6f6; }
+.layer-name.selected { background: steelblue; color: #f6f6f6; }
 
 /*# sourceMappingURL=app.css.map */

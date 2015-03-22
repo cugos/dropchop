@@ -1,7 +1,5 @@
 'use strict';
 
-var base = './app';
-
 module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -14,9 +12,14 @@ module.exports = function(grunt) {
       files: ['src/js/*.js']
     },
     uglify: {
-      dist: {
+      app: {
+        options: {
+          compress: true,
+          mangle: true,
+          sourceMap: true
+        },
         files: {
-          'app/static/js/app.js': ['src/js/app.js']
+          'app/static/js/app.js': ['src/js/*.js']
         }
       }
     },
@@ -31,27 +34,11 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      scripts: {
-        files: 'src/sass/*.scss',
-        tasks: ['css'],
-        options: {
-          event: [ 'changed', 'added', 'deleted'],
-        },
-      },
+      all: {
+        files: ['src/js/*.js', 'src/sass/*.scss'],
+        tasks: ['default'],
+      }
     },
-    concat: {
-      options: {
-        separator: ';',
-      },
-      dist: {
-        src: ['src/js/*.js'],
-        dest: 'src/js/app.js',
-      },
-    },
-    server: {
-      port: 8080,
-      base: './app'
-    }
   });
 
   // Loading tasks.
@@ -61,15 +48,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-wiredep');
-  grunt.loadNpmTasks('grunt-contrib-concat');
 
   // Tasks.  
-  grunt.registerTask('default', ['build']);
-  grunt.registerTask('js', ['jshint', 'concat', 'uglify']);
-  grunt.registerTask('build', ['wiredep', 'jshint', 'sass', 'uglify']);
+  grunt.registerTask('default', ['watch']);
+  grunt.registerTask('js', ['jshint', 'uglify']);
+  grunt.registerTask('build', ['wiredep', 'js', 'css']);
   grunt.registerTask('bower', ['wiredep'])
   grunt.registerTask('css',['sass']);
   grunt.registerTask('lint', ['jshint']);
-  grunt.registerTask('watcher', ['watch']);
 
 };
