@@ -1,12 +1,12 @@
 {
-  "name": "grunt-less-build-more",
+  "name": "Drop 'n Chop",
   "version": "0.0.1",
-  "description": "an example grunt repo for svmatthews",
-  "homepage": "https://github.com/thebigspoon/grunt-less-build-more",
-  "bugs": "https://github.com/thebigspoon/grunt-less-build-more/issues",
+  "description": "GIS in the browser.",
+  "homepage": "https://github.com/cugos/drop-n-chop",
+  "bugs": "https://github.com/cugos/drop-n-chop",
   "repository": {
     "type": "git",
-    "url": "https://github.com/svmatthews/grunt-quickstart"
+    "url": "https://github.com/cugos/drop-n-chop"
   },
   "main": "src/main.js",
   "devDependencies": {
