@@ -16,6 +16,8 @@ function setupMap() {
 }
 
 function addEventHandlers() {
+
+  // dropzone event handlers
   var dz = document.getElementById('dropzone');
   dz.addEventListener('dragover', function(e) {
     e = e || event;
@@ -34,9 +36,18 @@ function addEventHandlers() {
     handleFiles(files);
   }, false);
 
+  // operation event handlers
   var buffer = document.getElementById('buffer');
   buffer.addEventListener('click', function(e){
-    operations.buffer(selection.list[0]._geojson);
+    // ops.geom.buffer(object, info);
+    ops.execute(ops.geom.buffer(selection.list[0].layer._geojson, selection.list[0].info));
+  });
+
+  var union = document.getElementById('union');
+  union.addEventListener('click', function(e){
+    // ops.geom.union(object1, object2, info1, info2);
+
+    ops.execute(ops.geom.union(selection.list[0].layer._geojson, selection.list[1].layer._geojson, selection.list[0].info, selection.list[1].info));
   });
 
   // menu expand
@@ -59,15 +70,17 @@ function handleFiles(files) {
   fr.onloadend = function() {
     var file = JSON.parse(fr.result);
     // addToFileList(files[0], file);
-    addLayer(files[0], L.mapbox.featureLayer(file), files[0].name, numLayers, file.features[0].geometry.type);
+
+    console.log(file, files);
+    addLayer(files[0], file, numLayers);
     // addToMap(file);
     numLayers++;
   }
   fr.readAsText(files[0]);
 }
 
-function addLayer(original, layer, name, z, type) {
-  layer
+function addLayer(info, layer, z) {
+  var mapLayer = L.mapbox.featureLayer(layer)
     .setZIndex(z)
     .addTo(map);
 
@@ -79,10 +92,10 @@ function addLayer(original, layer, name, z, type) {
 
   var layerItem = document.createElement('div');
       layerItem.className = 'layer-name';
-      layerItem.innerHTML = original.name;
+      layerItem.innerHTML = info.name;
 
   var li = document.createElement('li');
-      li.className = 'layer-element ' + type;
+      li.className = 'layer-element ' + info.name;
 
   // when you click the layer item, make it selectable
   layerItem.onclick = function(e) {
@@ -93,11 +106,14 @@ function addLayer(original, layer, name, z, type) {
       this.className += ' selected';
 
       // add to select list
-      selection.add(layer);
+      selection.add({
+        info: info,
+        layer: mapLayer
+      });
     } else {
 
       // remove selection
-      selection.remove(layer);
+      selection.remove(mapLayer);
 
       // remove class name
       this.className = 'layer-name';
@@ -108,9 +124,9 @@ function addLayer(original, layer, name, z, type) {
     // if the box is now checked, show the layer
     console.log(this);
     if (check.checked) {
-      map.addLayer(layer);
+      map.addLayer(mapLayer);
     } else {
-      if (map.hasLayer(layer)) map.removeLayer(layer);
+      if (map.hasLayer(mapLayer)) map.removeLayer(mapLayer);
     }
   };
 
@@ -118,6 +134,8 @@ function addLayer(original, layer, name, z, type) {
   document.getElementById('fileList').appendChild(li);
   li.appendChild(check);
   li.appendChild(layerItem);
+
+  numLayers++;
 }
 
 function addToMap(file) {
@@ -130,7 +148,7 @@ var selection = {
   },
   remove: function(l) {
     for (var i = 0; i < this.list.length; i++) {
-      if (l._leaflet_id == this.list[i]._leaflet_id) {
+      if (l._leaflet_id == this.list[i].layer._leaflet_id) {
         this.list.splice(i, 1);
       }
     }
@@ -139,18 +157,55 @@ var selection = {
 }
 
 function updateDownload(file) {
-
   download.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(file));
-
 }
 
-var operations = {
-  buffer: function(object) {
-    var newFile = turf.buffer(object, 10);
-    var orig = {
-      name: 'this is a new layer'
+
+/* 
+These are all of the spatial operations the tool can execute.
+The first function ops.execute() should be used first, with the second
+value `newLayer` typically coming from another ops.function().
+
+For example, ops.execute(info, ops.buffer(object)) 
+*/
+var ops = {
+
+  // main execution for operations
+  execute: function(newLayer) {
+    addLayer(newLayer, newLayer.geometry, numLayers);
+  },
+
+  // all geometry processes
+  geom: {
+    buffer: function(object, info) {
+      console.log(object, info);
+      var newLayer = {
+        geometry: turf.buffer(object, 0.1),
+        name: 'buffer_' + info.name
+      }
+
+      console.log(newLayer);
+      return newLayer;
+    },
+
+    // var union = turf.union(poly1, poly2);
+    union: function(object1, object2, info1, info2) {
+      console.log(object1, object2);
+      var poly1 = object1,
+          poly2 = object2,
+          info1Strip = info1.name.replace('.geojson', ''),
+          info2Strip = info2.name.replace('.geojson', '');
+
+      if (object1.features.length) poly1 = object1.features[0];
+      if (object2.features.length) poly2 = object2.features[0];
+
+      var newLayer = {
+        geometry: turf.union(poly1, poly2),
+        name: 'union_' + info1Strip + '_' + info2Strip + '.geojson'
+      }
+      return newLayer;
     }
-    addLayer(orig, L.mapbox.featureLayer(newFile), orig.name, numLayers, newFile.features[0].geometry.type);
-    updateDownload(newFile);
   }
+
+
 }

@@ -2,7 +2,9 @@
 
 **You drop. We chop.**
 
-Drop 'n Chop tests the idea that GIS operations can be done in the browser, without a server. The concept in this repository is simple: drag a GeoJSON file into the browser and have it return a new file to download once the user has implemented a standard spatial operation.
+Drop 'n Chop tests the idea that GIS operations can be done in the browser, without a server. This application is currently a proof of concept testing the capabilities of a user uploading files, executing GIS operations, creating new spatial data layers, and downloading the new data. Here's an example of it running a `buffer` and `union` operation in the same process.
+
+![buffer union sf east!](assets/dropnchop_union.gif)
 
 ### Wait, how are you doing spatial operations on the web?
 
@@ -14,7 +16,7 @@ Sure have! What happens when you drag and drop a file into your browser typicall
 
 ### If I believe the above, will this do everything for me?
 
-No! Right now this project is a single implementation of Turf's `buffer()` function. If you're interested in expanding this to more spatial functions, let's talk in [the issues](https://github.com/cugos/drop-n-chop/issues).
+No! Right now this project is an implementation of some of Turf's geoprocessing functions and doesn't really allow for much user interaction yet. If you're interested in expanding the functionality, let's talk in [the issues](https://github.com/cugos/drop-n-chop/issues).
 
 ### Hm.
 
