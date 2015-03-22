@@ -25,13 +25,21 @@ body {
 
 /* NAV */
 #menu-bar {
-  position:absolute;
+  position:fixed;
   top:0;
   right:0;
   left:250px;
+  background:white;
+  padding:5px;
+  height:31px;
+}
+.nav {
+  position:relative;
 }
 .menu {
   display:none;
+  position:absolute;
+  box-shadow:1px 1px 5px 0 rgba(0,0,0,0.3);
 }
 .menu.expanded {
   display:block;
@@ -43,11 +51,18 @@ body {
   background:white;
   border-radius:0;
   border:none;
-  padding:10px;
+  padding:8px;
   font-size:.8em;
   font-weight:100;
   letter-spacing:.05em;
   color:#999;
+  cursor:pointer;
+}
+.menu-button:focus {
+  outline:none;
+}
+.menu-button:hover {
+  background:#f6f6f6;
 }
 .menu-button.menu-expand {}
 .menu-button.menu-button-action {
