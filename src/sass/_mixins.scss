@@ -1,0 +1,23 @@
+// mixins
+
+@mixin transition($time) {
+  -webkit-transition: $time;
+     -moz-transition: $time;
+      -ms-transition: $time;
+       -o-transition: $time;
+          transition: $time;
+}
+
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+     -moz-border-radius: $radius;
+      -ms-border-radius: $radius;
+          border-radius: $radius;
+}
+
+@mixin background-size($size) {
+  -webkit-background-size: $size; 
+     -moz-background-size: $size; 
+       -o-background-size: $size;
+          background-size: $size;
+}
