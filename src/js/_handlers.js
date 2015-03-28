@@ -36,6 +36,12 @@ function addEventHandlers() {
     ops.execute(ops.geom.union(selection.list[0].layer._geojson, selection.list[1].layer._geojson, selection.list[0].info, selection.list[1].info));
   });
 
+  var erase = document.getElementById('erase');
+  erase.addEventListener('click', function(){
+    // ops.geom.union(object1, object2, info1, info2);
+    ops.execute(ops.geom.erase(selection.list[0].layer._geojson, selection.list[1].layer._geojson, selection.list[0].info, selection.list[1].info));
+  });
+
   
   /* + + + + + MENU + + + + +
   */
