@@ -3,20 +3,21 @@ function addEventHandlers() {
 
   /* + + + + + DROPZONE + + + + +
   */
-  var dz = document.getElementById('dropzone');
-  dz.addEventListener('dragover', function(e) {
+  var dropzone = window;
+  dropzone.addEventListener('dragover', function(e) {
     e = e || event;
     e.preventDefault();
-    this.className = "dragging";
+    document.body.className = "dragging";
   }, false);
-  dz.addEventListener('dragleave', function(e) {
+  dropzone.addEventListener('dragleave', function(e) {
     e = e || event;
     e.preventDefault();
-    this.className = "";
+    document.body.className = "";
   }, false);
-  dz.addEventListener('drop', function(e) {
+  dropzone.addEventListener('drop', function(e) {
     e = e || event;
     e.preventDefault();
+    document.body.className = "";
     files = e.dataTransfer.files;
     handleFiles(files);
   }, false);

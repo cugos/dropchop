@@ -5,11 +5,14 @@ function handleFiles(files) {
 }
 
 function readFile(fileObject) {
-  var fr = new FileReader();
-  fr.readAsText(fileObject, 'UTF-8');
-  fr.onload = function() {
-    var file = JSON.parse(fr.result);
+  var reader = new FileReader();
+  reader.readAsText(fileObject, 'UTF-8');
+  reader.onload = function() {
+    var file = JSON.parse(reader.result);
     addLayer(fileObject, file, numLayers);
     numLayers++;
   };
+  // reader.onprogress = function(data) {
+  //   console.log(data);
+  // };
 }
