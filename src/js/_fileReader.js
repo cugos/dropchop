@@ -1,13 +1,18 @@
 function handleFiles(files) {
   for (i = 0; i < files.length; i++) {
-    (function(file){
-      var fr = new FileReader();
-      fr.readAsText(file, 'UTF-8');
-      fr.onload = function() {
-        var file = JSON.parse(fr.result);
-        addLayer(files[0], file, numLayers);
-        numLayers++;
-      };
-    })(files[i]);
+    readFile(files[i]);
   }
+}
+
+function readFile(fileObject) {
+  var reader = new FileReader();
+  reader.readAsText(fileObject, 'UTF-8');
+  reader.onload = function() {
+    var file = JSON.parse(reader.result);
+    addLayer(fileObject, file, numLayers);
+    numLayers++;
+  };
+  // reader.onprogress = function(data) {
+  //   console.log(data);
+  // };
 }

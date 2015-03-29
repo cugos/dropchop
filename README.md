@@ -37,13 +37,35 @@ Again, metaphors aren't our thing but we're looking at the following:
 
 # Setup
 
-Install development dependencies
+Working on Drop-n-Chop requires a few tools. We are using [Grunt](http://gruntjs.com/) for our task running and build process. You can install the Grunt CLI with `npm`:
+
+```
+npm install -g grunt-cli
+```
+
+Once that has been installed successfully, you can clone the repository or your own fork and `cd` into the directory.
+
+```
+git clone git@github.com:YOUR-GITHUB-USERNAME/drop-n-chop.git
+cd drop-n-chop
+```
+
+Install development dependencies with `npm`
+
 ```
 npm install
 ```
+
 Install bower components
+
 ```
 bower install
 ```
 
-You're good to go.
+And run a simple server with
+
+```
+python -m SimpleHTTPServer
+```
+
+You should now be able to access the application at `http://localhost:8000/app`

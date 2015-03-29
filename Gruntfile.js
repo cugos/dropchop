@@ -26,7 +26,7 @@ module.exports = function(grunt) {
     sass: {                              
       dist: {                            
         options: {                       
-          style: 'compact'
+          style: 'compressed'
         },
         files: {
           'app/static/css/app.css': 'src/sass/site.scss'
@@ -36,7 +36,7 @@ module.exports = function(grunt) {
     watch: {
       all: {
         files: ['src/js/*.js', 'src/sass/*.scss'],
-        tasks: ['default'],
+        tasks: ['js', 'css'],
       }
     },
   });
@@ -50,9 +50,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-wiredep');
 
   // Tasks.  
-  grunt.registerTask('default', ['watch']);
+  grunt.registerTask('default', ['build']);
   grunt.registerTask('js', ['jshint', 'uglify']);
-  grunt.registerTask('build', ['wiredep', 'js', 'css']);
+  grunt.registerTask('build', ['wiredep', 'js', 'css', 'watch']);
   grunt.registerTask('bower', ['wiredep'])
   grunt.registerTask('css',['sass']);
   grunt.registerTask('lint', ['jshint']);
