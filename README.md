@@ -68,4 +68,4 @@ And run a simple server with
 npm start
 ```
 
-You should now be able to access the application at `http://localhost:8000/app`
+You should now be able to access the application at `http://localhost:8000`
