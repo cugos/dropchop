@@ -65,7 +65,7 @@ bower install
 And run a simple server with
 
 ```
-python -m SimpleHTTPServer
+npm start
 ```
 
 You should now be able to access the application at `http://localhost:8000/app`
