@@ -10,7 +10,7 @@
   },
   "main": "src/main.js",
   "scripts": {
-    "start": "goat -e ./app/index.html ./ -p 8000"
+    "start": "goat -e app/index.html -p 8000"
   },
   "devDependencies": {
     "browserify": "2.35.4",
