@@ -43,7 +43,7 @@ module.exports = function(grunt) {
     connect: {
       server: {
         options: {
-          base: 'app',
+          base: './',
           livereload: true,
           open: true,
         }
