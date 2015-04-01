@@ -9,6 +9,9 @@
     "url": "https://github.com/cugos/drop-n-chop"
   },
   "main": "src/main.js",
+  "scripts": {
+    "start": "goat -e app/index.html -p 8000"
+  },
   "devDependencies": {
     "browserify": "2.35.4",
     "grunt": "^0.4.5",
@@ -22,6 +25,7 @@
     "grunt-contrib-uglify": "^0.8.0",
     "grunt-contrib-watch": "0.5.x",
     "grunt-reload": "^0.2.0",
-    "grunt-wiredep": "^2.0.0"
+    "grunt-wiredep": "^2.0.0",
+    "goat": "^0.4.2"
   }
 }
