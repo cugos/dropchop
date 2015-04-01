@@ -14,6 +14,7 @@
   },
   "devDependencies": {
     "browserify": "2.35.4",
+    "goat": "^0.4.2",
     "grunt": "^0.4.5",
     "grunt-browserify": "1.2.x",
     "grunt-contrib-clean": "0.5.x",
@@ -23,9 +24,8 @@
     "grunt-contrib-jshint": "0.7.0",
     "grunt-contrib-sass": "^0.8.1",
     "grunt-contrib-uglify": "^0.8.0",
-    "grunt-contrib-watch": "0.5.x",
+    "grunt-contrib-watch": "^0.6.1",
     "grunt-reload": "^0.2.0",
-    "grunt-wiredep": "^2.0.0",
-    "goat": "^0.4.2"
+    "grunt-wiredep": "^2.0.0"
   }
 }

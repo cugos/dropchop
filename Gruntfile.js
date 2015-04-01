@@ -23,9 +23,9 @@ module.exports = function(grunt) {
         }
       }
     },
-    sass: {                              
-      dist: {                            
-        options: {                       
+    sass: {
+      dist: {
+        options: {
           style: 'compressed'
         },
         files: {
@@ -35,10 +35,20 @@ module.exports = function(grunt) {
     },
     watch: {
       all: {
-        files: ['src/js/*.js', 'src/sass/*.scss'],
+        files: ['src/js/*.js', 'src/sass/*.scss', 'app/index.html'],
         tasks: ['js', 'css'],
+        options: { livereload: true },
       }
     },
+    connect: {
+      server: {
+        options: {
+          base: 'app',
+          livereload: true,
+          open: true,
+        }
+      }
+    }
   });
 
   // Loading tasks.
@@ -48,13 +58,15 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-wiredep');
+  grunt.loadNpmTasks('grunt-contrib-connect');
 
-  // Tasks.  
+
+  // Tasks.
   grunt.registerTask('default', ['build']);
   grunt.registerTask('js', ['jshint', 'uglify']);
   grunt.registerTask('build', ['wiredep', 'js', 'css', 'watch']);
   grunt.registerTask('bower', ['wiredep'])
   grunt.registerTask('css',['sass']);
   grunt.registerTask('lint', ['jshint']);
-
+  grunt.registerTask('serve', ['connect:server', 'watch']);
 };
