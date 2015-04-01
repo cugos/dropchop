@@ -35,15 +35,17 @@ module.exports = function(grunt) {
     },
     watch: {
       all: {
-        files: ['src/js/*.js', 'src/sass/*.scss'],
+        files: ['src/js/*.js', 'src/sass/*.scss', 'app/index.html'],
         tasks: ['js', 'css'],
+        options: { livereload: true },
       }
     },
     connect: {
       server: {
         options: {
           base: 'app',
-          livereload: true
+          livereload: true,
+          open: true,
         }
       }
     }
