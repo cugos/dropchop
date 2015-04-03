@@ -1,5 +1,0 @@
-
-0. make sure everything that needs to attach event handlers is listening to main registration event
-
-1. make sure CustomEvent places event on window or find something else
-
