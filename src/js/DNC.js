@@ -1,12 +1,8 @@
-var map = require( './map' ) ,
-    Menu = require( './geoprocessing_menu' ) ,
-    Dropzone = require( './dropzone' );
+var map = require( './map' );
 
 var DNC = {
     version: '0.0.1-dev' ,
-    map : map ,
-    Menu : Menu ,
-    Dropzone: Dropzone ,
+    map : map 
 };
 
 if (typeof module === 'object' && typeof module.exports === 'object') {

@@ -1,4 +1,6 @@
 'use strict';
+var Dropzone = require( '../dropzone' ) ,
+    GeoMenu = require( '../geoprocessing_menu' );
 
 var Map = function( options ) {
     this.options = options || {}; 
@@ -36,8 +38,8 @@ Map.prototype = {
     init : function() {
 
         // wireup the other classes 
-        DNC.dropzone = new DNC.Dropzone()
-        DNC.menu = new DNC.Menu()
+        DNC.dropzone = new Dropzone()
+        DNC.menu = new GeoMenu()
 
         this.addEventListeners();
         this.setupMap();
