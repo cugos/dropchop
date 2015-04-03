@@ -21,8 +21,12 @@ DropZone.prototype = {
       reader.onload = function() {
         var file = JSON.parse(reader.result);
 
-        // TODO: this kind of coupling feels bad
-        // we should be able to resolve this events
+        /*
+        **  TODO: this tight coupling feels bad
+        **  we should be able to resolve this with
+        **  an observer pattern where the map responds
+        **  to the dropzone throwing an 'file-added' event 
+        */
         DNC.map.addLayer(fileObject, file, DNC.map.numLayers);
         DNC.map.numLayers++;
       };

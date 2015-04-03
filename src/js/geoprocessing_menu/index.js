@@ -38,16 +38,18 @@ Menu.prototype = {
 
         /*
         **
-        **  handlers for menu geoprocessing opertations
-        **  TODO: these should not be here
-        **  we should have menu-item components
-        **  that insert their DOM buttons and attached
-        **  and destroy event listeners
+        **  TODO: these 'operation' listeners 
+        **  should probably not be here.
+        **  it would be nice if we could have
+        **  each operation we want to add register
+        **  itself as a plugin with it's own HTML for
+        **  the menu item and functions to bind/unbind
+        **  event listeners
         **
         **  TODO: also the tight coupling to map.selection
-        **  should not be here. we need to break this out into events
+        **  needs to be factored out
         **
-        **
+        **  handlers for menu geoprocessing opertations
         */
         var buffer = document.getElementById('buffer');
         buffer.addEventListener('click', function(){
@@ -71,17 +73,16 @@ Menu.prototype = {
         }.bind(this)); 
     } ,
 
-    //
-    // TODO: flatten opts into separate functions for testing
-    // and each turf-related function register itself
-    //
+    /*
+    **  TODO: flatten opts into separate functions
+    **  to make it more testable and think about the
+    **  idea plugin idea mentioned in above TODO(s)
+    ** 
+    */
     ops :  {
-      //
-      // TODO: this tight coupling between map
-      // should be evented
-      //
       // main execution for operations
       execute: function(newLayer) {
+        // TODO: another tight coupling between map
         DNC.map.addLayer(newLayer, newLayer.geometry, DNC.map.numLayers);
       },
 

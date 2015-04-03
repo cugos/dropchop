@@ -10,7 +10,8 @@ var Map = function( options ) {
 
     /*
     **
-    **  TODO: these variables to be put into properties
+    **  TODO: these variables should be put 
+    **  into properties on the prototype
     **  see the getters/setters section below
     **
     */
@@ -71,7 +72,7 @@ Map.prototype = {
 
     } ,
 
-    // TODO: this function is really big, can we break it up
+    // TODO: this function is really big, we should probably break it up
     addLayer : function(info, layer, z) {
       var mapLayer = L.mapbox.featureLayer(layer)
         .setZIndex(z)

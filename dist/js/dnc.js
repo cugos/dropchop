@@ -39,8 +39,12 @@ DropZone.prototype = {
       reader.onload = function() {
         var file = JSON.parse(reader.result);
 
-        // TODO: this kind of coupling feels bad
-        // we should be able to resolve this events
+        /*
+        **  TODO: this tight coupling feels bad
+        **  we should be able to resolve this with
+        **  an observer pattern where the map responds
+        **  to the dropzone throwing an 'file-added' event 
+        */
         DNC.map.addLayer(fileObject, file, DNC.map.numLayers);
         DNC.map.numLayers++;
       };
@@ -124,16 +128,18 @@ Menu.prototype = {
 
         /*
         **
-        **  handlers for menu geoprocessing opertations
-        **  TODO: these should not be here
-        **  we should have menu-item components
-        **  that insert their DOM buttons and attached
-        **  and destroy event listeners
+        **  TODO: these 'operation' listeners 
+        **  should probably not be here.
+        **  it would be nice if we could have
+        **  each operation we want to add register
+        **  itself as a plugin with it's own HTML for
+        **  the menu item and functions to bind/unbind
+        **  event listeners
         **
         **  TODO: also the tight coupling to map.selection
-        **  should not be here. we need to break this out into events
+        **  needs to be factored out
         **
-        **
+        **  handlers for menu geoprocessing opertations
         */
         var buffer = document.getElementById('buffer');
         buffer.addEventListener('click', function(){
@@ -157,17 +163,16 @@ Menu.prototype = {
         }.bind(this)); 
     } ,
 
-    //
-    // TODO: flatten opts into separate functions for testing
-    // and each turf-related function register itself
-    //
+    /*
+    **  TODO: flatten opts into separate functions
+    **  to make it more testable and think about the
+    **  idea plugin idea mentioned in above TODO(s)
+    ** 
+    */
     ops :  {
-      //
-      // TODO: this tight coupling between map
-      // should be evented
-      //
       // main execution for operations
       execute: function(newLayer) {
+        // TODO: another tight coupling between map
         DNC.map.addLayer(newLayer, newLayer.geometry, DNC.map.numLayers);
       },
 
@@ -235,7 +240,8 @@ var Map = function( options ) {
 
     /*
     **
-    **  TODO: these variables to be put into properties
+    **  TODO: these variables should be put 
+    **  into properties on the prototype
     **  see the getters/setters section below
     **
     */
@@ -296,7 +302,7 @@ Map.prototype = {
 
     } ,
 
-    // TODO: this function is really big, can we break it up
+    // TODO: this function is really big, we should probably break it up
     addLayer : function(info, layer, z) {
       var mapLayer = L.mapbox.featureLayer(layer)
         .setZIndex(z)
