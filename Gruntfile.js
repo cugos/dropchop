@@ -29,10 +29,27 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      all: {
-        files: ['src/js/*.js', 'src/sass/*.scss', 'app/index.html'],
-        tasks: ['js', 'css'],
-        options: { livereload: true },
+      html: {
+        files: ['index.html'],
+      },
+      stylesheets: {
+        files: ['src/sass/*.scss'],
+        tasks: ['css'],
+      },
+      js: {
+        files: ['src/js/*.js'],
+        tasks: ['js', 'browserify'],
+      },
+      options: { livereload: true },
+    },
+    browserify: {
+      dist: {
+        files: {
+          'dist/js/dnc.js': ['src/js/DNC.js'],
+        }
+      },
+      options: {
+        watch: true
       }
     },
     connect: {
@@ -53,7 +70,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-connect');
-
+  grunt.loadNpmTasks('grunt-browserify');
 
   // Tasks.
   grunt.registerTask('default', ['build']);
