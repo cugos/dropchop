@@ -50,11 +50,11 @@ Map.prototype = {
         //
         // examples of events that L.DNC.DropZone.FileReader throws
         //
-        this.dropzone.fileReader.on( "enabled", function(e,extras){
-           console.debug( "[ FILEREADER ]: enabled > ", e, extras );
+        this.dropzone.fileReader.on( "enabled", function(e){
+           console.debug( "[ FILEREADER ]: enabled > ", e );
         });
-        this.dropzone.fileReader.on( "disabled", function(e,extras){
-            console.debug( "[ FILEREADER ]: enabled > ", e, extras );
+        this.dropzone.fileReader.on( "disabled", function(e){
+            console.debug( "[ FILEREADER ]: disabled > ", e );
         });
         this.dropzone.fileReader.on( "fileparsed", function(e){
             console.debug( "[ FILEREADER ]: file parsed > ", e.file );
