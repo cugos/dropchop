@@ -1,19 +1,19 @@
 'use strict';
 
-var DropZone = function( options ) {
+var FileList = function( options ) {
     this.options = options || {};
-    if ( !( this instanceof DropZone ) ) {
-        return new DropZone();
+    if ( !( this instanceof FileList ) ) {
+        return new FileList();
     }
 
     document.addEventListener( 'register-dnc-event-handlers' , function(e) {
-        console.info( "[ REGISTER ]: dropzone" );
+        console.info( "[ REGISTER ]: FileList" );
         this.addEventHandlers();
     }.bind(this));
     
 }; 
 
-DropZone.prototype = {
+FileList.prototype = {
 
     readFile: function(fileObject) {
       var reader = new FileReader();
@@ -25,7 +25,7 @@ DropZone.prototype = {
         **  TODO: this tight coupling feels bad
         **  we should be able to resolve this with
         **  an observer pattern where the map responds
-        **  to the dropzone throwing an 'file-added' event 
+        **  to the FileList throwing an 'file-added' event 
         */
         DNC.map.addLayer(fileObject, file, DNC.map.numLayers);
         DNC.map.numLayers++;
@@ -62,9 +62,9 @@ DropZone.prototype = {
             }.bind(this), false);
 
         }
-    } ,
+    }
 };
 
 
 // NOTE: we are returning a class, not an instance
-module.exports = DropZone;
+module.exports = FileList;

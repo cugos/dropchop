@@ -1,5 +1,5 @@
 'use strict';
-var Dropzone = require( '../dropzone' ) ,
+var FileList = require( '../filelist' ) ,
     GeoMenu = require( '../geoprocessing_menu' );
 
 var Map = function( options ) {
@@ -39,7 +39,7 @@ Map.prototype = {
     init : function() {
 
         // wireup the other classes 
-        DNC.dropzone = new Dropzone()
+        DNC.filelist = new FileList()
         DNC.menu = new GeoMenu()
 
         this.addEventListeners();
