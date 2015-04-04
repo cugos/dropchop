@@ -10,8 +10,7 @@
   },
   "main": "src/main.js",
   "scripts": {
-    "start": "goat -e index.html -p 8000",
-    "browserify": "browserify src/js/DNC.js > dist/js/dnc.js"
+    "start": "goat -e index.html -p 8000"
   },
   "devDependencies": {
     "browserify": "2.35.4",

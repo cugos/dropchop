@@ -14,7 +14,7 @@ module.exports = function(grunt) {
           sourceMap: true
         },
         files: {
-          'dist/js/dnc.min.js': ['dist/js/*.js']
+          'dist/js/dnc.min.js': ['dist/js/dnc.js']
         }
       }
     },
