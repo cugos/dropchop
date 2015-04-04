@@ -14,7 +14,7 @@ module.exports = function(grunt) {
           sourceMap: true
         },
         files: {
-          'dist/js/app.js': ['src/js/*.js']
+          'dist/js/dnc.min.js': ['dist/js/*.js']
         }
       }
     },
@@ -38,9 +38,11 @@ module.exports = function(grunt) {
       },
       js: {
         files: ['src/js/*.js'],
-        tasks: ['js', 'browserify'],
+        tasks: ['js'],
       },
-      options: { livereload: true },
+      options: {
+        livereload: true,
+      },
     },
     browserify: {
       dist: {
@@ -74,7 +76,7 @@ module.exports = function(grunt) {
 
   // Tasks.
   grunt.registerTask('default', ['build']);
-  grunt.registerTask('js', ['jshint', 'uglify']);
+  grunt.registerTask('js', ['jshint', 'browserify', 'uglify']);
   grunt.registerTask('build', ['js', 'css','watch']);
   grunt.registerTask('css',['sass']);
   grunt.registerTask('lint', ['jshint']);
