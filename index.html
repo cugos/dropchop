@@ -37,10 +37,13 @@
 
 <a id="download" download="file.geojson">download buffer</a>
 
-<script type="text/javascript" src="dist/js/dnc.min.js"></script>
+<script type="text/javascript" src="src/js/L.DNC.js"></script>
+<script type="text/javascript" src="src/js/dropzone/DropZone.js"></script>
+<script type="text/javascript" src="src/js/dropzone/handlers/DropZone.FileReader.js"></script>
+<script type="text/javascript" src="dist/js/dnc.js"></script>
 <script type="text/javascript">
     window.onload = function() {
-        DNC.map.init();
+        DncApp.map.init();
     };
 </script>
 

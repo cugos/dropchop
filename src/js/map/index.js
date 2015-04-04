@@ -1,6 +1,5 @@
 'use strict';
-var FileList = require( '../filelist' ) ,
-    GeoMenu = require( '../geoprocessing_menu' );
+var GeoMenu = require( '../geoprocessing_menu' );
 
 var Map = function( options ) {
     this.options = options || {}; 
@@ -16,7 +15,7 @@ var Map = function( options ) {
     **
     */
     this.numLayers = 0;
-    this.map = null;
+    this._map = null;
     this.selection = {
         add: function(l) {
             this.list.push(l);
@@ -38,12 +37,32 @@ Map.prototype = {
 
     init : function() {
 
-        // wireup the other classes 
-        DNC.filelist = new FileList()
-        DNC.menu = new GeoMenu()
+
+        // wire up Browserify module
+        this.menu = new GeoMenu();
 
         this.addEventListeners();
         this.setupMap();
+
+        // wire L.DNC plugins
+        this.dropzone = new L.DNC.DropZone( this._map, { 'dropzoneOptions' : true } );
+
+        //
+        // examples of events that L.DNC.DropZone.FileReader throws
+        //
+        this.dropzone.fileReader.on( "enabled", function(e,extras){
+           console.debug( "[ FILEREADER ]: enabled > ", e, extras );
+        });
+        this.dropzone.fileReader.on( "disabled", function(e,extras){
+            console.debug( "[ FILEREADER ]: enabled > ", e, extras );
+        });
+        this.dropzone.fileReader.on( "fileparsed", function(e){
+            console.debug( "[ FILEREADER ]: file parsed > ", e.file );
+            this.addLayer(e.fileInfo, e.file, this.numLayers);
+            this.numLayers++;
+        }.bind(this));
+
+        this.dropzone.fileReader.enable();
 
     } ,
     
@@ -66,7 +85,7 @@ Map.prototype = {
     setupMap : function () {
 
         L.mapbox.accessToken = 'pk.eyJ1Ijoic3ZtYXR0aGV3cyIsImEiOiJVMUlUR0xrIn0.NweS_AttjswtN5wRuWCSNA';
-        this.map = L.mapbox.map('map', 'svmatthews.hf8pfph5', {
+        this._map = L.mapbox.map('map', 'svmatthews.hf8pfph5', {
             zoomControl: false
         }).setView([0,0], 3);
 
@@ -76,7 +95,7 @@ Map.prototype = {
     addLayer : function(info, layer, z) {
       var mapLayer = L.mapbox.featureLayer(layer)
         .setZIndex(z)
-        .addTo(this.map);
+        .addTo(this._map);
 
       // add radio button for show/hide of layer
       var check = document.createElement('input');
@@ -117,9 +136,9 @@ Map.prototype = {
       check.onchange = function() {
         // if the box is now checked, show the layer
         if (check.checked) {
-          this.map.addLayer(mapLayer);
+          this._map.addLayer(mapLayer);
         } else {
-          if (this.map.hasLayer(mapLayer)) this.map.removeLayer(mapLayer);
+          if (this._map.hasLayer(mapLayer)) this._map.removeLayer(mapLayer);
         }
       }.bind( this );
 

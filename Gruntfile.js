@@ -47,7 +47,7 @@ module.exports = function(grunt) {
     browserify: {
       dist: {
         files: {
-          'dist/js/dnc.js': ['src/js/DNC.js'],
+          'dist/js/dnc.js': ['src/js/DncApp.js'],
         }
       },
       options: {

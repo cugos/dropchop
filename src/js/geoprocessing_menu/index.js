@@ -54,21 +54,21 @@ Menu.prototype = {
         var buffer = document.getElementById('buffer');
         buffer.addEventListener('click', function(){
             this.ops.execute(
-                this.ops.geom.buffer( DNC.map.selection.list[0].layer._geojson, DNC.map.selection.list[0].info )
+                this.ops.geom.buffer( DncApp.map.selection.list[0].layer._geojson, DncApp.map.selection.list[0].info )
             );
         }.bind(this)); 
 
         var union = document.getElementById('union');
         union.addEventListener('click', function(){
             this.ops.execute(
-                this.ops.geom.union( DNC.map.selection.list[0].layer._geojson, DNC.map.selection.list[1].layer._geojson, DNC.map.selection.list[0].info, DNC.map.selection.list[1].info )
+                this.ops.geom.union( DncApp.map.selection.list[0].layer._geojson, DncApp.map.selection.list[1].layer._geojson, DncApp.map.selection.list[0].info, DncApp.map.selection.list[1].info )
             );
         }.bind(this)); 
 
         var erase = document.getElementById('erase');
         erase.addEventListener('click', function(){
             this.ops.execute(
-                this.ops.geom.erase( DNC.map.selection.list[0].layer._geojson, DNC.map.selection.list[1].layer._geojson, DNC.map.selection.list[0].info, DNC.map.selection.list[1].info)
+                this.ops.geom.erase( DncApp.map.selection.list[0].layer._geojson, DncApp.map.selection.list[1].layer._geojson, DncApp.map.selection.list[0].info, DncApp.map.selection.list[1].info)
             );
         }.bind(this)); 
     } ,
@@ -83,7 +83,7 @@ Menu.prototype = {
       // main execution for operations
       execute: function(newLayer) {
         // TODO: another tight coupling between map
-        DNC.map.addLayer(newLayer, newLayer.geometry, DNC.map.numLayers);
+        DncApp.map.addLayer(newLayer, newLayer.geometry, DncApp.map.numLayers);
       },
 
       // all geometry processes

@@ -1,93 +1,21 @@
 ;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var map = require( './map' );
 
-var DNC = {
+var DncApp = {
     version: '0.0.1-dev' ,
     map : map 
 };
 
 if (typeof module === 'object' && typeof module.exports === 'object') {
-    module.exports = DNC;
+    module.exports = DncApp;
 }
 
 if (typeof window !== 'undefined') {
-    window.DNC = DNC;
+    window.DncApp = DncApp;
 }
 
 
-},{"./map":4}],2:[function(require,module,exports){
-'use strict';
-
-var DropZone = function( options ) {
-    this.options = options || {};
-    if ( !( this instanceof DropZone ) ) {
-        return new DropZone();
-    }
-
-    document.addEventListener( 'register-dnc-event-handlers' , function(e) {
-        console.info( "[ REGISTER ]: dropzone" );
-        this.addEventHandlers();
-    }.bind(this));
-    
-}; 
-
-DropZone.prototype = {
-
-    readFile: function(fileObject) {
-      var reader = new FileReader();
-      reader.readAsText(fileObject, 'UTF-8');
-      reader.onload = function() {
-        var file = JSON.parse(reader.result);
-
-        /*
-        **  TODO: this tight coupling feels bad
-        **  we should be able to resolve this with
-        **  an observer pattern where the map responds
-        **  to the dropzone throwing an 'file-added' event 
-        */
-        DNC.map.addLayer(fileObject, file, DNC.map.numLayers);
-        DNC.map.numLayers++;
-      };
-    } ,
-
-    handleFiles : function (files) {
-      for (var i = 0; i < files.length; i++) {
-        this.readFile(files[i]);
-      }
-    } ,
-
-    addEventHandlers : function() {
-        if (typeof window !== 'undefined') {
-
-            window.addEventListener('dragover', function(e) {
-                e = e || event;
-                e.preventDefault();
-                document.body.className = "dragging";
-            }, false);
-
-            window.addEventListener('dragleave', function(e) {
-                e = e || event;
-                e.preventDefault();
-                document.body.className = "";
-            }, false);
-
-            window.addEventListener('drop', function(e) {
-                e = e || event;
-                e.preventDefault();
-                document.body.className = "";
-                var files = e.dataTransfer.files;
-                this.handleFiles(files);
-            }.bind(this), false);
-
-        }
-    } ,
-};
-
-
-// NOTE: we are returning a class, not an instance
-module.exports = DropZone;
-
-},{}],3:[function(require,module,exports){
+},{"./map":3}],2:[function(require,module,exports){
 'use strict';
 
 var Menu = function( options ) {
@@ -144,21 +72,21 @@ Menu.prototype = {
         var buffer = document.getElementById('buffer');
         buffer.addEventListener('click', function(){
             this.ops.execute(
-                this.ops.geom.buffer( DNC.map.selection.list[0].layer._geojson, DNC.map.selection.list[0].info )
+                this.ops.geom.buffer( DncApp.map.selection.list[0].layer._geojson, DncApp.map.selection.list[0].info )
             );
         }.bind(this)); 
 
         var union = document.getElementById('union');
         union.addEventListener('click', function(){
             this.ops.execute(
-                this.ops.geom.union( DNC.map.selection.list[0].layer._geojson, DNC.map.selection.list[1].layer._geojson, DNC.map.selection.list[0].info, DNC.map.selection.list[1].info )
+                this.ops.geom.union( DncApp.map.selection.list[0].layer._geojson, DncApp.map.selection.list[1].layer._geojson, DncApp.map.selection.list[0].info, DncApp.map.selection.list[1].info )
             );
         }.bind(this)); 
 
         var erase = document.getElementById('erase');
         erase.addEventListener('click', function(){
             this.ops.execute(
-                this.ops.geom.erase( DNC.map.selection.list[0].layer._geojson, DNC.map.selection.list[1].layer._geojson, DNC.map.selection.list[0].info, DNC.map.selection.list[1].info)
+                this.ops.geom.erase( DncApp.map.selection.list[0].layer._geojson, DncApp.map.selection.list[1].layer._geojson, DncApp.map.selection.list[0].info, DncApp.map.selection.list[1].info)
             );
         }.bind(this)); 
     } ,
@@ -173,7 +101,7 @@ Menu.prototype = {
       // main execution for operations
       execute: function(newLayer) {
         // TODO: another tight coupling between map
-        DNC.map.addLayer(newLayer, newLayer.geometry, DNC.map.numLayers);
+        DncApp.map.addLayer(newLayer, newLayer.geometry, DncApp.map.numLayers);
       },
 
       // all geometry processes
@@ -227,10 +155,9 @@ Menu.prototype = {
 // NOTE: we are returning a class, not an instance
 module.exports =  Menu;
 
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 'use strict';
-var Dropzone = require( '../dropzone' ) ,
-    GeoMenu = require( '../geoprocessing_menu' );
+var GeoMenu = require( '../geoprocessing_menu' );
 
 var Map = function( options ) {
     this.options = options || {}; 
@@ -246,7 +173,7 @@ var Map = function( options ) {
     **
     */
     this.numLayers = 0;
-    this.map = null;
+    this._map = null;
     this.selection = {
         add: function(l) {
             this.list.push(l);
@@ -268,12 +195,32 @@ Map.prototype = {
 
     init : function() {
 
-        // wireup the other classes 
-        DNC.dropzone = new Dropzone()
-        DNC.menu = new GeoMenu()
+
+        // wire up Browserify module
+        this.menu = new GeoMenu();
 
         this.addEventListeners();
         this.setupMap();
+
+        // wire L.DNC plugins
+        this.dropzone = new L.DNC.DropZone( this._map, { 'dropzoneOptions' : true } );
+
+        //
+        // examples of events that L.DNC.DropZone.FileReader throws
+        //
+        this.dropzone.fileReader.on( "enabled", function(e,extras){
+           console.debug( "[ FILEREADER ]: enabled > ", e, extras );
+        });
+        this.dropzone.fileReader.on( "disabled", function(e,extras){
+            console.debug( "[ FILEREADER ]: enabled > ", e, extras );
+        });
+        this.dropzone.fileReader.on( "fileparsed", function(e){
+            console.debug( "[ FILEREADER ]: file parsed > ", e.file );
+            this.addLayer(e.fileInfo, e.file, this.numLayers);
+            this.numLayers++;
+        }.bind(this));
+
+        this.dropzone.fileReader.enable();
 
     } ,
     
@@ -296,7 +243,7 @@ Map.prototype = {
     setupMap : function () {
 
         L.mapbox.accessToken = 'pk.eyJ1Ijoic3ZtYXR0aGV3cyIsImEiOiJVMUlUR0xrIn0.NweS_AttjswtN5wRuWCSNA';
-        this.map = L.mapbox.map('map', 'svmatthews.hf8pfph5', {
+        this._map = L.mapbox.map('map', 'svmatthews.hf8pfph5', {
             zoomControl: false
         }).setView([0,0], 3);
 
@@ -306,7 +253,7 @@ Map.prototype = {
     addLayer : function(info, layer, z) {
       var mapLayer = L.mapbox.featureLayer(layer)
         .setZIndex(z)
-        .addTo(this.map);
+        .addTo(this._map);
 
       // add radio button for show/hide of layer
       var check = document.createElement('input');
@@ -347,9 +294,9 @@ Map.prototype = {
       check.onchange = function() {
         // if the box is now checked, show the layer
         if (check.checked) {
-          this.map.addLayer(mapLayer);
+          this._map.addLayer(mapLayer);
         } else {
-          if (this.map.hasLayer(mapLayer)) this.map.removeLayer(mapLayer);
+          if (this._map.hasLayer(mapLayer)) this._map.removeLayer(mapLayer);
         }
       }.bind( this );
 
@@ -394,5 +341,5 @@ module.exports = new Map();
 
 
 
-},{"../dropzone":2,"../geoprocessing_menu":3}]},{},[1])
+},{"../geoprocessing_menu":2}]},{},[1])
 ;
