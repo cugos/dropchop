@@ -40,9 +40,7 @@ L.DNC.DropZone.FileReader = L.Handler.extend({
         **  hook called on super.enable()
         **
         */
-        var map = this._map;
-
-        if (map) {
+        if(this._map){
             // attach DropZone events
             L.DomEvent.on(this._container, 'dragover', this._handleDragOver, this);
             L.DomEvent.on(this._container, 'dragleave', this._handleDragLeave, this);

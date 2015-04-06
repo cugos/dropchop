@@ -30,6 +30,9 @@
             this.dropzone.fileReader.on( "enabled", function(e){
                 console.debug( "[ FILEREADER ]: enabled > ", e );
             });
+            this._map.on( "dropzone:enabled", function(e){
+                console.debug( "[ FILEREADER THROUGH MAP ]: enabled > ", e );
+            });
             this.dropzone.fileReader.on( "fileparsed", function(e){
                 console.debug( "[ FILEREADER ]: file parsed > ", e.file );
                 var mapLayer = L.mapbox.featureLayer(e.file);
