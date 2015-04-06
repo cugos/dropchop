@@ -62,6 +62,11 @@ module.exports = function(grunt) {
           src: ['src/js/L.DNC.js', 'src/js/dropzone/DropZone.js', 'src/js/dropzone/handlers/DropZone.FileReader.js', 'src/js/layerlist/JsonLayerList.js', 'src/js/geomenu/GeoMenu.js'],
           dest: 'dist/js/L.DNC.js'
         },
+    },
+    karma: {
+      unit: {
+          configFile: 'spec/karma.conf.js'
+      }
     }
   });
 
@@ -73,7 +78,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-connect');
-  grunt.loadNpmTasks('grunt-browserify');
+  grunt.loadNpmTasks('grunt-karma');
 
   // Tasks.
   grunt.registerTask('default', ['build']);
@@ -82,4 +87,5 @@ module.exports = function(grunt) {
   grunt.registerTask('css',['sass']);
   grunt.registerTask('lint', ['jshint']);
   grunt.registerTask('serve', ['connect:server', 'watch']);
+  grunt.registerTask('test', ['karma']);
 };
