@@ -1,16 +1,19 @@
 L.DNC.DropZone = L.DNC.DropZone || {};
-
 L.DNC.DropZone.FileReader = L.Handler.extend({
     includes: L.Mixin.Events,
 
+    // defaults
+    options: {
+
+    },
+
     initialize: function (map, options) {
+
+        // override defaults with passed options
+        L.setOptions(this, options);
         this._map = map;
         this._container = map._container;
 
-        if (options && options.fileReaderOptions) {
-            options.fileReaderOptions = L.Util.extend({}, this.options.fileReaderOptions, options.fileReaderOptions);
-        }
-        L.setOptions(this, options);
     },
 
     enable: function () {
@@ -79,7 +82,6 @@ L.DNC.DropZone.FileReader = L.Handler.extend({
         e.preventDefault();
         document.body.className = "";
         var files = e.dataTransfer.files;
-        console.debug( "[ FILES TRANSFERED  ]: ", files );
         this._handleFiles(files);
     },
 
