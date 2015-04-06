@@ -23,10 +23,9 @@
 
             // wire L.DNC plugins
             this.dropzone = new L.DNC.DropZone( this._map, {} );
-            this.layerlist = new L.DNC.JsonLayerList( { fileContainerId: 'dropzone' })
-                .addTo( this._map );
+            this.layerlist = new L.DNC.JsonLayerList( { layerContainerId: 'dropzone' }).addTo( this._map );
             this.geoMenu = new L.DNC.GeoMenu( this.layerlist, {} );
-            
+
             // examples of events that L.DNC.DropZone.FileReader throws
             this.dropzone.fileReader.on( "enabled", function(e){
                 console.debug( "[ FILEREADER ]: enabled > ", e );
