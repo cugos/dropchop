@@ -174,19 +174,6 @@ var Map = function( options ) {
     */
     this.numLayers = 0;
     this._map = null;
-    this.selection = {
-        add: function(l) {
-            this.list.push(l);
-        },
-        remove: function(l) {
-            for (var i = 0; i < this.list.length; i++) {
-              if (l._leaflet_id == this.list[i].layer._leaflet_id) {
-                this.list.splice(i, 1);
-              }
-            }
-        },
-        list: []
-    };
     this.download = document.getElementById('download');
 
 };
@@ -204,6 +191,8 @@ Map.prototype = {
 
         // wire L.DNC plugins
         this.dropzone = new L.DNC.DropZone( this._map, { 'dropzoneOptions' : true } );
+        this.layerlist = new L.DNC.JsonLayerList( { fileContainerId: 'json-layer-list' })
+                                                                        .addTo( this._map );
 
         //
         // examples of events that L.DNC.DropZone.FileReader throws
@@ -211,12 +200,11 @@ Map.prototype = {
         this.dropzone.fileReader.on( "enabled", function(e){
            console.debug( "[ FILEREADER ]: enabled > ", e );
         });
-        this.dropzone.fileReader.on( "disabled", function(e){
-            console.debug( "[ FILEREADER ]: disabled > ", e );
-        });
         this.dropzone.fileReader.on( "fileparsed", function(e){
             console.debug( "[ FILEREADER ]: file parsed > ", e.file );
-            this.addLayer(e.fileInfo, e.file, this.numLayers);
+            //this.addLayer(e.fileInfo, e.file, this.numLayers);
+            var mapLayer = L.mapbox.featureLayer(e.file);
+            this.layerlist.addLayer( mapLayer, e.fileInfo.name, true );
             this.numLayers++;
         }.bind(this));
 
@@ -247,65 +235,6 @@ Map.prototype = {
             zoomControl: false
         }).setView([0,0], 3);
 
-    } ,
-
-    // TODO: this function is really big, we should probably break it up
-    addLayer : function(info, layer, z) {
-      var mapLayer = L.mapbox.featureLayer(layer)
-        .setZIndex(z)
-        .addTo(this._map);
-
-      // add radio button for show/hide of layer
-      var check = document.createElement('input');
-          check.setAttribute('type', 'checkbox');
-          check.setAttribute('checked', 'true');
-          check.className = 'layer-toggle';
-
-      var layerItem = document.createElement('div');
-          layerItem.className = 'layer-name';
-          layerItem.innerHTML = info.name;
-
-      var li = document.createElement('li');
-          li.className = 'layer-element ' + info.name;
-
-      // when you click the layer item, make it selectable
-      layerItem.onclick = function(evt) {
-        // if the element is currently not selected, add the class
-        if (evt.currentTarget.className.indexOf('selected') == -1) {
-
-          // add the class
-          evt.currentTarget.className += ' selected';
-
-          // add to select list
-          this.selection.add({
-            info: info,
-            layer: mapLayer
-          });
-        } else {
-
-          // remove selection
-          this.selection.remove(mapLayer);
-
-          // remove class name
-          evt.currentTarget.className = 'layer-name';
-        }
-      }.bind( this );
-
-      check.onchange = function() {
-        // if the box is now checked, show the layer
-        if (check.checked) {
-          this._map.addLayer(mapLayer);
-        } else {
-          if (this._map.hasLayer(mapLayer)) this._map.removeLayer(mapLayer);
-        }
-      }.bind( this );
-
-      // first append it, then add the checkbox and inner html
-      document.getElementById('fileList').appendChild(li);
-      li.appendChild(check);
-      li.appendChild(layerItem);
-
-      this.numLayers++;
     } ,
 
     updateDownload : function(file) {
