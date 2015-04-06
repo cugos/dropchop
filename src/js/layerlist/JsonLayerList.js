@@ -1,21 +1,37 @@
 L.DNC.JsonLayerList = L.Control.extend({
 
+    /*
+    **
+    **  TODO: this class was supposed to be subclass of L.Control.Layers class.
+    **  The internals of how that class
+    **  is structured changed a lot between L v0.7.2 and L v0.7.3.
+    **  It would be nice to improve upon the code below
+    **  with changes reflected in v0.7.3 especially to add/remove layer events
+    **
+    */
+
+    // defaults
     options: {
         autoZIndex: true,
-        fileContainerId: 'json-layer-list' // default
+        layerContainerId: 'dropzone'
     },
 
     initialize: function (options) {
+
+        // override defaults with passed options
         L.setOptions(this, options);
 
         this._layers = {};
         this._lastZIndex = 0;
         this._handlingClick = false;
-        this.layerContainer = L.DomUtil.get( this.options.fileContainerId );
+        this.layerContainer = L.DomUtil.get( this.options.layerContainerId );
 
-        //
-        // TODO: this is a local cache just like this._layers, so remove it later
-        //
+        /*
+        **
+        **  TODO: selection acts as a local cache just like this._layers
+        **  so one of the two should be factored out OR combined later
+        **
+        */
         this.selection = {
             add: function(l) {
                 this.list.push(l);
@@ -32,12 +48,12 @@ L.DNC.JsonLayerList = L.Control.extend({
     },
 
     _initLayout: function () {
-        this._container = L.DomUtil.create('ul');
+        this._container = L.DomUtil.create('ul', "json-layer-list");
         this._container.setAttribute( "id", "fileList" );
         this.layerContainer.appendChild( this._container );
     },
 
-    onAdd: function () {
+    onAdd: function (map) {
         this._initLayout();
         this._update();
         return this._container;
@@ -49,6 +65,7 @@ L.DNC.JsonLayerList = L.Control.extend({
         this._container = this.onAdd(map);
         return this;
     },
+
     remove: function () {
         if (!this._map) {
             return this;
@@ -61,10 +78,7 @@ L.DNC.JsonLayerList = L.Control.extend({
         return this;
     },
 
-    addLayer: function (layer, name, overlay) {
-        // TODO: figure out how to get this to work with v0.7.2
-        //this._map.on('layeradd layerremove', this._onLayerChange, this);
-
+    addLayerToList: function (layer, name, overlay) {
         var id = L.stamp(layer);
 
         this._layers[id] = {
@@ -78,8 +92,13 @@ L.DNC.JsonLayerList = L.Control.extend({
             layer.setZIndex(this._lastZIndex);
         }
 
-        this._map.addLayer( layer );
         this._update();
+    },
+
+    removeLayerFromList: function (layer) {
+        var id = L.stamp(layer);
+        delete this._layers[id];
+        return this;
     },
 
     _update: function () {
@@ -87,34 +106,37 @@ L.DNC.JsonLayerList = L.Control.extend({
 
         for (i in this._layers) {
             obj = this._layers[i];
-            this._addItem(obj);
+
+            if ( !(this._map.hasLayer( obj.layer )) ){
+
+                this._map.addLayer( obj.layer );
+                this._addItem(obj);
+
+            }
+
         }
 
         return this;
     },
 
-    // TODO: figure out how to get this to work with v0.7.2
-    //_onLayerChange: function (e) {
-    //    if (!this._handlingClick) {
-    //        this._update();
-    //    }
-    //},
-
-
+    /*
+    **
+    **  TODO: the input element's onchange callback
+    **  and the layerItem's onclick callback
+    **  should be split out as class-level
+    **  functions that know what layer was interacted with
+    *   based on the "data-id" attribute
+    **
+    */
     _addItem: function (obj) {
         var inputEl = document.createElement('input');
         inputEl.setAttribute('type', 'checkbox');
         inputEl.setAttribute('checked', 'true');
         inputEl.className = 'layer-toggle';
         inputEl.setAttribute( 'data-id', L.stamp(obj.layer) );
-        //
-        // TODO: figure out how to get this to work with v0.7.2
-        //
-        //L.DomEvent.on(inputEl, 'click', this._onInputClick, this);
         inputEl.onchange = function() {
             // if the box is now checked, show the layer
             if (inputEl.checked) {
-                console.log( "[ ADD LAYER ]" );
                 this._map.addLayer(obj.layer);
             } else {
                 if (this._map.hasLayer(obj.layer)) this._map.removeLayer(obj.layer);
@@ -124,11 +146,7 @@ L.DNC.JsonLayerList = L.Control.extend({
         var layerItem = document.createElement('div');
         layerItem.className = 'layer-name';
         layerItem.innerHTML = obj.name;
-        //
-        // TODO: figure out how to get this to work with v0.7.2
-        //
-        //L.DomEvent.on(layerItem, 'click', this._onLayerClick, this);
-        // when you click the layer item, make it selectable
+        layerItem.setAttribute( 'data-id', L.stamp(obj.layer) );
         layerItem.onclick = function(evt) {
             // if the element is currently not selected, add the class
             if (evt.currentTarget.className.indexOf('selected') == -1) {
@@ -151,77 +169,14 @@ L.DNC.JsonLayerList = L.Control.extend({
             }
         }.bind( this );
 
-
         var li = document.createElement('li');
         li.className = 'layer-element ' + obj.name;
 
 
-        this.layerContainer.appendChild(li);
         li.appendChild(inputEl);
         li.appendChild(layerItem);
+        this._container.appendChild(li);
 
-    },
-
-
-    // TODO: figure out how to get this to work with v0.7.2
-    //_onInputClick: function () {
-    //    var inputs = this.layerContainer.getElementsByTagName('input'),
-    //        input, layer, hasLayer;
-    //    var addedLayers = [],
-    //        removedLayers = [];
-    //
-    //    this._handlingClick = true;
-    //
-    //    for (var i = 0, len = inputs.length; i < len; i++) {
-    //        input = inputs[i];
-    //        layer = this._layers[input.layerId].layer;
-    //        hasLayer = this._map.hasLayer(layer);
-    //
-    //        if (input.checked && !hasLayer) {
-    //            addedLayers.push(layer);
-    //
-    //        } else if (!input.checked && hasLayer) {
-    //            removedLayers.push(layer);
-    //        }
-    //    }
-    //
-    //    for (i = 0; i < removedLayers.length; i++) {
-    //        this._map.removeLayer(removedLayers[i]);
-    //    }
-    //    for (i = 0; i < addedLayers.length; i++) {
-    //        this._map.addLayer(addedLayers[i]);
-    //    }
-    //
-    //    this._handlingClick = false;
-    //
-    //    this._refocusOnMap();
-    //},
-    //
-
-    // TODO: figure out how to get this to work with v0.7.2
-    //_onLayerClick: function (evt) {
-    //    console.log( "[ ON LYR CLICK ]: ", evt.currentTarget.layerId );
-    //    var targetLayer = this._map.getLayer( evt.currentTarget.layerId );
-    //
-    //    if (evt.currentTarget.className.indexOf('selected') == -1) {
-    //
-    //        // add the class
-    //        evt.currentTarget.className += ' selected';
-    //
-    //        // add to select list
-    //        this.selection.add({
-    //            info: evt.currentTarget.layerInfo,
-    //            layer: targetLayer
-    //        });
-    //
-    //    } else {
-    //
-    //        // remove selection
-    //        this.selection.remove(targetLayer);
-    //
-    //        // remove class name
-    //        evt.currentTarget.className = 'layer-name';
-    //    }
-    //}
+    }
 
 });
