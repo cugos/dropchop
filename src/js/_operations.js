@@ -53,19 +53,6 @@ var ops = {
       };
       return newLayer;
 
-    },
-
-    intersect: function(object1, object2, info1, info2) {
-      var poly1 = object1,
-          poly2 = object2,
-          info1Strip = info1.name.replace('.geojson', ''),
-          info2Strip = info2.name.replace('.geojson', '');
-
-        var newLayer = {
-          geometry: turf.intersect(poly1, poly2),
-          name: 'intersect_' + info1Strip + '_' + info2Strip + '.geojson' 
-        };
-        return newLayer;
     }
   }
 };
