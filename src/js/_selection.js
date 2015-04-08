@@ -17,4 +17,5 @@ var selection = {
     }
   },
   list: []
-};
+}; 
+
