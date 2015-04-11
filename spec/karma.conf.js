@@ -6,11 +6,7 @@ module.exports = function (config) {
     ];
 
     var libSources = [ 
-        'src/js/L.DNC.js', 
-        'src/js/dropzone/DropZone.js', 
-        'src/js/dropzone/handlers/DropZone.FileReader.js', 
-        'src/js/layerlist/JsonLayerList.js', 
-        'src/js/geomenu/GeoMenu.js'
+        'dist/js/L.DNC.js'
     ];
 
     var leafletSources = require(__dirname+'/../node_modules/leaflet/build/build.js').getFiles();

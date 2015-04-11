@@ -59,7 +59,7 @@ module.exports = function(grunt) {
           dest: 'dist/js/dnc.js'
         },
         extras: {
-          src: ['src/js/L.DNC.js', 'src/js/dropzone/DropZone.js', 'src/js/dropzone/handlers/DropZone.FileReader.js', 'src/js/layerlist/JsonLayerList.js', 'src/js/geomenu/GeoMenu.js'],
+          src: ['src/js/L.DNC.js', 'src/js/**/*.js'],
           dest: 'dist/js/L.DNC.js'
         },
     },

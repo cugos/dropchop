@@ -1,4 +1,5 @@
-L.DNC.JsonLayerList = L.Control.extend({
+L.DNC = L.DNC || {};
+L.DNC.LayerList = L.Control.extend({
 
     /*
     **

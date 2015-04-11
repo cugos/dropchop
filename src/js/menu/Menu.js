@@ -1,4 +1,5 @@
-L.DNC.GeoMenu = L.Class.extend({
+L.DNC = L.DNC || {};
+L.DNC.Menu = L.Class.extend({
 
     // defaults
     options: {

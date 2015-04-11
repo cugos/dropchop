@@ -1,3 +1,4 @@
+L.DNC = L.DNC || {};
 L.DNC.DropZone = L.Class.extend({
 
 
