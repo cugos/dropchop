@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/cugos/drop-n-chop.svg?branch=leaflet-plugin)](https://travis-ci.org/cugos/drop-n-chop)
+
 # Drop 'n Chop
 
 **You drop. We chop.**

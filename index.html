@@ -13,7 +13,6 @@
 <body>
 
 <div id="dropzone">
-  <ul id="fileList"></ul>
 </div>
 
 <div id="map"></div>
@@ -37,6 +36,13 @@
 
 <a id="download" download="file.geojson">download buffer</a>
 
-<script type="text/javascript" src="dist/js/app.js"></script>
+<script type="text/javascript" src="dist/js/L.DNC.js"></script>
+<script type="text/javascript" src="dist/js/dnc.js"></script>
+<script type="text/javascript">
+    window.onload = function() {
+        L.DNC.init();
+    };
+</script>
+
 </body>
 </html>

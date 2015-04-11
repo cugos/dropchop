@@ -3,11 +3,6 @@
 module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    wiredep: {
-      target: {
-        src: 'index.html'
-      }
-    },
     jshint: {
       files: ['src/js/*.js']
     },
@@ -19,7 +14,7 @@ module.exports = function(grunt) {
           sourceMap: true
         },
         files: {
-          'dist/js/app.js': ['src/js/*.js']
+          'dist/js/dnc.min.js': ['dist/js/dnc.js']
         }
       }
     },
@@ -34,11 +29,20 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      all: {
-        files: ['src/js/*.js', 'src/sass/*.scss', 'app/index.html'],
-        tasks: ['js', 'css'],
-        options: { livereload: true },
-      }
+      html: {
+        files: ['index.html'],
+      },
+      stylesheets: {
+        files: ['src/sass/*.scss'],
+        tasks: ['css'],
+      },
+      js: {
+        files: ['src/js/*.js'],
+        tasks: ['js'],
+      },
+      options: {
+        livereload: true,
+      },
     },
     connect: {
       server: {
@@ -48,25 +52,40 @@ module.exports = function(grunt) {
           open: true,
         }
       }
+    },
+    concat: {
+        basic: {
+          src: ['src/js/DncApp.js'],
+          dest: 'dist/js/dnc.js'
+        },
+        extras: {
+          src: ['src/js/L.DNC.js', 'src/js/**/*.js'],
+          dest: 'dist/js/L.DNC.js'
+        },
+    },
+    karma: {
+      unit: {
+          configFile: 'spec/karma.conf.js'
+      }
     }
   });
 
   // Loading tasks.
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-sass');
-  grunt.loadNpmTasks('grunt-wiredep');
   grunt.loadNpmTasks('grunt-contrib-connect');
-
+  grunt.loadNpmTasks('grunt-karma');
 
   // Tasks.
   grunt.registerTask('default', ['build']);
-  grunt.registerTask('js', ['jshint', 'uglify']);
-  grunt.registerTask('build', ['wiredep', 'js', 'css', 'watch']);
-  grunt.registerTask('bower', ['wiredep'])
+  grunt.registerTask('js', ['jshint', 'concat', 'uglify']);
+  grunt.registerTask('build', ['js', 'css','watch']);
   grunt.registerTask('css',['sass']);
   grunt.registerTask('lint', ['jshint']);
   grunt.registerTask('serve', ['connect:server', 'watch']);
+  grunt.registerTask('test', ['karma']);
 };
