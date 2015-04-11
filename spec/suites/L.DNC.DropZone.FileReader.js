@@ -18,6 +18,10 @@ describe("L.DNC.DropZone.FileReader > ", function () {
             expect(fileReader instanceof L.DNC.DropZone.FileReader).to.equal(true);
         });
 
+        it("fileReader instance has passed options > ", function () {
+            expect(fileReader.options).to.eql(fakeOptions);
+        });
+
         it("fileReader has ref to same mapping ref > ", function () {
             expect(fileReader._map).to.eql(map);
         });
@@ -100,7 +104,7 @@ describe("L.DNC.DropZone.FileReader > ", function () {
         });
     });
 
-    describe("addHook not called without map ref > ", function () {
+    describe("addHooks not called without map ref > ", function () {
         var fileReader = null;
         var mockDomEvent = null;
 
@@ -126,7 +130,7 @@ describe("L.DNC.DropZone.FileReader > ", function () {
 
     });
 
-    describe("addHook called > ", function () {
+    describe("addHooks called > ", function () {
         var fileReader = null;
         var mockDomEvent = null;
 
@@ -146,6 +150,57 @@ describe("L.DNC.DropZone.FileReader > ", function () {
 
 
         it("L.DomEvent.on called > ", function () {
+            expect(mockDomEvent.verify()).to.equal(true);
+        });
+
+    });
+
+    describe("removeHooks not called without map ref > ", function () {
+        var fileReader = null;
+        var mockDomEvent = null;
+
+        beforeEach(function () {
+            fileReader = new L.DNC.DropZone.FileReader( map, {} );
+            fileReader._map = null; // determines that listeners are never created
+
+            mockDomEvent = sinon.mock(L.DomEvent);
+            mockDomEvent.expects("off").never();
+
+            fileReader.removeHooks();
+
+        });
+
+        afterEach(function(){
+            mockDomEvent.restore();
+        });
+
+
+        it("L.DomEvent.off never called > ", function () {
+            expect(mockDomEvent.verify()).to.equal(true);
+        });
+
+    });
+
+    describe("removeHooks called > ", function () {
+        var fileReader = null;
+        var mockDomEvent = null;
+
+        beforeEach(function () {
+            fileReader = new L.DNC.DropZone.FileReader( map, {} );
+
+            mockDomEvent = sinon.mock(L.DomEvent);
+            mockDomEvent.expects("off").atLeast(3);
+
+            fileReader.removeHooks();
+
+        });
+
+        afterEach(function(){
+            mockDomEvent.restore();
+        });
+
+
+        it("L.DomEvent.off called > ", function () {
             expect(mockDomEvent.verify()).to.equal(true);
         });
 
