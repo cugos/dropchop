@@ -1,5 +1,6 @@
 L.DNC = L.DNC || {};
 L.DNC.GeoMenu = L.DNC.Menu.extend({
+    title: "Geoprocessing Tools",
 
     addEventHandlers : function() {
         /*
@@ -7,7 +8,7 @@ L.DNC.GeoMenu = L.DNC.Menu.extend({
         **  handlers for menu options
         **
         */
-        L.DNC.Menu.prototype.addEventHandlers();
+        L.DNC.Menu.prototype.addEventHandlers.call(this);
 
         var buffer = document.getElementById('buffer');
         buffer.addEventListener('click', function(){
@@ -43,6 +44,27 @@ L.DNC.GeoMenu = L.DNC.Menu.extend({
             );
         }.bind(this));
     } ,
+
+    buildMenu : function() {
+        var domElement = L.DNC.Menu.prototype.buildMenu.call(this);
+
+        // Sort
+        var keys = [];
+        for (var key in this.ops.geom) {
+            keys.push(key);
+        }
+        keys = keys.sort();
+
+        // Build menu dropdown
+        html = '<div class="menu-dropdown menu-expand">';
+        for (var i=0; i < keys.length; i++) {
+            var key = keys[i];
+            html += '<button class="menu-button menu-button-action" id="' + key + '">' + key + '</button>';
+        }
+        html += '</div>';
+        domElement.appendChild(this._buildElement(html));
+        return domElement;
+    },
 
     /*
     **  TODO: flatten opts into separate functions

@@ -3,6 +3,7 @@ L.DNC.Menu = L.Class.extend({ // This is a base class. It should never be initia
 
     // defaults
     options: {
+        parentId : 'menu-bar'
     },
 
     initialize: function ( jsonLayerList, options ) {
@@ -11,18 +12,18 @@ L.DNC.Menu = L.Class.extend({ // This is a base class. It should never be initia
         // override defaults with passed options
         L.setOptions(this, options);
 
+        this.buildMenu();
         this.addEventHandlers();
     },
 
-    addEventHandlers : function() {
+    addEventHandlers : function () {
         /*
         **
         **  handlers for menu options
         **
         */
-        var menu = document.getElementsByClassName('menu');
-        for (var m = 0; m < menu.length; m++) {
-            menu[m].addEventListener('click', menuClick, false);
+        if (this.domElement) {
+            this.domElement.addEventListener('click', menuClick, false);
         }
 
         function menuClick() {
@@ -43,5 +44,25 @@ L.DNC.Menu = L.Class.extend({ // This is a base class. It should never be initia
             }
 
         }
+    },
+
+    _buildElement: function (str) {
+        // Helper to insert raw HTML into element
+        var div = document.createElement('div');
+        div.innerHTML = str;
+        return div.children[0];
+    },
+
+    buildMenu: function () {
+        var html =
+        '<div class="menu">' +
+          '<button class="menu-button">' +
+            this.title + '<i class="fa fa-angle-down"></i>' +
+          '</button>' +
+        '</div>';
+        menu = this._buildElement(html);
+
+        this.domElement = document.getElementById(this.options.parentId).appendChild(menu);
+        return this.domElement;
     }
 });

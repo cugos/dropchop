@@ -3,11 +3,11 @@
   <title>Drip. Drop.</title>
 
   <script src="//api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js"></script>
-  <script src='//api.tiles.mapbox.com/mapbox.js/v2.1.6/mapbox.js'></script>
+  <script src="//api.tiles.mapbox.com/mapbox.js/v2.1.6/mapbox.js"></script>
 
-  <link href='//fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link href="//fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">
   <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-  <link href='//api.tiles.mapbox.com/mapbox.js/v2.1.6/mapbox.css' rel='stylesheet' />
+  <link href="//api.tiles.mapbox.com/mapbox.js/v2.1.6/mapbox.css" rel="stylesheet" />
   <link href="dist/css/app.css" rel="stylesheet">
 </head>
 <body>
@@ -17,26 +17,8 @@
 
 <div id="map"></div>
 
-<div id="menu-bar">
-  <nav class="nav">
-    <div class="menu">
-      <button class="menu-button">Geoprocessing Tools<i class="fa fa-angle-down"></i></button>
-      <div class="menu-dropdown menu-expand">
-        <button class="menu-button menu-button-action" id="bezier">bezier</button>
-        <button class="menu-button menu-button-action" id="buffer">buffer</button>
-        <button class="menu-button menu-button-action" id="concave">concave</button>
-        <button class="menu-button menu-button-action" id="convex">convex</button>
-        <button class="menu-button menu-button-action" id="erase">erase</button>
-        <button class="menu-button menu-button-action" id="intersect">intersect</button>
-        <button class="menu-button menu-button-action" id="merge">merge</button>
-        <button class="menu-button menu-button-action" id="simplify">simplify</button>
-        <button class="menu-button menu-button-action" id="union">union</button>
-      </div>
-    </div>
-  </nav>
-</div>
-
-<a id="download" download="file.geojson">download buffer</a>
+<nav id="menu-bar">
+</nav>
 
 <script type="text/javascript" src="dist/js/L.DNC.min.js"></script>
 <script type="text/javascript">

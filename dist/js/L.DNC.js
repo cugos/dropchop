@@ -17,6 +17,75 @@
 })();
 
 L.DNC = L.DNC || {};
+L.DNC.Menu = L.Class.extend({ // This is a base class. It should never be initiated directly.
+
+    // defaults
+    options: {
+        parentId : 'menu-bar'
+    },
+
+    initialize: function ( jsonLayerList, options ) {
+        this._jsonLayerList = jsonLayerList;
+
+        // override defaults with passed options
+        L.setOptions(this, options);
+
+        this.buildMenu();
+        this.addEventHandlers();
+    },
+
+    addEventHandlers : function () {
+        /*
+        **
+        **  handlers for menu options
+        **
+        */
+        if (this.domElement) {
+            this.domElement.addEventListener('click', menuClick, false);
+        }
+
+        function menuClick() {
+            var menuExpand = this.querySelector('.menu-dropdown');
+
+            if (menuExpand.className.indexOf('expanded') == -1) {
+                // Close open menus
+                var openMenus = document.getElementsByClassName('expanded');
+                for (var i=0; i < openMenus.length; i++){
+                  openMenus[i].className = openMenus[i].className.replace(/\b expanded\b/,'');
+                }
+
+                // Open this menu
+                menuExpand.className += ' expanded';
+
+            } else {
+                menuExpand.className = menuExpand.className.replace(/\b expanded\b/,'');
+            }
+
+        }
+    },
+
+    _buildElement: function (str) {
+        // Helper to insert raw HTML into element
+        var div = document.createElement('div');
+        div.innerHTML = str;
+        return div.children[0];
+    },
+
+    buildMenu: function () {
+        var html =
+        '<div class="menu">' +
+          '<button class="menu-button">' +
+            this.title + '<i class="fa fa-angle-down"></i>' +
+          '</button>' +
+        '</div>';
+        menu = this._buildElement(html);
+
+        this.domElement = document.getElementById(this.options.parentId).appendChild(menu);
+        return this.domElement;
+    }
+});
+
+L.DNC = L.DNC || {};
 L.DNC.DropZone = L.Class.extend({
 
 
@@ -177,6 +246,10 @@ L.DNC.LayerList = L.Control.extend({
         **
         **  TODO: selection acts as a local cache just like this._layers
         **  so one of the two should be factored out OR combined later
+        **
+        **  TODO: selection will not be forever tied to the layerlist (it
+        **  will be possible to select via click on features or by attributes)
+        **  meaning that it would be wise to decouple this from layerlist soon
         **
         */
         this.selection = {
@@ -345,7 +418,6 @@ L.DNC.MapView = L.Class.extend({
 
         this.numLayers = 0;
         this._map = null;
-        this.download = document.getElementById('download');
 
         // init hooks
         this._setupMap();
@@ -363,16 +435,13 @@ L.DNC.MapView = L.Class.extend({
 
     } ,
 
-    updateDownload : function(file) {
-        download.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(file));
-    } ,
-
     _registerEventHandlers: function(){
 
         // wire L.DNC plugins
         this.dropzone = new L.DNC.DropZone( this._map, {} );
         this.layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' }).addTo( this._map );
-        this.geoMenu = new L.DNC.Menu( this.layerlist, {} );
+        this.geoMenu = new L.DNC.GeoMenu( this.layerlist, {} );
+        // this.saveMenu = new L.DNC.SaveMenu( this.layerlist, {} );
 
         // examples of events that L.DNC.DropZone.FileReader throws
         this.dropzone.fileReader.on( "enabled", function(e){
@@ -387,30 +456,11 @@ L.DNC.MapView = L.Class.extend({
 
         this.dropzone.fileReader.enable();
     }
-
-
-
 });
 
-
-
-
 L.DNC = L.DNC || {};
-L.DNC.Menu = L.Class.extend({
-
-    // defaults
-    options: {
-    },
-
-    initialize: function ( jsonLayerList, options ) {
-
-        // override defaults with passed options
-        L.setOptions(this, options);
-
-        this._jsonLayerList = jsonLayerList;
-        this.addEventHandlers();
-
-    },
+L.DNC.GeoMenu = L.DNC.Menu.extend({
+    title: "Geoprocessing Tools",
 
     addEventHandlers : function() {
         /*
@@ -418,33 +468,8 @@ L.DNC.Menu = L.Class.extend({
         **  handlers for menu options
         **
         */
-        var menu = document.getElementsByClassName('menu-expand');
-        for (var m = 0; m < menu.length; m++) {
-            menu[m].addEventListener('click', menuClick, false);
-        }
+        L.DNC.Menu.prototype.addEventHandlers.call(this);
 
-        function menuClick() {
-            var menuExpand = this.nextSibling.nextSibling;
-            if (menuExpand.className.indexOf('expanded') == -1) {
-                menuExpand.className += ' expanded';
-            } else {
-                menuExpand.className = 'menu';
-            }
-        }
-
-
-        /*
-         **
-         **  TODO: these 'operation' listeners
-         **  should probably be somewhere else.
-         **  it would be nice if we could have
-         **  each operation we want register
-         **  itself as a plugin with it's own HTML for
-         **  the menu item and functions to bind/unbind
-         **  event listeners
-         **
-         **  handlers for menu geoprocessing opertations
-         */
         var buffer = document.getElementById('buffer');
         buffer.addEventListener('click', function(){
             this.ops.execute.call( this,
@@ -479,6 +504,27 @@ L.DNC.Menu = L.Class.extend({
             );
         }.bind(this));
     } ,
+
+    buildMenu : function() {
+        var domElement = L.DNC.Menu.prototype.buildMenu.call(this);
+
+        // Sort
+        var keys = [];
+        for (var key in this.ops.geom) {
+            keys.push(key);
+        }
+        keys = keys.sort();
+
+        // Build menu dropdown
+        html = '<div class="menu-dropdown menu-expand">';
+        for (var i=0; i < keys.length; i++) {
+            var key = keys[i];
+            html += '<button class="menu-button menu-button-action" id="' + key + '">' + key + '</button>';
+        }
+        html += '</div>';
+        domElement.appendChild(this._buildElement(html));
+        return domElement;
+    },
 
     /*
     **  TODO: flatten opts into separate functions
@@ -534,10 +580,88 @@ L.DNC.Menu = L.Class.extend({
                     name: 'erase_' + info1Strip + '_' + info2Strip + '.geojson'
                 };
                 return newLayer;
-
             }
         }
     }
-
-
 });
+
+// L.DNC = L.DNC || {};
+// L.DNC.SaveMenu = L.DNC.Menu.extend({
+//
+//     addEventHandlers : function() {
+//         /*
+//         **
+//         **  handlers for menu options
+//         **
+//         */
+//         // L.DNC.Menu.prototype.addEventHandlers();
+//
+//         // var download = document.getElementById('download');
+//         // download.addEventListener('click', function() {
+//         //   console.log(this);
+//         //     // this.download( this._jsonLayerList.selection.list );
+//         // }.bind(this));
+//     } ,
+//
+//     /*
+//     **  TODO: flatten opts into separate functions
+//     **  to make it more testable and think about the
+//     **  plugin idea mentioned in above TODO(s)
+//     **
+//     */
+//     // download : function(layerList) {
+//     //     console.log(layerList);
+//     // }
+//
+//     // ops :  {
+//     //     // main execution for operations
+//     //     execute: function(newLayer) {
+//     //         var mapLayer = L.mapbox.featureLayer(newLayer.geometry);
+//     //         this._jsonLayerList.addLayerToList( mapLayer, newLayer.name, true );
+//     //     },
+//     //
+//     //     // all geometry processes
+//     //     geom: {
+//     //         download: function(object, info) {
+//     //             console.log(object, info);
+//     //             var newLayer = {
+//     //                 geometry: turf.buffer(object, 0.1),
+//     //                 name: 'buffer_' + info.name
+//     //             };
+//     //
+//     //             return newLayer;
+//     //         },
+//     //
+//     //         // var union = turf.union(poly1, poly2);
+//     //         union: function(object1, object2, info1, info2) {
+//     //
+//     //             var poly1 = object1,
+//     //                 poly2 = object2,
+//     //                 info1Strip = info1.name.replace('.geojson', ''),
+//     //                 info2Strip = info2.name.replace('.geojson', '');
+//     //
+//     //             if (object1.features) poly1 = object1.features[0];
+//     //             if (object2.features) poly2 = object2.features[0];
+//     //
+//     //             var newLayer = {
+//     //                 geometry: turf.union(poly1, poly2),
+//     //                 name: 'union_' + info1Strip + '_' + info2Strip + '.geojson'
+//     //             };
+//     //             return newLayer;
+//     //         },
+//     //
+//     //         erase: function(object1, object2, info1, info2) {
+//     //             var poly1 = object1,
+//     //                 poly2 = object2,
+//     //                 info1Strip = info1.name.replace('.geojson', ''),
+//     //                 info2Strip = info2.name.replace('.geojson', '');
+//     //
+//     //             var newLayer = {
+//     //                 geometry: turf.erase(poly1, poly2),
+//     //                 name: 'erase_' + info1Strip + '_' + info2Strip + '.geojson'
+//     //             };
+//     //             return newLayer;
+//     //         }
+//     //     }
+//     // }
+// });
