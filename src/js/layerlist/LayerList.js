@@ -105,7 +105,7 @@ L.DNC.LayerList = L.Control.extend({
     _update: function () {
         if (!this._container) { return this; }
 
-        for (i in this._layers) {
+        for (var i in this._layers) {
             obj = this._layers[i];
 
             if ( !(this._map.hasLayer( obj.layer )) ){

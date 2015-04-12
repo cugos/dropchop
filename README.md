@@ -58,16 +58,10 @@ Install development dependencies with `npm`
 npm install
 ```
 
-Install bower components
+And run a development server with
 
 ```
-bower install
+grunt
 ```
 
-And run a simple server with
-
-```
-npm start
-```
-
-You should now be able to access the application at `http://localhost:8000`
+You should now be able to access the application at `http://localhost:8000`. While the development server is running, any changes to `index.html` or files within `src/` will cause appropriate linting/compiling/testing to occur.
