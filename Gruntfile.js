@@ -14,7 +14,7 @@ module.exports = function(grunt) {
           sourceMap: true
         },
         files: {
-          'dist/js/dnc.min.js': ['dist/js/dnc.js']
+          'dist/js/L.DNC.min.js': ['dist/js/L.DNC.js']
         }
       }
     },
@@ -55,10 +55,6 @@ module.exports = function(grunt) {
     },
     concat: {
         basic: {
-          src: ['src/js/DncApp.js'],
-          dest: 'dist/js/dnc.js'
-        },
-        extras: {
           src: ['src/js/L.DNC.js', 'src/js/**/*.js'],
           dest: 'dist/js/L.DNC.js'
         },

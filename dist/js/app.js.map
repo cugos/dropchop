@@ -1,1 +1,0 @@
-{"version":3,"file":"app.js","sources":["../../src/js/DNC.js"],"names":["map","require","Menu","Dropzone","DNC","version","module","exports","window"],"mappings":"AAAA,GAAIA,KAAMC,QAAS,SACfC,KAAOD,QAAS,wBAChBE,SAAWF,QAAS,cAEpBG,KACAC,QAAS,YACTL,IAAMA,IACNE,KAAOA,KACPC,SAAUA,SAGQ,iBAAXG,SAAiD,gBAAnBA,QAAOC,UAC5CD,OAAOC,QAAUH,KAGC,mBAAXI,UACPA,OAAOJ,IAAMA"}

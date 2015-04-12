@@ -1,2 +1,0 @@
-var map=require("./map"),Menu=require("./geoprocessing_menu"),Dropzone=require("./dropzone"),DNC={version:"0.0.1-dev",map:map,Menu:Menu,Dropzone:Dropzone};"object"==typeof module&&"object"==typeof module.exports&&(module.exports=DNC),"undefined"!=typeof window&&(window.DNC=DNC);
-//# sourceMappingURL=app.js.map
