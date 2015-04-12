@@ -1,12 +1,6 @@
 L.DNC = L.DNC || {};
 L.DNC.GeoMenu = L.DNC.Menu.extend({
 
-    initialize: function ( jsonLayerList, options ) {
-        this._jsonLayerList = jsonLayerList;
-
-        L.DNC.Menu.prototype.initialize();
-    },
-
     addEventHandlers : function() {
         /*
         **

@@ -5,7 +5,8 @@ L.DNC.Menu = L.Class.extend({ // This is a base class. It should never be initia
     options: {
     },
 
-    initialize: function ( options ) {
+    initialize: function ( jsonLayerList, options ) {
+        this._jsonLayerList = jsonLayerList;
 
         // override defaults with passed options
         L.setOptions(this, options);
