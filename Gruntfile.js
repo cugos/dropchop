@@ -41,7 +41,7 @@ module.exports = function(grunt) {
         tasks: ['js:dev'],
       },
       options: {
-        livereload: true
+        livereload: true // Prevent auto-reload of browser by setting to false
       },
     },
     connect: {
