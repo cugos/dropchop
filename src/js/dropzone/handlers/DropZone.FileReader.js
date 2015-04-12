@@ -13,7 +13,13 @@ L.DNC.DropZone.FileReader = L.Handler.extend({
         L.setOptions(this, options);
         this._map = map;
         this._container = map._container;
+        this._registerEventHandlers();
+    },
 
+    _registerEventHandlers: function() {
+        this.on( "enabled", function(e){
+            console.debug( "[ FILEREADER ]: enabled > ", e );
+        });
     },
 
     enable: function () {
