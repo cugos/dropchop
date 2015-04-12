@@ -54,7 +54,6 @@ module.exports = function(grunt) {
       dev: {
         options: {
           base: './',
-          open: true,
         }
       },
     },
