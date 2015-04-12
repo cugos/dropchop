@@ -38,7 +38,7 @@ module.exports = function(grunt) {
       },
       js: {
         files: ['src/js/**/*.js'],
-        tasks: ['js:dev'],
+        tasks: ['js'],
       },
       options: {
         livereload: true // Prevent auto-reload of browser by setting to false
