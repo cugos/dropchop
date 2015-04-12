@@ -42,7 +42,7 @@ L.DNC.MapView = L.Class.extend({
         // wire L.DNC plugins
         this.dropzone = new L.DNC.DropZone( this._map, {} );
         this.layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' }).addTo( this._map );
-        this.geoMenu = new L.DNC.Menu( this.layerlist, {} );
+        this.geoMenu = new L.DNC.GeoMenu( this.layerlist, {} );
 
         // examples of events that L.DNC.DropZone.FileReader throws
         this.dropzone.fileReader.on( "enabled", function(e){
@@ -61,6 +61,3 @@ L.DNC.MapView = L.Class.extend({
 
 
 });
-
-
-
