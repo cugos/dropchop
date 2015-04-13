@@ -6,11 +6,10 @@ L.DNC.Menu = L.Class.extend({ // This is a base class. It should never be initia
         parentId : 'menu-bar'
     },
 
-    initialize: function ( title, jsonLayerList, options ) {
+    initialize: function ( title, options ) {
         L.setOptions(this, options);
 
         this.title = title;
-        this._jsonLayerList = jsonLayerList;
 
         this.domElement = this._buildMenu();
         this._addEventHandlers();
@@ -26,6 +25,7 @@ L.DNC.Menu = L.Class.extend({ // This is a base class. It should never be initia
             this.domElement.addEventListener('click', menuClick, false);
         }
 
+        // Dropdown tooling
         function menuClick() {
             var menuExpand = this.querySelector('.menu-dropdown');
 
@@ -46,8 +46,8 @@ L.DNC.Menu = L.Class.extend({ // This is a base class. It should never be initia
         }
     },
 
+    // Create and attach dom elements
     _buildMenu: function () {
-        // Create menu dropdown
         var menu = document.createElement('div');
         menu.className = "menu";
         menu.innerHTML = '<button class="menu-button">' +
@@ -59,9 +59,10 @@ L.DNC.Menu = L.Class.extend({ // This is a base class. It should never be initia
         return domElement;
     },
 
+    // Add operation to menu
     addOperation: function( operation ) {
-        // Add operation to menu
-        operation.buildDomElement(this.domElement.getElementsByClassName('menu-dropdown')[0]);
+        var dropdown = this.domElement.getElementsByClassName('menu-dropdown')[0];
+        dropdown.appendChild( operation.domElement );
         return this;
     }
 });
