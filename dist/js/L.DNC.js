@@ -15,8 +15,30 @@
             this.mapView = new L.DNC.MapView();
             this.dropzone = new L.DNC.DropZone( this.mapView._map, {} );
             this.layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' } ).addTo( this.mapView._map );
+<<<<<<< HEAD
             this.menuBar = new L.DNC.MenuBar( this.layerlist, {} );
             
+=======
+            this.geoMenu = new L.DNC.Menu( this.layerlist, {} );
+            this.notifications = new L.DNC.Notifications( this.mapView._map, {} );
+
+            // examples of events that L.DNC.DropZone.FileReader throws
+            this.dropzone.fileReader.on( "fileparsed", function(e){
+                // TODO: This should be refactored so that this.dropzone and
+                // this.layerlist are not so tightly coupled. The logic behind
+                // this tooling should exist within their respective modules.
+                console.debug( "[ FILEREADER ]: file parsed > ", e.file );
+                var mapLayer = L.mapbox.featureLayer(e.file);
+                this.layerlist.addLayerToList( mapLayer, e.fileInfo.name, true );
+                this.numLayers++;
+
+                this.notifications.add({
+                    text: '<strong>' + e.fileInfo.name + '</strong> added successfully.',
+                    type: 'success',
+                    time: 2000
+                });
+            }.bind(this));
+>>>>>>> set default params and allow for option changes
         };
     }
 })();
@@ -464,7 +486,7 @@ L.DNC.MapView = L.Class.extend({
     _setupMap : function () {
 
         L.mapbox.accessToken = 'pk.eyJ1Ijoic3ZtYXR0aGV3cyIsImEiOiJVMUlUR0xrIn0.NweS_AttjswtN5wRuWCSNA';
-        this._map = L.mapbox.map('map', 'svmatthews.hf8pfph5', {
+        this._map = L.mapbox.map('map', 'examples.map-zr0njcqy', {
             zoomControl: false
         }).setView([0,0], 3);
 
@@ -635,19 +657,27 @@ L.DNC.Notifications = L.Class.extend({
 
     // used to add a notification to the DOM
     add: function ( options ) {
-        // add a new notification to the stream
-        noteCenter = this.hub;
 
+        // TODO: clean this up?
+        params = {},
+        params.text = options.text || 'THIS NOTIFICATION REQUIRES TEXT',
+        params.time = options.time || 4000,
+        params.type = options.type || 'default';
+
+        // add a new notification to the stream
         var note = document.createElement('div');
         note.className = 'notification ' + options.type;
         note.innerHTML = options.text;
-        noteCenter.appendChild(note);
+        this.hub.appendChild(note);
+
+        // redefine for setTimeout() scope
+        var _this = this;
         
         // TODO: add/remove notifications to an array to interact with them
         // instead of relying on setTimeout() dictating their existence.
         setTimeout(function () {
-            noteCenter.removeChild( noteCenter.firstChild );
-        }, 4000);
+            _this.hub.removeChild( _this.hub.firstChild );
+        }, params.time);
 
     }
 
