@@ -11,7 +11,28 @@
         window.L.DNC = DNC;
 
         L.DNC.init = function(){
-            L.DNC.mapView = new L.DNC.MapView();
+
+            this.mapView = new L.DNC.MapView();
+            this.dropzone = new L.DNC.DropZone( this.mapView._map, {} );
+            this.layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' } ).addTo( this.mapView._map );
+            this.geoMenu = new L.DNC.Menu( this.layerlist, {} );
+            this.notifications = new L.DNC.Notifications( this.mapView._map, {} );
+
+            // examples of events that L.DNC.DropZone.FileReader throws
+            this.dropzone.fileReader.on( "fileparsed", function(e){
+                // TODO: This should be refactored so that this.dropzone and
+                // this.layerlist are not so tightly coupled. The logic behind
+                // this tooling should exist within their respective modules.
+                console.debug( "[ FILEREADER ]: file parsed > ", e.file );
+                var mapLayer = L.mapbox.featureLayer(e.file);
+                this.layerlist.addLayerToList( mapLayer, e.fileInfo.name, true );
+                this.numLayers++;
+
+                this.notifications.add({
+                    text: '<strong>' + e.fileInfo.name + '</strong> added successfully.',
+                    type: 'success'
+                });
+            }.bind(this));
         };
     }
 })();
@@ -37,9 +58,11 @@ L.DNC.DropZone = L.Class.extend({
         this.type = L.DNC.DropZone.TYPE;
 
         this.fileReader = new L.DNC.DropZone.FileReader( this._map, options );
+        this.fileReader.enable();
     }
 
 });
+
 L.DNC.DropZone = L.DNC.DropZone || {};
 L.DNC.DropZone.FileReader = L.Handler.extend({
     includes: L.Mixin.Events,
@@ -55,7 +78,13 @@ L.DNC.DropZone.FileReader = L.Handler.extend({
         L.setOptions(this, options);
         this._map = map;
         this._container = map._container;
+        this._registerEventHandlers();
+    },
 
+    _registerEventHandlers: function() {
+        this.on( "enabled", function(e){
+            console.debug( "[ FILEREADER ]: enabled > ", e );
+        });
     },
 
     enable: function () {
@@ -345,11 +374,9 @@ L.DNC.MapView = L.Class.extend({
 
         this.numLayers = 0;
         this._map = null;
-        this.download = document.getElementById('download');
 
         // init hooks
         this._setupMap();
-        this._registerEventHandlers();
 
     } ,
 
@@ -361,39 +388,9 @@ L.DNC.MapView = L.Class.extend({
             zoomControl: false
         }).setView([0,0], 3);
 
-    } ,
-
-    updateDownload : function(file) {
-        download.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(file));
-    } ,
-
-    _registerEventHandlers: function(){
-
-        // wire L.DNC plugins
-        this.dropzone = new L.DNC.DropZone( this._map, {} );
-        this.layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' }).addTo( this._map );
-        this.geoMenu = new L.DNC.Menu( this.layerlist, {} );
-
-        // examples of events that L.DNC.DropZone.FileReader throws
-        this.dropzone.fileReader.on( "enabled", function(e){
-            console.debug( "[ FILEREADER ]: enabled > ", e );
-        });
-        this.dropzone.fileReader.on( "fileparsed", function(e){
-            console.debug( "[ FILEREADER ]: file parsed > ", e.file );
-            var mapLayer = L.mapbox.featureLayer(e.file);
-            this.layerlist.addLayerToList( mapLayer, e.fileInfo.name, true );
-            this.numLayers++;
-        }.bind(this));
-
-        this.dropzone.fileReader.enable();
     }
 
-
-
 });
-
-
-
 
 L.DNC = L.DNC || {};
 L.DNC.Menu = L.Class.extend({
@@ -538,6 +535,50 @@ L.DNC.Menu = L.Class.extend({
             }
         }
     }
+
+
+});
+L.DNC = L.DNC || {};
+L.DNC.Notifications = L.Class.extend({
+
+
+    statics: {},
+
+    // defaults
+    options: {},
+
+    initialize: function (map, options) {
+
+        // override defaults with passed options
+        L.setOptions(this, options);
+        this._map = map;
+
+        // create notification center & locations
+        this.hub = document.getElementById('notifications');
+
+    } ,
+
+    // used to add a notification to the DOM
+    add: function ( options ) {
+        // add a new notification to the stream
+        noteCenter = this.hub;
+
+        var note = document.createElement('div');
+        note.className = 'notification ' + options.type;
+        note.innerHTML = options.text;
+        noteCenter.appendChild(note);
+        
+        // TODO: add/remove notifications to an array to interact with them
+        // instead of relying on setTimeout() dictating their existence.
+        setTimeout(function () {
+            noteCenter.removeChild( noteCenter.firstChild );
+        }, 4000);
+
+    }
+
+    // TODO: add event listeners for notifications here instead of 
+    // throughout the application. Maybe?
+
 
 
 });

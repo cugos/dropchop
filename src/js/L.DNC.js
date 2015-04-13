@@ -16,6 +16,7 @@
             this.dropzone = new L.DNC.DropZone( this.mapView._map, {} );
             this.layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' } ).addTo( this.mapView._map );
             this.geoMenu = new L.DNC.Menu( this.layerlist, {} );
+            this.notifications = new L.DNC.Notifications( this.mapView._map, {} );
 
             // examples of events that L.DNC.DropZone.FileReader throws
             this.dropzone.fileReader.on( "fileparsed", function(e){
@@ -26,6 +27,11 @@
                 var mapLayer = L.mapbox.featureLayer(e.file);
                 this.layerlist.addLayerToList( mapLayer, e.fileInfo.name, true );
                 this.numLayers++;
+
+                this.notifications.add({
+                    text: '<strong>' + e.fileInfo.name + '</strong> added successfully.',
+                    type: 'success'
+                });
             }.bind(this));
         };
     }
