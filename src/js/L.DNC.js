@@ -30,7 +30,8 @@
 
                 this.notifications.add({
                     text: '<strong>' + e.fileInfo.name + '</strong> added successfully.',
-                    type: 'success'
+                    type: 'success',
+                    time: 2000
                 });
             }.bind(this));
         };

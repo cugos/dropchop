@@ -30,7 +30,8 @@
 
                 this.notifications.add({
                     text: '<strong>' + e.fileInfo.name + '</strong> added successfully.',
-                    type: 'success'
+                    type: 'success',
+                    time: 2000
                 });
             }.bind(this));
         };
@@ -384,7 +385,7 @@ L.DNC.MapView = L.Class.extend({
     _setupMap : function () {
 
         L.mapbox.accessToken = 'pk.eyJ1Ijoic3ZtYXR0aGV3cyIsImEiOiJVMUlUR0xrIn0.NweS_AttjswtN5wRuWCSNA';
-        this._map = L.mapbox.map('map', 'svmatthews.hf8pfph5', {
+        this._map = L.mapbox.map('map', 'examples.map-zr0njcqy', {
             zoomControl: false
         }).setView([0,0], 3);
 
@@ -560,19 +561,27 @@ L.DNC.Notifications = L.Class.extend({
 
     // used to add a notification to the DOM
     add: function ( options ) {
-        // add a new notification to the stream
-        noteCenter = this.hub;
 
+        // TODO: clean this up?
+        params = {},
+        params.text = options.text || 'THIS NOTIFICATION REQUIRES TEXT',
+        params.time = options.time || 4000,
+        params.type = options.type || 'default';
+
+        // add a new notification to the stream
         var note = document.createElement('div');
         note.className = 'notification ' + options.type;
         note.innerHTML = options.text;
-        noteCenter.appendChild(note);
+        this.hub.appendChild(note);
+
+        // redefine for setTimeout() scope
+        var _this = this;
         
         // TODO: add/remove notifications to an array to interact with them
         // instead of relying on setTimeout() dictating their existence.
         setTimeout(function () {
-            noteCenter.removeChild( noteCenter.firstChild );
-        }, 4000);
+            _this.hub.removeChild( _this.hub.firstChild );
+        }, params.time);
 
     }
 
