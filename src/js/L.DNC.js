@@ -15,7 +15,7 @@
             this.mapView = new L.DNC.MapView();
             this.dropzone = new L.DNC.DropZone( this.mapView._map, {} );
             this.layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' } ).addTo( this.mapView._map );
-            this.geoMenu = new L.DNC.Menu( this.layerlist, {} );
+            this.menuBar = new L.DNC.MenuBar( this.layerlist, {} );
 
             // examples of events that L.DNC.DropZone.FileReader throws
             this.dropzone.fileReader.on( "fileparsed", function(e){

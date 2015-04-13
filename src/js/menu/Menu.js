@@ -6,17 +6,17 @@ L.DNC.Menu = L.Class.extend({ // This is a base class. It should never be initia
         parentId : 'menu-bar'
     },
 
-    initialize: function ( jsonLayerList, options ) {
-        this._jsonLayerList = jsonLayerList;
-
-        // override defaults with passed options
+    initialize: function ( title, jsonLayerList, options ) {
         L.setOptions(this, options);
 
-        this.buildMenu();
-        this.addEventHandlers();
+        this.title = title;
+        this._jsonLayerList = jsonLayerList;
+
+        this.domElement = this._buildMenu();
+        this._addEventHandlers();
     },
 
-    addEventHandlers : function () {
+    _addEventHandlers : function () {
         /*
         **
         **  handlers for menu options
@@ -46,23 +46,22 @@ L.DNC.Menu = L.Class.extend({ // This is a base class. It should never be initia
         }
     },
 
-    _buildElement: function (str) {
-        // Helper to insert raw HTML into element
-        var div = document.createElement('div');
-        div.innerHTML = str;
-        return div.children[0];
+    _buildMenu: function () {
+        // Create menu dropdown
+        var menu = document.createElement('div');
+        menu.className = "menu";
+        menu.innerHTML = '<button class="menu-button">' +
+            this.title + '<i class="fa fa-angle-down"></i>' +
+            '</button>' +
+        '<div class="menu-dropdown menu-expand"></div>';
+
+        var domElement = document.getElementById(this.options.parentId).appendChild(menu);
+        return domElement;
     },
 
-    buildMenu: function () {
-        var html =
-        '<div class="menu">' +
-          '<button class="menu-button">' +
-            this.title + '<i class="fa fa-angle-down"></i>' +
-          '</button>' +
-        '</div>';
-        menu = this._buildElement(html);
-
-        this.domElement = document.getElementById(this.options.parentId).appendChild(menu);
-        return this.domElement;
+    addOperation: function( operation ) {
+        // Add operation to menu
+        operation.buildDomElement(this.domElement.getElementsByClassName('menu-dropdown')[0]);
+        return this;
     }
 });
