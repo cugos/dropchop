@@ -16,17 +16,6 @@
             this.dropzone = new L.DNC.DropZone( this.mapView._map, {} );
             this.layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' } ).addTo( this.mapView._map );
             this.menuBar = new L.DNC.MenuBar( this.layerlist, {} );
-
-            // examples of events that L.DNC.DropZone.FileReader throws
-            this.dropzone.fileReader.on( "fileparsed", function(e){
-                // TODO: This should be refactored so that this.dropzone and
-                // this.layerlist are not so tightly coupled. The logic behind
-                // this tooling should exist within their respective modules.
-                console.debug( "[ FILEREADER ]: file parsed > ", e.file );
-                var mapLayer = L.mapbox.featureLayer(e.file);
-                this.layerlist.addLayerToList( mapLayer, e.fileInfo.name, true );
-                this.numLayers++;
-            }.bind(this));
         };
     }
 })();
@@ -147,6 +136,16 @@ L.DNC.DropZone.FileReader = L.Handler.extend({
     _registerEventHandlers: function() {
         this.on( "enabled", function(e){
             console.debug( "[ FILEREADER ]: enabled > ", e );
+        });
+
+        this.on( "fileparsed", function(e){
+            // TODO: This should be refactored so that this.dropzone and
+            // this.layerlist are not so tightly coupled. The logic behind
+            // this tooling should exist within their respective modules.
+            console.debug( "[ FILEREADER ]: file parsed > ", e.file );
+            var mapLayer = L.mapbox.featureLayer(e.file);
+            L.DNC.layerlist.addLayerToList( mapLayer, e.fileInfo.name, true );
+            L.DNC.mapView.numLayers++;
         });
     },
 
@@ -476,38 +475,43 @@ L.DNC.MenuBar = L.Class.extend({
             .addOperation(new L.DNC.TurfOperation('buffer', {
                 maxFeatures: 1,
                 additionalArgs: 0.1
-            }));
+            }))
+            .addOperation(new L.DNC.TurfOperation('union', {
+                minFeatures: 2,
+                maxFeatures: 2
+            }))
+            .addOperation(new L.DNC.TurfOperation('erase', {
+                minFeatures: 2,
+                maxFeatures: 2
+            }))
+            ;
 
         this.menus = [];
         this.menus.push( geotools );
     }
 });
 
+L.DNC = L.DNC || {};
 L.DNC.Operation = L.Class.extend({
 
     options: {
-        // supportedFeatures : [],
-        minFeatures : 1,
-        maxFeatures : 0,
-        orderImport : false,
-        // iterable : true
     },
 
     initialize: function ( title, options ) {
         L.setOptions(this, options);
         this.title = title;
-        this.domElement = this.buildDomElement();
+        this.domElement = this._buildDomElement();
         this._addEventHandlers();
     },
 
     _addEventHandlers : function () {
         this.domElement.addEventListener('click', function(){
-            this._execute.call( this );
+            this.execute.call( this );
         }.bind(this));
     },
 
-    // Append button within provided element
-    buildDomElement: function () {
+    // Generate and return button
+    _buildDomElement: function () {
         var div = document.createElement('div');
         div.innerHTML += '<button class="menu-button menu-button-action" id="' +
             this.title + '">' + this.title + '</button>';
@@ -515,8 +519,8 @@ L.DNC.Operation = L.Class.extend({
     },
 
     // Where the magic happens
-    _execute: function( ) {
-        console.error("L.DNC.Operation object did not properly override '_execute'", this);
+    execute: function() {
+        console.error("L.DNC.Operation object did not properly override 'execute'", this);
     },
 });
 
@@ -531,13 +535,44 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
         additionalArgs: null // Kludge to handle no dialog for input
     },
 
-    initialize: function ( title, options ) {
-        L.DNC.Operation.prototype.initialize.call(this, title, options);
+    execute: function () {
+        var layers = L.DNC.layerlist.selection.list;
+
+        // Validate
+        this._validate(layers);
+
+        // Prep
+        var prepared_args = this._prepareArgs(layers);
+        var objects = prepared_args[0];
+        var name = prepared_args[1];
+
+        // Call func
+        var newLayer = {
+            geometry: turf[this.title].apply(null, objects),
+            name: this.title + '_' + name + '.geojson'
+        };
+
+        var mapLayer = L.mapbox.featureLayer(newLayer.geometry);
+        L.DNC.layerlist.addLayerToList( mapLayer, newLayer.name, true );
     },
 
-    _execute: function( ) {
-        // Prepare args
-        var layers = L.DNC.layerlist.selection.list;
+    _validate: function ( layers ) {
+        var length = layers.length;
+        if (!length) {
+            throw new Error("Can't run " + this.title + " on empty selection.");
+        }
+
+        if (this.options.maxFeatures && length > this.options.maxFeatures) {
+            throw new Error("Too many layers. Max is set to " + this.options.maxFeatures + ", got " + length + ".");
+        }
+
+        if (this.options.minFeatures && length < this.options.minFeatures) {
+            throw new Error("Too few layers. Min is set to " + this.options.minFeatures + ", got " + length + ".");
+        }
+    },
+
+    _prepareArgs: function ( layers ) {
+        // Get layer objects
         if (this.options.maxFeatures) {
             layers = layers.slice(0, this.options.maxFeatures);
         }
@@ -545,6 +580,8 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
         if (this.options.additionalArgs) {
             layer_objs.push(this.options.additionalArgs);
         }
+
+        // Get layer names
         var layer_names = layers.map(function(obj) { return obj.info.name; });
         var layer_names_str = '';
         if (layer_names.length === 1) {
@@ -557,15 +594,7 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
             });
         }
 
-        // Call func
-        var newLayer = {
-            geometry: turf[this.title].apply(null, layer_objs),
-            name: this.title + '_' + layer_names_str + '.geojson'
-        };
-
-        // TODO: Should all layers be added?
-        var mapLayer = L.mapbox.featureLayer(newLayer.geometry);
-        L.DNC.layerlist.addLayerToList( mapLayer, newLayer.name, true );
-    },
+        return [layer_objs, layer_names_str];
+    }
 
 });

@@ -15,7 +15,16 @@ L.DNC.MenuBar = L.Class.extend({
             .addOperation(new L.DNC.TurfOperation('buffer', {
                 maxFeatures: 1,
                 additionalArgs: 0.1
-            }));
+            }))
+            .addOperation(new L.DNC.TurfOperation('union', {
+                minFeatures: 2,
+                maxFeatures: 2
+            }))
+            .addOperation(new L.DNC.TurfOperation('erase', {
+                minFeatures: 2,
+                maxFeatures: 2
+            }))
+            ;
 
         this.menus = [];
         this.menus.push( geotools );
