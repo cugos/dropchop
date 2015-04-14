@@ -32,6 +32,10 @@ L.DNC.LayerList = L.Control.extend({
         **  TODO: selection acts as a local cache just like this._layers
         **  so one of the two should be factored out OR combined later
         **
+        **  TODO: selection will not be forever tied to the layerlist (it
+        **  will be possible to select via click on features or by attributes)
+        **  meaning that it would be wise to decouple this from layerlist soon
+        **
         */
         this.selection = {
             add: function(l) {
