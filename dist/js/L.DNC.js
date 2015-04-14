@@ -662,6 +662,12 @@ L.DNC.Notifications = L.Class.extend({
     // TODO: add event listeners for notifications here instead of 
     // throughout the application. Maybe?
 
+    // this.notifications.add({
+    //     text: '<strong>' + e.fileInfo.name + '</strong> added successfully.',
+    //     type: 'success',
+    //     time: 2000
+    // });
+
 
 
 });
