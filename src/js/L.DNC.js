@@ -11,7 +11,11 @@
         window.L.DNC = DNC;
 
         L.DNC.init = function(){
-            L.DNC.mapView = new L.DNC.MapView();
+
+            this.mapView = new L.DNC.MapView();
+            this.dropzone = new L.DNC.DropZone( this.mapView._map, {} );
+            this.layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' } ).addTo( this.mapView._map );
+            this.menuBar = new L.DNC.MenuBar( this.layerlist, {} );
         };
     }
 })();

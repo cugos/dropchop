@@ -59,7 +59,7 @@ module.exports = function(grunt) {
     },
     concat: {
         dist: {
-          src: ['src/**/*.js'],
+          src: ['src/js/*.js', 'src/js/menu/Menu.js', 'src/js/**/*.js'],
           dest: 'dist/js/L.DNC.js'
         },
     },
