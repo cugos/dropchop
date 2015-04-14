@@ -1,7 +1,6 @@
 L.DNC = L.DNC || {};
 L.DNC.Notifications = L.Class.extend({
 
-
     statics: {},
 
     // defaults
@@ -18,15 +17,18 @@ L.DNC.Notifications = L.Class.extend({
         // create notification center & locations
         this.hub = document.getElementById('notifications');
 
+        // set all "handlers" as subscribers to events as they come through
+        this._registerEventHandlers();
+
     } ,
 
     // used to add a notification to the DOM
     add: function ( options ) {
 
         // TODO: clean this up?
-        params = {},
-        params.text = options.text || 'THIS NOTIFICATION REQUIRES TEXT',
-        params.time = options.time || 4000,
+        params = {};
+        params.text = options.text || 'THIS NOTIFICATION REQUIRES TEXT';
+        params.time = options.time || 4000;
         params.type = options.type || 'default';
 
         // add a new notification to the stream
