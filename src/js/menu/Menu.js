@@ -81,6 +81,18 @@ L.DNC.Menu = L.Class.extend({
                 )
             );
         }.bind(this));
+
+        var intersect = document.getElementById('intersect');
+        intersect.addEventListener('click', function() {
+            this.ops.execute.call( this, 
+                this.ops.geom.intersect(
+                    this._jsonLayerList.selection.list[0].layer._geojson,
+                    this._jsonLayerList.selection.list[1].layer._geojson,
+                    this._jsonLayerList.selection.list[0].info,
+                    this._jsonLayerList.selection.list[1].info
+                )
+            );
+        }.bind(this));
     } ,
 
     /*
@@ -132,15 +144,29 @@ L.DNC.Menu = L.Class.extend({
                     info1Strip = info1.name.replace('.geojson', ''),
                     info2Strip = info2.name.replace('.geojson', '');
 
+                console.log(object1, object2, info1, info2);
                 var newLayer = {
                     geometry: turf.erase(poly1, poly2),
                     name: 'erase_' + info1Strip + '_' + info2Strip + '.geojson'
                 };
                 return newLayer;
 
+            },
+
+            intersect: function(object1, object2, info1, info2) {
+                var poly1 = object1,
+                    poly2 = object2,
+                    info1Strip = info1.name.replace('.geojson', ''),
+                    info2Strip = info2.name.replace('.geojson', '');
+
+                var newLayer = {
+                    geometry: turf.intersect(poly1, poly2),
+                    name: 'intersect_' + info1Strip + '_' + info2Strip + '.geojson' 
+                };
+                return newLayer;
             }
         }
-    }
 
+    }
 
 });
