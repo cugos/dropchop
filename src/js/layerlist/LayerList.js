@@ -14,6 +14,7 @@ L.DNC.LayerList = L.Control.extend({
     // defaults
     options: {
         autoZIndex: true,
+        zoomToExtentOnAdd: true,
         layerContainerId: 'dropzone'
     },
 
@@ -98,6 +99,18 @@ L.DNC.LayerList = L.Control.extend({
         }
 
         this._update();
+
+        // If we have the zoomToExtentOnAdd feature enabled (on by default, but can be
+        // hooked to UI element) then we loop through the layers and get the extent and 
+        // set the map zoom so people see the data right away.
+        if (this.options.zoomToExtentOnAdd) {
+            var bounds = layer.getBounds();
+            for (var i in this._layers) {
+                bounds.extend(this._layers[i].layer.getBounds());
+            }
+            this._map.fitBounds(bounds);
+        }
+
     },
 
     removeLayerFromList: function (layer) {
