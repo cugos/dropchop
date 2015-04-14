@@ -108,7 +108,7 @@ L.DNC.LayerList = L.Control.extend({
             for (var i in this._layers) {
                 bounds.extend(this._layers[i].layer.getBounds());
             }
-            this._map.fitBounds(bounds)
+            this._map.fitBounds(bounds);
         }
 
     },
