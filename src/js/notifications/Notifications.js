@@ -7,11 +7,13 @@ L.DNC.Notifications = L.Class.extend({
     // defaults
     options: {},
 
-    initialize: function (map, options) {
+    initialize: function (fileReader, options) {
 
         // override defaults with passed options
         L.setOptions(this, options);
-        this._map = map;
+
+        // listen for fileReader events
+        this._fileReader = fileReader;
 
         // create notification center & locations
         this.hub = document.getElementById('notifications');
@@ -42,17 +44,17 @@ L.DNC.Notifications = L.Class.extend({
             _this.hub.removeChild( _this.hub.firstChild );
         }, params.time);
 
+    } ,
+
+    _registerEventHandlers: function () {
+        // NEW FILE: success
+        this._fileReader.on('fileparsed', function(e) {
+            L.DNC.notifications.add({
+                text: '<strong>' + e.fileInfo.name + '</strong> added successfully.',
+                type: 'success',
+                time: 2000
+            });
+        });
     }
-
-    // TODO: add event listeners for notifications here instead of 
-    // throughout the application. Maybe?
-
-    // this.notifications.add({
-    //     text: '<strong>' + e.fileInfo.name + '</strong> added successfully.',
-    //     type: 'success',
-    //     time: 2000
-    // });
-
-
 
 });
