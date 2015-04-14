@@ -16,7 +16,7 @@
             this.dropzone = new L.DNC.DropZone( this.mapView._map, {} );
             this.layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' } ).addTo( this.mapView._map );
             this.menuBar = new L.DNC.MenuBar( this.layerlist, {} );
-            this.notifications = new L.DNC.Notifications( this.mapView._map, {} );
+            this.notifications = new L.DNC.Notifications( this.dropzone.fileReader, {} );
             
         };
     }
@@ -609,11 +609,13 @@ L.DNC.Notifications = L.Class.extend({
     // defaults
     options: {},
 
-    initialize: function (map, options) {
+    initialize: function (fileReader, options) {
 
         // override defaults with passed options
         L.setOptions(this, options);
-        this._map = map;
+
+        // listen for fileReader events
+        this._fileReader = fileReader;
 
         // create notification center & locations
         this.hub = document.getElementById('notifications');
@@ -649,23 +651,15 @@ L.DNC.Notifications = L.Class.extend({
 
     } ,
 
-
-    // TODO: add event listeners for notifications here instead of 
-    // throughout the application. Maybe?
     _registerEventHandlers: function () {
-        this.on('fileparsed', function(e) {
-            console.debug(e);
+        // NEW FILE: success
+        this._fileReader.on('fileparsed', function(e) {
+            L.DNC.notifications.add({
+                text: '<strong>' + e.fileInfo.name + '</strong> added successfully.',
+                type: 'success',
+                time: 2000
+            });
         });
     }
-
-
-    // example addition from previously
-
-    // this.notifications.add({
-    //     text: '<strong>' + e.fileInfo.name + '</strong> added successfully.',
-    //     type: 'success',
-    //     time: 2000
-    // });
-
 
 });
