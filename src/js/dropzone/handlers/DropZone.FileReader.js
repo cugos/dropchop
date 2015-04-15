@@ -110,7 +110,6 @@ L.DNC.DropZone.FileReader = L.Handler.extend({
         reader.readAsText(fileObject, 'UTF-8');
         reader.onload = function() {
             var file = JSON.parse(reader.result);
-
             this._map.fire('dropzone:fileparsed', { file: file });
             this.fire('fileparsed', { fileInfo: fileObject, file: file });
         }.bind(this);

@@ -229,7 +229,6 @@ L.DNC.DropZone.FileReader = L.Handler.extend({
         reader.readAsText(fileObject, 'UTF-8');
         reader.onload = function() {
             var file = JSON.parse(reader.result);
-
             this._map.fire('dropzone:fileparsed', { file: file });
             this.fire('fileparsed', { fileInfo: fileObject, file: file });
         }.bind(this);
@@ -665,7 +664,7 @@ L.DNC.Notifications = L.Class.extend({
     } ,
 
     _registerEventHandlers: function () {
-        // NEW FILE: success
+        // NEW FILE: SUCCESSFULLY ADDED & PARSED
         this._fileReader.on('fileparsed', function(e) {
             L.DNC.notifications.add({
                 text: '<strong>' + e.fileInfo.name + '</strong> added successfully.',
