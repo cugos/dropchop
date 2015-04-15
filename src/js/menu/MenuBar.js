@@ -1,32 +1,29 @@
 L.DNC = L.DNC || {};
 L.DNC.MenuBar = L.Class.extend({
 
-    // defaults
-    options: {
-        parentId : 'menu-bar'
+    initialize: function ( options ) {
+        L.setOptions(this, options);
+        this.children = [];
+        this.domElement = this._buildDomElement();
     },
 
-    initialize: function ( layerlist, options ) {
-        // override defaults with passed options
-        this.layerlist = layerlist;
-        L.setOptions(this, options);
+    // Add object as child. Object must have domElement property.
+    addChild: function ( child ) {
+        this.domElement.appendChild(child.domElement);
+        child.parentDomElement = this;
+        this.children.push( child );
+        return this;
+    },
 
-        var geotools = new L.DNC.Menu( "Geoprocessing Tools", {} )
-            .addOperation(new L.DNC.TurfOperation('buffer', {
-                maxFeatures: 1,
-                additionalArgs: 0.1
-            }))
-            .addOperation(new L.DNC.TurfOperation('union', {
-                minFeatures: 2,
-                maxFeatures: 2
-            }))
-            .addOperation(new L.DNC.TurfOperation('erase', {
-                minFeatures: 2,
-                maxFeatures: 2
-            }))
-            ;
+    // Append this domElement to a give domElement
+    addTo: function ( parentDomElement ) {
+        parentDomElement.appendChild(this.domElement);
+        this.parentDomElement = parentDomElement;
+        return this;
+    },
 
-        this.menus = [];
-        this.menus.push( geotools );
+    // Create and return dom element
+    _buildDomElement: function () {
+        return document.createElement('div');
     }
 });
