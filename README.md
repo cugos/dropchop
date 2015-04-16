@@ -39,7 +39,9 @@ All of this work is made possible by [CUGOS](http://cugos.org), an open-source g
 
 Run a local server with a development (not minified) version of the code:
 
----
+```
+grunt
+```
 
 Run a local server with a production (minified) version of the code:
 
