@@ -1,15 +1,5 @@
 L.DNC = L.DNC || {};
-L.DNC.Operation = L.Class.extend({
-
-    options: {
-    },
-
-    initialize: function ( title, options ) {
-        L.setOptions(this, options);
-        this.title = title;
-        this.domElement = this._buildDomElement();
-        this._addEventHandlers();
-    },
+L.DNC.Operation = L.DNC.Menu.extend({
 
     _addEventHandlers : function () {
         this.domElement.addEventListener('click', function(){
@@ -17,7 +7,7 @@ L.DNC.Operation = L.Class.extend({
         }.bind(this));
     },
 
-    // Generate and return button
+    // Create and return dom element (note: this does not attach dom element to any parent)
     _buildDomElement: function () {
         var div = document.createElement('div');
         div.innerHTML += '<button class="menu-button menu-button-action" id="' +

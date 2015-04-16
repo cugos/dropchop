@@ -75,7 +75,7 @@ module.exports = function(grunt) {
     },
     concat: {
         dist: {
-          src: ['src/js/*.js', 'src/js/menu/Menu.js', 'src/js/**/*.js'],
+          src: ['src/js/*.js', 'src/js/menu/MenuBar.js', 'src/js/**/*.js'],
           dest: 'dist/js/L.DNC.js'
         },
     },
@@ -98,6 +98,12 @@ module.exports = function(grunt) {
                 'dist/index.html' : ['src/index.html']
             }
         }
+    },
+    'gh-pages': {
+      options: {
+        base: '.'
+      },
+      src: ['**']
     }
   });
 
@@ -109,6 +115,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-gh-pages');
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-processhtml');
   grunt.loadNpmTasks('grunt-focus');
