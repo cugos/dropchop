@@ -12,8 +12,9 @@
 #     branch to watch for commits. Can be added online or within .travis.yml
 #
 
-if [ "${TRAVIS_BRANCH}" != "${RELEASE_BRANCH}" ]; then
-    echo "In branch '${TRAVIS_BRANCH}', not '${RELEASE_BRANCH}'. Not deploying."
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [ "${BRANCH}" != "${RELEASE_BRANCH}" ]; then
+    echo "In branch '${BRANCH}', not '${RELEASE_BRANCH}'. Not deploying."
     exit 0;
 fi
 
