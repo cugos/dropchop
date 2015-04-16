@@ -33,22 +33,8 @@ All of this work is made possible by [CUGOS](http://cugos.org), an open-source g
 1. **Install Grunt**. Working on Drop-n-Chop requires a few tools. We are using [Grunt](http://gruntjs.com/) for our task running and build process. You can install the Grunt CLI with `npm`:`npm install -g grunt-cli`
 2. **Clone the repository**. Once that has been installed successfully, you can clone the repository or your own fork and `cd` into the directory. `git clone git@github.com:YOUR-GITHUB-USERNAME/drop-n-chop.git` and `cd drop-n-chop`
 3. **Install dependencies** by running `npm install`
-4. **Build & serve** the application with `grunt`. This will create a watcher as well that will lint your JS in the `/src` directory. You can access the application at `localhost:8000`.
+4. **Build & serve** the application with `grunt`. This will create a watcher as well that will lint your JS in the `/src` directory. You can access the application at `localhost:8000`. _Note:_ If you'd like to build the minified version of the codebase (as is used in production), use `grunt prod`.
 
 **NOTE:** Things are moving very quickly with DNC right now. We are still continuing to build out and refactor the architecture of the application. If you want to read more about our decision-making process take a look at some of our [meeting notes in the wiki](https://github.com/cugos/drop-n-chop/wiki/Meeting-Notes---04-11-2015).
-
-Run a local server with a development (not minified) version of the code:
-
-```
-grunt
-```
-
-Run a local server with a production (minified) version of the code:
-
-```
-grunt prod
-```
-
-You should now be able to access the application at `http://localhost:8000`. While the development server is running, any changes to files within `src/` will cause appropriate linting/compiling/testing to occur.
 
 *Once you drop the chop don't stop.*
