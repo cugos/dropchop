@@ -5,3 +5,7 @@ before_install:
   - gem install sass
 before_script:
   - grunt build:basic
+after_success:
+  - .travis/deploy-to-gh-pages.sh
+env:
+  - RELEASE_BRANCH=master
