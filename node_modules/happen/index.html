@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>happen makes real events happen in your browser</title>
+        <link href='http://fonts.googleapis.com/css?family=Radley' rel='stylesheet' type='text/css'>
+        <link rel='stylesheet' type='text/css' href='css/style.css' />
+        <link rel='stylesheet' type='text/css' href='css/site.css' />
+        <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+        <meta name='viewport' content='initial-scale=1.0 maximum-scale=1.0'>
+    </head>
+    <body>
+        <div class='col10 margin1 pad2'>
+            <h1>happen <em>makes <strong>real</strong> events happen <strong>in browser</strong></em></h1>
+            <br />
+            <div class='col5'>
+                <p>JavaScript is great at listening for handling events - a
+                user clicks, drags, or types, and we know: jQuery makes it easy
+                to say <code>$('#foo').click(function() {})</code>.</p>
+                <p>But what about the opposite - <em>creating events</em>?
+                That's where <strong>happen</strong> comes in it makes it
+                simple to interact with the <a href='https://developer.mozilla.org/en-US/docs/Web/API/document.createEvent'><code>createEvent</code></a> API,
+                which yields real events.</p>
+                <p>Why? Script interfaces for web scraping, test applications
+                based on really whether they respond to events, emulate
+                touch or mouse events as vice versa, and more.</p>
+                <h3>Doesn't jQuery Do This?</h3>
+                <p>Not really. jQuery can trigger events that it binds,
+                through its <code>.trigger('eventname')</code> function, but
+                can't trigger events bound outside of jQuery's kingdom. Happen
+                can trigger events bound the old fashioned way with <code>.onclick</code>,
+                the new-fashioned way with <code>.addEventListener</code>, and
+                even just bound by your browser with a default behavior.
+                </p>
+            </div>
+            <div class='col6 margin1'>
+                <div class='demo'>
+                <a id='say-hi'>click me to say hi</a> / <a href='#' id='click-other'>click click me to click on the other link</a>
+            </div>
+                <pre><code>var say_hi = document.getElementById('say-hi'),
+    click_other = document.getElementById('click-other');
+
+say_hi.onclick = function() {
+    alert('hi');
+};
+
+click_other.onclick = function() {
+    happen.click(say_hi);
+    return false;
+}</code></pre>
+            </div>
+            <div class='col12 clearfix'>
+                <div class='col3'>
+                    <h2>Browser</h2>
+                    <a href='https://github.com/tmcw/happen/archive/master.zip'>download master.zip</a>
+                </div>
+                <div class='col3'>
+                    <h2>Browserify</h2>
+                    <code>npm install happen</code>
+                </div>
+                <div class='col6'>
+                    <h2>GitHub</h2>
+                    <code>git clone https://github.com/tmcw/happen.git</code>
+                </div>
+            </div>
+        </div>
+        <script src='jquery/jquery.js'></script>
+        <script src='happen.js'></script>
+        <script>
+var say_hi = document.getElementById('say-hi'),
+    click_other = document.getElementById('click-other');
+
+say_hi.onclick = function() {
+    alert('hi');
+};
+
+click_other.onclick = function() {
+    happen.click(say_hi);
+    return false;
+}
+        </script>
+    </body>
+</html>

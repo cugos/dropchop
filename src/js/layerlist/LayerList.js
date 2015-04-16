@@ -14,6 +14,7 @@ L.DNC.LayerList = L.Control.extend({
     // defaults
     options: {
         autoZIndex: true,
+        zoomToExtentOnAdd: true,
         layerContainerId: 'dropzone'
     },
 
@@ -31,6 +32,10 @@ L.DNC.LayerList = L.Control.extend({
         **
         **  TODO: selection acts as a local cache just like this._layers
         **  so one of the two should be factored out OR combined later
+        **
+        **  TODO: selection will not be forever tied to the layerlist (it
+        **  will be possible to select via click on features or by attributes)
+        **  meaning that it would be wise to decouple this from layerlist soon
         **
         */
         this.selection = {
@@ -50,7 +55,7 @@ L.DNC.LayerList = L.Control.extend({
 
     _initLayout: function () {
         this._container = L.DomUtil.create('ul', "json-layer-list");
-        this._container.setAttribute( "id", "fileList" );
+        this._container.setAttribute( "id", "layer-list" );
         this.layerContainer.appendChild( this._container );
     },
 
@@ -94,6 +99,18 @@ L.DNC.LayerList = L.Control.extend({
         }
 
         this._update();
+
+        // If we have the zoomToExtentOnAdd feature enabled (on by default, but can be
+        // hooked to UI element) then we loop through the layers and get the extent and 
+        // set the map zoom so people see the data right away.
+        if (this.options.zoomToExtentOnAdd) {
+            var bounds = layer.getBounds();
+            for (var i in this._layers) {
+                bounds.extend(this._layers[i].layer.getBounds());
+            }
+            this._map.fitBounds(bounds);
+        }
+
     },
 
     removeLayerFromList: function (layer) {
@@ -105,7 +122,7 @@ L.DNC.LayerList = L.Control.extend({
     _update: function () {
         if (!this._container) { return this; }
 
-        for (i in this._layers) {
+        for (var i in this._layers) {
             obj = this._layers[i];
 
             if ( !(this._map.hasLayer( obj.layer )) ){

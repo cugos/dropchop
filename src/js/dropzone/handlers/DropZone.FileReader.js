@@ -12,8 +12,24 @@ L.DNC.DropZone.FileReader = L.Handler.extend({
         // override defaults with passed options
         L.setOptions(this, options);
         this._map = map;
-        this._container = map._container;
+        this._container = document.body;
+        this._registerEventHandlers();
+    },
 
+    _registerEventHandlers: function() {
+        this.on( "enabled", function(e){
+            console.debug( "[ FILEREADER ]: enabled > ", e );
+        });
+
+        this.on( "fileparsed", function(e){
+            // TODO: This should be refactored so that this.dropzone and
+            // this.layerlist are not so tightly coupled. The logic behind
+            // this tooling should exist within their respective modules.
+            console.debug( "[ FILEREADER ]: file parsed > ", e.file );
+            var mapLayer = L.mapbox.featureLayer(e.file);
+            L.DNC.layerlist.addLayerToList( mapLayer, e.fileInfo.name, true );
+            L.DNC.mapView.numLayers++;
+        });
     },
 
     enable: function () {

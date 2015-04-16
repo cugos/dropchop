@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mocha</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset='utf-8'>
+    <link rel="stylesheet" href="mocha.css" />
+    <script src="../src/happen.js"></script>
+  </head>
+  <body>
+    <button id='go'></button>
+    <script>
+        go.onclick = function() { this.innerHTML = 'pass'; };
+        happen.click(document.getElementById('go'));
+    </script>
+  </body>
+</html>

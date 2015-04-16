@@ -1,0 +1,38 @@
+h1 {
+    font: normal 40px/50px 'Radley', 'Georgia', serif;;
+}
+
+h1 em {
+    color:#555;
+    font-style:normal;
+    background:#f6f6f6;
+    padding:5px 20px;
+}
+
+h1 em strong {
+    color:#da3151;
+}
+
+h2 {
+    margin-top:40px;
+    font-weight:normal;
+}
+
+.lined {
+    padding:10px 0;
+}
+
+a {
+    color:darkblue;
+    text-decoration:none;
+}
+
+a:hover {
+    text-decoration:underline;
+}
+
+.demo {
+    padding:5px;
+    background:#eef;
+    margin-bottom:10px;
+}

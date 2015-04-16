@@ -8,15 +8,13 @@
   left:250px;
   background:$white;
   padding:5px;
-  height:41px;
-}
-
-
-.nav {
-  position:relative;
 }
 
 .menu {
+  display: inline-block;
+}
+
+.menu-dropdown {
   display:none;
   position:absolute;
   box-shadow:1px 1px 5px 0 rgba(0,0,0,0.3);
@@ -40,7 +38,7 @@
   &:hover {
     background:$menu-hover;
   }
-  
+
   .fa {
     margin-left:10px;
   }

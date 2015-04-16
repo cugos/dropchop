@@ -1,0 +1,12 @@
+{
+  "name": "happen",
+  "repo": "tmcw/happen",
+  "description": "real events for browsers",
+  "version": "0.1.3",
+  "keywords": ["events", "mock", "trigger", "event"],
+  "dependencies": {},
+  "development": {},
+  "scripts": [
+    "src/happen.js"
+  ]
+}

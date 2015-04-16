@@ -19,6 +19,7 @@ L.DNC.DropZone = L.Class.extend({
         this.type = L.DNC.DropZone.TYPE;
 
         this.fileReader = new L.DNC.DropZone.FileReader( this._map, options );
+        this.fileReader.enable();
     }
 
 });
