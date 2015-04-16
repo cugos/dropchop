@@ -55,7 +55,7 @@ L.DNC.LayerList = L.Control.extend({
 
     _initLayout: function () {
         this._container = L.DomUtil.create('ul', "json-layer-list");
-        this._container.setAttribute( "id", "fileList" );
+        this._container.setAttribute( "id", "layer-list" );
         this.layerContainer.appendChild( this._container );
     },
 
