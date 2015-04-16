@@ -4,7 +4,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     jshint: {
-      files: ['src/js/*.js']
+      files: ['src/js/**/*.js']
     },
     uglify: {
       app: {
@@ -33,29 +33,33 @@ module.exports = function(grunt) {
         files: ['index.html'],
       },
       stylesheets: {
-        files: ['src/sass/*.scss'],
+        files: ['src/sass/**/*.scss'],
         tasks: ['css'],
       },
       js: {
-        files: ['src/js/*.js'],
+        files: ['src/js/**/*.js'],
         tasks: ['js'],
       },
       options: {
-        livereload: true,
+        livereload: true // Prevent auto-reload of browser by setting to false
       },
     },
     connect: {
-      server: {
+      default: {
         options: {
           base: './',
-          livereload: true,
-          open: true,
+          keepalive: true
         }
-      }
+      },
+      dev: {
+        options: {
+          base: './',
+        }
+      },
     },
     concat: {
-        basic: {
-          src: ['src/js/L.DNC.js', 'src/js/**/*.js'],
+        dist: {
+          src: ['src/js/*.js', 'src/js/menu/Menu.js', 'src/js/**/*.js'],
           dest: 'dist/js/L.DNC.js'
         },
     },
@@ -77,11 +81,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-karma');
 
   // Tasks.
-  grunt.registerTask('default', ['build']);
-  grunt.registerTask('js', ['jshint', 'concat', 'uglify']);
-  grunt.registerTask('build', ['js', 'css','watch']);
-  grunt.registerTask('css',['sass']);
-  grunt.registerTask('lint', ['jshint']);
-  grunt.registerTask('serve', ['connect:server', 'watch']);
   grunt.registerTask('test', ['karma']);
+  grunt.registerTask('lint', ['jshint']);
+  grunt.registerTask('js:dev', ['jshint', 'concat', 'uglify', 'test']);
+  grunt.registerTask('js', ['concat', 'uglify']);
+  grunt.registerTask('css', ['sass']);
+  grunt.registerTask('build', ['js:dev', 'css']);
+  grunt.registerTask('build:basic', ['js', 'css']);
+  grunt.registerTask('serve', ['connect:dev', 'watch']);
+  grunt.registerTask('default', ['build', 'serve']);
 };

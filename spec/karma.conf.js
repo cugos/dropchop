@@ -1,11 +1,7 @@
 // Karma configuration
 module.exports = function (config) {
 
-    var appSources = [
-        'src/js/DncApp.js',
-    ];
-
-    var libSources = [ 
+    var libSources = [
         'dist/js/L.DNC.js'
     ];
 
@@ -75,4 +71,3 @@ module.exports = function (config) {
         singleRun: true
     });
 };
-
