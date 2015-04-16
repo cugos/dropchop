@@ -12,7 +12,7 @@ L.DNC.DropZone.FileReader = L.Handler.extend({
         // override defaults with passed options
         L.setOptions(this, options);
         this._map = map;
-        this._container = map._container;
+        this._container = document.body;
         this._registerEventHandlers();
     },
 
