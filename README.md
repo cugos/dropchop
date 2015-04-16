@@ -37,6 +37,18 @@ All of this work is made possible by [CUGOS](http://cugos.org), an open-source g
 
 **NOTE:** Things are moving very quickly with DNC right now. We are still continuing to build out and refactor the architecture of the application. If you want to read more about our decision-making process take a look at some of our [meeting notes in the wiki](https://github.com/cugos/drop-n-chop/wiki/Meeting-Notes---04-11-2015).
 
----
+Run a local server with a development (not minified) version of the code:
+
+```
+grunt
+```
+
+Run a local server with a production (minified) version of the code:
+
+```
+grunt prod
+```
+
+You should now be able to access the application at `http://localhost:8000`. While the development server is running, any changes to files within `src/` will cause appropriate linting/compiling/testing to occur.
 
 *Once you drop the chop don't stop.*

@@ -1,6 +1,6 @@
 <html lang="en">
 <head>
-  <title>Drip. Drop.</title>
+  <title>Drip. Drop. Drip.</title>
 
   <script src="//api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js"></script>
   <script src="//api.tiles.mapbox.com/mapbox.js/v2.1.6/mapbox.js"></script>
@@ -8,7 +8,8 @@
   <link href="//fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">
   <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//api.tiles.mapbox.com/mapbox.js/v2.1.6/mapbox.css" rel="stylesheet" />
-  <link href="dist/css/app.css" rel="stylesheet">
+  <link href="css/app.css" rel="stylesheet">
+
 </head>
 <body>
 
@@ -20,7 +21,9 @@
 <nav id="menu-bar">
 </nav>
 
-<script type="text/javascript" src="dist/js/L.DNC.min.js"></script>
+<!-- build:[src]:dev js/L.DNC.js -->
+<script src="js/L.DNC.min.js" type="text/javascript"></script>
+<!-- /build -->
 <script type="text/javascript">
     window.onload = function() {
         L.DNC.init();
