@@ -4,64 +4,39 @@
 
 **You drop. We chop.**
 
-Drop 'n Chop tests the idea that GIS operations can be done in the browser, without a server. This application is currently a proof of concept testing the capabilities of a user uploading files, executing GIS operations, creating new spatial data layers, and downloading the new data. Here's an example of it running a `buffer` and `union` operation in the same process.
+Drop 'n Chop (DNC) is a browser-based GIS powered by [Leaflet.js](http://leafletjs.com) and [Turf.js](http://turfjs.org). DNC is currently a proof of concept and explores three hypothesis:
+
+### 1. GIS can be data-first, not operation-first.
+
+GIS software is complex. And rightly so! The vast number of spatial operations and analyses make for an incredibly steep point of entry for a user. Without having a single shapefile prepared there are multitudes of buttons and operations available to you. Operations come first. Data is secondary.
+
+Your data should dictate what operations are available. DNC aims to only show what's possible with the data that you've loaded. *If you upload a single polygon you can add a buffer to it. But you can't union it to nothing, so why allow the user to go through the process of setting up a union?*
+
+### 2. GIS doesn't require a server.
+
+By using HTML5 FileReaders and some special Javascripts for processing file types, we are able to read file binaries in the browser. This allows us to bypass a server and load GeoJSON files straight into our map. With this and the advancements of Turf we can run spatial operations and download them in a light-weight manner.
+
+*It's important to recognize that a huge amount of data will probably require a server. But we are talking small things here right now.*
+
+### 3. GIS is open.
+
+Too often do we hear of people moving from proprietary software to open source software only because they "can't afford it any longer" or "their student license ran out." You shouldn't have to be able to afford giant, bulky software to do simple things with **your** data. DNC is a project made by folks who have mumbled the above more times than ~~Arc~~ a GIS crashing in the middle of a project.
 
 ![buffer union sf east!](assets/dropnchop_union.gif)
 
-### Wait, how are you doing spatial operations on the web?
+# Who?
 
-Well now, that's a fantastic question. We're using [Turf.js](https://github.com/Turfjs/turf), a javascript library that can run spatial operations on GeoJSON objects and returns new objects for usage.
+All of this work is made possible by [CUGOS](http://cugos.org), an open-source geo community based in Seattle.
 
-### Haven't we been able to drag and drop files into the browser for, like, forever?
+# Contribute!
 
-Sure have! What happens when you drag and drop a file into your browser typically involves a server to handle the files. This project attempts to bypass the need for a server by using the [HTML5 File Reader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader) implementation to handle the file and convert into a usable object for Turf.
+1. **Install Grunt**. Working on Drop-n-Chop requires a few tools. We are using [Grunt](http://gruntjs.com/) for our task running and build process. You can install the Grunt CLI with `npm`:`npm install -g grunt-cli`
+2. **Clone the repository**. Once that has been installed successfully, you can clone the repository or your own fork and `cd` into the directory. `git clone git@github.com:YOUR-GITHUB-USERNAME/drop-n-chop.git` and `cd drop-n-chop`
+3. **Install dependencies** by running `npm install`
+4. **Build & serve** the application with `grunt`. This will create a watcher as well that will lint your JS in the `/src` directory. You can access the application at `localhost:8000`.
 
-### If I believe the above, will this do everything for me?
+**NOTE:** Things are moving very quickly with DNC right now. We are still continuing to build out and refactor the architecture of the application. If you want to read more about our decision-making process take a look at some of our [meeting notes in the wiki](https://github.com/cugos/drop-n-chop/wiki/Meeting-Notes---04-11-2015).
 
-No! Right now this project is an implementation of some of Turf's geoprocessing functions and doesn't really allow for much user interaction yet. If you're interested in expanding the functionality, let's talk in [the issues](https://github.com/cugos/drop-n-chop/issues).
+---
 
-### Hm.
-
-That's good enough for us! You should stay tuned for any developments. Maybe we can make a completely self-contained GIS in the browser using concepts like this.
-
-### What's on the horizon?
-
-We're not much of a metaphor group here at [CUGOS](http://cugos.org/), but if you're watching the sunset just remember that it's rising somewhere else.
-
-### What's on the roadmap?
-
-Again, metaphors aren't our thing but we're looking at the following:
-
-* Convert `.shp` files to `.json` in the browser, without a server.
-* Allow the user to specify which Turf functions they'd like to run against their files.
-* Discuss the versatility of `<a href="data: ...">` as the main download constructor.
-* Develop an alpha prototype that allows users to upload multiple files, choose which they'd like to edit, and do some sweet GIS stuff, without downloading a single piece of software or writing any code.
-
-# Setup
-
-Working on Drop-n-Chop requires a few tools. We are using [Grunt](http://gruntjs.com/) for our task running and build process. You can install the Grunt CLI with `npm`:
-
-```
-npm install -g grunt-cli
-```
-
-Once that has been installed successfully, you can clone the repository or your own fork and `cd` into the directory.
-
-```
-git clone git@github.com:YOUR-GITHUB-USERNAME/drop-n-chop.git
-cd drop-n-chop
-```
-
-Install development dependencies with `npm`
-
-```
-npm install
-```
-
-And run a development server with
-
-```
-grunt
-```
-
-You should now be able to access the application at `http://localhost:8000`. While the development server is running, any changes to `index.html` or files within `src/` will cause appropriate linting/compiling/testing to occur.
+*Once you drop the chop don't stop.*
