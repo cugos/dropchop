@@ -28,6 +28,8 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-karma": "~0.10.1",
     "grunt-reload": "^0.2.0",
+    "grunt-processhtml": "^0.3.7",
+    "grunt-focus": "^0.1.1",
     "happen": "~0.1.3",
     "jshint": "~2.3.0",
     "karma": "^0.12.19",
