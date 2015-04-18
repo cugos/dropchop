@@ -11,6 +11,15 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
     },
 
     execute: function () {
+        /*
+        **
+        **  TODO: this is the type of referencing
+        **  that feels like it should be avoided.
+        **  it is the only reference left and it cannot
+        **  be factored out until we potentially
+        **  revisit how MenBar and Menu are working.
+        **
+        */
         var layers = L.DNC.app.getLayerSelection();
 
         // Validate
@@ -32,10 +41,8 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
 
         /*
         **
-        **  TODO: not sure why we need a MenuBar > Menu relationship modeled here
-        **  but it would be nice to have the MenuBar fire these events
-        **  I'm wondering if we can refactor these classes to make this type of interaction
-        **  easier to model.
+        **  TODO: I'm wondering if we can refactor these classes
+        **  to make this type of interaction easier to model
         **
         */
         var eventExtras = { mapLayer: mapLayer, layerName: newLayer.name, isOverlay: true };
