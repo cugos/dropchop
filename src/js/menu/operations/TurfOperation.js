@@ -17,7 +17,7 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
         **  that feels like it should be avoided.
         **  it is the only reference left and it cannot
         **  be factored out until we potentially
-        **  revisit how MenBar and Menu are working.
+        **  revisit how MenBar, Menu and Operation work together
         **
         */
         var layers = L.DNC.app.getLayerSelection();
