@@ -1,5 +1,6 @@
 L.DNC = L.DNC || {};
 L.DNC.MenuBar = L.Class.extend({
+    includes: L.Mixin.Events,
 
     initialize: function ( options ) {
         L.setOptions(this, options);

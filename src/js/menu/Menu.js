@@ -13,6 +13,7 @@ L.DNC.Menu = L.DNC.MenuBar.extend({
     addChild: function( child ) {
         var dropdown = this.domElement.getElementsByClassName('menu-dropdown')[0];
         dropdown.appendChild( child.domElement );
+        child.parent = this;
         this.children.push( child );
         return this;
     },

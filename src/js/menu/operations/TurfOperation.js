@@ -1,5 +1,6 @@
 L.DNC.TurfOperation = L.DNC.Operation.extend({
 
+
     options: {
         // supportedFeatures : [],
         minFeatures : 1,
@@ -10,7 +11,7 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
     },
 
     execute: function () {
-        var layers = L.DNC.layerlist.selection.list;
+        var layers = L.DNC.app.getLayerSelection();
 
         // Validate
         this._validate(layers);
@@ -27,7 +28,18 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
         };
 
         var mapLayer = L.mapbox.featureLayer(newLayer.geometry);
-        L.DNC.layerlist.addLayerToList( mapLayer, newLayer.name, true );
+
+
+        /*
+        **
+        **  TODO: not sure why we need a MenuBar > Menu relationship modeled here
+        **  but it would be nice to have the MenuBar fire these events
+        **  I'm wondering if we can refactor these classes to make this type of interaction
+        **  easier to model.
+        **
+        */
+        var eventExtras = { mapLayer: mapLayer, layerName: newLayer.name, isOverlay: true };
+        this.parent.parentDomElement.fire('operation-result', eventExtras);
     },
 
     _validate: function ( layers ) {
