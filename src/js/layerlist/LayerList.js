@@ -76,7 +76,10 @@ L.DNC.LayerList = L.Control.extend({
         if (!this._map) {
             return this;
         }
-        L.DomUtil.remove(this._container);
+
+        this._container.parentElement.removeChild( this._container );
+        this._container = null;
+
         if (this.onRemove) {
             this.onRemove(this._map);
         }
