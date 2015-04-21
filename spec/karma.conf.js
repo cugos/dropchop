@@ -16,6 +16,7 @@ module.exports = function (config) {
     }
 
     var files = [
+        "spec/es5-shims.js",
         "spec/sinon.js",
         "spec/expect.js"
     ].concat(leafletSources, testData, libSources, [
