@@ -385,4 +385,86 @@ describe("L.DNC.LayerList > ", function () {
 
     });
 
+
+    describe("_addItem > ", function () {
+        /*
+        **  an example of the HTML hierarchy we testing
+            <li class="layer-element {{ layer-name }}">
+                <input class="layer-toggle" type="checkbox" data-id="{{ layer-id }}" />
+                <div class="layer-name" data-id="{{ layer-id }}">{{ layer-name }}</div>
+            </li>
+        **
+        */
+        var layerlist;
+        var layer;
+
+        beforeEach(function () {
+            layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' } );
+            layer = L.geoJson( window.testingData.polygon );
+            sinon.stub(L.DNC.LayerList.prototype, "_handleLayerChange", function(){});
+            sinon.stub(L.DNC.LayerList.prototype, "_handleLayerClick", function(){});
+        });
+
+        afterEach(function(){
+            L.DNC.LayerList.prototype._handleLayerChange.restore();
+            L.DNC.LayerList.prototype._handleLayerClick.restore();
+        });
+
+        it("LayerList._addItem creates correct /li/ element > ", function () {
+            layerlist._container = document.createElement("div");
+            layerlist._container.className = "test";
+            var obj = {
+                layer: layer,
+                name: "test",
+                overlay: true
+            };
+            layerlist._addItem( obj );
+
+            var listItem = layerlist._container.querySelectorAll(".layer-element");
+            expect( listItem.length).to.equal(1);
+            expect( listItem[0].className).to.equal( "layer-element test" );
+            expect( listItem[0].children.length).to.equal( 2 );
+        });
+
+        it("LayerList._addItem creates correct /input/ element > ", function () {
+            layerlist._container = document.createElement("div");
+            layerlist._container.className = "test";
+            var lookupId = L.stamp( layer );
+            var obj = {
+                layer: layer,
+                name: "test",
+                overlay: true
+            };
+            layerlist._addItem( obj );
+
+            var input = layerlist._container.querySelectorAll("input");
+            expect( input.length).to.equal(1);
+            expect( input[0].className).to.equal( "layer-toggle" );
+            expect( input[0].getAttribute( 'data-id' )).to.equal( ''+lookupId );
+            expect( input[0].getAttribute( 'checked' )).to.equal( ''+true );
+            expect( input[0].children.length).to.equal( 0 );
+        });
+
+        it("LayerList._addItem creates correct /div/ element > ", function () {
+            layerlist._container = document.createElement("div");
+            layerlist._container.className = "test";
+            var lookupId = L.stamp( layer );
+            var obj = {
+                layer: layer,
+                name: "test",
+                overlay: true
+            };
+            layerlist._addItem( obj );
+
+            var el = layerlist._container.querySelectorAll("div");
+            expect( el.length).to.equal(1);
+            expect( el[0].className).to.equal( "layer-name" );
+            expect( el[0].getAttribute( 'data-id' )).to.equal( ''+lookupId );
+            expect( el[0].textContent ).to.equal( "test" );
+            expect( el[0].children.length).to.equal( 0 );
+        });
+
+    });
+
+
 });
