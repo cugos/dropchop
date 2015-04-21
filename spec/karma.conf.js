@@ -5,6 +5,10 @@ module.exports = function (config) {
         'dist/js/L.DNC.js'
     ];
 
+    var testData = [
+        'spec/testing-data.js'
+    ];
+
     var leafletSources = require(__dirname+'/../node_modules/leaflet/build/build.js').getFiles();
 
     for (var i=0; i < leafletSources.length; i++) {
@@ -14,7 +18,7 @@ module.exports = function (config) {
     var files = [
         "spec/sinon.js",
         "spec/expect.js"
-    ].concat(leafletSources, libSources, [
+    ].concat(leafletSources, testData, libSources, [
         "node_modules/happen/happen.js",
         "spec/suites/SpecHelper.js",
         "spec/suites/**/*.js",

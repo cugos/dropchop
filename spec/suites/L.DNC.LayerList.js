@@ -187,4 +187,91 @@ describe("L.DNC.LayerList > ", function () {
 
     });
 
+    describe("addLayerToList > ", function () {
+        var layer;
+        var layerlist;
+        var mappySpy;
+        var geojsonSpy;
+        var updateSpy;
+
+        beforeEach(function () {
+            layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' } );
+            layer = L.geoJson( window.testingData.polygon );
+
+            // LayerList._update will be tested separately so mock it here
+            updateSpy = sinon.spy(L.DNC.LayerList.prototype, "_update");
+            // add a spy to know when branching on zoomToExtentonAdd runs
+            mappySpy = sinon.spy(map, "fitBounds");
+            // add a spy to know when L.GeoJSON.setZIndex is called in autoZIndex branching
+            geojsonSpy = sinon.spy(L.GeoJSON.prototype, "setZIndex");
+        });
+
+        afterEach(function(){
+            L.DNC.LayerList.prototype._update.restore();
+            mappySpy.restore();
+            geojsonSpy.restore();
+            updateSpy.restore();
+        });
+
+        it("LayerList.addLayerToList when options.autoZIndex is false > ", function () {
+            layerlist._map = map;
+            layerlist.options.autoZIndex = false;
+            layerlist.options.zoomToExtentOnAdd = true;
+            layerlist.addLayerToList( layer, "test", true );
+            var lookupId = L.stamp( layer );
+
+            // assertions
+            expect(layerlist._layers[lookupId]).to.eql({
+                layer: layer,
+                name: "test",
+                overlay: true
+            });
+            expect(layerlist._lastZIndex).to.equal(0);
+            expect(geojsonSpy.called).to.equal(false);
+            expect(updateSpy.called).to.equal(true);
+            expect(mappySpy.called).to.equal(true);
+
+        });
+
+        it("LayerList.addLayerToList when options.autoZIndex is true > ", function () {
+            layerlist._map = map;
+            layerlist.options.autoZIndex = true;
+            layerlist.options.zoomToExtentOnAdd = true;
+            layerlist.addLayerToList( layer, "test", true );
+            var lookupId = L.stamp( layer );
+
+            // assertions
+            expect(layerlist._layers[lookupId]).to.eql({
+                layer: layer,
+                name: "test",
+                overlay: true
+            });
+            expect(layerlist._lastZIndex).to.equal(1);
+            expect(geojsonSpy.called).to.equal(true);
+            expect(updateSpy.called).to.equal(true);
+            expect(mappySpy.called).to.equal(true);
+        });
+
+        it("LayerList.addLayerToList when options.zoomToExtentOnAdd is false > ", function () {
+            layerlist._map = map;
+            layerlist.options.autoZIndex = true;
+            layerlist.options.zoomToExtentOnAdd = false;
+            layerlist.addLayerToList( layer, "test", true );
+            var lookupId = L.stamp( layer );
+
+            // assertions
+            expect(layerlist._layers[lookupId]).to.eql({
+                layer: layer,
+                name: "test",
+                overlay: true
+            });
+            expect(layerlist._lastZIndex).to.equal(1);
+            expect(geojsonSpy.called).to.equal(true);
+            expect(updateSpy.called).to.equal(true);
+            expect(mappySpy.called).to.equal(false);
+        });
+
+
+    });
+
 });
