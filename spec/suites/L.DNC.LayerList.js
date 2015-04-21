@@ -274,4 +274,115 @@ describe("L.DNC.LayerList > ", function () {
 
     });
 
+    describe("removeLayerFromList > ", function () {
+        var layer;
+        var layerlist;
+
+        beforeEach(function () {
+            layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' } );
+            layer = L.geoJson( window.testingData.polygon );
+        });
+
+        afterEach(function(){
+        });
+
+        it("LayerList.removeLayerFromList removes the cached layer and returns LayerList instance > ", function () {
+            var lookupId = L.stamp( layer );
+            layerlist._layers[ lookupId ] = { foo: 'bar' };
+            var returnedInstance = layerlist.removeLayerFromList(layer);
+
+            // assertions
+            expect(returnedInstance instanceof L.DNC.LayerList).to.equal(true);
+            expect(typeof returnedInstance._layers[ lookupId ]).to.equal("undefined");
+        });
+
+    });
+
+    describe("_updated > ", function () {
+        var layer;
+        var layerlist;
+        var mockAddLayer;
+
+        beforeEach(function () {
+            layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' } );
+            layer = L.geoJson( window.testingData.polygon );
+
+            // LayerList._addItem will have it's own tests, so mock up here
+            sinon.stub(L.DNC.LayerList.prototype,"_addItem",function(){ return true; });
+            // to test if this._map.hasLayer branching works, mock these up
+            mockAddLayer = sinon.spy(map,'addLayer', function(){return true;});
+        });
+
+        afterEach(function(){
+            mockAddLayer.restore();
+            L.DNC.LayerList.prototype._addItem.restore();
+        });
+
+        it("LayerList._updated when this._container is falsy > ", function () {
+            layerlist._map = map;
+            var lookupId = L.stamp(layer);
+            layerlist._layers[ lookupId ] = {
+                layer: layer,
+                name: "test",
+                overlay: true
+            }
+            layerlist._container = null;
+            sinon.stub(map,'hasLayer', function(){ return true; });
+            var returnedInstance = layerlist._update();
+
+            // assertions
+            expect(returnedInstance instanceof L.DNC.LayerList).to.equal(true);
+            expect(mockAddLayer.called).to.equal(false);
+            map.hasLayer.restore();
+        });
+
+        it("LayerList._updated when this._container is truthy with no this._layers > ", function () {
+            layerlist._map = map;
+            layerlist._container = document.createElement('div');
+            sinon.stub(map,'hasLayer', function(){ return true; });
+            var returnedInstance = layerlist._update();
+
+            // assertions
+            expect(mockAddLayer.called).to.equal(false);
+            map.hasLayer.restore();
+        });
+
+        it("LayerList._updated when this._map already has that layer > ", function () {
+            layerlist._map = map;
+            var lookupId = L.stamp(layer);
+            layerlist._layers[ lookupId ] = {
+                layer: layer,
+                name: "test",
+                overlay: true
+            };
+            layerlist._container = document.createElement('div');
+            sinon.stub(map,'hasLayer', function(){ return true; });
+            var returnedInstance = layerlist._update();
+
+            // assertions
+            expect(returnedInstance instanceof L.DNC.LayerList).to.equal(true);
+            expect(mockAddLayer.called).to.equal(false);
+            map.hasLayer.restore();
+        });
+
+        it("LayerList._updated when this._map DOES NOT already have that layer > ", function () {
+            layerlist._map = map;
+            var lookupId = L.stamp(layer);
+            layerlist._layers[ lookupId ] = {
+                layer: layer,
+                name: "test",
+                overlay: true
+            };
+            layerlist._container = document.createElement('div');
+            sinon.stub(map,'hasLayer', function(){ return false; });
+            var returnedInstance = layerlist._update();
+
+            // assertions
+            expect(returnedInstance instanceof L.DNC.LayerList).to.equal(true);
+            expect(mockAddLayer.called).to.equal(true);
+            map.hasLayer.restore();
+        });
+
+    });
+
 });
