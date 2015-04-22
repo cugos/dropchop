@@ -550,4 +550,67 @@ describe("L.DNC.LayerList > ", function () {
 
     });
 
+    describe("_handleLayerClick > ", function () {
+        var layerlist;
+        var layer;
+        var mockSelectAdd;
+        var mockSelectRemove;
+
+        beforeEach(function () {
+            layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' } );
+            layer = L.geoJson( window.testingData.polygon );
+            mockSelectAdd = sinon.spy(layerlist.selection, "add");
+            mockSelectRemove = sinon.spy(layerlist.selection, "remove");
+        });
+
+        afterEach(function(){
+            mockSelectAdd.restore();
+            mockSelectRemove.restore();
+        });
+
+        it("LayerList._handleLayerClick if the target is NOT selected > ", function () {
+            layerlist._map = map;
+            layerlist._container = document.createElement("div");
+            layerlist._container.className = "test";
+            var lookupId = L.stamp( layer );
+            var obj = {
+                layer: layer,
+                name: "test",
+                overlay: true
+            };
+            layerlist._addItem( obj );
+            var el = layerlist._container.querySelectorAll(".layer-name")[0];
+            layerlist._handleLayerClick( obj, { currentTarget: el } );
+            var elPostEvent = layerlist._container.querySelectorAll(".layer-name")[0];
+
+            // assertions
+            expect(mockSelectAdd.called).to.equal(true);
+            expect(mockSelectRemove.called).to.equal(false);
+            expect(elPostEvent.className.indexOf("selected") !== -1).to.equal(true);
+        });
+
+        it("LayerList._handleLayerClick if the target is already selected > ", function () {
+            layerlist._map = map;
+            layerlist._container = document.createElement("div");
+            layerlist._container.className = "test";
+            var lookupId = L.stamp( layer );
+            var obj = {
+                layer: layer,
+                name: "test",
+                overlay: true
+            };
+            layerlist._addItem( obj );
+            var el = layerlist._container.querySelectorAll(".layer-name")[0];
+            el.className = el.className + "selected";
+            layerlist._handleLayerClick( obj, { currentTarget: el } );
+            var elPostEvent = layerlist._container.querySelectorAll(".layer-name")[0];
+
+            // assertions
+            expect(mockSelectAdd.called).to.equal(false);
+            expect(mockSelectRemove.called).to.equal(true);
+            expect(elPostEvent.className.indexOf("selected") === -1).to.equal(true);
+        });
+
+    });
+
 });
