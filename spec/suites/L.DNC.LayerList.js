@@ -466,5 +466,88 @@ describe("L.DNC.LayerList > ", function () {
 
     });
 
+    describe("_handleLayerChanged > ", function () {
+        var layerlist;
+        var layer;
+        var mockAddLayer;
+        var mockRemoveLayer;
+
+        beforeEach(function () {
+            layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' } );
+            layer = L.geoJson( window.testingData.polygon );
+            mockAddLayer = sinon.spy(map, "addLayer" );
+            mockRemoveLayer = sinon.spy(map, "removeLayer" );
+        });
+
+        afterEach(function(){
+            mockAddLayer.restore();
+            mockRemoveLayer.restore();
+        });
+
+        it("LayerList._handleLayerChanged if el.checked > ", function () {
+            layerlist._map = map;
+            layerlist._container = document.createElement("div");
+            layerlist._container.className = "test";
+            var lookupId = L.stamp( layer );
+            var obj = {
+                layer: layer,
+                name: "test",
+                overlay: true
+            };
+            layerlist._addItem( obj );
+            var el = layerlist._container.querySelectorAll("input")[0];
+            layerlist._handleLayerChange( obj, { target: el } );
+
+            // assertions
+            expect(layerlist._map.hasLayer( obj.layer )).to.equal(true);
+            expect(mockAddLayer.called).to.equal(true);
+            expect(mockRemoveLayer.called).to.equal(false);
+
+        });
+
+        it("LayerList._handleLayerChanged if not el.checked and this._map.hasLayer is false > ", function () {
+            layerlist._map = map;
+            layerlist._container = document.createElement("div");
+            layerlist._container.className = "test";
+            var lookupId = L.stamp( layer );
+            var obj = {
+                layer: layer,
+                name: "test",
+                overlay: true
+            };
+            layerlist._addItem( obj );
+            var el = layerlist._container.querySelectorAll("input")[0];
+            el.checked = false;
+            layerlist._handleLayerChange( obj, { target: el } );
+
+            // assertions
+            expect(layerlist._map.hasLayer( obj.layer )).to.equal(false); // because it was never there to begin with
+            expect(mockAddLayer.called).to.equal(false);
+            expect(mockRemoveLayer.called).to.equal(false);
+        });
+
+        it("LayerList._handleLayerChanged if not el.checked and this._map.hasLayer is true > ", function () {
+            layerlist._map = map;
+            layerlist._container = document.createElement("div");
+            layerlist._container.className = "test";
+            var lookupId = L.stamp( layer );
+            var obj = {
+                layer: layer,
+                name: "test",
+                overlay: true
+            };
+            layerlist._addItem( obj );
+            var el = layerlist._container.querySelectorAll("input")[0];
+            el.checked = false;
+            map.addLayer( obj.layer );
+            layerlist._handleLayerChange( obj, { target: el } );
+
+            // assertions
+            expect(layerlist._map.hasLayer( obj.layer )).to.equal(false); // because it was removed
+            expect(mockAddLayer.callCount).to.equal(2); // 1st when we called addLayer in this test on line#539
+            expect(mockRemoveLayer.called).to.equal(true);
+        });
+
+    });
 
 });
