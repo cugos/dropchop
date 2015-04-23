@@ -34,6 +34,7 @@ All of this work is made possible by [CUGOS](http://cugos.org), an open-source g
 2. **Clone the repository**. Once that has been installed successfully, you can clone the repository or your own fork and `cd` into the directory. `git clone git@github.com:YOUR-GITHUB-USERNAME/drop-n-chop.git` and `cd drop-n-chop`
 3. **Install dependencies** by running `npm install`
 4. **Build & serve** the application with `grunt`. This will create a watcher as well that will lint your JS in the `/src` directory. You can access the application at `localhost:8000`. _Note:_ If you'd like to build the minified version of the codebase (as is used in production), use `grunt prod`.
+5. **Deploy** the application to Github Pages via `grunt deploy`. The site should become available at https://YOUR-GITHUB-USERNAME.github.io/drop-n-chop.
 
 **NOTE:** Things are moving very quickly with DNC right now. We are still continuing to build out and refactor the architecture of the application. If you want to read more about our decision-making process take a look at some of our [meeting notes in the wiki](https://github.com/cugos/drop-n-chop/wiki/Meeting-Notes---04-11-2015).
 
