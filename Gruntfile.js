@@ -136,7 +136,6 @@ module.exports = function(grunt) {
   grunt.registerTask('serve:dev', ['connect:dev', 'focus:dev']);
   grunt.registerTask('serve:prod', ['connect:prod', 'focus:prod']);
   // Overall build targets... dev and prod.  Default to dev
-  grunt.registerTask('deploy', ['build:prod', 'gh-pages']);
   grunt.registerTask('dev', ['build:dev', 'serve:dev']);
   grunt.registerTask('prod', ['build:prod', 'serve:prod']);
   grunt.registerTask('deploy', ['build:prod', 'gh-pages']);
