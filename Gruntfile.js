@@ -139,6 +139,7 @@ module.exports = function(grunt) {
   grunt.registerTask('deploy', ['build:prod', 'gh-pages']);
   grunt.registerTask('dev', ['build:dev', 'serve:dev']);
   grunt.registerTask('prod', ['build:prod', 'serve:prod']);
+  grunt.registerTask('deploy', ['build:prod', 'gh-pages']);
   grunt.registerTask('default', ['dev']);
   // Example to run dev (and serve) on commandline:
   // $ grunt
