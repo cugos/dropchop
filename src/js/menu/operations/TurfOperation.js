@@ -1,5 +1,6 @@
 L.DNC.TurfOperation = L.DNC.Operation.extend({
 
+
     options: {
         // supportedFeatures : [],
         minFeatures : 1,
@@ -10,7 +11,16 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
     },
 
     execute: function () {
-        var layers = L.DNC.layerlist.selection.list;
+        /*
+        **
+        **  TODO: this is the type of referencing
+        **  that feels like it should be avoided.
+        **  it is the only reference left and it cannot
+        **  be factored out until we potentially
+        **  revisit how MenBar, Menu and Operation work together
+        **
+        */
+        var layers = L.DNC.app.getLayerSelection();
 
         // Validate
         this._validate(layers);
@@ -27,7 +37,16 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
         };
 
         var mapLayer = L.mapbox.featureLayer(newLayer.geometry);
-        L.DNC.layerlist.addLayerToList( mapLayer, newLayer.name, true );
+
+
+        /*
+        **
+        **  TODO: I'm wondering if we can refactor these classes
+        **  to make this type of interaction easier to model
+        **
+        */
+        var eventExtras = { mapLayer: mapLayer, layerName: newLayer.name, isOverlay: true };
+        this.parent.parentDomElement.fire('operation-result', eventExtras);
     },
 
     _validate: function ( layers ) {
