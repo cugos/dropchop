@@ -11,14 +11,8 @@ L.DNC.Notifications = L.Class.extend({
         // override defaults with passed options
         L.setOptions(this, options);
 
-        // listen for fileReader events
-        this._fileReader = fileReader;
-
         // create notification center & locations
         this.hub = document.getElementById('notifications');
-
-        // set all "handlers" as subscribers to events as they come through
-        this._registerEventHandlers();
 
     } ,
 
@@ -46,17 +40,6 @@ L.DNC.Notifications = L.Class.extend({
             _this.hub.removeChild( _this.hub.firstChild );
         }, params.time);
 
-    } ,
-
-    _registerEventHandlers: function () {
-        // NEW FILE: SUCCESSFULLY ADDED & PARSED
-        this._fileReader.on('fileparsed', function(e) {
-            L.DNC.notifications.add({
-                text: '<strong>' + e.fileInfo.name + '</strong> added successfully.',
-                type: 'success',
-                time: 2000
-            });
-        });
     }
 
 });
