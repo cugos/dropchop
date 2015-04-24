@@ -1,26 +1,25 @@
 L.DNC = L.DNC || {};
-L.DNC.Menu = L.Class.extend({ // This is a base class. It should never be initiated directly.
-
-    // defaults
-    options: {
-        parentId : 'menu-bar'
-    },
+L.DNC.Menu = L.DNC.MenuBar.extend({
 
     initialize: function ( title, options ) {
         L.setOptions(this, options);
-
         this.title = title;
-
-        this.domElement = this._buildMenu();
+        this.children = [];
+        this.domElement = this._buildDomElement();
         this._addEventHandlers();
     },
 
+    // Add object as child. Object must have domElement property.
+    addChild: function( child ) {
+        var dropdown = this.domElement.getElementsByClassName('menu-dropdown')[0];
+        dropdown.appendChild( child.domElement );
+        child.parent = this;
+        this.children.push( child );
+        return this;
+    },
+
+    // handlers for menu options
     _addEventHandlers : function () {
-        /*
-        **
-        **  handlers for menu options
-        **
-        */
         if (this.domElement) {
             this.domElement.addEventListener('click', menuClick, false);
         }
@@ -46,23 +45,14 @@ L.DNC.Menu = L.Class.extend({ // This is a base class. It should never be initia
         }
     },
 
-    // Create and attach dom elements
-    _buildMenu: function () {
+    // Create and return dom element (note: this does not attach dom element to any parent)
+    _buildDomElement: function () {
         var menu = document.createElement('div');
         menu.className = "menu";
         menu.innerHTML = '<button class="menu-button">' +
             this.title + '<i class="fa fa-angle-down"></i>' +
             '</button>' +
         '<div class="menu-dropdown menu-expand"></div>';
-
-        var domElement = document.getElementById(this.options.parentId).appendChild(menu);
-        return domElement;
-    },
-
-    // Add operation to menu
-    addOperation: function( operation ) {
-        var dropdown = this.domElement.getElementsByClassName('menu-dropdown')[0];
-        dropdown.appendChild( operation.domElement );
-        return this;
+        return menu;
     }
 });

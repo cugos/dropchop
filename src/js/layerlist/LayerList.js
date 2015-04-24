@@ -55,7 +55,7 @@ L.DNC.LayerList = L.Control.extend({
 
     _initLayout: function () {
         this._container = L.DomUtil.create('ul', "json-layer-list");
-        this._container.setAttribute( "id", "fileList" );
+        this._container.setAttribute( "id", "layer-list" );
         this.layerContainer.appendChild( this._container );
     },
 
@@ -76,7 +76,10 @@ L.DNC.LayerList = L.Control.extend({
         if (!this._map) {
             return this;
         }
-        L.DomUtil.remove(this._container);
+
+        this._container.parentElement.removeChild( this._container );
+        this._container = null;
+
         if (this.onRemove) {
             this.onRemove(this._map);
         }
@@ -137,55 +140,20 @@ L.DNC.LayerList = L.Control.extend({
         return this;
     },
 
-    /*
-    **
-    **  TODO: the input element's onchange callback
-    **  and the layerItem's onclick callback
-    **  should be split out as class-level
-    **  functions that know what layer was interacted with
-    *   based on the "data-id" attribute
-    **
-    */
+
     _addItem: function (obj) {
         var inputEl = document.createElement('input');
         inputEl.setAttribute('type', 'checkbox');
         inputEl.setAttribute('checked', 'true');
         inputEl.className = 'layer-toggle';
         inputEl.setAttribute( 'data-id', L.stamp(obj.layer) );
-        inputEl.onchange = function() {
-            // if the box is now checked, show the layer
-            if (inputEl.checked) {
-                this._map.addLayer(obj.layer);
-            } else {
-                if (this._map.hasLayer(obj.layer)) this._map.removeLayer(obj.layer);
-            }
-        }.bind( this );
+        inputEl.onchange = this._handleLayerChange.bind( this, obj );
 
         var layerItem = document.createElement('div');
         layerItem.className = 'layer-name';
         layerItem.innerHTML = obj.name;
         layerItem.setAttribute( 'data-id', L.stamp(obj.layer) );
-        layerItem.onclick = function(evt) {
-            // if the element is currently not selected, add the class
-            if (evt.currentTarget.className.indexOf('selected') == -1) {
-
-                // add the class
-                evt.currentTarget.className += ' selected';
-
-                // add to select list
-                this.selection.add({
-                    info: obj,
-                    layer: obj.layer
-                });
-            } else {
-
-                // remove selection
-                this.selection.remove(obj.layer);
-
-                // remove class name
-                evt.currentTarget.className = 'layer-name';
-            }
-        }.bind( this );
+        layerItem.onclick = this._handleLayerClick.bind( this, obj );
 
         var li = document.createElement('li');
         li.className = 'layer-element ' + obj.name;
@@ -195,6 +163,38 @@ L.DNC.LayerList = L.Control.extend({
         li.appendChild(layerItem);
         this._container.appendChild(li);
 
-    }
+    } ,
+
+    _handleLayerChange: function(obj, e){
+        var inputEl = e.target;
+        if (inputEl.checked) {
+            this._map.addLayer(obj.layer);
+        } else {
+            if (this._map.hasLayer(obj.layer)) this._map.removeLayer(obj.layer);
+        }
+    } ,
+
+    _handleLayerClick: function(obj,e) {
+
+        if (e.currentTarget.className.indexOf('selected') == -1) {
+
+            // add the class
+            e.currentTarget.className += ' selected';
+
+            // add to select list
+            this.selection.add({
+                info: obj,
+                layer: obj.layer
+            });
+        } else {
+
+            // remove selection
+            this.selection.remove(obj.layer);
+
+            // remove class name
+            e.currentTarget.className = 'layer-name';
+
+        }
+    } ,
 
 });

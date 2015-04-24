@@ -4,4 +4,4 @@ node_js:
 before_install:
   - gem install sass
 before_script:
-  - grunt build:basic
+  - grunt build:prod
