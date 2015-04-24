@@ -32,6 +32,8 @@ L.DNC.AppController = L.Class.extend({
                 }))
             );
 
+        this.notification = new L.DNC.Notifications();
+
         this._addEventHandlers();
 
     } ,
@@ -45,6 +47,12 @@ L.DNC.AppController = L.Class.extend({
         var mapLayer = L.mapbox.featureLayer(e.file);
         this.layerlist.addLayerToList( mapLayer, e.fileInfo.name, true );
         this.mapView.numLayers++;
+
+        this.notification.add({
+            text: '<strong>' + e.fileInfo.name + '</strong> added successfully.',
+            type: 'success',
+            time: 2500
+        });
     } ,
 
     _handleTurfResults: function( e ) {

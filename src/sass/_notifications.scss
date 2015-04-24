@@ -1,0 +1,37 @@
+#notifications {
+  position:absolute;
+  top:10px;
+  right:10px;
+
+  .notification {
+    padding:.5em 1em;
+    font-size:.7em;
+    text-transform:uppercase;
+    letter-spacing: .1em;
+    margin-bottom:.5em;
+    background:$blue;
+    color: $white;
+    width:300px;
+
+    &:before {
+      font-family:"FontAwesome";
+      margin-right:.5em;
+      content:"\f05a";
+    }
+
+    &.alert {
+      background:$alert;
+      &:before {
+        content:"\f06a";
+      }
+    }
+
+    &.success {
+      background:$success;
+      &:before {
+        content:"\f00c";
+      }
+    }
+
+  }
+}
