@@ -180,7 +180,6 @@ describe("L.DNC.LayerList > ", function () {
             layerlist._map = map;
             layerlist._initLayout();
             layerlist.remove();
-            console.log( "[ MAP ]: ", layerlist._map );
             expect(layerlist._map).to.equal(null);
             expect(layerlist._container).to.equal(null);
         });

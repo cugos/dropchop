@@ -9,9 +9,16 @@ describe("L.DNC.DropZone.FileReader > ", function () {
     describe("initialization > ", function () {
         var fakeOptions = { 'foo': 'bar', 'baz': 'biz' };
         var fileReader = null;
+        var _console = {};
 
         beforeEach(function () {
+            _console.debug = console.debug;
+            console.debug = function(){};
             fileReader = new L.DNC.DropZone.FileReader( map, fakeOptions );
+        });
+
+        afterEach(function(){
+            console.debug = _console.debug;
         });
 
         it("fileReader instance is activated correctly > ", function () {
