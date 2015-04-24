@@ -9,18 +9,18 @@
     text-transform:uppercase;
     letter-spacing: .1em;
     margin-bottom:.5em;
-    background:$white;
-    color:$black;
+    background:$blue;
+    color: $white;
     width:300px;
 
     &:before {
       font-family:"FontAwesome";
       margin-right:.5em;
+      content:"\f05a";
     }
 
     &.alert {
       background:$alert;
-      color:$white;
       &:before {
         content:"\f06a";
       }
@@ -28,7 +28,6 @@
 
     &.success {
       background:$success;
-      color:$white;
       &:before {
         content:"\f00c";
       }

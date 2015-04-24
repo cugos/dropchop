@@ -51,7 +51,7 @@ L.DNC.AppController = L.Class.extend({
         this.notification.add({
             text: '<strong>' + e.fileInfo.name + '</strong> added successfully.',
             type: 'success',
-            time: 2000
+            time: 2500
         });
     } ,
 
