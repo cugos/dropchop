@@ -309,7 +309,7 @@ describe("L.DNC.LayerList > ", function () {
             // LayerList._addItem will have it's own tests, so mock up here
             sinon.stub(L.DNC.LayerList.prototype,"_addItem",function(){ return true; });
             // to test if this._map.hasLayer branching works, mock these up
-            mockAddLayer = sinon.spy(map,'addLayer', function(){return true;});
+            mockAddLayer = sinon.spy(map,'addLayer');
         });
 
         afterEach(function(){
