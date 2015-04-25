@@ -95,7 +95,7 @@ L.DNC.AppController = L.Class.extend({
 
         this.notification.add({
             text: '<strong>' + e.fileInfo.name + '</strong> added successfully.',
-            type: '',
+            type: 'success',
             time: 2500
         });
     } ,
@@ -596,6 +596,11 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
             name: this.title + '_' + name + '.geojson'
         };
 
+        // if the new object is a feature collection and only has one layer,
+        // remove it and just keep it as a feature
+        if ( newLayer.geometry.type == "FeatureCollection" &&
+             newLayer.geometry.features.length == 1 ) newLayer.geometry = this._unCollect( newLayer.geometry );
+
         var mapLayer = L.mapbox.featureLayer(newLayer.geometry);
 
 
@@ -608,6 +613,17 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
         var eventExtras = { mapLayer: mapLayer, layerName: newLayer.name, isOverlay: true };
         this.parent.parentDomElement.fire('operation-result', eventExtras);
     },
+
+    /*
+    **  
+    **  Used to standardize features if they exist as feature collections,
+    **  which tend to break during certain Turf functions.
+    **  Issue: drop-n-chop/issues/5
+    **
+    */
+    _unCollect: function( feature ) {
+        return feature.features[0];
+    } ,
 
     _validate: function ( layers ) {
         var length = layers.length;
