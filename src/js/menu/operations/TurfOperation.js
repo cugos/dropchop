@@ -56,15 +56,11 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
 
     /*
     **  
-    **  Used to standardize features if they exist as feature collections,
-    **  which tend to break during certain Turf functions.
-    **  Issue: drop-n-chop/issues/5
+    **  VALIDATE LAYERS
+    **  Checks if the proper number of layers are in the current selection to
+    **  allow Turf operations to run
     **
     */
-    _unCollect: function( feature ) {
-        return feature.features[0];
-    } ,
-
     _validate: function ( layers ) {
         var length = layers.length;
         if (!length) {
@@ -80,6 +76,13 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
         }
     },
 
+    /*
+    **  
+    **  PREPARE DATA
+    **  Prepares the selected data to be run through Turf operations
+    **  and builds the new layer name
+    **
+    */
     _prepareArgs: function ( layers ) {
         // Get layer objects
         if (this.options.maxFeatures) {
@@ -104,6 +107,17 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
         }
 
         return [layer_objs, layer_names_str];
+    } , 
+
+    /*
+    **  
+    **  Used to standardize features if they exist as feature collections,
+    **  which tend to break during certain Turf functions.
+    **  Issue: drop-n-chop/issues/5
+    **
+    */
+    _unCollect: function( feature ) {
+        return feature.features[0];
     }
 
 });
