@@ -51,7 +51,7 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
         **
         */
         var eventExtras = { mapLayer: mapLayer, layerName: newLayer.name, isOverlay: true };
-        this.parent.parentDomElement.fire('operation-result', eventExtras);
+        this.parent.parent.fire('operation-result', eventExtras);
     },
 
     /*

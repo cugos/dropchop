@@ -10,12 +10,9 @@ L.DNC.Menu = L.DNC.MenuBar.extend({
     },
 
     // Add object as child. Object must have domElement property.
-    addChild: function( child ) {
-        var dropdown = this.domElement.getElementsByClassName('menu-dropdown')[0];
-        dropdown.appendChild( child.domElement );
-        child.parent = this;
-        this.children.push( child );
-        return this;
+    addChild: function( child, target ) {
+        target = target || this.domElement.getElementsByClassName('menu-dropdown')[0];
+        return this.constructor.__super__.addChild.call(this, child, target);
     },
 
     // handlers for menu options
