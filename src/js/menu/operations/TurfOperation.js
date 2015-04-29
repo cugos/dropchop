@@ -36,6 +36,11 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
             name: this.title + '_' + name + '.geojson'
         };
 
+        // if the new object is a feature collection and only has one layer,
+        // remove it and just keep it as a feature
+        if ( newLayer.geometry.type == "FeatureCollection" &&
+             newLayer.geometry.features.length == 1 ) newLayer.geometry = this._unCollect( newLayer.geometry );
+
         var mapLayer = L.mapbox.featureLayer(newLayer.geometry);
 
 
@@ -46,9 +51,16 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
         **
         */
         var eventExtras = { mapLayer: mapLayer, layerName: newLayer.name, isOverlay: true };
-        this.parent.parentDomElement.fire('operation-result', eventExtras);
+        this.parent.parent.fire('operation-result', eventExtras);
     },
 
+    /*
+    **  
+    **  VALIDATE LAYERS
+    **  Checks if the proper number of layers are in the current selection to
+    **  allow Turf operations to run
+    **
+    */
     _validate: function ( layers ) {
         var length = layers.length;
         if (!length) {
@@ -64,6 +76,13 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
         }
     },
 
+    /*
+    **  
+    **  PREPARE DATA
+    **  Prepares the selected data to be run through Turf operations
+    **  and builds the new layer name
+    **
+    */
     _prepareArgs: function ( layers ) {
         // Get layer objects
         if (this.options.maxFeatures) {
@@ -88,6 +107,17 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
         }
 
         return [layer_objs, layer_names_str];
+    } , 
+
+    /*
+    **  
+    **  Used to standardize features if they exist as feature collections,
+    **  which tend to break during certain Turf functions.
+    **  Issue: drop-n-chop/issues/5
+    **
+    */
+    _unCollect: function( feature ) {
+        return feature.features[0];
     }
 
 });
