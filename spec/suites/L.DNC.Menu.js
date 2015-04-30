@@ -1,4 +1,4 @@
-describe("L.DNC.Menu >", function () {
+describe("L.DNC.Menu", function () {
     var menu = null;
     var title = "Test Menu";
     var fakeOptions = { foo: 'bar' };
@@ -20,24 +20,24 @@ describe("L.DNC.Menu >", function () {
         menu = new L.DNC.Menu( title, fakeOptions );
     });
 
-    describe("initialize options >", function () {
+    describe("initialize options", function () {
 
-        it("is activated correctly >", function () {
+        it("is activated correctly", function () {
             expect( menu instanceof L.DNC.Menu ).to.equal( true );
         });
 
-        it("options correctly set >", function () {
+        it("options correctly set", function () {
             expect( menu.options ).to.eql( fakeOptions );
         });
 
-        it("has title set >", function () {
+        it("has title set", function () {
             expect( menu.title ).to.equal( title );
         });
     });
 
-    describe("dom element >", function () {
+    describe("dom element", function () {
 
-        it("can build dom element >", function () {
+        it("can build dom element", function () {
             expect( menu._buildDomElement ).to.be.ok;
 
             var generated_el = menu._buildDomElement();
@@ -45,16 +45,16 @@ describe("L.DNC.Menu >", function () {
             expect( generated_el.outerHTML ).to.eql( expected_html );
         });
 
-        it("has dom element >", function () {
+        it("has dom element", function () {
             expect( menu.domElement ).to.be.ok;
             expect( menu.domElement instanceof HTMLElement ).to.equal( true );
             expect( menu.domElement.outerHTML ).to.equal( expected_html );
         });
     });
 
-    describe("public methods >", function (){
+    describe("public methods", function (){
 
-        it("has addTo >", function () {
+        it("has addTo", function () {
             expect( menu.addTo ).to.be.ok;
 
             var parent = document.createElement( 'div' );
@@ -63,7 +63,7 @@ describe("L.DNC.Menu >", function () {
             expect( parent.outerHTML ).to.equal( '<div>' + expected_html + '</div>' );
         });
 
-        it("has addChild >", function () {
+        it("has addChild", function () {
             expect( menu.addChild ).to.be.ok;
 
             var child = document.createElement( 'div' );
@@ -76,28 +76,28 @@ describe("L.DNC.Menu >", function () {
 
     });
 
-    describe("menu dropdown >", function (){
+    describe("menu dropdown", function (){
         var dropdown;
         beforeEach(function () {
             dropdown = menu.domElement.getElementsByClassName('menu-dropdown')[0];
         });
 
-        it("is unexpanded at start >", function () {
+        it("is unexpanded at start", function () {
             expect(dropdown.classList.contains('expanded')).to.be.false;
         });
 
-        it("expands upon click >", function () {
+        it("expands upon click", function () {
             menu.domElement.click();
             expect(dropdown.classList.contains('expanded')).to.be.true;
         });
 
-        it("unexpanded upon double click >", function () {
+        it("unexpanded upon double click", function () {
             menu.domElement.click();
             menu.domElement.click();
             expect(dropdown.classList.contains('expanded')).to.be.false;
         });
 
-        it("unexpands one menu when other menu is clicked >", function () {
+        it("unexpands one menu when other menu is clicked", function () {
             // Setup
             var menu2 = new L.DNC.Menu( "Second Menu" );
             var dropdown2 = menu2.domElement.getElementsByClassName('menu-dropdown')[0];
@@ -113,12 +113,12 @@ describe("L.DNC.Menu >", function () {
             expect(dropdown.classList.contains('expanded')).to.be.false;
         });
 
-        // it("is not visible when not expanded >", function () {
+        // it("is not visible when not expanded", function () {
         //     // TODO: Expect that dropdown is not visible
         //     // isVisible(dropdown)
         // });
 
-        // it("is visible when expanded >", function () {
+        // it("is visible when expanded", function () {
         //     menu.domElement.click();
         //     // TODO: Expect that dropdown is visible
         // });

@@ -1,4 +1,4 @@
-describe("L.DNC.DropZone.FileReader > ", function () {
+describe("L.DNC.DropZone.FileReader", function () {
     var map;
 
 
@@ -6,7 +6,7 @@ describe("L.DNC.DropZone.FileReader > ", function () {
         map = new L.Map(document.createElement('div')).setView([0, 0], 15);
     });
 
-    describe("initialization > ", function () {
+    describe("initialization", function () {
         var fakeOptions = { 'foo': 'bar', 'baz': 'biz' };
         var fileReader = null;
         var _console = {};
@@ -21,21 +21,21 @@ describe("L.DNC.DropZone.FileReader > ", function () {
             console.debug = _console.debug;
         });
 
-        it("fileReader instance is activated correctly > ", function () {
+        it("fileReader instance is activated correctly", function () {
             expect(fileReader instanceof L.DNC.DropZone.FileReader).to.equal(true);
         });
 
-        it("fileReader instance has passed options > ", function () {
+        it("fileReader instance has passed options", function () {
             expect(fileReader.options).to.eql(fakeOptions);
         });
 
-        it("fileReader has ref to same mapping ref > ", function () {
+        it("fileReader has ref to same mapping ref", function () {
             expect(fileReader._map).to.eql(map);
         });
 
     });
 
-    describe("enabled fires > ", function () {
+    describe("enabled fires", function () {
         var fileReader = null;
         filereader_enabled_dispatched = false;
         map_filereader_enabled_dispatched = false;
@@ -55,24 +55,24 @@ describe("L.DNC.DropZone.FileReader > ", function () {
 
         });
 
-        it("fileReader instance throws enabled > ", function () {
+        it("fileReader instance throws enabled", function () {
             expect(filereader_enabled_dispatched).to.equal(true);
         });
 
-        it("map instance throws enabled > ", function () {
+        it("map instance throws enabled", function () {
             expect(map_filereader_enabled_dispatched).to.equal(true);
         });
 
     });
 
-    describe("enable DOES NOT fire > ", function () {
+    describe("enable DOES NOT fire", function () {
         // TODO: mock these with sinon spies
         it("enable will not fire if already enabled",function(){
            expect(true).to.equal(true);
         });
     });
 
-    describe("disabled fires > ", function () {
+    describe("disabled fires", function () {
         var fileReader = null;
         filereader_disabled_dispatched = false;
         map_filereader_disabled_dispatched = false;
@@ -94,24 +94,24 @@ describe("L.DNC.DropZone.FileReader > ", function () {
 
         });
 
-        it("fileReader instance throws disabled > ", function () {
+        it("fileReader instance throws disabled", function () {
             expect(filereader_disabled_dispatched).to.equal(true);
         });
 
-        it("map instance throws disabled > ", function () {
+        it("map instance throws disabled", function () {
             expect(map_filereader_disabled_dispatched).to.equal(true);
         });
 
     });
 
-    describe("disabled DOES NOT fire > ", function () {
+    describe("disabled DOES NOT fire", function () {
         // TODO: mock these with sinon spies
         it("disable will not fire if already disabled",function(){
             expect(true).to.equal(true);
         });
     });
 
-    describe("addHooks not called without map ref > ", function () {
+    describe("addHooks not called without map ref", function () {
         var fileReader = null;
         var mockDomEvent = null;
 
@@ -131,13 +131,13 @@ describe("L.DNC.DropZone.FileReader > ", function () {
         });
 
 
-        it("L.DomEvent.on never called > ", function () {
+        it("L.DomEvent.on never called", function () {
             expect(mockDomEvent.verify()).to.equal(true);
         });
 
     });
 
-    describe("addHooks called > ", function () {
+    describe("addHooks called", function () {
         var fileReader = null;
         var mockDomEvent = null;
 
@@ -156,13 +156,13 @@ describe("L.DNC.DropZone.FileReader > ", function () {
         });
 
 
-        it("L.DomEvent.on called > ", function () {
+        it("L.DomEvent.on called", function () {
             expect(mockDomEvent.verify()).to.equal(true);
         });
 
     });
 
-    describe("removeHooks not called without map ref > ", function () {
+    describe("removeHooks not called without map ref", function () {
         var fileReader = null;
         var mockDomEvent = null;
 
@@ -182,13 +182,13 @@ describe("L.DNC.DropZone.FileReader > ", function () {
         });
 
 
-        it("L.DomEvent.off never called > ", function () {
+        it("L.DomEvent.off never called", function () {
             expect(mockDomEvent.verify()).to.equal(true);
         });
 
     });
 
-    describe("removeHooks called > ", function () {
+    describe("removeHooks called", function () {
         var fileReader = null;
         var mockDomEvent = null;
 
@@ -207,7 +207,7 @@ describe("L.DNC.DropZone.FileReader > ", function () {
         });
 
 
-        it("L.DomEvent.off called > ", function () {
+        it("L.DomEvent.off called", function () {
             expect(mockDomEvent.verify()).to.equal(true);
         });
 
