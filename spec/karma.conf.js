@@ -7,14 +7,21 @@ module.exports = function (config) {
         basePath: '../',
 
         // frameworks to use
-        frameworks: ['mocha', 'chai', 'sinon'],
+        frameworks: [
+            'mocha',
+            'chai',
+            'sinon',
+            'browserify'
+        ],
+
+        preprocessors: {
+            "node_modules/mapbox.js/src/index.js": [ 'browserify' ]
+        },
 
         // list of files / patterns to load in the browser
         files: [
-            "node_modules/leaflet/dist/leaflet.js",
-
+            "node_modules/mapbox.js/src/index.js",
             "dist/js/L.DNC.js",
-
             "spec/**/*.js",
         ],
         exclude: [],
