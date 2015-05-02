@@ -10,7 +10,30 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
         additionalArgs: null // Kludge to handle no dialog for input
     },
 
-    execute: function () {
+    /*
+    **
+    ** RENDER INPUT TEMPLATE
+    **
+    */
+    renderInput: function () {
+        console.log(this); // operation
+        console.log(Mustache); // mustache object
+
+        var templateHTML = document.getElementById(this.options.template).innerHTML;
+        var template = Mustache.render(templateHTML, {name: "BUFFER"});
+        console.log(template);
+        var div = document.createElement('div');
+        div.className = 'input-outer';
+        div.innerHTML = template;
+        document.body.appendChild(div);
+    },
+
+    /*
+    **
+    ** EXECUTE OPERATIONS FROM INPUT
+    **
+    */
+    _execute: function () {
         /*
         **
         **  TODO: this is the type of referencing
@@ -53,6 +76,7 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
         var eventExtras = { mapLayer: mapLayer, layerName: newLayer.name, isOverlay: true };
         this.parent.parent.fire('operation-result', eventExtras);
     },
+
 
     /*
     **  
