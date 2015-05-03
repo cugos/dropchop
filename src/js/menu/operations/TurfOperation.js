@@ -44,8 +44,18 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
 
         var div = document.createElement('div');
         div.className = 'form-outer';
+        div.id = 'DNC-FORM';
         div.innerHTML = html;
         document.body.appendChild(div);
+
+        this._formHandlers();
+    },
+
+    _formHandlers: function() {
+        var closers = document.getElementsByClassName('form-close');
+        for ( var x = 0; x < closers.length; x++ ) {
+            closers[x].addEventListener('click', this.closeForm.bind(this));
+        }
     },
 
     _inputTypeDefault: function ( p ) {
@@ -65,6 +75,11 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
 
     validateForm: function ( form ) {
         // validation stuff here
+    },
+
+    closeForm: function ( event ) {
+        var child = document.getElementById('DNC-FORM');
+        child.parentElement.removeChild(child);
     },
 
     // _removeInput: function() {
