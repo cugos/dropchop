@@ -12,86 +12,10 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
 
     /*
     **
-    ** RENDER INPUT TEMPLATE
-    **
-    */
-    renderForm: function () {
-        console.log(this.options.description);
-        var html =  '<div class="form-inner"><div class="form">'+
-                    '<button type="button" class="btn close form-close"><i class="fa fa-times"></i></button>'+
-                    '<div class="form-information"><h3 class="form-title">'+this.title+'</h3>'+
-                    '<p class="form-description">'+this.options.description+'</p></div>'+
-                    '<form class="form-inputs">';
-
-        for ( var i = 0; i < this.options.parameters.length; i++ ) {
-            var parameter = this.options.parameters[i];
-            
-            var input = '<div class="parameter"><label class="parameter-name">' + parameter.name + '</label>';
-            
-            if ( parameter.type == 'select') {
-                input += this._inputTypeSelect( parameter );
-            } else {
-                input += this._inputTypeDefault( parameter );
-            }
-
-            if (parameter.description) input += '<p class="parameter-description">' + parameter.description + '</p>';
-            html += input + '</div>';
-        }
-
-        // submit button 
-        html += '<button type="button" class="btn form-submit">Execute<i class="fa fa-thumbs-o-up push-left"></i></button>';
-        html += '</div></div>';
-
-        var div = document.createElement('div');
-        div.className = 'form-outer';
-        div.id = 'DNC-FORM';
-        div.innerHTML = html;
-        document.body.appendChild(div);
-
-        this._formHandlers();
-    },
-
-    _formHandlers: function() {
-        var closers = document.getElementsByClassName('form-close');
-        for ( var x = 0; x < closers.length; x++ ) {
-            closers[x].addEventListener('click', this.closeForm.bind(this));
-        }
-    },
-
-    _inputTypeDefault: function ( p ) {
-        var field = '<input name="' + p.name + '" type="' + p.type + '">';
-        return field;
-    },
-
-    _inputTypeSelect: function( p ) {
-        var select = '<select name="' + p.name + '">';
-        for ( var o = 0; o < p.options.length; o++ ) {
-            select += '<option value="' + p.options[o] + '"';
-            if ( p.options[o] == p.selected ) select += ' selected';
-            select += '>' + p.options[o] + '</option>';
-        }
-        return select + '</select>';
-    },
-
-    validateForm: function ( form ) {
-        // validation stuff here
-    },
-
-    closeForm: function ( event ) {
-        var child = document.getElementById('DNC-FORM');
-        child.parentElement.removeChild(child);
-    },
-
-    // _removeInput: function() {
-
-    // }
-
-    /*
-    **
     ** EXECUTE OPERATIONS FROM INPUT
     **
     */
-    _execute: function () {
+    execute: function () {
         /*
         **
         **  TODO: this is the type of referencing
