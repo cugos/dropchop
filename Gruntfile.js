@@ -38,8 +38,8 @@ module.exports = function(grunt) {
         tasks: ['processhtml:prod'],
       },
       htmltemplates: {
-        files: ['src/templates/**/*.html'],
-        tasks: ['templates:dev']
+        files: ['src/templates/*.html'],
+        tasks: ['htmlbuild']
       },
       stylesheets: {
         files: ['src/sass/**/*.scss'],

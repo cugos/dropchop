@@ -1,4 +1,32 @@
 /* globals */
-a {
-  text-decoration:none;
+
+/* font-family */
+$ff: 'Open Sans', sans-serif;
+
+.btn {
+  font-size: .7em;
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  padding: 1em 2em;
+  border: none;
+  cursor:pointer;
+  &.close {
+    padding:.2em .2em .3em .35em;
+    font-size:1em;
+    background:$white;
+    color:$red;
+  }
+}
+
+.fa {
+  &.push-right {
+    margin-right:.5em;
+  }
+  &.push-left {
+    margin-left:.5em;
+  }
+}
+
+.pull-right {
+  float:right;
 }
