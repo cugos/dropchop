@@ -103,6 +103,19 @@ module.exports = function(grunt) {
             }
         }
     },
+    htmlbuild: {
+        dist: {
+            src: 'src/index.html',
+            dest: 'dist/index.html',
+            options: {
+                beautify: true,
+                relative: true,
+                sections: {
+                    templates: 'src/templates/**/*.html',
+                },
+            }
+        }
+    },
     'gh-pages': {
       options: {
         base: 'dist'
@@ -122,6 +135,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-gh-pages');
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-processhtml');
+  grunt.loadNpmTasks('grunt-html-build');
   grunt.loadNpmTasks('grunt-focus');
 
   // Tasks.
@@ -130,9 +144,11 @@ module.exports = function(grunt) {
   // JS
   grunt.registerTask('js:dev', ['jshint', 'concat', 'uglify', 'test']);
   grunt.registerTask('js:prod', ['concat', 'uglify']);
-  //CSS
+  // CSS
   grunt.registerTask('css:dev', ['sass']);
   grunt.registerTask('css:prod', ['sass']);
+  // HTML Mustache Templates
+  grunt.registerTask('mustachio', ['htmlbuild'])
   // Build wrappers
   grunt.registerTask('build:dev', ['js:dev', 'css:dev', 'processhtml:dev']);
   grunt.registerTask('build:prod', ['js:prod', 'css:prod', 'processhtml:prod']);
