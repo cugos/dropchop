@@ -49,15 +49,17 @@ L.DNC.AppController = L.Class.extend({
             );
 
         this.notification = new L.DNC.Notifications();
-
+        this.forms = new L.DNC.Forms();
         this._addEventHandlers();
 
-    } ,
+    },
 
     _addEventHandlers: function(){
-        this.dropzone.fileReader.on( "fileparsed", this._handleParsedFile.bind( this ) );
-        this.menuBar.on( "operation-result", this._handleTurfResults.bind(this) );
-    } ,
+        this.dropzone.fileReader.on( 'fileparsed', this._handleParsedFile.bind( this ) );
+        this.menuBar.on( 'operation-result', this._handleTurfResults.bind(this) );
+
+        this.menuBar.on( 'operation-click', this._handleOperationClick.bind(this) );
+    },
 
     _handleParsedFile: function( e ) {
         var mapLayer = L.mapbox.featureLayer(e.file);
@@ -69,11 +71,15 @@ L.DNC.AppController = L.Class.extend({
             type: 'success',
             time: 2500
         });
-    } ,
+    },
 
     _handleTurfResults: function( e ) {
         this.layerlist.addLayerToList(e.mapLayer, e.layerName, e.isOverlay );
-    } ,
+    },
+
+    _handleOperationClick: function ( e ) {
+        this.forms.render( e );
+    },
 
     getLayerSelection: function(){
         return this.layerlist.selection.list || [];
