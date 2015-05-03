@@ -130,8 +130,8 @@ module.exports = function(grunt) {
   grunt.registerTask('css:dev', ['sass']);
   grunt.registerTask('css:prod', ['sass']);
   // Build wrappers
-  grunt.registerTask('build:dev', ['js:dev', 'css:dev', 'processhtml:dev', 'templates:dev']);
-  grunt.registerTask('build:prod', ['js:prod', 'css:prod', 'processhtml:prod', 'templates:prod']);
+  grunt.registerTask('build:dev', ['js:dev', 'css:dev', 'processhtml:dev']);
+  grunt.registerTask('build:prod', ['js:prod', 'css:prod', 'processhtml:prod']);
   // Serve locally on :8000
   grunt.registerTask('serve:dev', ['connect:dev', 'focus:dev']);
   grunt.registerTask('serve:prod', ['connect:prod', 'focus:prod']);
