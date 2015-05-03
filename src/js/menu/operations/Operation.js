@@ -3,7 +3,7 @@ L.DNC.Operation = L.DNC.Menu.extend({
 
     _addEventHandlers : function () {
         this.domElement.addEventListener('click', function(){
-            this.renderInput.call( this );
+            this.renderForm.call( this );
         }.bind(this));
     },
 
