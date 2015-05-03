@@ -20,7 +20,7 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
         console.log(Mustache); // mustache object
 
         var templateHTML = document.getElementById(this.options.template).innerHTML;
-        var template = Mustache.render(templateHTML, {name: "BUFFER"});
+        var template = Mustache.render(templateHTML, this.options);
         console.log(template);
         var div = document.createElement('div');
         div.className = 'input-outer';

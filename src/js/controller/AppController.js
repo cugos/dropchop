@@ -21,12 +21,14 @@ L.DNC.AppController = L.Class.extend({
                 .addChild(new L.DNC.TurfOperation('buffer', {
                     maxFeatures: 1,
                     additionalArgs: 0.1,
-                    template: 'template-turf-buffer'
+                    template: 'template-turf-buffer',
+                    description: 'Calculates a buffer for input features for a given radius. Units supported are miles, kilometers, and degrees.'
                 }))
                 .addChild(new L.DNC.TurfOperation('union', {
                     minFeatures: 2,
                     maxFeatures: 2,
-                    template: 'template-turf-union'
+                    template: 'template-turf-union',
+                    description: 'Takes two polygons and returns a combined polygon. If the input polygons are not contiguous, this function returns a MultiPolygon feature.'
                 }))
                 .addChild(new L.DNC.TurfOperation('erase', {
                     minFeatures: 2,
