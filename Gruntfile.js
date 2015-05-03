@@ -37,6 +37,10 @@ module.exports = function(grunt) {
         files: ['src/index.html'],
         tasks: ['processhtml:prod'],
       },
+      htmltemplates: {
+        files: ['src/templates/**/*.html'],
+        tasks: ['templates:dev']
+      },
       stylesheets: {
         files: ['src/sass/**/*.scss'],
         tasks: ['sass'],
@@ -148,10 +152,11 @@ module.exports = function(grunt) {
   grunt.registerTask('css:dev', ['sass']);
   grunt.registerTask('css:prod', ['sass']);
   // HTML Mustache Templates
-  grunt.registerTask('mustachio', ['htmlbuild'])
+  grunt.registerTask('templates:dev', ['htmlbuild'])
+  grunt.registerTask('templates:prod', ['htmlbuild'])
   // Build wrappers
-  grunt.registerTask('build:dev', ['js:dev', 'css:dev', 'processhtml:dev']);
-  grunt.registerTask('build:prod', ['js:prod', 'css:prod', 'processhtml:prod']);
+  grunt.registerTask('build:dev', ['js:dev', 'css:dev', 'processhtml:dev', 'templates:dev']);
+  grunt.registerTask('build:prod', ['js:prod', 'css:prod', 'processhtml:prod', 'templates:prod']);
   // Serve locally on :8000
   grunt.registerTask('serve:dev', ['connect:dev', 'focus:dev']);
   grunt.registerTask('serve:prod', ['connect:prod', 'focus:prod']);
