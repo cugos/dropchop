@@ -1,44 +1,29 @@
-// Karma configuration
 module.exports = function (config) {
-
-    var libSources = [
-        'dist/js/L.DNC.js'
-    ];
-
-    var testData = [
-        'spec/testing-data.js'
-    ];
-
-    var leafletSources = require(__dirname+'/../node_modules/leaflet/build/build.js').getFiles();
-
-    for (var i=0; i < leafletSources.length; i++) {
-        leafletSources[i] = __dirname+"/../node_modules/leaflet/" + leafletSources[i];
-    }
-
-    var files = [
-        "spec/es5-shims.js",
-        "spec/sinon.js",
-        "spec/expect.js"
-    ].concat(leafletSources, testData, libSources, [
-        "node_modules/happen/happen.js",
-        "spec/suites/SpecHelper.js",
-        "spec/suites/**/*.js",
-    ]);
+    'use strict';
 
     config.set({
+
         // base path, that will be used to resolve files and exclude
         basePath: '../',
 
-        plugins: [
-            'karma-mocha',
-            'karma-phantomjs-launcher',
-            'karma-chrome-launcher'],
-
         // frameworks to use
-        frameworks: ['mocha'],
+        frameworks: [
+            'mocha',
+            'chai',
+            'sinon',
+            'browserify'
+        ],
+
+        preprocessors: {
+            "node_modules/mapbox.js/src/index.js": [ 'browserify' ]
+        },
 
         // list of files / patterns to load in the browser
-        files: files,
+        files: [
+            "node_modules/mapbox.js/src/index.js",
+            "dist/js/L.DNC.js",
+            "spec/**/*.js",
+        ],
         exclude: [],
 
         // test results reporter to use

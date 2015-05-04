@@ -49,6 +49,10 @@ module.exports = function(grunt) {
         files: ['src/js/*.js', 'src/js/**/*.js'],
         tasks: ['js:prod'],
       },
+      tests: {
+        files: ['spec/**/*.js'],
+        tasks: ['karma'],
+      },
       options: {
         livereload: true // Prevent auto-reload of browser by setting to false
       },
@@ -67,10 +71,10 @@ module.exports = function(grunt) {
     },
     focus: {
       dev: {
-        include: ['htmldev', 'stylesheets', 'jsdev']
+        include: ['htmldev', 'stylesheets', 'jsdev', 'tests']
       },
       prod: {
-        include: ['htmlprod', 'stylesheets', 'jsprod']
+        include: ['htmlprod', 'stylesheets', 'jsprod', 'tests']
       },
     },
     concat: {

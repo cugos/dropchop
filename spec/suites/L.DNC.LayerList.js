@@ -1,4 +1,4 @@
-describe("L.DNC.LayerList > ", function () {
+describe("L.DNC.LayerList", function () {
     var map;
 
     beforeEach(function () {
@@ -13,7 +13,7 @@ describe("L.DNC.LayerList > ", function () {
     });
 
 
-    describe("initialize > ", function () {
+    describe("initialize", function () {
         var layerlist;
 
         beforeEach(function () {
@@ -24,7 +24,7 @@ describe("L.DNC.LayerList > ", function () {
 
         });
 
-        it("LayerList.initialize options and members setup correctly > ", function () {
+        it("LayerList.initialize options and members setup correctly", function () {
             // options
             expect(layerlist.options.layerContainerId).to.equal('dropzone');
             expect(layerlist.options.autoZIndex).to.equal(true);
@@ -37,13 +37,13 @@ describe("L.DNC.LayerList > ", function () {
             expect(layerlist.layerContainer.getAttribute('id')).to.equal('dropzone');
         });
 
-        it("LayerList intialized correctly > ", function () {
+        it("LayerList intialized correctly", function () {
             expect(layerlist instanceof L.DNC.LayerList).to.equal(true);
         });
 
     });
 
-    describe("_initLayout > ", function () {
+    describe("_initLayout", function () {
         var layerlist;
 
         beforeEach(function () {
@@ -54,7 +54,7 @@ describe("L.DNC.LayerList > ", function () {
 
         });
 
-        it("LayerList._initLayout creates expected DOM elements > ", function () {
+        it("LayerList._initLayout creates expected DOM elements", function () {
             layerlist._initLayout();
             expect(layerlist._container.getAttribute('class')).to.equal('json-layer-list');
             expect(layerlist._container.getAttribute('id')).to.equal('layer-list');
@@ -64,7 +64,7 @@ describe("L.DNC.LayerList > ", function () {
 
     });
 
-    describe("onAdd > ", function () {
+    describe("onAdd", function () {
         var layerlist;
 
         beforeEach(function () {
@@ -75,7 +75,7 @@ describe("L.DNC.LayerList > ", function () {
 
         });
 
-        it("LayerList.onAdd returns the expected DOM elements > ", function () {
+        it("LayerList.onAdd returns the expected DOM elements", function () {
             var container = layerlist.onAdd();
             expect(container.getAttribute('class')).to.equal('json-layer-list');
             expect(container.getAttribute('id')).to.equal('layer-list');
@@ -83,7 +83,7 @@ describe("L.DNC.LayerList > ", function () {
 
     });
 
-    describe("onAdd > ", function () {
+    describe("onAdd", function () {
         var layerlist;
         var layerListSpy;
 
@@ -96,7 +96,7 @@ describe("L.DNC.LayerList > ", function () {
             layerListSpy.restore();
         });
 
-        it("LayerList.onAdd returns the expected DOM elements > ", function () {
+        it("LayerList.onAdd returns the expected DOM elements", function () {
             var container = layerlist.onAdd();
             expect(container.getAttribute('class')).to.equal('json-layer-list');
             expect(container.getAttribute('id')).to.equal('layer-list');
@@ -108,7 +108,7 @@ describe("L.DNC.LayerList > ", function () {
         **  and so this._addItem should never be called
         **
         */
-        it("LayerList.onAdd with empty this._layers should not call this._addItem > ", function () {
+        it("LayerList.onAdd with empty this._layers should not call this._addItem", function () {
             var container = layerlist.onAdd();
             expect(layerListSpy.called).to.equal(false);
         });
@@ -116,7 +116,7 @@ describe("L.DNC.LayerList > ", function () {
     });
 
 
-    describe("addTo > ", function () {
+    describe("addTo", function () {
         var layerlist;
         var fakeContainerEl = L.DomUtil.create('ul', "json-layer-list");
 
@@ -138,7 +138,7 @@ describe("L.DNC.LayerList > ", function () {
             L.DNC.LayerList.prototype.remove.restore();
         });
 
-        it("LayerList.addTo returns correct instance of layerList > ", function () {
+        it("LayerList.addTo returns correct instance of layerList", function () {
             var layerListInstance = layerlist.addTo(map);
             expect(layerListInstance instanceof L.DNC.LayerList).to.equal(true);
             expect(layerListInstance._map).to.eql(map);
@@ -147,7 +147,7 @@ describe("L.DNC.LayerList > ", function () {
 
     });
 
-    describe("remove > ", function () {
+    describe("remove", function () {
         var layerlist;
         var mockOnRemove;
 
@@ -164,30 +164,29 @@ describe("L.DNC.LayerList > ", function () {
             mockOnRemove.restore();
         });
 
-        it("LayerList.remove returns instance on empty this._map ref > ", function () {
+        it("LayerList.remove returns instance on empty this._map ref", function () {
             var layerListInstance = layerlist.remove();
             expect(layerListInstance).to.eql(layerlist);
         });
 
-        it("LayerList.remove calls this.onRemove lifecycle hook if it exists > ", function () {
+        it("LayerList.remove calls this.onRemove lifecycle hook if it exists", function () {
             layerlist._map = map;
             layerlist._initLayout();
             layerlist.remove();
             expect(mockOnRemove.called).to.equal(true);
         });
 
-        it("LayerList.remove returns instance with deleted this._map ref and empty container DOMC > ", function () {
+        it("LayerList.remove returns instance with deleted this._map ref and empty container DOMC", function () {
             layerlist._map = map;
             layerlist._initLayout();
             layerlist.remove();
-            console.log( "[ MAP ]: ", layerlist._map );
             expect(layerlist._map).to.equal(null);
             expect(layerlist._container).to.equal(null);
         });
 
     });
 
-    describe("addLayerToList > ", function () {
+    describe("addLayerToList", function () {
         var layer;
         var layerlist;
         var mappySpy;
@@ -213,7 +212,7 @@ describe("L.DNC.LayerList > ", function () {
             updateSpy.restore();
         });
 
-        it("LayerList.addLayerToList when options.autoZIndex is false > ", function () {
+        it("LayerList.addLayerToList when options.autoZIndex is false", function () {
             layerlist._map = map;
             layerlist.options.autoZIndex = false;
             layerlist.options.zoomToExtentOnAdd = true;
@@ -233,7 +232,7 @@ describe("L.DNC.LayerList > ", function () {
 
         });
 
-        it("LayerList.addLayerToList when options.autoZIndex is true > ", function () {
+        it("LayerList.addLayerToList when options.autoZIndex is true", function () {
             layerlist._map = map;
             layerlist.options.autoZIndex = true;
             layerlist.options.zoomToExtentOnAdd = true;
@@ -252,7 +251,7 @@ describe("L.DNC.LayerList > ", function () {
             expect(mappySpy.called).to.equal(true);
         });
 
-        it("LayerList.addLayerToList when options.zoomToExtentOnAdd is false > ", function () {
+        it("LayerList.addLayerToList when options.zoomToExtentOnAdd is false", function () {
             layerlist._map = map;
             layerlist.options.autoZIndex = true;
             layerlist.options.zoomToExtentOnAdd = false;
@@ -274,7 +273,7 @@ describe("L.DNC.LayerList > ", function () {
 
     });
 
-    describe("removeLayerFromList > ", function () {
+    describe("removeLayerFromList", function () {
         var layer;
         var layerlist;
 
@@ -286,7 +285,7 @@ describe("L.DNC.LayerList > ", function () {
         afterEach(function(){
         });
 
-        it("LayerList.removeLayerFromList removes the cached layer and returns LayerList instance > ", function () {
+        it("LayerList.removeLayerFromList removes the cached layer and returns LayerList instance", function () {
             var lookupId = L.stamp( layer );
             layerlist._layers[ lookupId ] = { foo: 'bar' };
             var returnedInstance = layerlist.removeLayerFromList(layer);
@@ -298,7 +297,7 @@ describe("L.DNC.LayerList > ", function () {
 
     });
 
-    describe("_updated > ", function () {
+    describe("_updated", function () {
         var layer;
         var layerlist;
         var mockAddLayer;
@@ -310,7 +309,7 @@ describe("L.DNC.LayerList > ", function () {
             // LayerList._addItem will have it's own tests, so mock up here
             sinon.stub(L.DNC.LayerList.prototype,"_addItem",function(){ return true; });
             // to test if this._map.hasLayer branching works, mock these up
-            mockAddLayer = sinon.spy(map,'addLayer', function(){return true;});
+            mockAddLayer = sinon.spy(map,'addLayer');
         });
 
         afterEach(function(){
@@ -318,7 +317,7 @@ describe("L.DNC.LayerList > ", function () {
             L.DNC.LayerList.prototype._addItem.restore();
         });
 
-        it("LayerList._updated when this._container is falsy > ", function () {
+        it("LayerList._updated when this._container is falsy", function () {
             layerlist._map = map;
             var lookupId = L.stamp(layer);
             layerlist._layers[ lookupId ] = {
@@ -336,7 +335,7 @@ describe("L.DNC.LayerList > ", function () {
             map.hasLayer.restore();
         });
 
-        it("LayerList._updated when this._container is truthy with no this._layers > ", function () {
+        it("LayerList._updated when this._container is truthy with no this._layers", function () {
             layerlist._map = map;
             layerlist._container = document.createElement('div');
             sinon.stub(map,'hasLayer', function(){ return true; });
@@ -347,7 +346,7 @@ describe("L.DNC.LayerList > ", function () {
             map.hasLayer.restore();
         });
 
-        it("LayerList._updated when this._map already has that layer > ", function () {
+        it("LayerList._updated when this._map already has that layer", function () {
             layerlist._map = map;
             var lookupId = L.stamp(layer);
             layerlist._layers[ lookupId ] = {
@@ -365,7 +364,7 @@ describe("L.DNC.LayerList > ", function () {
             map.hasLayer.restore();
         });
 
-        it("LayerList._updated when this._map DOES NOT already have that layer > ", function () {
+        it("LayerList._updated when this._map DOES NOT already have that layer", function () {
             layerlist._map = map;
             var lookupId = L.stamp(layer);
             layerlist._layers[ lookupId ] = {
@@ -386,7 +385,7 @@ describe("L.DNC.LayerList > ", function () {
     });
 
 
-    describe("_addItem > ", function () {
+    describe("_addItem", function () {
         /*
         **  an example of the HTML hierarchy we testing
             <li class="layer-element {{ layer-name }}">
@@ -410,7 +409,7 @@ describe("L.DNC.LayerList > ", function () {
             L.DNC.LayerList.prototype._handleLayerClick.restore();
         });
 
-        it("LayerList._addItem creates correct /li/ element > ", function () {
+        it("LayerList._addItem creates correct /li/ element", function () {
             layerlist._container = document.createElement("div");
             layerlist._container.className = "test";
             var obj = {
@@ -426,7 +425,7 @@ describe("L.DNC.LayerList > ", function () {
             expect( listItem[0].children.length).to.equal( 2 );
         });
 
-        it("LayerList._addItem creates correct /input/ element > ", function () {
+        it("LayerList._addItem creates correct /input/ element", function () {
             layerlist._container = document.createElement("div");
             layerlist._container.className = "test";
             var lookupId = L.stamp( layer );
@@ -445,7 +444,7 @@ describe("L.DNC.LayerList > ", function () {
             expect( input[0].children.length).to.equal( 0 );
         });
 
-        it("LayerList._addItem creates correct /div/ element > ", function () {
+        it("LayerList._addItem creates correct /div/ element", function () {
             layerlist._container = document.createElement("div");
             layerlist._container.className = "test";
             var lookupId = L.stamp( layer );
@@ -466,7 +465,7 @@ describe("L.DNC.LayerList > ", function () {
 
     });
 
-    describe("_handleLayerChanged > ", function () {
+    describe("_handleLayerChanged", function () {
         var layerlist;
         var layer;
         var mockAddLayer;
@@ -484,7 +483,7 @@ describe("L.DNC.LayerList > ", function () {
             mockRemoveLayer.restore();
         });
 
-        it("LayerList._handleLayerChanged if el.checked > ", function () {
+        it("LayerList._handleLayerChanged if el.checked", function () {
             layerlist._map = map;
             layerlist._container = document.createElement("div");
             layerlist._container.className = "test";
@@ -505,7 +504,7 @@ describe("L.DNC.LayerList > ", function () {
 
         });
 
-        it("LayerList._handleLayerChanged if not el.checked and this._map.hasLayer is false > ", function () {
+        it("LayerList._handleLayerChanged if not el.checked and this._map.hasLayer is false", function () {
             layerlist._map = map;
             layerlist._container = document.createElement("div");
             layerlist._container.className = "test";
@@ -526,7 +525,7 @@ describe("L.DNC.LayerList > ", function () {
             expect(mockRemoveLayer.called).to.equal(false);
         });
 
-        it("LayerList._handleLayerChanged if not el.checked and this._map.hasLayer is true > ", function () {
+        it("LayerList._handleLayerChanged if not el.checked and this._map.hasLayer is true", function () {
             layerlist._map = map;
             layerlist._container = document.createElement("div");
             layerlist._container.className = "test";
@@ -550,7 +549,7 @@ describe("L.DNC.LayerList > ", function () {
 
     });
 
-    describe("_handleLayerClick > ", function () {
+    describe("_handleLayerClick", function () {
         var layerlist;
         var layer;
         var mockSelectAdd;
@@ -568,7 +567,7 @@ describe("L.DNC.LayerList > ", function () {
             mockSelectRemove.restore();
         });
 
-        it("LayerList._handleLayerClick if the target is NOT selected > ", function () {
+        it("LayerList._handleLayerClick if the target is NOT selected", function () {
             layerlist._map = map;
             layerlist._container = document.createElement("div");
             layerlist._container.className = "test";
@@ -589,7 +588,7 @@ describe("L.DNC.LayerList > ", function () {
             expect(elPostEvent.className.indexOf("selected") !== -1).to.equal(true);
         });
 
-        it("LayerList._handleLayerClick if the target is already selected > ", function () {
+        it("LayerList._handleLayerClick if the target is already selected", function () {
             layerlist._map = map;
             layerlist._container = document.createElement("div");
             layerlist._container.className = "test";
