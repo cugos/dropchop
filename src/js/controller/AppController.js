@@ -26,14 +26,15 @@ L.DNC.AppController = L.Class.extend({
                         {
                             name: 'distance',
                             description: 'Distance to draw the buffer.',
-                            type: 'number'
+                            type: 'number',
+                            default: 10
                         },
                         {
                             name: 'unit',
                             type: 'select',
                             description: '',
                             options: ['miles', 'feet', 'kilometers', 'meters', 'degrees'],
-                            selected: 'miles'
+                            default: 'miles'
                         }
                     ]
                 }))
@@ -57,8 +58,14 @@ L.DNC.AppController = L.Class.extend({
     _addEventHandlers: function(){
         this.dropzone.fileReader.on( 'fileparsed', this._handleParsedFile.bind( this ) );
         this.menuBar.on( 'operation-result', this._handleTurfResults.bind(this) );
-
         this.menuBar.on( 'operation-click', this._handleOperationClick.bind(this) );
+        this.forms.on( 'submit', this._handleFormSubmit.bind(this) );
+    },
+
+    _handleFormSubmit: function( e ) {
+        for ( var c = 0; c < e.parent.children.length; c++ ) {
+            if ( e.parent.children[c].title == e.title ) e.parent.children[c].execute( { additionalArgs: e.paramArray } );
+        }
     },
 
     _handleParsedFile: function( e ) {
