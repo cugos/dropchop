@@ -4,6 +4,8 @@
 
 **You drop. We chop.**
 
+![Drop n' Chop Logo](assets/drop-n-chop-logo.png)
+
 Drop 'n Chop (DNC) is a browser-based GIS powered by [Leaflet.js](http://leafletjs.com) and [Turf.js](http://turfjs.org). DNC is currently a proof of concept and explores three hypothesis:
 
 ### 1. GIS can be data-first, not operation-first.

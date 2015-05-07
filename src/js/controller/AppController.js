@@ -81,6 +81,7 @@ L.DNC.AppController = L.Class.extend({
     },
 
     _handleTurfResults: function( e ) {
+        console.log(e);
         this.layerlist.addLayerToList(e.mapLayer, e.layerName, e.isOverlay );
     },
 
