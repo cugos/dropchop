@@ -10,7 +10,15 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
         additionalArgs: null // Kludge to handle no dialog for input
     },
 
-    execute: function () {
+    /*
+    **
+    ** EXECUTE OPERATIONS FROM INPUT
+    **
+    */
+    execute: function ( params ) {
+
+        L.setOptions(this, params);
+
         /*
         **
         **  TODO: this is the type of referencing
@@ -54,6 +62,7 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
         this.parent.parent.fire('operation-result', eventExtras);
     },
 
+
     /*
     **  
     **  VALIDATE LAYERS
@@ -90,7 +99,7 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
         }
         var layer_objs = layers.map(function(obj) { return obj.layer._geojson; });
         if (this.options.additionalArgs) {
-            layer_objs.push(this.options.additionalArgs);
+            for ( var arg = 0; arg < this.options.additionalArgs.length; arg++ ) layer_objs.push(this.options.additionalArgs[arg]);
         }
 
         // Get layer names

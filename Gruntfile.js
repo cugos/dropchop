@@ -130,7 +130,7 @@ module.exports = function(grunt) {
   // JS
   grunt.registerTask('js:dev', ['jshint', 'concat', 'uglify', 'test']);
   grunt.registerTask('js:prod', ['concat', 'uglify']);
-  //CSS
+  // CSS
   grunt.registerTask('css:dev', ['sass']);
   grunt.registerTask('css:prod', ['sass']);
   // Build wrappers
