@@ -24,10 +24,24 @@ L.DNC.MapView = L.Class.extend({
 
     _setupMap : function () {
 
-        L.mapbox.accessToken = 'pk.eyJ1IjoibHl6aWRpYW1vbmQiLCJhIjoicVFlRGd0SSJ9.raSJU76jSGHUvxkub6JKSg';
-        this._map = L.mapbox.map('map', 'mapbox.streets', {
+        L.mapbox.accessToken = 'pk.eyJ1Ijoic3ZtYXR0aGV3cyIsImEiOiJVMUlUR0xrIn0.NweS_AttjswtN5wRuWCSNA';
+        this._map = L.mapbox.map('map', null, {
             zoomControl: false
         }).setView([0,0], 3);
+
+        var baseLayers = {
+            "Mapbox Streets": L.mapbox.tileLayer('mapbox.streets'),
+            "Mapbox Outdoors": L.mapbox.tileLayer('mapbox.outdoors'),
+            "Mapbox Light": L.mapbox.tileLayer('mapbox.light'),
+            "Mapbox Dark": L.mapbox.tileLayer('mapbox.dark'),
+            "Mapbox Satellite": L.mapbox.tileLayer('mapbox.satellite')
+        };
+
+        baseLayers['Mapbox Streets'].addTo(this._map);
+        L.control.layers(baseLayers, {}, {
+            position: 'bottomright',
+            collapsed: false
+        }).addTo(this._map);
 
     }
 
