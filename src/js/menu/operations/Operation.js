@@ -10,9 +10,10 @@ L.DNC.Operation = L.DNC.Menu.extend({
 
     // Create and return dom element (note: this does not attach dom element to any parent)
     _buildDomElement: function () {
+        console.log(this);
         var div = document.createElement('div');
         div.innerHTML += '<button class="menu-button menu-button-action" id="' +
-            this.title + '">' + this.title + '</button>';
+            this.title + '" alt="' + this.options.description + '">' + this.title + '</button>';
         return div.children[0];
     },
 

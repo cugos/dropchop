@@ -35,9 +35,7 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
 
         // Prep
         var prepared_args = this._prepareArgs(layers);
-        console.log(prepared_args);
         var objects = prepared_args[0];
-        console.log(objects);
         var name = prepared_args[1];
 
         // Call func

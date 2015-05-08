@@ -63,6 +63,7 @@ L.DNC.AppController = L.Class.extend({
     },
 
     _handleFormSubmit: function( e ) {
+        console.log(e);
         for ( var c = 0; c < e.parent.children.length; c++ ) {
             if ( e.parent.children[c].title == e.title ) e.parent.children[c].execute( { additionalArgs: e.paramArray } );
         }
@@ -81,7 +82,6 @@ L.DNC.AppController = L.Class.extend({
     },
 
     _handleTurfResults: function( e ) {
-        console.log(e);
         this.layerlist.addLayerToList(e.mapLayer, e.layerName, e.isOverlay );
     },
 
