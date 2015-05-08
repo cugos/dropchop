@@ -24,8 +24,8 @@ L.DNC.MapView = L.Class.extend({
 
     _setupMap : function () {
 
-        L.mapbox.accessToken = 'pk.eyJ1Ijoic3ZtYXR0aGV3cyIsImEiOiJVMUlUR0xrIn0.NweS_AttjswtN5wRuWCSNA';
-        this._map = L.mapbox.map('map', 'examples.map-zr0njcqy', {
+        L.mapbox.accessToken = 'pk.eyJ1IjoibHl6aWRpYW1vbmQiLCJhIjoicVFlRGd0SSJ9.raSJU76jSGHUvxkub6JKSg';
+        this._map = L.mapbox.map('map', 'mapbox.streets', {
             zoomControl: false
         }).setView([0,0], 3);
 
