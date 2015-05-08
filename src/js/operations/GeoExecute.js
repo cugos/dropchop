@@ -1,23 +1,18 @@
-L.DNC.TurfOperation = L.DNC.Operation.extend({
+L.DNC = L.DNC || {};
+L.DNC.GeoExecute = L.Class.extend({
+    includes: L.Mixin.Events,
 
-
-    options: {
-        // supportedFeatures : [],
-        minFeatures : 1,
-        maxFeatures : 0,
-        orderImport : false,
-        // iterable : true
-        additionalArgs: null // Kludge to handle no dialog for input
-    },
+    options: {},
 
     /*
     **
     ** EXECUTE OPERATIONS FROM INPUT
     **
     */
-    execute: function ( params ) {
+    execute: function ( action, parameters, options ) {
 
-        L.setOptions(this, params);
+        L.setOptions(this, options);
+        this.action = action;
 
         /*
         **
@@ -27,21 +22,34 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
         **  be factored out until we potentially
         **  revisit how MenBar, Menu and Operation work together
         **
+        **  Update 05/07/2015: We can likely turn the selection
+        **  object into it's own L.Class if we like. This way we
+        **  can reference it in AppController.js when passing
+        **  info around.
+        **
         */
         var layers = L.DNC.app.getLayerSelection();
 
-        // Validate
-        this._validate(layers);
+        /*
+        **
+        **  TODO: I think validation should happen before the
+        **  submit form is rendered on the DOM. If we plan to 
+        **  only show available operations then we'll have to
+        **  do it there anyways.
+        **
+        **/
+        // this._validate(layers);
 
         // Prep
-        var prepared_args = this._prepareArgs(layers);
-        var objects = prepared_args[0];
-        var name = prepared_args[1];
+        var params = this._prepareParameters( layers, options, parameters );
+        var name = this._prepareName( layers );
+
+        console.log(params, name);
 
         // Call func
         var newLayer = {
-            geometry: turf[this.title].apply(null, objects),
-            name: this.title + '_' + name + '.geojson'
+            geometry: turf[this.action].apply(null, params),
+            name: this.action + '_' + name + '.geojson'
         };
 
         // if the new object is a feature collection and only has one layer,
@@ -59,7 +67,7 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
         **
         */
         var eventExtras = { mapLayer: mapLayer, layerName: newLayer.name, isOverlay: true };
-        this.parent.parent.fire('operation-result', eventExtras);
+        this.fire('created', eventExtras);
     },
 
 
@@ -92,16 +100,22 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
     **  and builds the new layer name
     **
     */
-    _prepareArgs: function ( layers ) {
-        // Get layer objects
+    _prepareParameters: function ( layers, options, params ) {
         if (this.options.maxFeatures) {
             layers = layers.slice(0, this.options.maxFeatures);
         }
         var layer_objs = layers.map(function(obj) { return obj.layer._geojson; });
-        if (this.options.additionalArgs) {
-            for ( var arg = 0; arg < this.options.additionalArgs.length; arg++ ) layer_objs.push(this.options.additionalArgs[arg]);
-        }
+        console.log(layer_objs, params);
 
+        if ( params ) {
+            for ( var l = 0; l < params.length; l++ ) {
+                layer_objs.push(params[l]);
+            }
+        }
+        return layer_objs;
+    },
+
+    _prepareName: function ( layers ) {
         // Get layer names
         var layer_names = layers.map(function(obj) { return obj.info.name; });
         var layer_names_str = '';
@@ -114,9 +128,8 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
                 return a.split('.')[0] + '_' + b.split('.')[0];
             });
         }
-
-        return [layer_objs, layer_names_str];
-    } , 
+        return layer_names_str;
+    },
 
     /*
     **  
@@ -128,5 +141,4 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
     _unCollect: function( feature ) {
         return feature.features[0];
     }
-
 });

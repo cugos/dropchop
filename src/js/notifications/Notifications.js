@@ -11,6 +11,9 @@ L.DNC.Notifications = L.Class.extend({
         // override defaults with passed options
         L.setOptions(this, options);
 
+        // create DOM element
+        this.domElement = this._buildDomElement();
+
         // create notification center & locations
         this.hub = document.getElementById('notifications');
 
@@ -40,6 +43,13 @@ L.DNC.Notifications = L.Class.extend({
             _this.hub.removeChild( _this.hub.firstChild );
         }, params.time);
 
+    },
+
+    _buildDomElement: function() {
+        var el = document.createElement('div');
+        el.id = 'notifications';
+        document.body.appendChild(el);
+        return el;
     }
 
 });
