@@ -22,9 +22,9 @@ By using HTML5 FileReaders and some special JavaScript for processing file types
 
 ### 3. GIS is open.
 
-Too often do we hear of people moving from proprietary software to open source software only because they "can't afford it any longer" or "their student license ran out." You shouldn't have to be able to afford giant, bulky software to do simple things with **your** data. DNC is a project made by folks who have mumbled the above more times than ~~Arc~~ a GIS crashing in the middle of a project.
+More often than not, people move from proprietary software to open source software because they "can't afford it any longer" or "their student license ran out." You shouldn't have to be able to afford giant, bulky software to do simple things with **your** data. DNC is a project made by folks who have mumbled the above more times than ~~Arc~~ a GIS crashing in the middle of a project. Here's to [our contributors](https://github.com/cugos/drop-n-chop/graphs/contributors)!
 
-![buffer union sf east!](assets/dropnchop_union.gif)
+![buffer union sf east!](assets/dnc-buffer-input.gif)
 
 # Who?
 
