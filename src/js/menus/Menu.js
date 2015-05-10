@@ -6,8 +6,7 @@ L.DNC.Menu = L.Class.extend({
         L.setOptions(this, options);
         this.title = title;
         this.parent = parent;
-        this.children = [];
-        this._buildMenuItems(this.options.items);
+        this.children = this._buildMenuItems(this.options.items);
         this.domElement = this._buildDomElement(this.children);
         this._addEventHandlers();
     },
@@ -58,13 +57,15 @@ L.DNC.Menu = L.Class.extend({
     },
 
     _buildMenuItems: function ( items ) {
+        var tempArray = [];
         for ( var i = 0; i < items.length; i++ ) {
             var menuItem = document.createElement('button');
             menuItem.className = 'menu-button menu-button-action';
             menuItem.id = items[i];
             menuItem.innerHTML = items[i];
-            this.children.push(menuItem);
+            tempArray.push(menuItem);
         }
+        return tempArray;
     },
 
     // Create, add, and return dom element
