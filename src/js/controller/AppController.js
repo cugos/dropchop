@@ -21,7 +21,7 @@ L.DNC.AppController = L.Class.extend({
         // new menu
         this.menu = {
             geo: new L.DNC.Menu('Geoprocessing', this.menubar, { 
-                items: ['buffer', 'union', 'erase', 'intersect'] 
+                items: ['buffer', 'union'] 
             })
         };
 
