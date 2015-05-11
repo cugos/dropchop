@@ -6,7 +6,7 @@ L.DNC.AppController = L.Class.extend({
     // default options
     options: {},
 
-
+    // L.Class.extend automatically executes 'initialize'
     initialize : function( options ) {
 
         // override defaults with passed options
@@ -15,33 +15,43 @@ L.DNC.AppController = L.Class.extend({
         this.mapView = new L.DNC.MapView();
         this.dropzone = new L.DNC.DropZone( this.mapView._map, {} );
         this.layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' } ).addTo( this.mapView._map );
-        this.menuBar = new L.DNC.MenuBar()
-            .addTo( document.getElementById('menu-bar') )
-            .addChild( new L.DNC.Menu( "Geoprocessing Tools", {} )
-                .addChild(new L.DNC.TurfOperation('buffer', {
-                    maxFeatures: 1,
-                    additionalArgs: 0.1
-                }))
-                .addChild(new L.DNC.TurfOperation('union', {
-                    minFeatures: 2,
-                    maxFeatures: 2
-                }))
-                .addChild(new L.DNC.TurfOperation('erase', {
-                    minFeatures: 2,
-                    maxFeatures: 2
-                }))
-            );
+        
+        this.menubar = new L.DNC.MenuBar( { id: 'menu-bar' } );
+
+        // new menu
+        this.menu = {
+            geo: new L.DNC.Menu('Geoprocessing', this.menubar, { 
+                items: ['buffer', 'union'] 
+            })
+        };
+
+        this.ops = {
+            geo: new L.DNC.Geo(),
+            geox: new L.DNC.GeoExecute()
+        };
+
+        this.forms = new L.DNC.Forms();
 
         this.notification = new L.DNC.Notifications();
-
         this._addEventHandlers();
 
-    } ,
+    },
 
     _addEventHandlers: function(){
-        this.dropzone.fileReader.on( "fileparsed", this._handleParsedFile.bind( this ) );
-        this.menuBar.on( "operation-result", this._handleTurfResults.bind(this) );
-    } ,
+        this.dropzone.fileReader.on( 'fileparsed', this._handleParsedFile.bind( this ) );
+        this.forms.on( 'submit', this._handleFormSubmit.bind(this) );
+        this.menu.geo.on( 'click', this._handleGeoClick.bind(this) );
+        this.ops.geox.on( 'created', this._handleGeoResult.bind(this) );
+    },
+
+    _handleGeoClick: function( e ) {
+        var info = this.ops.geo[e.action];
+        this.forms.render( e.action, info );
+    },
+
+    _handleFormSubmit: function( e ) {
+        this.ops.geox.execute( e.action, e.parameters, this.ops.geo[e.action] );
+    },
 
     _handleParsedFile: function( e ) {
         var mapLayer = L.mapbox.featureLayer(e.file);
@@ -53,11 +63,15 @@ L.DNC.AppController = L.Class.extend({
             type: 'success',
             time: 2500
         });
-    } ,
+    },
 
-    _handleTurfResults: function( e ) {
+    _handleGeoResult: function( e ) {
         this.layerlist.addLayerToList(e.mapLayer, e.layerName, e.isOverlay );
-    } ,
+    },
+
+    _handleOperationClick: function ( e ) {
+        this.forms.render( e );
+    },
 
     getLayerSelection: function(){
         return this.layerlist.selection.list || [];

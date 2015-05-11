@@ -25,8 +25,15 @@ L.DNC.MenuBar = L.Class.extend({
         return this;
     },
 
-    // Create and return dom element
+    /*
+    **
+    ** create the DOM element #menu-bar
+    **
+    */
     _buildDomElement: function () {
-        return document.createElement( 'div' );
+        var nav = document.createElement('nav');
+        nav.id = this.options.id;
+        document.body.appendChild(nav);
+        return nav;
     }
 });

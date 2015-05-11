@@ -1,7 +1,9 @@
 describe("L.DNC.Menu", function () {
     var menu = null;
     var title = "Test Menu";
-    var fakeOptions = { foo: 'bar' };
+    var items = [];
+    var parent = new L.DNC.MenuBar( { id: 'menu-bar' } );
+    var fakeOptions = { items: ['waka', 'flaka'] };
 
     var begin_html =
         '<div class="menu">' +
@@ -10,16 +12,25 @@ describe("L.DNC.Menu", function () {
             '<i class="fa fa-angle-down"></i>' +
           '</button>' +
           '<div class="menu-dropdown menu-expand">';
+    var middle_html = '<button class="menu-button menu-button-action" id="waka">waka</button>' +
+                      '<button class="menu-button menu-button-action" id="flaka">flaka</button>';
     var end_html =
           '</div>' +
         '</div>';
-    var expected_html = begin_html + end_html;
+    var expected_html = begin_html + middle_html + end_html;
 
 
     beforeEach(function () {
-        menu = new L.DNC.Menu( title, fakeOptions );
+        menu = new L.DNC.Menu( title, parent, fakeOptions );
     });
 
+
+    /*
+    **
+    **  Ensures all options passed through L.DNC.Menu are properly
+    **  intialized in the app and equalt their expected values.
+    **
+    */
     describe("initialize options", function () {
 
         it("is activated correctly", function () {
@@ -33,15 +44,42 @@ describe("L.DNC.Menu", function () {
         it("has title set", function () {
             expect( menu.title ).to.equal( title );
         });
+
     });
 
+    /*
+    **
+    **  Tests building the menu items, which returns an array of
+    **  HTML elements in this.children
+    **
+    */
+    describe("building menu items", function () {
+
+        it("can build items", function() {
+            expect( menu._buildMenuItems ).to.be.ok;
+
+            items = menu._buildMenuItems(menu.options.items);
+            expect( Array.isArray(items) ).to.equal( true );
+            for ( var a = 0; a < items.length; a++ ) {
+                expect( items[a] instanceof HTMLElement ).to.equal( true );
+            }
+        });
+    });
+
+    /*
+    **
+    **  Building the main DOM element
+    **  This tests for HTML elements, and ensures the function
+    **  is running properly with "items" from above.
+    **
+    */
     describe("dom element", function () {
 
         it("can build dom element", function () {
             expect( menu._buildDomElement ).to.be.ok;
 
-            var generated_el = menu._buildDomElement();
-            expect( generated_el instanceof HTMLElement) .to.equal( true );
+            var generated_el = menu._buildDomElement( items );
+            expect( generated_el instanceof HTMLElement).to.equal( true );
             expect( generated_el.outerHTML ).to.eql( expected_html );
         });
 
@@ -52,30 +90,43 @@ describe("L.DNC.Menu", function () {
         });
     });
 
+    /*
+    **
+    **  No longer using .addChild() in the code so going to 
+    **  keep this one commented out for now
+    **
+    */
     describe("public methods", function (){
 
-        it("has addTo", function () {
-            expect( menu.addTo ).to.be.ok;
+        // it("has addTo", function () {
+        //     expect( menu.addTo ).to.be.ok;
 
-            var parent = document.createElement( 'div' );
-            menu.addTo(parent);
+        //     var parent = document.createElement( 'div' );
+        //     menu.addTo(parent);
 
-            expect( parent.outerHTML ).to.equal( '<div>' + expected_html + '</div>' );
-        });
+        //     expect( parent.outerHTML ).to.equal( '<div>' + expected_html + '</div>' );
+        // });
 
-        it("has addChild", function () {
-            expect( menu.addChild ).to.be.ok;
+        // it("has addChild", function () {
+        //     expect( menu.addChild ).to.be.ok;
 
-            var child = document.createElement( 'div' );
-            var innerHtml = "<b>This is probably where a button would be</b>";
+        //     var child = document.createElement( 'div' );
+        //     var innerHtml = "<b>This is probably where a button would be</b>";
 
-            child.innerHTML = innerHtml;
-            menu.addChild( { domElement: child } );
-            expect( menu.domElement.outerHTML ).to.equal( begin_html + child.outerHTML + end_html );
-        });
+        //     child.innerHTML = innerHtml;
+        //     menu.addChild( { domElement: child } );
+        //     expect( menu.domElement.outerHTML ).to.equal( begin_html + child.outerHTML + end_html );
+        // });
 
     });
 
+    /*
+    **
+    **  Testing the dropdown/visibility functionality for menus.
+    **  Create a second menu to test for menu closing when another
+    **  has been clicked.
+    **
+    */
     describe("menu dropdown", function (){
         var dropdown;
         beforeEach(function () {
@@ -99,7 +150,7 @@ describe("L.DNC.Menu", function () {
 
         it("unexpands one menu when other menu is clicked", function () {
             // Setup
-            var menu2 = new L.DNC.Menu( "Second Menu" );
+            var menu2 = new L.DNC.Menu( "Second Menu", parent, fakeOptions );
             var dropdown2 = menu2.domElement.getElementsByClassName('menu-dropdown')[0];
             document.body.appendChild(menu.domElement);
             document.body.appendChild(menu2.domElement);
@@ -113,15 +164,15 @@ describe("L.DNC.Menu", function () {
             expect(dropdown.classList.contains('expanded')).to.be.false;
         });
 
-        // it("is not visible when not expanded", function () {
-        //     // TODO: Expect that dropdown is not visible
-        //     // isVisible(dropdown)
-        // });
+        it("is not visible when not expanded", function () {
+            // TODO: Expect that dropdown is not visible
+            // isVisible(dropdown)
+        });
 
-        // it("is visible when expanded", function () {
-        //     menu.domElement.click();
-        //     // TODO: Expect that dropdown is visible
-        // });
+        it("is visible when expanded", function () {
+            menu.domElement.click();
+            // TODO: Expect that dropdown is visible
+        });
 
     });
 });
