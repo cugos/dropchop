@@ -13,6 +13,7 @@ L.DNC.Forms = L.Class.extend({
 
         this.title = title;
         this.paramArray = [];
+        this.options = {}; // reset options for next form
         L.setOptions(this, options);
 
         var html = '<div class="form-inner"><div class="form">'+
@@ -23,22 +24,22 @@ L.DNC.Forms = L.Class.extend({
 
         if ( this.options.parameters ) {
 
-        for ( var i = 0; i < this.options.parameters.length; i++ ) {
-            var parameter = this.options.parameters[i];
-            
-            var input = '<div class="parameter"><label class="parameter-name">' + parameter.name + '</label>';
-            
-            // select
-            if ( parameter.type == 'select') {
-                input += this._inputTypeSelect( parameter );
-            // input
-            } else {
-                input += this._inputTypeDefault( parameter );
-            }
+            for ( var i = 0; i < this.options.parameters.length; i++ ) {
+                var parameter = this.options.parameters[i];
+                
+                var input = '<div class="parameter"><label class="parameter-name">' + parameter.name + '</label>';
+                
+                // select
+                if ( parameter.type == 'select') {
+                    input += this._inputTypeSelect( parameter );
+                // input
+                } else {
+                    input += this._inputTypeDefault( parameter );
+                }
 
-            if (parameter.description) input += '<p class="parameter-description">' + parameter.description + '</p>';
-            html += input + '</div>';
-        }
+                if (parameter.description) input += '<p class="parameter-description">' + parameter.description + '</p>';
+                html += input + '</div>';
+            }
 
         }
 
