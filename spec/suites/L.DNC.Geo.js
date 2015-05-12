@@ -1,6 +1,7 @@
 describe("L.DNC.GeoExecute", function () {
     var menu;
     var ops;
+    var _console = {};
 
     beforeEach(function () {
         ops = {
@@ -8,6 +9,13 @@ describe("L.DNC.GeoExecute", function () {
             geox: new L.DNC.GeoExecute()
         };
 
+
+        _console.debug = console.debug;
+        console.debug = function(){};
+    });
+
+    afterEach(function () {
+        console.debug = _console.debug;
     });
 
     describe("buffer", function () {
