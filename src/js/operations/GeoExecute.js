@@ -9,26 +9,10 @@ L.DNC.GeoExecute = L.Class.extend({
     ** EXECUTE OPERATIONS FROM INPUT
     **
     */
-    execute: function ( action, parameters, options ) {
+    execute: function ( action, parameters, options, layers ) {
 
         L.setOptions(this, options);
         this.action = action;
-
-        /*
-        **
-        **  TODO: this is the type of referencing
-        **  that feels like it should be avoided.
-        **  it is the only reference left and it cannot
-        **  be factored out until we potentially
-        **  revisit how MenBar, Menu and Operation work together
-        **
-        **  Update 05/07/2015: We can likely turn the selection
-        **  object into it's own L.Class if we like. This way we
-        **  can reference it in AppController.js when passing
-        **  info around.
-        **
-        */
-        var layers = L.DNC.app.getLayerSelection();
 
         /*
         **
