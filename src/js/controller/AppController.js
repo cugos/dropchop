@@ -44,16 +44,26 @@ L.DNC.AppController = L.Class.extend({
     },
 
     _handleGeoClick: function( e ) {
+        // Take click on menu
+
         var info = this.ops.geo[e.action];
         this.forms.render( e.action, info );
     },
 
     _handleFormSubmit: function( e ) {
-        var newLayer = this.ops.geox.execute( e.action, e.parameters, this.ops.geo[e.action] );
+        // Take input from an options form, use input to create layer,
+        // pass new layer off to be added to map.
+
+        var newLayer = this.ops.geox.execute(
+            e.action, e.parameters,
+            this.ops.geo[e.action], this.getLayerSelection()
+        );
         this._handleGeoResult(layer);
     },
 
     _handleParsedFile: function( e ) {
+        // Take newly parsed file, add to make and layerlist
+
         var mapLayer = L.mapbox.featureLayer( e.file );
         this.layerlist.addLayerToList( mapLayer, e.fileInfo.name, true );
         this.mapView.numLayers++;
@@ -66,14 +76,9 @@ L.DNC.AppController = L.Class.extend({
     },
 
     _handleGeoResult: function( layer ) {
-        /*
-        **
-        **  TODO: I'm wondering if we can refactor these classes
-        **  to make this type of interaction easier to model
-        **
-        */
+        // Take new layer, add to map and layerlist
+
         var mapLayer = L.mapbox.featureLayer( layer.geometry );
-        var eventExtras = { mapLayer: mapLayer, layerName: layer.name, isOverlay: true };
         this.layerlist.addLayerToList( mapLayer, layer.name, true );
     },
 
