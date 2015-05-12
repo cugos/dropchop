@@ -21,6 +21,7 @@ module.exports = function (config) {
         // list of files / patterns to load in the browser
         files: [
             "node_modules/mapbox.js/src/index.js",
+            "node_modules/turf/turf.js",
             "dist/js/L.DNC.js",
             "spec/**/*.js",
         ],

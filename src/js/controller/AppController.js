@@ -15,13 +15,13 @@ L.DNC.AppController = L.Class.extend({
         this.mapView = new L.DNC.MapView();
         this.dropzone = new L.DNC.DropZone( this.mapView._map, {} );
         this.layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' } ).addTo( this.mapView._map );
-        
+
         this.menubar = new L.DNC.MenuBar( { id: 'menu-bar' } );
 
         // new menu
         this.menu = {
-            geo: new L.DNC.Menu('Geoprocessing', this.menubar, { 
-                items: ['buffer', 'union'] 
+            geo: new L.DNC.Menu('Geoprocessing', this.menubar, {
+                items: ['buffer', 'union']
             })
         };
 
@@ -41,20 +41,30 @@ L.DNC.AppController = L.Class.extend({
         this.dropzone.fileReader.on( 'fileparsed', this._handleParsedFile.bind( this ) );
         this.forms.on( 'submit', this._handleFormSubmit.bind(this) );
         this.menu.geo.on( 'click', this._handleGeoClick.bind(this) );
-        this.ops.geox.on( 'created', this._handleGeoResult.bind(this) );
     },
 
     _handleGeoClick: function( e ) {
+        // Take click on menu
+
         var info = this.ops.geo[e.action];
         this.forms.render( e.action, info );
     },
 
     _handleFormSubmit: function( e ) {
-        this.ops.geox.execute( e.action, e.parameters, this.ops.geo[e.action] );
+        // Take input from an options form, use input to create layer,
+        // pass new layer off to be added to map.
+
+        var newLayer = this.ops.geox.execute(
+            e.action, e.parameters,
+            this.ops.geo[e.action], this.getLayerSelection()
+        );
+        this._handleGeoResult(layer);
     },
 
     _handleParsedFile: function( e ) {
-        var mapLayer = L.mapbox.featureLayer(e.file);
+        // Take newly parsed file, add to make and layerlist
+
+        var mapLayer = L.mapbox.featureLayer( e.file );
         this.layerlist.addLayerToList( mapLayer, e.fileInfo.name, true );
         this.mapView.numLayers++;
 
@@ -65,8 +75,11 @@ L.DNC.AppController = L.Class.extend({
         });
     },
 
-    _handleGeoResult: function( e ) {
-        this.layerlist.addLayerToList(e.mapLayer, e.layerName, e.isOverlay );
+    _handleGeoResult: function( layer ) {
+        // Take new layer, add to map and layerlist
+
+        var mapLayer = L.mapbox.featureLayer( layer.geometry );
+        this.layerlist.addLayerToList( mapLayer, layer.name, true );
     },
 
     _handleOperationClick: function ( e ) {

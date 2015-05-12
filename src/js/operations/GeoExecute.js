@@ -9,31 +9,15 @@ L.DNC.GeoExecute = L.Class.extend({
     ** EXECUTE OPERATIONS FROM INPUT
     **
     */
-    execute: function ( action, parameters, options ) {
+    execute: function ( action, parameters, options, layers ) {
 
         L.setOptions(this, options);
         this.action = action;
 
         /*
         **
-        **  TODO: this is the type of referencing
-        **  that feels like it should be avoided.
-        **  it is the only reference left and it cannot
-        **  be factored out until we potentially
-        **  revisit how MenBar, Menu and Operation work together
-        **
-        **  Update 05/07/2015: We can likely turn the selection
-        **  object into it's own L.Class if we like. This way we
-        **  can reference it in AppController.js when passing
-        **  info around.
-        **
-        */
-        var layers = L.DNC.app.getLayerSelection();
-
-        /*
-        **
         **  TODO: I think validation should happen before the
-        **  submit form is rendered on the DOM. If we plan to 
+        **  submit form is rendered on the DOM. If we plan to
         **  only show available operations then we'll have to
         **  do it there anyways.
         **
@@ -44,7 +28,7 @@ L.DNC.GeoExecute = L.Class.extend({
         var params = this._prepareParameters( layers, options, parameters );
         var name = this._prepareName( layers );
 
-        console.log(params, name);
+        console.debug(params, name);
 
         // Call func
         var newLayer = {
@@ -54,25 +38,16 @@ L.DNC.GeoExecute = L.Class.extend({
 
         // if the new object is a feature collection and only has one layer,
         // remove it and just keep it as a feature
-        if ( newLayer.geometry.type == "FeatureCollection" &&
-             newLayer.geometry.features.length == 1 ) newLayer.geometry = this._unCollect( newLayer.geometry );
+        if ( newLayer.geometry.type == "FeatureCollection" && newLayer.geometry.features.length == 1 ) {
+            newLayer.geometry = this._unCollect( newLayer.geometry );
+        }
 
-        var mapLayer = L.mapbox.featureLayer(newLayer.geometry);
-
-
-        /*
-        **
-        **  TODO: I'm wondering if we can refactor these classes
-        **  to make this type of interaction easier to model
-        **
-        */
-        var eventExtras = { mapLayer: mapLayer, layerName: newLayer.name, isOverlay: true };
-        this.fire('created', eventExtras);
+        return newLayer;
     },
 
 
     /*
-    **  
+    **
     **  VALIDATE LAYERS
     **  Checks if the proper number of layers are in the current selection to
     **  allow Turf operations to run
@@ -94,7 +69,7 @@ L.DNC.GeoExecute = L.Class.extend({
     },
 
     /*
-    **  
+    **
     **  PREPARE DATA
     **  Prepares the selected data to be run through Turf operations
     **  and builds the new layer name
@@ -105,7 +80,7 @@ L.DNC.GeoExecute = L.Class.extend({
             layers = layers.slice(0, this.options.maxFeatures);
         }
         var layer_objs = layers.map(function(obj) { return obj.layer._geojson; });
-        console.log(layer_objs, params);
+        console.debug(layer_objs, params);
 
         if ( params ) {
             for ( var l = 0; l < params.length; l++ ) {
@@ -132,7 +107,7 @@ L.DNC.GeoExecute = L.Class.extend({
     },
 
     /*
-    **  
+    **
     **  Used to standardize features if they exist as feature collections,
     **  which tend to break during certain Turf functions.
     **  Issue: drop-n-chop/issues/5
