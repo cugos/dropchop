@@ -28,7 +28,7 @@ L.DNC.GeoExecute = L.Class.extend({
         var params = this._prepareParameters( layers, options, parameters );
         var name = this._prepareName( layers );
 
-        console.log(params, name);
+        console.debug(params, name);
 
         // Call func
         var newLayer = {
@@ -80,7 +80,7 @@ L.DNC.GeoExecute = L.Class.extend({
             layers = layers.slice(0, this.options.maxFeatures);
         }
         var layer_objs = layers.map(function(obj) { return obj.layer._geojson; });
-        console.log(layer_objs, params);
+        console.debug(layer_objs, params);
 
         if ( params ) {
             for ( var l = 0; l < params.length; l++ ) {
