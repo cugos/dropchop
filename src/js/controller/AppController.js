@@ -15,13 +15,13 @@ L.DNC.AppController = L.Class.extend({
         this.mapView = new L.DNC.MapView();
         this.dropzone = new L.DNC.DropZone( this.mapView._map, {} );
         this.layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' } ).addTo( this.mapView._map );
-        
+
         this.menubar = new L.DNC.MenuBar( { id: 'menu-bar' } );
 
         // new menu
         this.menu = {
-            geo: new L.DNC.Menu('Geoprocessing', this.menubar, { 
-                items: ['buffer', 'union'] 
+            geo: new L.DNC.Menu('Geoprocessing', this.menubar, {
+                items: ['buffer', 'union']
             })
         };
 
@@ -41,7 +41,6 @@ L.DNC.AppController = L.Class.extend({
         this.dropzone.fileReader.on( 'fileparsed', this._handleParsedFile.bind( this ) );
         this.forms.on( 'submit', this._handleFormSubmit.bind(this) );
         this.menu.geo.on( 'click', this._handleGeoClick.bind(this) );
-        this.ops.geox.on( 'created', this._handleGeoResult.bind(this) );
     },
 
     _handleGeoClick: function( e ) {
@@ -50,11 +49,12 @@ L.DNC.AppController = L.Class.extend({
     },
 
     _handleFormSubmit: function( e ) {
-        this.ops.geox.execute( e.action, e.parameters, this.ops.geo[e.action] );
+        var newLayer = this.ops.geox.execute( e.action, e.parameters, this.ops.geo[e.action] );
+        this._handleGeoResult(layer);
     },
 
     _handleParsedFile: function( e ) {
-        var mapLayer = L.mapbox.featureLayer(e.file);
+        var mapLayer = L.mapbox.featureLayer( e.file );
         this.layerlist.addLayerToList( mapLayer, e.fileInfo.name, true );
         this.mapView.numLayers++;
 
@@ -65,8 +65,16 @@ L.DNC.AppController = L.Class.extend({
         });
     },
 
-    _handleGeoResult: function( e ) {
-        this.layerlist.addLayerToList(e.mapLayer, e.layerName, e.isOverlay );
+    _handleGeoResult: function( layer ) {
+        /*
+        **
+        **  TODO: I'm wondering if we can refactor these classes
+        **  to make this type of interaction easier to model
+        **
+        */
+        var mapLayer = L.mapbox.featureLayer( layer.geometry );
+        var eventExtras = { mapLayer: mapLayer, layerName: layer.name, isOverlay: true };
+        this.layerlist.addLayerToList( mapLayer, layer.name, true );
     },
 
     _handleOperationClick: function ( e ) {

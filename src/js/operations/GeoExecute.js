@@ -33,7 +33,7 @@ L.DNC.GeoExecute = L.Class.extend({
         /*
         **
         **  TODO: I think validation should happen before the
-        **  submit form is rendered on the DOM. If we plan to 
+        **  submit form is rendered on the DOM. If we plan to
         **  only show available operations then we'll have to
         **  do it there anyways.
         **
@@ -54,25 +54,16 @@ L.DNC.GeoExecute = L.Class.extend({
 
         // if the new object is a feature collection and only has one layer,
         // remove it and just keep it as a feature
-        if ( newLayer.geometry.type == "FeatureCollection" &&
-             newLayer.geometry.features.length == 1 ) newLayer.geometry = this._unCollect( newLayer.geometry );
+        if ( newLayer.geometry.type == "FeatureCollection" && newLayer.geometry.features.length == 1 ) {
+            newLayer.geometry = this._unCollect( newLayer.geometry );
+        }
 
-        var mapLayer = L.mapbox.featureLayer(newLayer.geometry);
-
-
-        /*
-        **
-        **  TODO: I'm wondering if we can refactor these classes
-        **  to make this type of interaction easier to model
-        **
-        */
-        var eventExtras = { mapLayer: mapLayer, layerName: newLayer.name, isOverlay: true };
-        this.fire('created', eventExtras);
+        return newLayer;
     },
 
 
     /*
-    **  
+    **
     **  VALIDATE LAYERS
     **  Checks if the proper number of layers are in the current selection to
     **  allow Turf operations to run
@@ -94,7 +85,7 @@ L.DNC.GeoExecute = L.Class.extend({
     },
 
     /*
-    **  
+    **
     **  PREPARE DATA
     **  Prepares the selected data to be run through Turf operations
     **  and builds the new layer name
@@ -132,7 +123,7 @@ L.DNC.GeoExecute = L.Class.extend({
     },
 
     /*
-    **  
+    **
     **  Used to standardize features if they exist as feature collections,
     **  which tend to break during certain Turf functions.
     **  Issue: drop-n-chop/issues/5
