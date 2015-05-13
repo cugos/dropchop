@@ -21,7 +21,7 @@ describe("L.DNC.Menu", function () {
 
 
     beforeEach(function () {
-        menu = new L.DNC.Menu( title, parent, fakeOptions );
+        menu = new L.DNC.Menu( title, fakeOptions ).addTo( parent );
     });
 
 
@@ -92,36 +92,6 @@ describe("L.DNC.Menu", function () {
 
     /*
     **
-    **  No longer using .addChild() in the code so going to 
-    **  keep this one commented out for now
-    **
-    */
-    describe("public methods", function (){
-
-        // it("has addTo", function () {
-        //     expect( menu.addTo ).to.be.ok;
-
-        //     var parent = document.createElement( 'div' );
-        //     menu.addTo(parent);
-
-        //     expect( parent.outerHTML ).to.equal( '<div>' + expected_html + '</div>' );
-        // });
-
-        // it("has addChild", function () {
-        //     expect( menu.addChild ).to.be.ok;
-
-        //     var child = document.createElement( 'div' );
-        //     var innerHtml = "<b>This is probably where a button would be</b>";
-
-        //     child.innerHTML = innerHtml;
-        //     menu.addChild( { domElement: child } );
-        //     expect( menu.domElement.outerHTML ).to.equal( begin_html + child.outerHTML + end_html );
-        // });
-
-    });
-
-    /*
-    **
     **  Testing the dropdown/visibility functionality for menus.
     **  Create a second menu to test for menu closing when another
     **  has been clicked.
@@ -150,7 +120,7 @@ describe("L.DNC.Menu", function () {
 
         it("unexpands one menu when other menu is clicked", function () {
             // Setup
-            var menu2 = new L.DNC.Menu( "Second Menu", parent, fakeOptions );
+            var menu2 = new L.DNC.Menu( "Second Menu", fakeOptions ).addTo( parent );
             var dropdown2 = menu2.domElement.getElementsByClassName('menu-dropdown')[0];
             document.body.appendChild(menu.domElement);
             document.body.appendChild(menu2.domElement);

@@ -16,13 +16,13 @@ L.DNC.AppController = L.Class.extend({
         this.dropzone = new L.DNC.DropZone( this.mapView._map, {} );
         this.layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' } ).addTo( this.mapView._map );
 
-        this.menubar = new L.DNC.MenuBar( { id: 'menu-bar' } );
+        this.menubar = new L.DNC.MenuBar( { id: 'menu-bar' } ).addTo( document.body );
 
         // new menu
         this.menu = {
-            geo: new L.DNC.Menu('Geoprocessing', this.menubar, {
+            geo: new L.DNC.Menu('Geoprocessing', {
                 items: ['buffer', 'union']
-            })
+            }).addTo( this.menubar )
         };
 
         this.ops = {
