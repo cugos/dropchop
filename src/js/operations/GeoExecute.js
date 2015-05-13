@@ -14,16 +14,6 @@ L.DNC.GeoExecute = L.Class.extend({
         L.setOptions(this, options);
         this.action = action;
 
-        /*
-        **
-        **  TODO: I think validation should happen before the
-        **  submit form is rendered on the DOM. If we plan to
-        **  only show available operations then we'll have to
-        **  do it there anyways.
-        **
-        **/
-        this.validate(layers, options);
-
         // Prep
         var params = this._prepareParameters( layers, options, parameters );
         var name = this._prepareName( layers );
