@@ -2,10 +2,9 @@ L.DNC = L.DNC || {};
 L.DNC.Menu = L.Class.extend({
     includes: L.Mixin.Events,
 
-    initialize: function ( title, parent, options ) {
+    initialize: function ( title, options ) {
         L.setOptions(this, options);
         this.title = title;
-        this.parent = parent;
         this.children = this._buildMenuItems(this.options.items);
         this.domElement = this._buildDomElement(this.children);
         this._addEventHandlers();
@@ -50,6 +49,18 @@ L.DNC.Menu = L.Class.extend({
         }
     },
 
+    /*
+    **
+    ** Append this domElement to a give parent object's dom element
+    **
+    */
+    addTo: function ( parent ) {
+        var parentDomElement = parent.domElement || parent; // If parent doesn't have a domElement, assume that it IS a dom element
+        parentDomElement.appendChild( this.domElement );
+        this.parent = parent;
+        return this;
+    },
+
     _buildMenuItems: function ( items ) {
         var tempArray = [];
         for ( var i = 0; i < items.length; i++ ) {
@@ -75,7 +86,6 @@ L.DNC.Menu = L.Class.extend({
         }
 
         menu.appendChild(menuDropdown);
-        this.parent.domElement.appendChild(menu); // add to DOM
         return menu;
     }
 });

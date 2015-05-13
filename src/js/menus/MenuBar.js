@@ -5,7 +5,7 @@ L.DNC.MenuBar = L.Class.extend({
     initialize: function ( options ) {
         L.setOptions( this, options );
         this.children = [];
-        this.domElement = this._buildDomElement();
+        this.domElement = this._buildDomElement(this.options.id);
     },
 
     // Append this domElement to a give parent object's dom element
@@ -21,10 +21,9 @@ L.DNC.MenuBar = L.Class.extend({
     ** create the DOM element #menu-bar
     **
     */
-    _buildDomElement: function () {
+    _buildDomElement: function ( id ) {
         var nav = document.createElement('nav');
-        nav.id = this.options.id;
-        document.body.appendChild(nav);
+        nav.id = id;
         return nav;
     }
 });

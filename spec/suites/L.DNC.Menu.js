@@ -21,7 +21,7 @@ describe("L.DNC.Menu", function () {
 
 
     beforeEach(function () {
-        menu = new L.DNC.Menu( title, parent, fakeOptions );
+        menu = new L.DNC.Menu( title, fakeOptions ).addTo( parent );
     });
 
 
@@ -120,7 +120,7 @@ describe("L.DNC.Menu", function () {
 
         it("unexpands one menu when other menu is clicked", function () {
             // Setup
-            var menu2 = new L.DNC.Menu( "Second Menu", parent, fakeOptions );
+            var menu2 = new L.DNC.Menu( "Second Menu", fakeOptions ).addTo( parent );
             var dropdown2 = menu2.domElement.getElementsByClassName('menu-dropdown')[0];
             document.body.appendChild(menu.domElement);
             document.body.appendChild(menu2.domElement);
