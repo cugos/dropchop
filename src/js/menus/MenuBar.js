@@ -8,7 +8,11 @@ L.DNC.MenuBar = L.Class.extend({
         this.domElement = this._buildDomElement(this.options.id);
     },
 
-    // Append this domElement to a give parent object's dom element
+    /*
+    **
+    ** Append this domElement to a give parent object's dom element
+    **
+    */
     addTo: function ( parent ) {
         var parentDomElement = parent.domElement || parent; // If parent doesn't have a domElement, assume that it IS a dom element
         parentDomElement.appendChild( this.domElement );
