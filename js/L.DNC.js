@@ -13,37 +13,12 @@
 })();
 
 L.DNC = L.DNC || {};
-L.DNC.MenuBar = L.Class.extend({
-    includes: L.Mixin.Events,
-
-    initialize: function ( options ) {
-        L.setOptions(this, options);
-        this.children = [];
-        this.domElement = this._buildDomElement();
-    },
-
-    // Add object as child. Object must have domElement property.
-    addChild: function ( child ) {
-        this.domElement.appendChild(child.domElement);
-        child.parentDomElement = this;
-        this.children.push( child );
-        return this;
-    },
-
-    // Append this domElement to a give domElement
-    addTo: function ( parentDomElement ) {
-        parentDomElement.appendChild(this.domElement);
-        this.parentDomElement = parentDomElement;
-        return this;
-    },
-
-    // Create and return dom element
-    _buildDomElement: function () {
-        return document.createElement('div');
-    }
-});
-
-L.DNC = L.DNC || {};
+/*
+**
+** AppController is the primary point of app initialization. It basically 'ties
+** every together'
+**
+*/
 L.DNC.AppController = L.Class.extend({
 
     statics: {},
@@ -51,7 +26,7 @@ L.DNC.AppController = L.Class.extend({
     // default options
     options: {},
 
-
+    // L.Class.extend automatically executes 'initialize'
     initialize : function( options ) {
 
         // override defaults with passed options
@@ -60,41 +35,117 @@ L.DNC.AppController = L.Class.extend({
         this.mapView = new L.DNC.MapView();
         this.dropzone = new L.DNC.DropZone( this.mapView._map, {} );
         this.layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' } ).addTo( this.mapView._map );
-        this.menuBar = new L.DNC.MenuBar()
-            .addTo( document.getElementById('menu-bar') )
-            .addChild( new L.DNC.Menu( "Geoprocessing Tools", {} )
-                .addChild(new L.DNC.TurfOperation('buffer', {
-                    maxFeatures: 1,
-                    additionalArgs: 0.1
-                }))
-                .addChild(new L.DNC.TurfOperation('union', {
-                    minFeatures: 2,
-                    maxFeatures: 2
-                }))
-                .addChild(new L.DNC.TurfOperation('erase', {
-                    minFeatures: 2,
-                    maxFeatures: 2
-                }))
-            );
 
+        this.menubar = new L.DNC.MenuBar( { id: 'menu-bar' } ).addTo( document.body );
+
+        // build out menus
+        this.menus = {
+            geo: new L.DNC.Menu('Geoprocessing', {  // New dropdown menu
+                items: ['buffer', 'union']          // Items in menu
+            }).addTo( this.menubar )                // Append to menubar
+        };
+
+        this.geoOpsConfig = {
+            operations: new L.DNC.Geo(),        // Configurations of GeoOperations
+            executor: new L.DNC.GeoExecute()    // Executor of GeoOperations
+        };
+
+        this.forms = new L.DNC.Forms();
+
+        this.notification = new L.DNC.Notifications();
         this._addEventHandlers();
 
-    } ,
+    },
 
     _addEventHandlers: function(){
-        this.dropzone.fileReader.on( "fileparsed", this._handleParsedFile.bind( this ) );
-        this.menuBar.on( "operation-result", this._handleTurfResults.bind(this) );
-    } ,
+        this.dropzone.fileReader.on( 'fileparsed', this._handleParsedFile.bind( this ) );
 
+        // Handle clicks on items within geoMenu
+        // NOTE: This is where an operation is tied to a menu item
+        this.menus.geo.on( 'clickedOperation', this._handleOperationClick.bind( this, this.geoOpsConfig ) );
+    },
+
+    /*
+    **
+    ** Lookup operation by name from operations configuration, render appropriate form
+    **
+    */
+    _handleOperationClick: function( opsConfig, e ) {
+        var config = opsConfig.operations[e.action];
+        try {
+            opsConfig.executor.validate(
+                this.getLayerSelection(),
+                config
+            );
+        }
+        catch(err) {
+            this.notification.add({
+                text: err.message,
+                type: 'alert',
+                time: 2500
+            });
+            console.error(err);
+            return;
+        }
+
+        var form = this.forms.render( e.action, config );
+        form.on( 'submit', this._handleFormSubmit.bind( this, opsConfig ) );
+    },
+
+    /*
+    **
+    ** Take input from an options form, use input to execute operation, get new
+    ** layer, pass new layer off to be added to map.
+    **
+    */
+    _handleFormSubmit: function( opsConfig, e ) {
+        var config = opsConfig.operations[e.action];
+        var results = opsConfig.executor.execute(
+            e.action,
+            e.parameters,
+            config,
+            this.getLayerSelection()
+        );
+
+        if (config.createsLayer) {
+            this._handleGeoResult(results);
+        } else {
+            // TODO: Handle non-geo results
+        }
+    },
+
+    /*
+    **
+    ** Take newly parsed file, add to make and layerlist
+    **
+    */
     _handleParsedFile: function( e ) {
-        var mapLayer = L.mapbox.featureLayer(e.file);
-        this.layerlist.addLayerToList( mapLayer, e.fileInfo.name, true );
+        var layer = L.mapbox.featureLayer( e.file );
+        this.layerlist.addLayerToList( layer, e.fileInfo.name, true );
         this.mapView.numLayers++;
-    } ,
 
-    _handleTurfResults: function( e ) {
-        this.layerlist.addLayerToList(e.mapLayer, e.layerName, e.isOverlay );
-    } ,
+        this.notification.add({
+            text: '<strong>' + e.fileInfo.name + '</strong> added successfully.',
+            type: 'success',
+            time: 2500
+        });
+    },
+
+    /*
+    **
+    ** Take new layer, add to map and layerlist
+    **
+    */
+    _handleGeoResult: function( layer ) {
+        var mapLayer = L.mapbox.featureLayer( layer.geometry );
+        this.layerlist.addLayerToList( mapLayer, layer.name, true );
+
+        this.notification.add({
+            text: '<strong>' + layer.name + '</strong> created successfully.',
+            type: 'success',
+            time: 2500
+        });
+    },
 
     getLayerSelection: function(){
         return this.layerlist.selection.list || [];
@@ -225,12 +276,140 @@ L.DNC.DropZone.FileReader = L.Handler.extend({
         reader.readAsText(fileObject, 'UTF-8');
         reader.onload = function() {
             var file = JSON.parse(reader.result);
-
             this._map.fire('dropzone:fileparsed', { file: file });
             this.fire('fileparsed', { fileInfo: fileObject, file: file });
         }.bind(this);
     }
 
+});
+
+L.DNC = L.DNC || {};
+L.DNC.Forms = L.Class.extend({
+    includes: L.Mixin.Events,
+
+    options: {},
+
+    /*
+    **
+    ** RENDER FORM TEMPLATE
+    **
+    */
+    render: function ( title, options ) {
+
+        this.title = title;
+        this.paramArray = [];
+        this.options = {}; // reset options for next form
+        L.setOptions(this, options);
+
+        var html = '<div class="form-inner"><div class="form">'+
+                '<button type="button" class="btn close form-close"><i class="fa fa-times"></i></button>'+
+                '<div class="form-information"><h3 class="form-title">' + this.title + '</h3>'+
+                '<p class="form-description">' + this.options.description + '</p></div>'+
+                '<form class="form-inputs">';
+
+        if ( this.options.parameters ) {
+
+            for ( var i = 0; i < this.options.parameters.length; i++ ) {
+                var parameter = this.options.parameters[i];
+
+                var input = '<div class="parameter"><label class="parameter-name">' + parameter.name + '</label>';
+
+                // select
+                if ( parameter.type == 'select') {
+                    input += this._inputTypeSelect( parameter );
+                // input
+                } else {
+                    input += this._inputTypeDefault( parameter );
+                }
+
+                if (parameter.description) input += '<p class="parameter-description">' + parameter.description + '</p>';
+                html += input + '</div>';
+            }
+
+        }
+
+        // submit button
+        html += '<button type="button" class="btn form-submit" id="operation-submit">Execute<i class="fa fa-thumbs-o-up push-left"></i></button>';
+        html += '</div></div>';
+
+        var div = document.createElement('div');
+        div.className = 'form-outer';
+        div.id = 'DNC-FORM';
+        div.innerHTML = html;
+        document.body.appendChild(div);
+        this.domElement = div;
+
+        this._formHandlers(div);
+
+        return this;
+    },
+
+    closeForm: function ( event ) {
+        var child = document.getElementById('DNC-FORM');
+        child.parentElement.removeChild(child);
+    },
+
+    submitForm: function( e ) {
+        // function that grabs all parameter information from the
+        // current open form, and publishes 'form-submitted' so the
+        // operations subscriber can execute the turf operation
+
+        // reset paramArray for new parameters
+        this.paramArray = [];
+
+        // get form info
+        var inputs = document.getElementsByClassName('param');
+        for ( var p = 0; p < inputs.length; p++ ) {
+            var paramValue = null;
+            if (inputs[p].nodeName == 'SELECT') {
+                paramValue = inputs[p].options[inputs[p].selectedIndex].value;
+            } else {
+                paramValue = inputs[p].value;
+                if (inputs[p].type == 'number') paramValue = parseInt(paramValue);
+            }
+            this.paramArray.push(paramValue);
+        }
+
+        if ( this.validateForm() ) {
+            this.fire( 'submit', { action: this.title, parameters: this.paramArray } );
+            this.closeForm();
+
+            // Remove event listener
+            this._leaflet_events.submit = []; // TODO: There's surely a better way to do this
+        }
+
+
+    },
+
+    validateForm: function () {
+        // do some validation eventually
+        return true;
+    },
+
+    _formHandlers: function() {
+        var closers = document.getElementsByClassName('form-close');
+        for ( var x = 0; x < closers.length; x++ ) {
+          closers[x].addEventListener('click', this.closeForm.bind(this));
+        }
+
+        var submit = document.getElementById('operation-submit');
+        submit.addEventListener('click', this.submitForm.bind(this));
+    },
+
+    _inputTypeDefault: function ( p ) {
+        var field = '<input class="param" name="' + p.name + '" type="' + p.type + '" value="' + p.default + '">';
+        return field;
+    },
+
+    _inputTypeSelect: function( p ) {
+        var select = '<select class="param" type="select" name="' + p.name + '">';
+        for ( var o = 0; o < p.options.length; o++ ) {
+            select += '<option value="' + p.options[o] + '"';
+            if ( p.options[o] == p.default ) select += ' selected';
+            select += '>' + p.options[o] + '</option>';
+        }
+        return select + '</select>';
+    }
 });
 
 L.DNC = L.DNC || {};
@@ -461,41 +640,61 @@ L.DNC.MapView = L.Class.extend({
     _setupMap : function () {
 
         L.mapbox.accessToken = 'pk.eyJ1Ijoic3ZtYXR0aGV3cyIsImEiOiJVMUlUR0xrIn0.NweS_AttjswtN5wRuWCSNA';
-        this._map = L.mapbox.map('map', 'svmatthews.hf8pfph5', {
+        this._map = L.mapbox.map('map', null, {
             zoomControl: false
         }).setView([0,0], 3);
+
+        var baseLayers = {
+            "Mapbox Streets": L.mapbox.tileLayer('mapbox.streets'),
+            "Mapbox Outdoors": L.mapbox.tileLayer('mapbox.outdoors'),
+            "Mapbox Light": L.mapbox.tileLayer('mapbox.light'),
+            "Mapbox Dark": L.mapbox.tileLayer('mapbox.dark'),
+            "Mapbox Satellite": L.mapbox.tileLayer('mapbox.satellite')
+        };
+
+        baseLayers['Mapbox Streets'].addTo(this._map);
+        L.control.layers(baseLayers, {}, {
+            position: 'bottomright',
+            collapsed: false
+        }).addTo(this._map);
 
     }
 
 });
 
 L.DNC = L.DNC || {};
-L.DNC.Menu = L.DNC.MenuBar.extend({
+
+/*
+**
+** A dropdown menu
+**
+*/
+L.DNC.Menu = L.Class.extend({
+    includes: L.Mixin.Events,
 
     initialize: function ( title, options ) {
         L.setOptions(this, options);
         this.title = title;
-        this.children = [];
-        this.domElement = this._buildDomElement();
+        this.children = this._buildMenuItems(this.options.items);
+        this.domElement = this._buildDomElement(this.children);
         this._addEventHandlers();
     },
 
-    // Add object as child. Object must have domElement property.
-    addChild: function( child ) {
-        var dropdown = this.domElement.getElementsByClassName('menu-dropdown')[0];
-        dropdown.appendChild( child.domElement );
-        child.parent = this;
-        this.children.push( child );
-        return this;
-    },
-
-    // handlers for menu options
+    /*
+    **
+    ** Create event handlers for dom elements within this object
+    **
+    */
     _addEventHandlers : function () {
+
+        // using within the click function scope since we need to pass information
+        // about the clicked object (id) AND its parent scope (menu) for .fire()
+        var _this = this;
+
+        // Dropdown tooling
         if (this.domElement) {
             this.domElement.addEventListener('click', menuClick, false);
         }
-
-        // Dropdown tooling
         function menuClick() {
             var menuExpand = this.querySelector('.menu-dropdown');
 
@@ -512,121 +711,288 @@ L.DNC.Menu = L.DNC.MenuBar.extend({
             } else {
                 menuExpand.className = menuExpand.className.replace(/\b expanded\b/,'');
             }
+        }
 
+        if (this.children) {
+            for ( var c = 0; c < this.children.length; c++ ) {
+                this.children[c].addEventListener('click', itemClick, false);
+            }
+        }
+        function itemClick() {
+            _this.fire('clickedOperation', { action: this.id });
         }
     },
 
-    // Create and return dom element (note: this does not attach dom element to any parent)
-    _buildDomElement: function () {
+    /*
+    **
+    ** Append this domElement to a give parent object's dom element
+    **
+    */
+    addTo: function ( parent ) {
+        var parentDomElement = parent.domElement || parent; // If parent doesn't have a domElement, assume that it IS a dom element
+        parentDomElement.appendChild( this.domElement );
+        this.parent = parent;
+        return this;
+    },
+
+    /*
+    **
+    ** Take in an array of operations names, return array of dom elements for
+    ** each item
+    **
+    */
+    _buildMenuItems: function ( items ) {
+        var tempArray = [];
+        for ( var i = 0; i < items.length; i++ ) {
+            var menuItem = document.createElement('button');
+            menuItem.className = 'menu-button menu-button-action';
+            menuItem.id = items[i];
+            menuItem.innerHTML = items[i];
+            tempArray.push(menuItem);
+        }
+        return tempArray;
+    },
+
+    /*
+    **
+    ** Take in array of menu item dom elements, return dom element for this menu
+    **
+    */
+    _buildDomElement: function ( childElements ) {
         var menu = document.createElement('div');
         menu.className = "menu";
-        menu.innerHTML = '<button class="menu-button">' +
-            this.title + '<i class="fa fa-angle-down"></i>' +
-            '</button>' +
-        '<div class="menu-dropdown menu-expand"></div>';
+        menu.innerHTML = '<button class="menu-button">' + this.title + '<i class="fa fa-angle-down"></i></button>';
+
+        var menuDropdown = document.createElement('div');
+        menuDropdown.className = 'menu-dropdown menu-expand';
+        for ( var e = 0; e < childElements.length; e++ ) {
+            menuDropdown.appendChild(childElements[e]);
+        }
+
+        menu.appendChild(menuDropdown);
         return menu;
     }
 });
 
 L.DNC = L.DNC || {};
-L.DNC.Operation = L.DNC.Menu.extend({
+L.DNC.MenuBar = L.Class.extend({
+    includes: L.Mixin.Events,
+    options: { id: '#menu-bar' },
 
-    _addEventHandlers : function () {
-        this.domElement.addEventListener('click', function(){
-            this.execute.call( this );
-        }.bind(this));
+    initialize: function ( options ) {
+        L.setOptions( this, options );
+        this.children = [];
+        this.domElement = this._buildDomElement(this.options.id);
     },
 
-    // Create and return dom element (note: this does not attach dom element to any parent)
-    _buildDomElement: function () {
-        var div = document.createElement('div');
-        div.innerHTML += '<button class="menu-button menu-button-action" id="' +
-            this.title + '">' + this.title + '</button>';
-        return div.children[0];
+    /*
+    **
+    ** Append this domElement to a give parent object's dom element
+    **
+    */
+    addTo: function ( parent ) {
+        var parentDomElement = parent.domElement || parent; // If parent doesn't have a domElement, assume that it IS a dom element
+        parentDomElement.appendChild( this.domElement );
+        this.parent = parent;
+        return this;
     },
 
-    // Where the magic happens
-    execute: function() {
-        console.error("L.DNC.Operation object did not properly override 'execute'", this);
-    },
+    /*
+    **
+    ** Create the DOM element
+    **
+    */
+    _buildDomElement: function ( id ) {
+        var nav = document.createElement('nav');
+        nav.id = id;
+        return nav;
+    }
 });
 
-L.DNC.TurfOperation = L.DNC.Operation.extend({
+L.DNC = L.DNC || {};
+L.DNC.Notifications = L.Class.extend({
 
+    statics: {},
 
-    options: {
-        // supportedFeatures : [],
-        minFeatures : 1,
-        maxFeatures : 0,
-        orderImport : false,
-        // iterable : true
-        additionalArgs: null // Kludge to handle no dialog for input
+    // defaults
+    options: {},
+
+    initialize: function (fileReader, options) {
+
+        // override defaults with passed options
+        L.setOptions(this, options);
+
+        // create DOM element
+        this.domElement = this._buildDomElement();
+
+        // create notification center & locations
+        this.hub = document.getElementById('notifications');
+
+    } ,
+
+    // used to add a notification to the DOM
+    add: function ( options ) {
+
+        // TODO: clean this up?
+        params = {};
+        params.text = options.text || 'THIS NOTIFICATION REQUIRES TEXT';
+        params.time = options.time || 4000;
+        params.type = options.type || 'default';
+
+        // add a new notification to the stream
+        var note = document.createElement('div');
+        note.className = 'notification ' + options.type;
+        note.innerHTML = options.text;
+        this.hub.appendChild(note);
+
+        // redefine for setTimeout() scope
+        var _this = this;
+        
+        // TODO: add/remove notifications to an array to interact with them
+        // instead of relying on setTimeout() dictating their existence.
+        setTimeout(function () {
+            _this.hub.removeChild( _this.hub.firstChild );
+        }, params.time);
+
     },
 
-    execute: function () {
-        /*
-        **
-        **  TODO: this is the type of referencing
-        **  that feels like it should be avoided.
-        **  it is the only reference left and it cannot
-        **  be factored out until we potentially
-        **  revisit how MenBar, Menu and Operation work together
-        **
-        */
-        var layers = L.DNC.app.getLayerSelection();
+    _buildDomElement: function() {
+        var el = document.createElement('div');
+        el.id = 'notifications';
+        document.body.appendChild(el);
+        return el;
+    }
 
-        // Validate
-        this._validate(layers);
+});
+
+L.DNC.Geo = L.Class.extend({
+    includes: L.Mixin.Events,
+
+    options: {},
+
+    buffer: {
+        maxFeatures: 1,
+        additionalArgs: 0.1,
+        description: 'Calculates a buffer for input features for a given radius. Units supported are miles, kilometers, and degrees.',
+        parameters: [
+            {
+                name: 'distance',
+                description: 'Distance to draw the buffer.',
+                type: 'number',
+                default: 10
+            },
+            {
+                name: 'unit',
+                type: 'select',
+                description: '',
+                options: ['miles', 'feet', 'kilometers', 'meters', 'degrees'],
+                default: 'miles'
+            }
+        ],
+        createsLayer: true
+    },
+
+    union: {
+        minFeatures: 2,
+        maxFeatures: 2,
+        description: 'Takes two polygons and returns a combined polygon. If the input polygons are not contiguous, this function returns a MultiPolygon feature.',
+        createsLayer: true
+    }
+
+});
+
+L.DNC = L.DNC || {};
+L.DNC.GeoExecute = L.Class.extend({
+    includes: L.Mixin.Events,
+
+    options: {},
+
+    /*
+    **
+    ** EXECUTE OPERATIONS FROM INPUT
+    **
+    */
+    execute: function ( action, parameters, options, layers ) {
+
+        L.setOptions(this, options);
+        this.action = action;
 
         // Prep
-        var prepared_args = this._prepareArgs(layers);
-        var objects = prepared_args[0];
-        var name = prepared_args[1];
+        var params = this._prepareParameters( layers, options, parameters );
+        var name = this._prepareName( layers );
+
+        console.debug(params, name);
 
         // Call func
         var newLayer = {
-            geometry: turf[this.title].apply(null, objects),
-            name: this.title + '_' + name + '.geojson'
+            geometry: turf[this.action].apply(null, params),
+            name: this.action + '_' + name + '.geojson'
         };
 
-        var mapLayer = L.mapbox.featureLayer(newLayer.geometry);
+        // if the new object is a feature collection and only has one layer,
+        // remove it and just keep it as a feature
+        if ( newLayer.geometry.type == "FeatureCollection" && newLayer.geometry.features.length == 1 ) {
+            newLayer.geometry = this._unCollect( newLayer.geometry );
+        }
 
-
-        /*
-        **
-        **  TODO: I'm wondering if we can refactor these classes
-        **  to make this type of interaction easier to model
-        **
-        */
-        var eventExtras = { mapLayer: mapLayer, layerName: newLayer.name, isOverlay: true };
-        this.parent.parentDomElement.fire('operation-result', eventExtras);
+        return newLayer;
     },
 
-    _validate: function ( layers ) {
+
+    /*
+    **
+    **  VALIDATE LAYERS
+    **  Checks if the proper number of layers are in the current selection to
+    **  allow Turf operations to run
+    **
+    */
+    validate: function ( layers, options ) {
         var length = layers.length;
+
+        // TODO: This should live elsewhere
+        function ValidationError(message) {
+              this.name = 'ValidationError';
+              this.message = message || 'Validation Error';
+        }
+        ValidationError.prototype = Object.create(Error.prototype);
+        ValidationError.prototype.constructor = ValidationError;
+
         if (!length) {
-            throw new Error("Can't run " + this.title + " on empty selection.");
+            throw new ValidationError("Can't run " + this.title + " on empty selection.");
         }
 
-        if (this.options.maxFeatures && length > this.options.maxFeatures) {
-            throw new Error("Too many layers. Max is set to " + this.options.maxFeatures + ", got " + length + ".");
+        if (options.maxFeatures && length > options.maxFeatures) {
+            throw new ValidationError("Too many layers. Max is set to " + options.maxFeatures + ", got " + length + ".");
         }
 
-        if (this.options.minFeatures && length < this.options.minFeatures) {
-            throw new Error("Too few layers. Min is set to " + this.options.minFeatures + ", got " + length + ".");
+        if (options.minFeatures && length < options.minFeatures) {
+            throw new ValidationError("Too few layers. Min is set to " + options.minFeatures + ", got " + length + ".");
         }
     },
 
-    _prepareArgs: function ( layers ) {
-        // Get layer objects
-        if (this.options.maxFeatures) {
-            layers = layers.slice(0, this.options.maxFeatures);
+    /*
+    **
+    **  PREPARE DATA
+    **  Prepares the selected data to be run through Turf operations
+    **  and builds the new layer name
+    **
+    */
+    _prepareParameters: function ( layers, options, params ) {
+        if (options.maxFeatures) {
+            layers = layers.slice(0, options.maxFeatures);
         }
         var layer_objs = layers.map(function(obj) { return obj.layer._geojson; });
-        if (this.options.additionalArgs) {
-            layer_objs.push(this.options.additionalArgs);
-        }
+        console.debug(layer_objs, params);
 
+        if ( params ) {
+            for ( var l = 0; l < params.length; l++ ) {
+                layer_objs.push(params[l]);
+            }
+        }
+        return layer_objs;
+    },
+
+    _prepareName: function ( layers ) {
         // Get layer names
         var layer_names = layers.map(function(obj) { return obj.info.name; });
         var layer_names_str = '';
@@ -639,8 +1005,17 @@ L.DNC.TurfOperation = L.DNC.Operation.extend({
                 return a.split('.')[0] + '_' + b.split('.')[0];
             });
         }
+        return layer_names_str;
+    },
 
-        return [layer_objs, layer_names_str];
+    /*
+    **
+    **  Used to standardize features if they exist as feature collections,
+    **  which tend to break during certain Turf functions.
+    **  Issue: drop-n-chop/issues/5
+    **
+    */
+    _unCollect: function( feature ) {
+        return feature.features[0];
     }
-
 });
