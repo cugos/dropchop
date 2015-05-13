@@ -26,7 +26,7 @@ L.DNC.MapView = L.Class.extend({
 
         L.mapbox.accessToken = 'pk.eyJ1Ijoic3ZtYXR0aGV3cyIsImEiOiJVMUlUR0xrIn0.NweS_AttjswtN5wRuWCSNA';
         this._map = L.mapbox.map('map', null, {
-            zoomControl: false
+            zoomControl: true
         }).setView([0,0], 3);
 
         var baseLayers = {
