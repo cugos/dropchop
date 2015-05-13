@@ -58,6 +58,22 @@ L.DNC.AppController = L.Class.extend({
     */
     _handleOperationClick: function( opsConfig, e ) {
         var config = opsConfig.operations[e.action];
+        try {
+            opsConfig.executor.validate(
+                this.getLayerSelection(),
+                config
+            );
+        }
+        catch(err) {
+            this.notification.add({
+                text: err.message,
+                type: 'alert',
+                time: 2500
+            });
+            console.error(err);
+            return;
+        }
+
         var form = this.forms.render( e.action, config );
         form.on( 'submit', this._handleFormSubmit.bind( this, opsConfig ) );
     },
@@ -70,14 +86,17 @@ L.DNC.AppController = L.Class.extend({
     */
     _handleFormSubmit: function( opsConfig, e ) {
         var config = opsConfig.operations[e.action];
-        var newLayer = opsConfig.executor.execute(
+        var results = opsConfig.executor.execute(
             e.action,
             e.parameters,
             config,
             this.getLayerSelection()
         );
+
         if (config.createsLayer) {
-            this._handleGeoResult(newLayer);
+            this._handleGeoResult(results);
+        } else {
+            // TODO: Handle non-geo results
         }
     },
 
@@ -106,6 +125,12 @@ L.DNC.AppController = L.Class.extend({
     _handleGeoResult: function( layer ) {
         var mapLayer = L.mapbox.featureLayer( layer.geometry );
         this.layerlist.addLayerToList( mapLayer, layer.name, true );
+
+        this.notification.add({
+            text: '<strong>' + layer.name + '</strong> created successfully.',
+            type: 'success',
+            time: 2500
+        });
     },
 
     getLayerSelection: function(){

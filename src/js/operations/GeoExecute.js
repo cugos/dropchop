@@ -22,7 +22,7 @@ L.DNC.GeoExecute = L.Class.extend({
         **  do it there anyways.
         **
         **/
-        // this._validate(layers);
+        this.validate(layers, options);
 
         // Prep
         var params = this._prepareParameters( layers, options, parameters );
@@ -53,18 +53,27 @@ L.DNC.GeoExecute = L.Class.extend({
     **  allow Turf operations to run
     **
     */
-    _validate: function ( layers ) {
+    validate: function ( layers, options ) {
         var length = layers.length;
+
+        // TODO: This should live elsewhere
+        function ValidationError(message) {
+              this.name = 'ValidationError';
+              this.message = message || 'Validation Error';
+        }
+        ValidationError.prototype = Object.create(Error.prototype);
+        ValidationError.prototype.constructor = ValidationError;
+
         if (!length) {
-            throw new Error("Can't run " + this.title + " on empty selection.");
+            throw new ValidationError("Can't run " + this.title + " on empty selection.");
         }
 
-        if (this.options.maxFeatures && length > this.options.maxFeatures) {
-            throw new Error("Too many layers. Max is set to " + this.options.maxFeatures + ", got " + length + ".");
+        if (options.maxFeatures && length > options.maxFeatures) {
+            throw new ValidationError("Too many layers. Max is set to " + options.maxFeatures + ", got " + length + ".");
         }
 
-        if (this.options.minFeatures && length < this.options.minFeatures) {
-            throw new Error("Too few layers. Min is set to " + this.options.minFeatures + ", got " + length + ".");
+        if (options.minFeatures && length < options.minFeatures) {
+            throw new ValidationError("Too few layers. Min is set to " + options.minFeatures + ", got " + length + ".");
         }
     },
 
@@ -76,8 +85,8 @@ L.DNC.GeoExecute = L.Class.extend({
     **
     */
     _prepareParameters: function ( layers, options, params ) {
-        if (this.options.maxFeatures) {
-            layers = layers.slice(0, this.options.maxFeatures);
+        if (options.maxFeatures) {
+            layers = layers.slice(0, options.maxFeatures);
         }
         var layer_objs = layers.map(function(obj) { return obj.layer._geojson; });
         console.debug(layer_objs, params);
