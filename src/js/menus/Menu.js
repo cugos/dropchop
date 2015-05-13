@@ -11,12 +11,6 @@ L.DNC.Menu = L.Class.extend({
         this._addEventHandlers();
     },
 
-    // Add object as child. Object must have domElement property.
-    addChild: function( child, target ) {
-        target = target || this.domElement.getElementsByClassName('menu-dropdown')[0];
-        return this.constructor.__super__.addChild.call(this, child, target);
-    },
-
     // handlers for menu options
     _addEventHandlers : function () {
 
