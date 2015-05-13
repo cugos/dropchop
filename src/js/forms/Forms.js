@@ -64,7 +64,7 @@ L.DNC.Forms = L.Class.extend({
         child.parentElement.removeChild(child);
     },
 
-    submitForm: function() {
+    submitForm: function( e ) {
         // function that grabs all parameter information from the
         // current open form, and publishes 'form-submitted' so the
         // operations subscriber can execute the turf operation
@@ -88,6 +88,9 @@ L.DNC.Forms = L.Class.extend({
         if ( this.validateForm() ) {
             this.fire( 'submit', { action: this.title, parameters: this.paramArray } );
             this.closeForm();
+
+            // Remove event listener
+            this._leaflet_events.submit = []; // TODO: There's surely a better way to do this
         }
 
 
