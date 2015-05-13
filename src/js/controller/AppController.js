@@ -53,16 +53,14 @@ L.DNC.AppController = L.Class.extend({
 
     /*
     **
-    ** Lookup operation by name from operations configuration, render appropriate form
+    ** Lookup operation by name from operations configuration, validate selection,
+    ** and render appropriate form
     **
     */
     _handleOperationClick: function( opsConfig, e ) {
         var config = opsConfig.operations[e.action];
         try {
-            opsConfig.executor.validate(
-                this.getLayerSelection(),
-                config
-            );
+            opsConfig.executor.validate( this.getLayerSelection(), config );
         }
         catch(err) {
             this.notification.add({
