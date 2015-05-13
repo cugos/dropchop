@@ -26,9 +26,9 @@ L.DNC.Forms = L.Class.extend({
 
             for ( var i = 0; i < this.options.parameters.length; i++ ) {
                 var parameter = this.options.parameters[i];
-                
+
                 var input = '<div class="parameter"><label class="parameter-name">' + parameter.name + '</label>';
-                
+
                 // select
                 if ( parameter.type == 'select') {
                     input += this._inputTypeSelect( parameter );
@@ -43,7 +43,7 @@ L.DNC.Forms = L.Class.extend({
 
         }
 
-        // submit button 
+        // submit button
         html += '<button type="button" class="btn form-submit" id="operation-submit">Execute<i class="fa fa-thumbs-o-up push-left"></i></button>';
         html += '</div></div>';
 
@@ -52,8 +52,11 @@ L.DNC.Forms = L.Class.extend({
         div.id = 'DNC-FORM';
         div.innerHTML = html;
         document.body.appendChild(div);
+        this.domElement = div;
 
-        this._formHandlers();
+        this._formHandlers(div);
+
+        return this;
     },
 
     closeForm: function ( event ) {
@@ -86,7 +89,7 @@ L.DNC.Forms = L.Class.extend({
             this.fire( 'submit', { action: this.title, parameters: this.paramArray } );
             this.closeForm();
         }
-        
+
 
     },
 
