@@ -27,7 +27,7 @@ L.DNC.AppController = L.Class.extend({
         // build out menus
         this.menus = {
             geo: new L.DNC.Menu('Geoprocessing', {  // New dropdown menu
-                items: ['buffer', 'union']          // Items in menu
+                items: ['buffer', 'center', 'centroid', 'envelope',  'union']          // Items in menu
             }).addTo( this.menubar )                // Append to menubar
         };
 
