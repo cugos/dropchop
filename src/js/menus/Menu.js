@@ -55,7 +55,7 @@ L.DNC.Menu = L.Class.extend({
             }
         }
         function itemClick() {
-            _this.fire('click', { action: this.id });
+            _this.fire('clickedOperation', { action: this.id });
         }
     },
 

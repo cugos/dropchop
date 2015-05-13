@@ -46,7 +46,7 @@ L.DNC.AppController = L.Class.extend({
     _addEventHandlers: function(){
         this.dropzone.fileReader.on( 'fileparsed', this._handleParsedFile.bind( this ) );
         this.forms.on( 'submit', this._handleFormSubmit.bind(this) );
-        this.menu.geo.on( 'click', this._handleGeoClick.bind(this) );
+        this.menu.geo.on( 'clickedOperation', this._handleGeoClick.bind(this) );
     },
 
     /*
