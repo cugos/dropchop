@@ -25,6 +25,27 @@ L.DNC.Geo = L.Class.extend({
         createsLayer: true
     },
 
+    center: {
+        minFeatures: 1,
+        maxFeatures: 1,
+        description: 'Creates a point in the center of the feature.',
+        createsLayer: true
+    },
+    
+    centroid: {
+        minFeatures: 1,
+        maxFeatures: 1,
+        description: 'Creates a point in the centroid of the features.',
+        createsLayer: true
+    },
+
+    envelope: {
+        minFeatures: 1,
+        maxFeatures: 1,
+        description: 'Extent of all the features.',
+        createsLayer: true
+    },
+
     union: {
         minFeatures: 2,
         maxFeatures: 2,
