@@ -67,18 +67,18 @@ L.DNC.AppController = L.Class.extend({
     ** Take input from an options form, use input to execute operation, get new
     ** layer, pass new layer off to be added to map.
     **
-    ** TODO: This is currently only built to handle geo operations. Eventually,
-    ** we'll need to support operations that don't return geo layers.
-    **
     */
     _handleFormSubmit: function( opsConfig, e ) {
+        var config = opsConfig.operations[e.action];
         var newLayer = opsConfig.executor.execute(
             e.action,
             e.parameters,
-            opsConfig.operations[e.action],
+            config,
             this.getLayerSelection()
         );
-        this._handleGeoResult(newLayer);
+        if (config.createsLayer) {
+            this._handleGeoResult(newLayer);
+        }
     },
 
     /*

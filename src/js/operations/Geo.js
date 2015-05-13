@@ -21,13 +21,15 @@ L.DNC.Geo = L.Class.extend({
                 options: ['miles', 'feet', 'kilometers', 'meters', 'degrees'],
                 default: 'miles'
             }
-        ]
+        ],
+        createsLayer: true
     },
 
     union: {
         minFeatures: 2,
         maxFeatures: 2,
-        description: 'Takes two polygons and returns a combined polygon. If the input polygons are not contiguous, this function returns a MultiPolygon feature.'
+        description: 'Takes two polygons and returns a combined polygon. If the input polygons are not contiguous, this function returns a MultiPolygon feature.',
+        createsLayer: true
     }
 
 });
