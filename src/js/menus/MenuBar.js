@@ -1,6 +1,7 @@
 L.DNC = L.DNC || {};
 L.DNC.MenuBar = L.Class.extend({
     includes: L.Mixin.Events,
+    options: { id: '#menu-bar' },
 
     initialize: function ( options ) {
         L.setOptions( this, options );
@@ -22,7 +23,7 @@ L.DNC.MenuBar = L.Class.extend({
 
     /*
     **
-    ** create the DOM element #menu-bar
+    ** Create the DOM element
     **
     */
     _buildDomElement: function ( id ) {

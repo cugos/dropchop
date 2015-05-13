@@ -1,4 +1,10 @@
 L.DNC = L.DNC || {};
+
+/*
+**
+** A dropdown menu
+**
+*/
 L.DNC.Menu = L.Class.extend({
     includes: L.Mixin.Events,
 
@@ -10,7 +16,11 @@ L.DNC.Menu = L.Class.extend({
         this._addEventHandlers();
     },
 
-    // handlers for menu options
+    /*
+    **
+    ** Create event handlers for dom elements within this object
+    **
+    */
     _addEventHandlers : function () {
 
         // using within the click function scope since we need to pass information
@@ -45,7 +55,7 @@ L.DNC.Menu = L.Class.extend({
             }
         }
         function itemClick() {
-            _this.fire('click', { action: this.id });
+            _this.fire('clickedOperation', { action: this.id });
         }
     },
 
@@ -61,6 +71,12 @@ L.DNC.Menu = L.Class.extend({
         return this;
     },
 
+    /*
+    **
+    ** Take in an array of operations names, return array of dom elements for
+    ** each item
+    **
+    */
     _buildMenuItems: function ( items ) {
         var tempArray = [];
         for ( var i = 0; i < items.length; i++ ) {
@@ -73,16 +89,20 @@ L.DNC.Menu = L.Class.extend({
         return tempArray;
     },
 
-    // Create, add, and return dom element
-    _buildDomElement: function ( elems ) {
+    /*
+    **
+    ** Take in array of menu item dom elements, return dom element for this menu
+    **
+    */
+    _buildDomElement: function ( childElements ) {
         var menu = document.createElement('div');
         menu.className = "menu";
         menu.innerHTML = '<button class="menu-button">' + this.title + '<i class="fa fa-angle-down"></i></button>';
 
         var menuDropdown = document.createElement('div');
         menuDropdown.className = 'menu-dropdown menu-expand';
-        for ( var e = 0; e < elems.length; e++ ) {
-            menuDropdown.appendChild(elems[e]);
+        for ( var e = 0; e < childElements.length; e++ ) {
+            menuDropdown.appendChild(childElements[e]);
         }
 
         menu.appendChild(menuDropdown);

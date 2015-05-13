@@ -1,4 +1,10 @@
 L.DNC = L.DNC || {};
+/*
+**
+** AppController is the primary point of app initialization. It basically 'ties
+** every together'
+**
+*/
 L.DNC.AppController = L.Class.extend({
 
     statics: {},
@@ -40,32 +46,44 @@ L.DNC.AppController = L.Class.extend({
     _addEventHandlers: function(){
         this.dropzone.fileReader.on( 'fileparsed', this._handleParsedFile.bind( this ) );
         this.forms.on( 'submit', this._handleFormSubmit.bind(this) );
-        this.menu.geo.on( 'click', this._handleGeoClick.bind(this) );
+        this.menu.geo.on( 'clickedOperation', this._handleGeoClick.bind(this) );
     },
 
+    /*
+    **
+    ** Lookup geo operation from clicked geomenu item, render appropriate form
+    **
+    */
     _handleGeoClick: function( e ) {
-        // Take click on menu
-
         var info = this.ops.geo[e.action];
         this.forms.render( e.action, info );
     },
 
+    /*
+    **
+    ** Take input from an options form, use input to execute operation, get new
+    ** layer, pass new layer off to be added to map.
+    **
+    */
     _handleFormSubmit: function( e ) {
-        // Take input from an options form, use input to create layer,
-        // pass new layer off to be added to map.
 
         var newLayer = this.ops.geox.execute(
-            e.action, e.parameters,
-            this.ops.geo[e.action], this.getLayerSelection()
+            e.action,
+            e.parameters,
+            this.ops.geo[e.action],
+            this.getLayerSelection()
         );
         this._handleGeoResult(newLayer);
     },
 
+    /*
+    **
+    ** Take newly parsed file, add to make and layerlist
+    **
+    */
     _handleParsedFile: function( e ) {
-        // Take newly parsed file, add to make and layerlist
-
-        var mapLayer = L.mapbox.featureLayer( e.file );
-        this.layerlist.addLayerToList( mapLayer, e.fileInfo.name, true );
+        var layer = L.mapbox.featureLayer( e.file );
+        this.layerlist.addLayerToList( layer, e.fileInfo.name, true );
         this.mapView.numLayers++;
 
         this.notification.add({
@@ -75,9 +93,12 @@ L.DNC.AppController = L.Class.extend({
         });
     },
 
+    /*
+    **
+    ** Take new layer, add to map and layerlist
+    **
+    */
     _handleGeoResult: function( layer ) {
-        // Take new layer, add to map and layerlist
-
         var mapLayer = L.mapbox.featureLayer( layer.geometry );
         this.layerlist.addLayerToList( mapLayer, layer.name, true );
     },
