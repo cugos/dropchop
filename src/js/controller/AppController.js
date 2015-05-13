@@ -58,7 +58,7 @@ L.DNC.AppController = L.Class.extend({
             e.action, e.parameters,
             this.ops.geo[e.action], this.getLayerSelection()
         );
-        this._handleGeoResult(layer);
+        this._handleGeoResult(newLayer);
     },
 
     _handleParsedFile: function( e ) {
