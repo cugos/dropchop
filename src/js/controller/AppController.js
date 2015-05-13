@@ -43,27 +43,41 @@ L.DNC.AppController = L.Class.extend({
         this.menu.geo.on( 'click', this._handleGeoClick.bind(this) );
     },
 
+    /*
+    **
+    ** Handle click on geomenu items
+    **
+    */
     _handleGeoClick: function( e ) {
-        // Take click on menu
-
         var info = this.ops.geo[e.action];
         this.forms.render( e.action, info );
     },
 
+
+    /*
+    **
+    ** Take input from an options form, use input to create layer,
+    ** pass new layer off to be added to map.
+    **
+    */
     _handleFormSubmit: function( e ) {
-        // Take input from an options form, use input to create layer,
-        // pass new layer off to be added to map.
 
         var newLayer = this.ops.geox.execute(
-            e.action, e.parameters,
-            this.ops.geo[e.action], this.getLayerSelection()
+            e.action,
+            e.parameters,
+            this.ops.geo[e.action],
+            this.getLayerSelection()
         );
         this._handleGeoResult(layer);
     },
 
-    _handleParsedFile: function( e ) {
-        // Take newly parsed file, add to make and layerlist
 
+    /*
+    **
+    ** Take newly parsed file, add to make and layerlist
+    **
+    */
+    _handleParsedFile: function( e ) {
         var mapLayer = L.mapbox.featureLayer( e.file );
         this.layerlist.addLayerToList( mapLayer, e.fileInfo.name, true );
         this.mapView.numLayers++;
@@ -75,9 +89,13 @@ L.DNC.AppController = L.Class.extend({
         });
     },
 
-    _handleGeoResult: function( layer ) {
-        // Take new layer, add to map and layerlist
 
+    /*
+    **
+    ** Take new layer, add to map and layerlist
+    **
+    */
+    _handleGeoResult: function( layer ) {
         var mapLayer = L.mapbox.featureLayer( layer.geometry );
         this.layerlist.addLayerToList( mapLayer, layer.name, true );
     },
