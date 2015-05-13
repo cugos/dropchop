@@ -24,16 +24,16 @@ L.DNC.AppController = L.Class.extend({
 
         this.menubar = new L.DNC.MenuBar( { id: 'menu-bar' } ).addTo( document.body );
 
-        // new menu
-        this.menu = {
-            geo: new L.DNC.Menu('Geoprocessing', {
-                items: ['buffer', 'union']
-            }).addTo( this.menubar )
+        // build out menus
+        this.menus = {
+            geo: new L.DNC.Menu('Geoprocessing', {  // New dropdown menu
+                items: ['buffer', 'union']          // Items in menu
+            }).addTo( this.menubar )                // Append to menubar
         };
 
-        this.ops = {
-            geo: new L.DNC.Geo(),
-            geox: new L.DNC.GeoExecute()
+        this.geoOpsConfig = {
+            operations: new L.DNC.Geo(),        // Configurations of GeoOperations
+            executor: new L.DNC.GeoExecute()    // Executor of GeoOperations
         };
 
         this.forms = new L.DNC.Forms();
@@ -45,18 +45,37 @@ L.DNC.AppController = L.Class.extend({
 
     _addEventHandlers: function(){
         this.dropzone.fileReader.on( 'fileparsed', this._handleParsedFile.bind( this ) );
-        this.forms.on( 'submit', this._handleFormSubmit.bind(this) );
-        this.menu.geo.on( 'clickedOperation', this._handleGeoClick.bind(this) );
+
+        // Handle clicks on items within geoMenu
+        // NOTE: This is where an operation is tied to a menu item
+        this.menus.geo.on( 'clickedOperation', this._handleOperationClick.bind( this, this.geoOpsConfig ) );
     },
 
     /*
     **
-    ** Lookup geo operation from clicked geomenu item, render appropriate form
+    ** Lookup operation by name from operations configuration, render appropriate form
     **
     */
-    _handleGeoClick: function( e ) {
-        var info = this.ops.geo[e.action];
-        this.forms.render( e.action, info );
+    _handleOperationClick: function( opsConfig, e ) {
+        var config = opsConfig.operations[e.action];
+        try {
+            opsConfig.executor.validate(
+                this.getLayerSelection(),
+                config
+            );
+        }
+        catch(err) {
+            this.notification.add({
+                text: err.message,
+                type: 'alert',
+                time: 2500
+            });
+            console.error(err);
+            return;
+        }
+
+        var form = this.forms.render( e.action, config );
+        form.on( 'submit', this._handleFormSubmit.bind( this, opsConfig ) );
     },
 
     /*
@@ -65,15 +84,20 @@ L.DNC.AppController = L.Class.extend({
     ** layer, pass new layer off to be added to map.
     **
     */
-    _handleFormSubmit: function( e ) {
-
-        var newLayer = this.ops.geox.execute(
+    _handleFormSubmit: function( opsConfig, e ) {
+        var config = opsConfig.operations[e.action];
+        var results = opsConfig.executor.execute(
             e.action,
             e.parameters,
-            this.ops.geo[e.action],
+            config,
             this.getLayerSelection()
         );
-        this._handleGeoResult(newLayer);
+
+        if (config.createsLayer) {
+            this._handleGeoResult(results);
+        } else {
+            // TODO: Handle non-geo results
+        }
     },
 
     /*
@@ -101,10 +125,12 @@ L.DNC.AppController = L.Class.extend({
     _handleGeoResult: function( layer ) {
         var mapLayer = L.mapbox.featureLayer( layer.geometry );
         this.layerlist.addLayerToList( mapLayer, layer.name, true );
-    },
 
-    _handleOperationClick: function ( e ) {
-        this.forms.render( e );
+        this.notification.add({
+            text: '<strong>' + layer.name + '</strong> created successfully.',
+            type: 'success',
+            time: 2500
+        });
     },
 
     getLayerSelection: function(){
