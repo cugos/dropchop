@@ -1,4 +1,10 @@
 L.DNC = L.DNC || {};
+/*
+**
+** AppController is the primary point of app initialization. It basically 'ties
+** every together'
+**
+*/
 L.DNC.AppController = L.Class.extend({
 
     statics: {},
@@ -45,7 +51,7 @@ L.DNC.AppController = L.Class.extend({
 
     /*
     **
-    ** Handle click on geomenu items
+    ** Lookup geo operation from clicked geomenu item, render appropriate form
     **
     */
     _handleGeoClick: function( e ) {
@@ -53,11 +59,10 @@ L.DNC.AppController = L.Class.extend({
         this.forms.render( e.action, info );
     },
 
-
     /*
     **
-    ** Take input from an options form, use input to create layer,
-    ** pass new layer off to be added to map.
+    ** Take input from an options form, use input to execute operation, get new
+    ** layer, pass new layer off to be added to map.
     **
     */
     _handleFormSubmit: function( e ) {
@@ -71,15 +76,14 @@ L.DNC.AppController = L.Class.extend({
         this._handleGeoResult(layer);
     },
 
-
     /*
     **
     ** Take newly parsed file, add to make and layerlist
     **
     */
     _handleParsedFile: function( e ) {
-        var mapLayer = L.mapbox.featureLayer( e.file );
-        this.layerlist.addLayerToList( mapLayer, e.fileInfo.name, true );
+        var layer = L.mapbox.featureLayer( e.file );
+        this.layerlist.addLayerToList( layer, e.fileInfo.name, true );
         this.mapView.numLayers++;
 
         this.notification.add({
@@ -88,7 +92,6 @@ L.DNC.AppController = L.Class.extend({
             time: 2500
         });
     },
-
 
     /*
     **
