@@ -93,13 +93,13 @@ L.DNC.LayerList = L.Control.extend({
             layer.setZIndex(this._lastZIndex);
         }
 
-        var id = L.stamp(layer);
         var obj = {
             layer: layer,
             name: name,
             overlay: overlay
         };
 
+        var id = L.stamp(layer);
         this._layers[id] = obj;
         this._map.addLayer( layer );
         this._addItem( obj );
