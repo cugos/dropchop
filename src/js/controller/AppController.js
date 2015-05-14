@@ -59,6 +59,8 @@ L.DNC.AppController = L.Class.extend({
     */
     _handleOperationClick: function( opsConfig, e ) {
         var config = opsConfig.operations[e.action];
+
+        // Validate selection
         try {
             opsConfig.executor.validate( this.getLayerSelection(), config );
         }
