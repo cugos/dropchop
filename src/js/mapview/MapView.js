@@ -42,6 +42,9 @@ L.DNC.MapView = L.Class.extend({
             position: 'bottomright',
             collapsed: false
         }).addTo(this._map);
+        L.control.zoom({
+            position: 'topright'
+        }).addTo(this._map);
 
     }
 
