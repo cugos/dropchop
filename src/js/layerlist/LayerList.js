@@ -88,23 +88,24 @@ L.DNC.LayerList = L.Control.extend({
     },
 
     addLayerToList: function (layer, name, overlay) {
-        var id = L.stamp(layer);
-
-        this._layers[id] = {
-            layer: layer,
-            name: name,
-            overlay: overlay
-        };
-
         if (this.options.autoZIndex && layer.setZIndex) {
             this._lastZIndex++;
             layer.setZIndex(this._lastZIndex);
         }
 
-        this._update();
+        var id = L.stamp(layer);
+        var obj = {
+            layer: layer,
+            name: name,
+            overlay: overlay
+        };
+
+        this._layers[id] = obj;
+        this._map.addLayer( layer );
+        this._addItem( obj );
 
         // If we have the zoomToExtentOnAdd feature enabled (on by default, but can be
-        // hooked to UI element) then we loop through the layers and get the extent and 
+        // hooked to UI element) then we loop through the layers and get the extent and
         // set the map zoom so people see the data right away.
         if (this.options.zoomToExtentOnAdd) {
             var bounds = layer.getBounds();
@@ -121,25 +122,6 @@ L.DNC.LayerList = L.Control.extend({
         delete this._layers[id];
         return this;
     },
-
-    _update: function () {
-        if (!this._container) { return this; }
-
-        for (var i in this._layers) {
-            obj = this._layers[i];
-
-            if ( !(this._map.hasLayer( obj.layer )) ){
-
-                this._map.addLayer( obj.layer );
-                this._addItem(obj);
-
-            }
-
-        }
-
-        return this;
-    },
-
 
     _addItem: function (obj) {
         var inputEl = document.createElement('input');
