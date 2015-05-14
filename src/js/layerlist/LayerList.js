@@ -63,8 +63,8 @@ L.DNC.LayerList = L.Control.extend({
         this.remove();
         this._map = map;
 
-        this._container = this._buildDomElement();
-        this.layerContainer.appendChild( this._container );
+        this.domElement = this._buildDomElement();
+        this.layerContainer.appendChild( this.domElement );
 
         return this;
     },
@@ -74,8 +74,8 @@ L.DNC.LayerList = L.Control.extend({
             return this;
         }
 
-        this._container.parentElement.removeChild( this._container );
-        this._container = null;
+        this.domElement.parentElement.removeChild( this.domElement );
+        this.domElement = null;
 
         if (this.onRemove) {
             this.onRemove(this._map);
@@ -140,7 +140,7 @@ L.DNC.LayerList = L.Control.extend({
 
         li.appendChild(inputEl);
         li.appendChild(layerItem);
-        this._container.appendChild(li);
+        this.domElement.appendChild(li);
 
     } ,
 
