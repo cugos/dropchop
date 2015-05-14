@@ -53,22 +53,19 @@ L.DNC.LayerList = L.Control.extend({
         };
     },
 
-    _initLayout: function () {
-        this._container = L.DomUtil.create('ul', "json-layer-list");
-        this._container.setAttribute( "id", "layer-list" );
-        this.layerContainer.appendChild( this._container );
-    },
-
-    onAdd: function (map) {
-        this._initLayout();
-        this._update();
-        return this._container;
+    _buildDomElement: function () {
+        var domElement = L.DomUtil.create('ul', "json-layer-list");
+        domElement.setAttribute( "id", "layer-list" );
+        return domElement;
     },
 
     addTo: function (map) {
         this.remove();
         this._map = map;
-        this._container = this.onAdd(map);
+
+        this._container = this._buildDomElement();
+        this.layerContainer.appendChild( this._container );
+
         return this;
     },
 
