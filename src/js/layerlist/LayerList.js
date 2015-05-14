@@ -85,11 +85,6 @@ L.DNC.LayerList = L.Control.extend({
     },
 
     addLayerToList: function (layer, name, overlay) {
-        if (this.options.autoZIndex && layer.setZIndex) {
-            this._lastZIndex++;
-            layer.setZIndex(this._lastZIndex);
-        }
-
         var obj = {
             layer: layer,
             name: name,
@@ -100,6 +95,11 @@ L.DNC.LayerList = L.Control.extend({
         this._layers[id] = obj;
         this._map.addLayer( layer );
         this._addItem( obj );
+
+        if (this.options.autoZIndex && layer.setZIndex) {
+            this._lastZIndex++;
+            layer.setZIndex(this._lastZIndex);
+        }
 
         // If we have the zoomToExtentOnAdd feature enabled (on by default, but can be
         // hooked to UI element) then we loop through the layers and get the extent and
