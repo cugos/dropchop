@@ -3,6 +3,27 @@ L.DNC.Geo = L.Class.extend({
 
     options: {},
 
+    bezier: {
+        minFeatures: 1,
+        description: 'Takes a line and returns a curved version by applying a Bezier spline algorithm.',
+        parameters: [
+            {
+                name: 'resolution',
+                description :'Time in milliseconds between points',
+                type: 'number',
+                default: 10000
+            },
+            {
+                name: 'sharpness',
+                description :'a measure of how curvy the path should be between splines',
+                type: 'number',
+                default:  0.85 
+
+            }
+        ],
+        createsLayer: true
+    },
+
     buffer: {
         maxFeatures: 1,
         additionalArgs: 0.1,
@@ -25,6 +46,27 @@ L.DNC.Geo = L.Class.extend({
         createsLayer: true
     },
 
+    center: {
+        minFeatures: 1,
+        maxFeatures: 1,
+        description: 'Creates a point in the center of the feature.',
+        createsLayer: true
+    },
+    
+    centroid: {
+        minFeatures: 1,
+        maxFeatures: 1,
+        description: 'Creates a point in the centroid of the features.',
+        createsLayer: true
+    },
+
+    envelope: {
+        minFeatures: 1,
+        maxFeatures: 1,
+        description: 'Extent of all the features.',
+        createsLayer: true
+    },
+
     union: {
         minFeatures: 2,
         maxFeatures: 2,
@@ -36,27 +78,6 @@ L.DNC.Geo = L.Class.extend({
         minFeatures: 1,
         maxFeatures: 1,
         description: 'Triangulated irregular network, interpolation method',
-    },
-
-    bezier: {
-        minFeatures: 1,
-        description: 'Takes a line and returns a curved version by applying a Bezier spline algorithm.',
-        parameters: [
-            {
-                name: 'resolution',
-                description :'Time in milliseconds between points',
-                type: 'number',
-                default: 10000
-            },
-            {
-                name: 'sharpness',
-                description :'a measure of how curvy the path should be between splines',
-                type: 'number',
-                default:  0.85 
-
-            }
-        ],
-        createsLayer: true
     }
 
     
