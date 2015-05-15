@@ -137,6 +137,149 @@ describe("L.DNC.GeoExecute", function () {
 
     /*
     **
+    ** CENTER TEST
+    **
+    */
+    describe("center", function () {
+
+        it("min attributes", function () {
+            var formData = {
+                action: 'center',
+                parameters: [],
+            };
+
+            var inputLayers = [{
+                info: {
+                    name: "center1.geojson",
+                    overlay: true
+                },
+                layer: {
+                    _geojson: window.testingData.polygon
+                }
+            }];
+
+            var layer = ops.geox.execute( formData.action, formData.parameters, ops.geo[formData.action], inputLayers);
+            expect(layer.name).to.equal("center_center1.geojson");
+            var expected = 
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        -122.33654022216795,
+                        47.64029462221234
+                    ]
+                },
+                "properties": {}
+            };
+            expect(layer.geometry).to.eql( expected );
+        });
+    });
+
+    /*
+    **
+    ** CENTROID TEST
+    **
+    */
+    describe("centroid", function () {
+
+        it("min attributes", function () {
+            var formData = {
+                action: 'centroid',
+                parameters: [],
+            };
+
+            var inputLayers = [{
+                info: {
+                    name: "center1.geojson",
+                    overlay: true
+                },
+                layer: {
+                    _geojson: window.testingData.polygon
+                }
+            }];
+
+            var layer = ops.geox.execute( formData.action, formData.parameters, ops.geo[formData.action], inputLayers);
+            expect(layer.name).to.equal("centroid_center1.geojson");
+            var expected = 
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        -122.33654022216795,
+                        47.64029462221234
+                    ]
+                },
+                "properties": {}
+            };
+            expect(layer.geometry).to.eql( expected );
+        });
+    });
+
+    /*
+    **
+    ** ENVELOPE TEST
+    **
+    */
+    describe("envelope", function () {
+
+        it("min attributes", function () {
+            var formData = {
+                action: 'envelope',
+                parameters: [],
+            };
+
+            var inputLayers = [{
+                info: {
+                    name: "feature.geojson",
+                    overlay: true
+                },
+                layer: {
+                    _geojson: window.testingData.fc_points
+                }
+            }];
+
+            var layer = ops.geox.execute( formData.action, formData.parameters, ops.geo[formData.action], inputLayers);
+            expect(layer.name).to.equal("envelope_feature.geojson");
+            var expected = 
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [
+                                6.6796875,
+                                25.799891182088334
+                            ],
+                            [
+                                29.8828125,
+                                25.799891182088334
+                            ],
+                            [
+                                29.8828125,
+                                44.84029065139799
+                            ],
+                            [
+                                6.6796875,
+                                44.84029065139799
+                            ],
+                            [
+                                6.6796875,
+                                25.799891182088334
+                            ]
+                        ]
+                    ]
+                },
+                "properties": {}
+            };
+            expect(layer.geometry).to.eql( expected );
+        });
+    });
+
+    /*
+    **
     ** TIN TEST
     **
     */
