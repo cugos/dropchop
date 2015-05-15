@@ -39,6 +39,61 @@
             ]
         } ,
 
+        "fc_points": 
+		    {
+		      "type": "FeatureCollection",
+		      "features": [
+		        {
+		          "type": "Feature",
+		          "properties": {
+		            "marker-color": "#7e7e7e",
+		            "marker-size": "medium",
+		            "marker-symbol": "",
+		            "foo": "baz"
+		          },
+		          "geometry": {
+		            "type": "Point",
+		            "coordinates": [
+		              6.6796875,
+		              25.799891182088334
+		            ]
+		          }
+		        },
+		        {
+		          "type": "Feature",
+		          "properties": {
+		            "marker-color": "#7e7e7e",
+		            "marker-size": "medium",
+		            "marker-symbol": "",
+		            "foo": "bar"
+		          },
+		          "geometry": {
+		            "type": "Point",
+		            "coordinates": [
+		              24.960937499999996,
+		              44.84029065139799
+		            ]
+		          }
+		        },
+		        {
+		          "type": "Feature",
+		          "properties": {
+		            "marker-color": "#7e7e7e",
+		            "marker-size": "medium",
+		            "marker-symbol": "",
+		            "foo": "bax"
+		          },
+		          "geometry": {
+		            "type": "Point",
+		            "coordinates": [
+		              29.8828125,
+		              32.54681317351517
+		            ]
+		          }
+		        }
+		      ]
+		} ,
+
     }
 
 })();

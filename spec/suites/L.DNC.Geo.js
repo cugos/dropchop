@@ -18,6 +18,11 @@ describe("L.DNC.GeoExecute", function () {
         console.debug = _console.debug;
     });
 
+    /*
+    **
+    ** BUFFER TEST
+    **
+    */
     describe("buffer", function () {
 
         it("min attributes", function () {
@@ -88,4 +93,72 @@ describe("L.DNC.GeoExecute", function () {
             expect(layer.geometry).to.eql( expected );
         });
     });
+
+    /*
+    **
+    ** TIN TEST
+    **
+    */
+    describe("tin", function () {
+
+        it("min attributes", function () {
+            var formData = {
+                action: 'tin',
+                parameters: ['foo'],
+            };
+
+            var inputLayers = [{
+                info: {
+                    name: "points.geojson",
+                    overlay: true
+                },
+                layer: {
+                    _geojson: window.testingData.fc_points
+                }
+            }];
+
+            var layer = ops.geox.execute( formData.action, formData.parameters, ops.geo[formData.action], inputLayers);
+            expect(layer.name).to.equal("tin_points.geojson");
+            var expected = {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [
+                                6.6796875,
+                                25.799891182088334
+                            ],
+                            [
+                                24.960937499999996,
+                                44.84029065139799
+                            ],
+                            [
+                                29.8828125,
+                                32.54681317351517
+                            ],
+                            [
+                                6.6796875,
+                                25.799891182088334
+                            ]
+                        ]
+                    ]
+                },
+
+                "properties": {
+                    "a": "baz",
+                    "b": "bar",
+                    "c": "bax"
+                }
+            };
+            expect( layer.geometry ).to.eql( expected );
+        });
+    });
+
+
+
+
+
+
+    
 });

@@ -30,6 +30,16 @@ L.DNC.Geo = L.Class.extend({
         maxFeatures: 2,
         description: 'Takes two polygons and returns a combined polygon. If the input polygons are not contiguous, this function returns a MultiPolygon feature.',
         createsLayer: true
+    },
+
+
+    tin: {
+        minFeatures: 1,
+        maxFeatures: 1,
+        description: 'Triangulated irregular network, interpolation method',
+        createsLayer: true
     }
+
+    
 
 });
