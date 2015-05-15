@@ -19,10 +19,10 @@ module.exports = function(grunt) {
       }
     },
     sass: {
+      options: {
+        style: 'compressed'
+      },
       dist: {
-        options: {
-          style: 'compressed'
-        },
         files: {
           'dist/css/app.css': 'src/sass/site.scss'
         }
@@ -117,7 +117,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-gh-pages');
   grunt.loadNpmTasks('grunt-karma');
