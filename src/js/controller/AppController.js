@@ -28,12 +28,20 @@ L.DNC.AppController = L.Class.extend({
         this.menus = {
             geo: new L.DNC.Menu('Geoprocessing', {  // New dropdown menu
                 items: ['bezier', 'buffer', 'center', 'centroid', 'envelope', 'union', 'tin']
-            }).addTo( this.menubar )                // Append to menubar
+            }).addTo( this.menubar ),                // Append to menubar
+            file: new L.DNC.Menu('File', {  // New dropdown menu
+                items: ['Save GeoJSON', 'Save Shapefile']          // Items in menu
+            }).addTo( this.menubar )         // Append to menubar
         };
 
         this.geoOpsConfig = {
             operations: new L.DNC.Geo(),        // Configurations of GeoOperations
             executor: new L.DNC.GeoExecute()    // Executor of GeoOperations
+        };
+
+        this.fileOpsConfig = {
+            operations: new L.DNC.File(),        // Configurations of GeoOperations
+            executor: new L.DNC.FileExecute()    // Executor of GeoOperations
         };
 
         this.forms = new L.DNC.Forms();
@@ -49,6 +57,8 @@ L.DNC.AppController = L.Class.extend({
         // Handle clicks on items within geoMenu
         // NOTE: This is where an operation is tied to a menu item
         this.menus.geo.on( 'clickedOperation', this._handleOperationClick.bind( this, this.geoOpsConfig ) );
+
+        this.menus.file.on( 'clickedOperation', this._handleOperationClick.bind( this, this.fileOpsConfig ) );
     },
 
     /*
@@ -74,8 +84,12 @@ L.DNC.AppController = L.Class.extend({
             return;
         }
 
-        var form = this.forms.render( e.action, config );
-        form.on( 'submit', this._handleFormSubmit.bind( this, opsConfig ) );
+        if (config.parameters !== undefined) {
+            var form = this.forms.render( e.action, config );
+            form.on( 'submit', this._handleFormSubmit.bind( this, opsConfig ) );
+        } else {
+            this._handleFormSubmit(opsConfig,e);
+        }
     },
 
     /*
