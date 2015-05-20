@@ -41,7 +41,7 @@ L.DNC.AppController = L.Class.extend({
         // build out menus
         this.menus = {
             geo: new L.DNC.Menu('Geoprocessing', {  // New dropdown menu
-                items: ['buffer', 'union']          // Items in menu
+                items: ['bezier', 'buffer', 'center', 'centroid', 'envelope', 'union', 'tin']
             }).addTo( this.menubar )                // Append to menubar
         };
 
@@ -67,16 +67,16 @@ L.DNC.AppController = L.Class.extend({
 
     /*
     **
-    ** Lookup operation by name from operations configuration, render appropriate form
+    ** Lookup operation by name from operations configuration, validate selection,
+    ** and render appropriate form
     **
     */
     _handleOperationClick: function( opsConfig, e ) {
         var config = opsConfig.operations[e.action];
+
+        // Validate selection
         try {
-            opsConfig.executor.validate(
-                this.getLayerSelection(),
-                config
-            );
+            opsConfig.executor.validate( this.getLayerSelection(), config );
         }
         catch(err) {
             this.notification.add({
@@ -657,6 +657,9 @@ L.DNC.MapView = L.Class.extend({
             position: 'bottomright',
             collapsed: false
         }).addTo(this._map);
+        L.control.zoom({
+            position: 'topright'
+        }).addTo(this._map);
 
     }
 
@@ -870,6 +873,27 @@ L.DNC.Geo = L.Class.extend({
 
     options: {},
 
+    bezier: {
+        minFeatures: 1,
+        description: 'Takes a line and returns a curved version by applying a Bezier spline algorithm.',
+        parameters: [
+            {
+                name: 'resolution',
+                description :'Time in milliseconds between points',
+                type: 'number',
+                default: 10000
+            },
+            {
+                name: 'sharpness',
+                description :'a measure of how curvy the path should be between splines',
+                type: 'number',
+                default:  0.85 
+
+            }
+        ],
+        createsLayer: true
+    },
+
     buffer: {
         maxFeatures: 1,
         additionalArgs: 0.1,
@@ -892,12 +916,41 @@ L.DNC.Geo = L.Class.extend({
         createsLayer: true
     },
 
+    center: {
+        minFeatures: 1,
+        maxFeatures: 1,
+        description: 'Creates a point in the center of the feature.',
+        createsLayer: true
+    },
+    
+    centroid: {
+        minFeatures: 1,
+        maxFeatures: 1,
+        description: 'Creates a point in the centroid of the features.',
+        createsLayer: true
+    },
+
+    envelope: {
+        minFeatures: 1,
+        maxFeatures: 1,
+        description: 'Extent of all the features.',
+        createsLayer: true
+    },
+
     union: {
         minFeatures: 2,
         maxFeatures: 2,
         description: 'Takes two polygons and returns a combined polygon. If the input polygons are not contiguous, this function returns a MultiPolygon feature.',
         createsLayer: true
+    },
+
+    tin: {
+        minFeatures: 1,
+        maxFeatures: 1,
+        description: 'Triangulated irregular network, interpolation method',
     }
+
+    
 
 });
 
