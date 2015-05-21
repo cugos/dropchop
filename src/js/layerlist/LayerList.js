@@ -111,6 +111,17 @@ L.DNC.LayerList = L.Control.extend({
 
     /*
     **
+    ** Given a leaflet layer, remove from layerlist
+    **
+    */
+    removeLayer: function (layer) {
+        var id = L.stamp(layer);
+        delete this._layers[id];
+        return this;
+    },
+
+    /*
+    **
     ** Generate list item dom element for new object
     **
     */
