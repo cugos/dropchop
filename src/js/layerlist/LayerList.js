@@ -53,6 +53,13 @@ L.DNC.LayerList = L.Control.extend({
                     }
                 }
             },
+            clear: function(l) {
+                var layers = document.getElementsByClassName( 'layer-name' );
+                for (var i = 0; i < layers.length; i++ ) {
+                    layers[i].className = layers[i].className.replace('selected', '');
+                }
+                this.list = [];
+            },
             list: []
         };
     },
@@ -119,6 +126,8 @@ L.DNC.LayerList = L.Control.extend({
     **
     */
     _buildListItemDomElement: function (obj) {
+        var _this = this;
+
         // Create checkbox
         var inputEl = document.createElement('input');
         inputEl.setAttribute('type', 'checkbox');
@@ -132,6 +141,7 @@ L.DNC.LayerList = L.Control.extend({
         layerItem.className = 'layer-name';
         layerItem.innerHTML = obj.name;
         layerItem.setAttribute( 'data-id', L.stamp(obj.layer) );
+        layerItem.setAttribute( 'data-layer', ObjectLength( _this._layers ) );
         layerItem.onclick = this._handleLayerClick.bind( this, obj );
 
         // Create list item
@@ -142,6 +152,17 @@ L.DNC.LayerList = L.Control.extend({
         li.appendChild(inputEl);
         li.appendChild(layerItem);
         return li;
+
+        // used to count how many layers currently exist
+        function ObjectLength( object ) {
+            var length = 0;
+            for( var key in object ) {
+                if( object.hasOwnProperty(key) ) {
+                    ++length;
+                }
+            }
+            return length;
+        }
     },
 
     /*
@@ -163,20 +184,59 @@ L.DNC.LayerList = L.Control.extend({
     ** Handler for when a list item's text section is clicked on
     **
     */
-    _handleLayerClick: function(obj,e) {
-        if (e.currentTarget.className.indexOf('selected') == -1) {
+    _handleLayerClick: function( obj, e ) {
+        var lyrs = document.getElementsByClassName('layer-name');
+        if (e.currentTarget.className.indexOf('layer-list-selected') == -1) {
+
+            // if holding meta key (command on mac)
+            if ( e.metaKey ) {
+                // do nothing
+            } 
+            else if ( e.shiftKey ) {
+                // get layer number, and other currently selected
+                // layers, and select everything in between
+                var thisLayerNum = e.currentTarget.getAttribute('data-layer');
+                var layerNumSelection = [thisLayerNum];
+                var others = document.getElementsByClassName('layer-list-selected');
+                for ( var l = 0; l < others.length; l++ ) {
+                    layerNumSelection.push( others[l].getAttribute('data-layer') );
+                }
+                var max = Math.max.apply(null, layerNumSelection);
+                var min = Math.min.apply(null, layerNumSelection);
+                console.log( layerNumSelection, min, max );
+                for ( var x = min-1; x < max; x++ ) {
+                    console.log(lyrs[x]);
+                    if ( lyrs[x].className.indexOf('layer-list-selected') == -1 ) {
+                        lyrs[x].className += ' layer-list-selected';
+                        this.selection.add({
+                            info: this._layers[lyrs[x].getAttribute('data-id')],
+                            layer: this._layers[lyrs[x].getAttribute('data-id')].layer
+                        });
+                    }
+                }
+                return;
+            }
+            else {
+                this.selection.clear();
+            }
+
             // add the class
-            e.currentTarget.className += ' selected';
+            e.currentTarget.className += ' layer-list-selected';
             // add to select list
             this.selection.add({
                 info: obj,
                 layer: obj.layer
             });
         } else {
-            // remove selection
-            this.selection.remove(obj.layer);
-            // remove class name
-            e.currentTarget.className = 'layer-name';
+            if ( e.metaKey ) {
+                this.selection.remove(obj.layer);
+                e.currentTarget.className = e.currentTarget.className.replace(/\b layer-list-selected\b/, '');
+            } else {
+                this.selection.clear();
+                // remove selection
+                this.selection.add(obj.layer);
+                e.currentTarget.className += ' layer-list-selected';
+            }
         }
     },
 
