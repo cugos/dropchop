@@ -1,12 +1,12 @@
 L.DNC = L.DNC || {};
 L.DNC.MenuBar = L.Class.extend({
     includes: L.Mixin.Events,
-    options: { id: '#menu-bar' },
+    options: { id: '#menu-bar', classList: [] },
 
     initialize: function ( options ) {
         L.setOptions( this, options );
         this.children = [];
-        this.domElement = this._buildDomElement(this.options.id);
+        this.domElement = this._buildDomElement(this.options.id, this.options.classList);
     },
 
     /*
@@ -26,9 +26,12 @@ L.DNC.MenuBar = L.Class.extend({
     ** Create the DOM element
     **
     */
-    _buildDomElement: function ( id ) {
+    _buildDomElement: function ( id, classList ) {
         var nav = document.createElement('nav');
         nav.id = id;
+        for (var i=0; i < classList.length; i++) {
+            nav.classList.add(classList[i]);
+        }
         return nav;
     }
 });
