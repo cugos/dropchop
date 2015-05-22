@@ -20,8 +20,8 @@ L.DNC.AppController = L.Class.extend({
 
         this.mapView = new L.DNC.MapView();
         this.dropzone = new L.DNC.DropZone( this.mapView._map, {} );
-        this.layerlist = new L.DNC.LayerList( this.mapView._map, { layerContainerId: 'dropzone' } );
         this.menubar = new L.DNC.MenuBar( { id: 'menu-bar' } ).addTo( document.body );
+        this.layerlist = new L.DNC.LayerList( this.mapView._map, { layerContainerId: 'sidebar' } );
 
         // build out menus
         this.menus = {
