@@ -8,6 +8,7 @@ L.DNC.Forms = L.Class.extend({
     **
     ** RENDER FORM TEMPLATE
     **
+    ** TODO: write tests for Forms
     */
     render: function ( title, options ) {
 
@@ -96,6 +97,7 @@ L.DNC.Forms = L.Class.extend({
 
     },
 
+    // TODO: validate the form
     validateForm: function () {
         // do some validation eventually
         return true;
@@ -119,6 +121,7 @@ L.DNC.Forms = L.Class.extend({
             }
         });
 
+        // bind event handler to form submit button
         var submit = document.getElementById('operation-submit');
         submit.addEventListener('click', this.submitForm.bind(this));
     },
