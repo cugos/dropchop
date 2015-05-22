@@ -20,14 +20,13 @@ L.DNC.AppController = L.Class.extend({
 
         this.mapView = new L.DNC.MapView();
         this.dropzone = new L.DNC.DropZone( this.mapView._map, {} );
-        this.layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' } ).addTo( this.mapView._map );
-
+        this.layerlist = new L.DNC.LayerList( this.mapView._map, { layerContainerId: 'dropzone' } );
         this.menubar = new L.DNC.MenuBar( { id: 'menu-bar' } ).addTo( document.body );
 
         // build out menus
         this.menus = {
             geo: new L.DNC.Menu('Geoprocessing', {  // New dropdown menu
-                items: ['buffer', 'union']          // Items in menu
+                items: ['bezier', 'buffer', 'center', 'centroid', 'envelope', 'union', 'tin']
             }).addTo( this.menubar )                // Append to menubar
         };
 
@@ -107,7 +106,7 @@ L.DNC.AppController = L.Class.extend({
     */
     _handleParsedFile: function( e ) {
         var layer = L.mapbox.featureLayer( e.file );
-        this.layerlist.addLayerToList( layer, e.fileInfo.name, true );
+        this.layerlist.addLayer( layer, e.fileInfo.name );
         this.mapView.numLayers++;
 
         this.notification.add({
@@ -124,7 +123,7 @@ L.DNC.AppController = L.Class.extend({
     */
     _handleGeoResult: function( layer ) {
         var mapLayer = L.mapbox.featureLayer( layer.geometry );
-        this.layerlist.addLayerToList( mapLayer, layer.name, true );
+        this.layerlist.addLayer( mapLayer, layer.name );
 
         this.notification.add({
             text: '<strong>' + layer.name + '</strong> created successfully.',

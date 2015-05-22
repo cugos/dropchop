@@ -8,6 +8,7 @@ L.DNC.Forms = L.Class.extend({
     **
     ** RENDER FORM TEMPLATE
     **
+    ** TODO: write tests for Forms
     */
     render: function ( title, options ) {
 
@@ -20,7 +21,7 @@ L.DNC.Forms = L.Class.extend({
                 '<button type="button" class="btn close form-close"><i class="fa fa-times"></i></button>'+
                 '<div class="form-information"><h3 class="form-title">' + this.title + '</h3>'+
                 '<p class="form-description">' + this.options.description + '</p></div>'+
-                '<form class="form-inputs">';
+                '<form id="operation-form" class="form-inputs">';
 
         if ( this.options.parameters ) {
 
@@ -96,17 +97,31 @@ L.DNC.Forms = L.Class.extend({
 
     },
 
+    // TODO: validate the form
     validateForm: function () {
         // do some validation eventually
         return true;
     },
 
     _formHandlers: function() {
+
+        var _this = this;
+
         var closers = document.getElementsByClassName('form-close');
         for ( var x = 0; x < closers.length; x++ ) {
-          closers[x].addEventListener('click', this.closeForm.bind(this));
+            closers[x].addEventListener('click', this.closeForm.bind(this));
         }
 
+        // form submit checks for enter key to prevent default
+        var form = document.getElementById('operation-form');
+        form.addEventListener('keypress', function( event ){
+            if ( event.keyCode == 13 ) {
+                event.preventDefault();
+                _this.submitForm();
+            }
+        });
+
+        // bind event handler to form submit button
         var submit = document.getElementById('operation-submit');
         submit.addEventListener('click', this.submitForm.bind(this));
     },
