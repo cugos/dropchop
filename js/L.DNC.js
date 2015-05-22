@@ -34,8 +34,7 @@ L.DNC.AppController = L.Class.extend({
 
         this.mapView = new L.DNC.MapView();
         this.dropzone = new L.DNC.DropZone( this.mapView._map, {} );
-        this.layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' } ).addTo( this.mapView._map );
-
+        this.layerlist = new L.DNC.LayerList( this.mapView._map, { layerContainerId: 'dropzone' } );
         this.menubar = new L.DNC.MenuBar( { id: 'menu-bar' } ).addTo( document.body );
 
         // build out menus
@@ -121,7 +120,7 @@ L.DNC.AppController = L.Class.extend({
     */
     _handleParsedFile: function( e ) {
         var layer = L.mapbox.featureLayer( e.file );
-        this.layerlist.addLayerToList( layer, e.fileInfo.name, true );
+        this.layerlist.addLayer( layer, e.fileInfo.name );
         this.mapView.numLayers++;
 
         this.notification.add({
@@ -138,7 +137,7 @@ L.DNC.AppController = L.Class.extend({
     */
     _handleGeoResult: function( layer ) {
         var mapLayer = L.mapbox.featureLayer( layer.geometry );
-        this.layerlist.addLayerToList( mapLayer, layer.name, true );
+        this.layerlist.addLayer( mapLayer, layer.name );
 
         this.notification.add({
             text: '<strong>' + layer.name + '</strong> created successfully.',
@@ -293,6 +292,7 @@ L.DNC.Forms = L.Class.extend({
     **
     ** RENDER FORM TEMPLATE
     **
+    ** TODO: write tests for Forms
     */
     render: function ( title, options ) {
 
@@ -305,7 +305,7 @@ L.DNC.Forms = L.Class.extend({
                 '<button type="button" class="btn close form-close"><i class="fa fa-times"></i></button>'+
                 '<div class="form-information"><h3 class="form-title">' + this.title + '</h3>'+
                 '<p class="form-description">' + this.options.description + '</p></div>'+
-                '<form class="form-inputs">';
+                '<form id="operation-form" class="form-inputs">';
 
         if ( this.options.parameters ) {
 
@@ -381,17 +381,31 @@ L.DNC.Forms = L.Class.extend({
 
     },
 
+    // TODO: validate the form
     validateForm: function () {
         // do some validation eventually
         return true;
     },
 
     _formHandlers: function() {
+
+        var _this = this;
+
         var closers = document.getElementsByClassName('form-close');
         for ( var x = 0; x < closers.length; x++ ) {
-          closers[x].addEventListener('click', this.closeForm.bind(this));
+            closers[x].addEventListener('click', this.closeForm.bind(this));
         }
 
+        // form submit checks for enter key to prevent default
+        var form = document.getElementById('operation-form');
+        form.addEventListener('keypress', function( event ){
+            if ( event.keyCode == 13 ) {
+                event.preventDefault();
+                _this.submitForm();
+            }
+        });
+
+        // bind event handler to form submit button
         var submit = document.getElementById('operation-submit');
         submit.addEventListener('click', this.submitForm.bind(this));
     },
@@ -432,15 +446,19 @@ L.DNC.LayerList = L.Control.extend({
         layerContainerId: 'dropzone'
     },
 
-    initialize: function (options) {
+    initialize: function (map, options) {
 
         // override defaults with passed options
         L.setOptions(this, options);
 
+        this._map = map;
         this._layers = {};
         this._lastZIndex = 0;
         this._handlingClick = false;
+
+        this.domElement = this._buildDomElement();
         this.layerContainer = L.DomUtil.get( this.options.layerContainerId );
+        this.layerContainer.appendChild( this.domElement );
 
         /*
         **
@@ -467,58 +485,40 @@ L.DNC.LayerList = L.Control.extend({
         };
     },
 
-    _initLayout: function () {
-        this._container = L.DomUtil.create('ul', "json-layer-list");
-        this._container.setAttribute( "id", "layer-list" );
-        this.layerContainer.appendChild( this._container );
+    /*
+    **
+    ** Generate dom element for layerlist
+    **
+    */
+    _buildDomElement: function () {
+        var domElement = L.DomUtil.create('ul', "json-layer-list");
+        domElement.setAttribute( "id", "layer-list" );
+        return domElement;
     },
 
-    onAdd: function (map) {
-        this._initLayout();
-        this._update();
-        return this._container;
-    },
-
-    addTo: function (map) {
-        this.remove();
-        this._map = map;
-        this._container = this.onAdd(map);
-        return this;
-    },
-
-    remove: function () {
-        if (!this._map) {
-            return this;
-        }
-
-        this._container.parentElement.removeChild( this._container );
-        this._container = null;
-
-        if (this.onRemove) {
-            this.onRemove(this._map);
-        }
-        this._map = null;
-        return this;
-    },
-
-    addLayerToList: function (layer, name, overlay) {
-        var id = L.stamp(layer);
-
-        this._layers[id] = {
+    /*
+    **
+    ** Given a leaflet layer and a layer name, add to map and layerlist
+    **
+    */
+    addLayer: function (layer, name) {
+        var obj = {
             layer: layer,
             name: name,
-            overlay: overlay
         };
+
+        var id = L.stamp(layer);
+        this._layers[id] = obj;
+        this._map.addLayer( layer );
+        this.domElement.appendChild( this._buildListItemDomElement( obj ) );
 
         if (this.options.autoZIndex && layer.setZIndex) {
             this._lastZIndex++;
             layer.setZIndex(this._lastZIndex);
         }
 
-        this._update();
-
         // If we have the zoomToExtentOnAdd feature enabled (on by default, but can be
-        // hooked to UI element) then we loop through the layers and get the extent and 
+        // hooked to UI element) then we loop through the layers and get the extent and
         // set the map zoom so people see the data right away.
         if (this.options.zoomToExtentOnAdd) {
             var bounds = layer.getBounds();
@@ -530,32 +530,24 @@ L.DNC.LayerList = L.Control.extend({
 
     },
 
-    removeLayerFromList: function (layer) {
+    /*
+    **
+    ** Given a leaflet layer, remove from layerlist
+    **
+    */
+    removeLayer: function (layer) {
         var id = L.stamp(layer);
         delete this._layers[id];
         return this;
     },
 
-    _update: function () {
-        if (!this._container) { return this; }
-
-        for (var i in this._layers) {
-            obj = this._layers[i];
-
-            if ( !(this._map.hasLayer( obj.layer )) ){
-
-                this._map.addLayer( obj.layer );
-                this._addItem(obj);
-
-            }
-
-        }
-
-        return this;
-    },
-
-
-    _addItem: function (obj) {
+    /*
+    **
+    ** Generate list item dom element for new object
+    **
+    */
+    _buildListItemDomElement: function (obj) {
+        // Create checkbox
         var inputEl = document.createElement('input');
         inputEl.setAttribute('type', 'checkbox');
         inputEl.setAttribute('checked', 'true');
@@ -563,22 +555,28 @@ L.DNC.LayerList = L.Control.extend({
         inputEl.setAttribute( 'data-id', L.stamp(obj.layer) );
         inputEl.onchange = this._handleLayerChange.bind( this, obj );
 
+        // Create text section
         var layerItem = document.createElement('div');
         layerItem.className = 'layer-name';
         layerItem.innerHTML = obj.name;
         layerItem.setAttribute( 'data-id', L.stamp(obj.layer) );
         layerItem.onclick = this._handleLayerClick.bind( this, obj );
 
+        // Create list item
         var li = document.createElement('li');
         li.className = 'layer-element ' + obj.name;
 
-
+        // Put it all together
         li.appendChild(inputEl);
         li.appendChild(layerItem);
-        this._container.appendChild(li);
+        return li;
+    },
 
-    } ,
-
+    /*
+    **
+    ** Handler for when list item's checkbox is toggled
+    **
+    */
     _handleLayerChange: function(obj, e){
         var inputEl = e.target;
         if (inputEl.checked) {
@@ -586,30 +584,29 @@ L.DNC.LayerList = L.Control.extend({
         } else {
             if (this._map.hasLayer(obj.layer)) this._map.removeLayer(obj.layer);
         }
-    } ,
+    },
 
+    /*
+    **
+    ** Handler for when a list item's text section is clicked on
+    **
+    */
     _handleLayerClick: function(obj,e) {
-
         if (e.currentTarget.className.indexOf('selected') == -1) {
-
             // add the class
             e.currentTarget.className += ' selected';
-
             // add to select list
             this.selection.add({
                 info: obj,
                 layer: obj.layer
             });
         } else {
-
             // remove selection
             this.selection.remove(obj.layer);
-
             // remove class name
             e.currentTarget.className = 'layer-name';
-
         }
-    } ,
+    },
 
 });
 
