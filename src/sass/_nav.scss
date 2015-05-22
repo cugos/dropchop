@@ -32,6 +32,7 @@
   letter-spacing:.05em;
   color:$black;
   cursor:pointer;
+  display:inline-block;
   &:focus {
     outline:none;
   }

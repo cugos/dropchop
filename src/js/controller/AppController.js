@@ -20,20 +20,33 @@ L.DNC.AppController = L.Class.extend({
 
         this.mapView = new L.DNC.MapView();
         this.dropzone = new L.DNC.DropZone( this.mapView._map, {} );
-        this.menubar = new L.DNC.MenuBar( { id: 'menu-bar' } ).addTo( document.body );
         this.layerlist = new L.DNC.LayerList( this.mapView._map, { layerContainerId: 'sidebar' } );
+        this.menubar = new L.DNC.MenuBar(
+            { id: 'menu-bar' }
+        ).addTo( document.body );
+        this.bottom_menu = new L.DNC.MenuBar(
+            { id: 'add-remove', classList: ["bottom", "menu"] }
+        ).addTo( document.getElementById('sidebar') );
 
         // build out menus
         this.menus = {
             geo: new L.DNC.Menu('Geoprocessing', {  // New dropdown menu
                 items: ['bezier', 'buffer', 'center', 'centroid', 'envelope', 'union', 'tin']
-            }).addTo( this.menubar )                // Append to menubar
-        };
+            }).addTo( this.menubar ),               // Append to menubar
 
+            addLayer: new L.DNC.Menu('Add', {       // New dropdown menu
+                items: ['a', 'b']
+            }).addTo( this.bottom_menu ),           // Append to menubar
+
+            removeLayer: new L.DNC.Menu('Remove', {  // New dropdown menu
+                items: ['a', 'b']
+            }).addTo( this.bottom_menu ),
+        };
         this.geoOpsConfig = {
             operations: new L.DNC.Geo(),        // Configurations of GeoOperations
             executor: new L.DNC.GeoExecute()    // Executor of GeoOperations
         };
+
 
         this.forms = new L.DNC.Forms();
 
