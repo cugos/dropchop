@@ -39,14 +39,16 @@ L.DNC.AppController = L.Class.extend({
                 menuDirection: 'above'
             }).addTo( this.bottom_menu ),           // Append to menubar
 
-            removeLayer: new L.DNC.Menu('Remove', {  // New dropdown menu
-                items: ['a', 'b'],
-                menuDirection: 'above'
-            }).addTo( this.bottom_menu ),
+            removeLayer: new L.DNC.Menu('Remove', {}).addTo( this.bottom_menu ),
         };
         this.geoOpsConfig = {
             operations: new L.DNC.Geo(),        // Configurations of GeoOperations
             executor: new L.DNC.GeoExecute()    // Executor of GeoOperations
+        };
+
+        this.FileOpsConfig = {
+            operations: new L.DNC.File(),       // Configurations of FileOperations
+            executor: new L.DNC.FileExecute()    // Executor of GeoOperations
         };
 
 
@@ -63,6 +65,7 @@ L.DNC.AppController = L.Class.extend({
         // Handle clicks on items within geoMenu
         // NOTE: This is where an operation is tied to a menu item
         this.menus.geo.on( 'clickedOperation', this._handleOperationClick.bind( this, this.geoOpsConfig ) );
+        this.menus.removeLayer.on( 'clickedOperation', this._handleOperationClick.bind( this, this.FileOpsConfig ) );
     },
 
     /*
