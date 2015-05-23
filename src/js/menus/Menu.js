@@ -29,7 +29,7 @@ L.DNC.Menu = L.Class.extend({
         var _this = this;
 
         // Dropdown tooling
-        if (this.domElement) {
+        if (this.domElement && this.children.length) { // Only if menu has child objects
             this.domElement.addEventListener('click', menuClick, false);
         }
         function menuClick() {
@@ -50,13 +50,15 @@ L.DNC.Menu = L.Class.extend({
             }
         }
 
-        if (this.children) {
+        if (this.children.length) {
             for ( var c = 0; c < this.children.length; c++ ) {
                 this.children[c].addEventListener('click', itemClick, false);
             }
+        } else {  // Handle menu with no sub-items (thus, the menu itself is the button)
+            this.domElement.addEventListener('click', itemClick, false);
         }
         function itemClick() {
-            _this.fire('clickedOperation', { action: this.id });
+            _this.fire('clickedOperation', { action: this.id || _this.title.toLowerCase() }); // Set action to operation id or lowercase menu title
         }
     },
 
