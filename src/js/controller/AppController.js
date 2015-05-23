@@ -35,11 +35,13 @@ L.DNC.AppController = L.Class.extend({
             }).addTo( this.menubar ),               // Append to menubar
 
             addLayer: new L.DNC.Menu('Add', {       // New dropdown menu
-                items: ['a', 'b']
+                items: ['upload', 'load from url'],
+                menuDirection: 'above'
             }).addTo( this.bottom_menu ),           // Append to menubar
 
             removeLayer: new L.DNC.Menu('Remove', {  // New dropdown menu
-                items: ['a', 'b']
+                items: ['a', 'b'],
+                menuDirection: 'above'
             }).addTo( this.bottom_menu ),
         };
         this.geoOpsConfig = {
