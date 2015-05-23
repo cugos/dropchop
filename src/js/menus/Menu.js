@@ -7,6 +7,7 @@ L.DNC = L.DNC || {};
 */
 L.DNC.Menu = L.Class.extend({
     includes: L.Mixin.Events,
+    options: { items: [], menuDirection: 'below' },
 
     initialize: function ( title, options ) {
         L.setOptions(this, options);
@@ -95,16 +96,37 @@ L.DNC.Menu = L.Class.extend({
     **
     */
     _buildDomElement: function ( childElements ) {
+        // Create menu div
         var menu = document.createElement('div');
         menu.className = "menu";
-        menu.innerHTML = '<button class="menu-button">' + this.title + '<i class="fa fa-angle-down"></i></button>';
 
+        // Create button for menu
+        var button = document.createElement('button');
+        button.className = "menu-button";
+        button.innerHTML = this.title;
+
+        // Create icon for menu's button
+        var icon = document.createElement('i');
+        if ( this.options.menuDirection == 'above' ) {
+            icon.className = 'fa fa-angle-up';
+        } else {
+            icon.className = 'fa fa-angle-down';
+        }
+
+        // Create menu dropdown
         var menuDropdown = document.createElement('div');
         menuDropdown.className = 'menu-dropdown menu-expand';
-        for ( var e = 0; e < childElements.length; e++ ) {
+
+        if ( this.options.menuDirection == 'above' ) {
+            menuDropdown.className += ' opens-above'; // Menu dropdown opens to above menu
+        }
+        for ( var e = 0; e < childElements.length; e++ ) {  // Add childElements
             menuDropdown.appendChild(childElements[e]);
         }
 
+        // Join it all together
+        button.appendChild(icon);
+        menu.appendChild(button);
         menu.appendChild(menuDropdown);
         return menu;
     }
