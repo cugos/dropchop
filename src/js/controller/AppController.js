@@ -61,7 +61,7 @@ L.DNC.AppController = L.Class.extend({
 
         // Validate selection
         try {
-            opsConfig.executor.validate( this.getLayerSelection(), config );
+            opsConfig.executor.validate( e.action, this.getLayerSelection(), config );
         }
         catch(err) {
             this.notification.add({
