@@ -149,6 +149,7 @@ module.exports = function(grunt) {
   grunt.registerTask('dev', ['build:dev', 'serve:dev']);
   grunt.registerTask('prod', ['build:prod', 'serve:prod']);
   grunt.registerTask('deploy', ['build:prod', 'copy', 'gh-pages']);
+  grunt.registerTask('deploy-dev', ['build:prod', 'gh-pages']); // No CNAME file copied over so people can host at their personal gh-pages
   grunt.registerTask('default', ['dev']);
   // Example to run dev (and serve) on commandline:
   // $ grunt

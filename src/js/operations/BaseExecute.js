@@ -22,7 +22,7 @@ L.DNC.BaseExecute = L.Class.extend({
     **  allow Turf operations to run
     **
     */
-    validate: function ( layers, options ) {
+    validate: function ( title, layers, options ) {
         var length = layers.length;
 
         // TODO: This should live elsewhere
@@ -34,7 +34,7 @@ L.DNC.BaseExecute = L.Class.extend({
         ValidationError.prototype.constructor = ValidationError;
 
         if (!length) {
-            throw new ValidationError("Can't run " + this.action + " on empty selection.");
+            throw new ValidationError("Can't run " + title + " on empty selection.");
         }
 
         if (options.maxFeatures && length > options.maxFeatures) {
