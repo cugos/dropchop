@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/cugos/drop-n-chop.svg?branch=master)](https://travis-ci.org/cugos/drop-n-chop)
+[![Build Status](https://travis-ci.org/cugos/dropchop.svg?branch=master)](https://travis-ci.org/cugos/dropchop)
 
 # Drop 'n Chop
 
