@@ -36,10 +36,13 @@ L.DNC.AppController = L.Class.extend({
 
             addLayer: new L.DNC.Menu('Add', {       // New dropdown menu
                 items: ['upload', 'load from url'],
-                menuDirection: 'above'
+                menuDirection: 'above',
+                iconClassName: "fa fa-plus",
             }).addTo( this.bottom_menu ),           // Append to menubar
 
-            removeLayer: new L.DNC.Menu('Remove', {}).addTo( this.bottom_menu ),
+            removeLayer: new L.DNC.Menu('Remove', {
+                iconClassName: "fa fa-minus",
+            }).addTo( this.bottom_menu ),
         };
         this.geoOpsConfig = {
             operations: new L.DNC.Geo(),        // Configurations of GeoOperations

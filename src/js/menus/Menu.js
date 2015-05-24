@@ -109,10 +109,14 @@ L.DNC.Menu = L.Class.extend({
 
         // Create icon for menu's button
         var icon = document.createElement('i');
-        if ( this.options.menuDirection == 'above' ) {
-            icon.className = 'fa fa-angle-up';
-        } else {
-            icon.className = 'fa fa-angle-down';
+        if ( this.options.iconClassName ){
+            icon.className = this.options.iconClassName;
+        } else if ( childElements.length ) { // Only if child elements
+            if ( this.options.menuDirection == 'above' ) {
+                icon.className = 'fa fa-angle-up';
+            } else {
+                icon.className = 'fa fa-angle-down';
+            }
         }
 
         // Create menu dropdown
