@@ -78,11 +78,12 @@ L.DNC.LayerList = L.Control.extend({
             layer: layer,
             name: name,
         };
+        obj.domElement = this._buildListItemDomElement( obj );
 
         var id = L.stamp(layer);
         this._layers[id] = obj;
         this._map.addLayer( layer );
-        this.domElement.appendChild( this._buildListItemDomElement( obj ) );
+        this.domElement.appendChild( obj.domElement );
 
         if (this.options.autoZIndex && layer.setZIndex) {
             this._lastZIndex++;
@@ -109,7 +110,10 @@ L.DNC.LayerList = L.Control.extend({
     */
     removeLayer: function (layer) {
         var id = L.stamp(layer);
-        delete this._layers[id];
+        this.domElement.removeChild(this._layers[id].domElement); // Rm from layerlist
+        this._map.removeLayer(layer); // Rm from map
+        this.selection.remove(layer); // Rm from selection
+        delete this._layers[id]; // Rm knowledge of layer
         return this;
     },
 

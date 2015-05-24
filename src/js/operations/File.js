@@ -6,6 +6,6 @@ L.DNC.File = L.Class.extend({
     remove: {
         minFeatures: 1,
         description: 'Removes a layer from the application.',
-        createsLayer: false
+        disableForm: true,
     },
 });

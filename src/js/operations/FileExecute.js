@@ -11,8 +11,22 @@ L.DNC.FileExecute = L.DNC.BaseExecute.extend({
     **
     */
     execute: function ( action, parameters, options, layers ) {
-        throw new Error("Execute method not implemented");
+        var actions = {
+            remove: function( action, parameters, options, layers ){
+                return {
+                    remove: layers.map( function(l){
+                        return {
+                            layer: l.layer,
+                            name: l.info.name
+                        };
+                    })
+                };
+            }
+        };
+        if (typeof actions[action] !== 'function') {
+          throw new Error('Invalid action.');
+        }
+        return actions[action](action, parameters, options, layers);
     },
-
 
 });
