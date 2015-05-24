@@ -112,17 +112,12 @@ L.DNC.AppController = L.Class.extend({
             config,
             this.getLayerSelection()
         );
-
-        if (config.createsLayer) {
-            this._handleGeoResult(results);
-        } else {
-            // TODO: Handle non-geo results
-        }
+        return this._handleResults(results);
     },
 
     /*
     **
-    ** Take newly parsed file, add to make and layerlist
+    ** Take newly parsed file, add to map and layerlist
     **
     */
     _handleParsedFile: function( e ) {
@@ -142,15 +137,32 @@ L.DNC.AppController = L.Class.extend({
     ** Take new layer, add to map and layerlist
     **
     */
-    _handleGeoResult: function( layer ) {
-        var mapLayer = L.mapbox.featureLayer( layer.geometry );
-        this.layerlist.addLayer( mapLayer, layer.name );
+    _handleResults: function( resultPkg ) {
+        // Add
+        if (resultPkg.add && resultPkg.add.length) {
+            resultPkg.add.map(function (obj) {
+                var mapLayer = L.mapbox.featureLayer( obj.layer.geometry );
+                this.layerlist.addLayer( mapLayer, obj.name );
 
-        this.notification.add({
-            text: '<strong>' + layer.name + '</strong> created successfully.',
-            type: 'success',
-            time: 2500
-        });
+                this.notification.add({
+                    text: '<strong>' + obj.name + '</strong> created successfully.',
+                    type: 'success',
+                    time: 2500
+                });
+            });
+        }
+        // Remove
+        if (resultPkg.remove && resultPkg.remove.length) {
+            var _this = this;
+            resultPkg.remove.map(function (obj) {
+                _this.layerlist.removeLayer(obj.layer);
+                _this.notification.add({
+                    text: '<strong>' + obj.name + '</strong> removed successfully.',
+                    type: 'success',
+                    time: 2500
+                });
+            });
+        }
     },
 
     getLayerSelection: function(){

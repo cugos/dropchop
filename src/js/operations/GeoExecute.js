@@ -32,7 +32,7 @@ L.DNC.GeoExecute = L.DNC.BaseExecute.extend({
             newLayer.geometry = this._unCollect( newLayer.geometry );
         }
 
-        return newLayer;
+        return { add: [newLayer] };
     },
 
     /*
