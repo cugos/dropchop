@@ -76,7 +76,6 @@ L.DNC.AppController = L.Class.extend({
     */
     _handleOperationClick: function( opsConfig, e ) {
         var config = opsConfig.operations[e.action];
-
         // Validate selection
         try {
             opsConfig.executor.validate( e.action, this.getLayerSelection(), config );
@@ -91,8 +90,12 @@ L.DNC.AppController = L.Class.extend({
             return;
         }
 
-        var form = this.forms.render( e.action, config );
-        form.on( 'submit', this._handleFormSubmit.bind( this, opsConfig ) );
+        if (config.disableForm) {
+            return this._handleFormSubmit( opsConfig, e );
+        } else {
+            var form = this.forms.render( e.action, config );
+            form.on( 'submit', this._handleFormSubmit.bind( this, opsConfig ) );
+        }
     },
 
     /*
