@@ -141,9 +141,14 @@ L.DNC.AppController = L.Class.extend({
     **
     */
     _handleResults: function( resultPkg ) {
+        if (!resultPkg) {
+            return console.warn("No results returned from operation.");
+        }
+
         // Add
         if (resultPkg.add && resultPkg.add.length) {
-            resultPkg.add.map(function (obj) {
+            for (var i = 0; i < resultPkg.add.length; i++) {
+                var obj = resultPkg.add[i];
                 var mapLayer = L.mapbox.featureLayer( obj.layer.geometry );
                 this.layerlist.addLayer( mapLayer, obj.name );
 
@@ -152,19 +157,19 @@ L.DNC.AppController = L.Class.extend({
                     type: 'success',
                     time: 2500
                 });
-            });
+            }
         }
         // Remove
         if (resultPkg.remove && resultPkg.remove.length) {
-            var _this = this;
-            resultPkg.remove.map(function (obj) {
-                _this.layerlist.removeLayer(obj.layer);
-                _this.notification.add({
+            for (var i = 0; i < resultPkg.remove.length; i++) {
+                var obj = resultPkg.remove[i];
+                this.layerlist.removeLayer(obj.layer);
+                this.notification.add({
                     text: '<strong>' + obj.name + '</strong> removed successfully.',
                     type: 'success',
                     time: 2500
                 });
-            });
+            }
         }
     },
 
