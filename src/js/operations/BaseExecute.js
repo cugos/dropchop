@@ -33,10 +33,6 @@ L.DNC.BaseExecute = L.Class.extend({
         ValidationError.prototype = Object.create(Error.prototype);
         ValidationError.prototype.constructor = ValidationError;
 
-        if (!length) {
-            throw new ValidationError("Can't run " + title + " on empty selection.");
-        }
-
         if (options.maxFeatures && length > options.maxFeatures) {
             throw new ValidationError("Too many layers. Max is set to " + options.maxFeatures + ", got " + length + ".");
         }
