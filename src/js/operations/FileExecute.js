@@ -10,17 +10,29 @@ L.DNC.FileExecute = L.DNC.BaseExecute.extend({
     ** Should be overwritten...
     **
     */
-    execute: function ( action, parameters, options, layers ) {
+    execute: function ( action, parameters, options, layers, callback ) {
         var actions = {
             remove: function( action, parameters, options, layers ){
-                return {
-                    remove: layers.map( function(l){
-                        return {
-                            layer: l.layer,
-                            name: l.info.name
-                        };
+                callback({
+                    remove: layers.map(
+                        function(l){ return { layer: l.layer, name: l.info.name };
                     })
+                });
+            },
+            'load from url': function ( action, parameters, options, layers ) {
+                var url = parameters[0];
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', encodeURI(url));
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        var file = JSON.parse(xhr.responseText);
+                        var filename = xhr.responseURL.substring(xhr.responseURL.lastIndexOf('/')+1);
+                        callback({ add: [{ layer: file, name: filename }] });
+                    } else {
+                        console.error('Request failed. Returned status of ' + xhr.status);
+                    }
                 };
+                xhr.send();
             }
         };
         if (typeof actions[action] !== 'function') {

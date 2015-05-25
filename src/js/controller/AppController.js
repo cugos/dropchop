@@ -68,6 +68,7 @@ L.DNC.AppController = L.Class.extend({
         // Handle clicks on items within geoMenu
         // NOTE: This is where an operation is tied to a menu item
         this.menus.geo.on( 'clickedOperation', this._handleOperationClick.bind( this, this.geoOpsConfig ) );
+        this.menus.addLayer.on( 'clickedOperation', this._handleOperationClick.bind( this, this.FileOpsConfig ) );
         this.menus.removeLayer.on( 'clickedOperation', this._handleOperationClick.bind( this, this.FileOpsConfig ) );
     },
 
