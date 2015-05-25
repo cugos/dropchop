@@ -9,7 +9,7 @@ L.DNC.GeoExecute = L.DNC.BaseExecute.extend({
     ** EXECUTE OPERATIONS FROM INPUT
     **
     */
-    execute: function ( action, parameters, options, layers ) {
+    execute: function ( action, parameters, options, layers, callback ) {
 
         L.setOptions(this, options);
         this.action = action;
@@ -17,8 +17,6 @@ L.DNC.GeoExecute = L.DNC.BaseExecute.extend({
         // Prep
         var params = this._prepareParameters( layers, options, parameters );
         var name = this._prepareName( layers );
-
-        console.debug(params, name);
 
         // Call func
         var newLayer = {
@@ -32,7 +30,7 @@ L.DNC.GeoExecute = L.DNC.BaseExecute.extend({
             newLayer.geometry = this._unCollect( newLayer.geometry );
         }
 
-        return { add: [newLayer] };
+        callback({ add: [newLayer] });
     },
 
     /*
