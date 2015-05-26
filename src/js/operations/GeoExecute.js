@@ -45,7 +45,6 @@ L.DNC.GeoExecute = L.DNC.BaseExecute.extend({
             layers = layers.slice(0, options.maxFeatures);
         }
         var layer_objs = layers.map(function(obj) { return obj.layer._geojson; });
-        console.debug(layer_objs, params);
 
         if ( params ) {
             for ( var l = 0; l < params.length; l++ ) {

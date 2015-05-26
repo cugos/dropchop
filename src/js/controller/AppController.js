@@ -49,7 +49,7 @@ L.DNC.AppController = L.Class.extend({
             executor: new L.DNC.GeoExecute()    // Executor of GeoOperations
         };
 
-        this.FileOpsConfig = {
+        this.fileOpsConfig = {
             operations: new L.DNC.File(),       // Configurations of FileOperations
             executor: new L.DNC.FileExecute()    // Executor of GeoOperations
         };
@@ -68,8 +68,8 @@ L.DNC.AppController = L.Class.extend({
         // Handle clicks on items within geoMenu
         // NOTE: This is where an operation is tied to a menu item
         this.menus.geo.on( 'clickedOperation', this._handleOperationClick.bind( this, this.geoOpsConfig ) );
-        this.menus.addLayer.on( 'clickedOperation', this._handleOperationClick.bind( this, this.FileOpsConfig ) );
-        this.menus.removeLayer.on( 'clickedOperation', this._handleOperationClick.bind( this, this.FileOpsConfig ) );
+        this.menus.addLayer.on( 'clickedOperation', this._handleOperationClick.bind( this, this.fileOpsConfig ) );
+        this.menus.removeLayer.on( 'clickedOperation', this._handleOperationClick.bind( this, this.fileOpsConfig ) );
     },
 
     /*

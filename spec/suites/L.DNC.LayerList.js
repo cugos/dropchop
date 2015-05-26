@@ -20,7 +20,7 @@ describe("L.DNC.LayerList", function () {
 
         });
 
-        it("LayerList.initialize options and members setup correctly", function () {
+        it("options and members setup correctly", function () {
             // options
             expect(layerlist.options.layerContainerId).to.equal('dropzone');
             expect(layerlist.options.autoZIndex).to.equal(true);
@@ -33,7 +33,7 @@ describe("L.DNC.LayerList", function () {
             expect(layerlist.layerContainer.getAttribute('id')).to.equal('dropzone');
         });
 
-        it("LayerList intialized correctly", function () {
+        it("intialized correctly", function () {
             expect(layerlist instanceof L.DNC.LayerList).to.equal(true);
         });
 
@@ -81,7 +81,7 @@ describe("L.DNC.LayerList", function () {
             geojsonSpy.restore();
         });
 
-        it("LayerList.addLayer when options.autoZIndex is false", function () {
+        it("options.autoZIndex is false", function () {
             layerlist._map = map;
             layerlist.options.autoZIndex = false;
             layerlist.options.zoomToExtentOnAdd = true;
@@ -99,7 +99,7 @@ describe("L.DNC.LayerList", function () {
 
         });
 
-        it("LayerList.addLayer when options.autoZIndex is true", function () {
+        it("options.autoZIndex is true", function () {
             layerlist._map = map;
             layerlist.options.autoZIndex = true;
             layerlist.options.zoomToExtentOnAdd = true;
@@ -116,7 +116,7 @@ describe("L.DNC.LayerList", function () {
             expect(mappySpy.called).to.equal(true);
         });
 
-        it("LayerList.addLayer when options.zoomToExtentOnAdd is false", function () {
+        it("options.zoomToExtentOnAdd is false", function () {
             layerlist._map = map;
             layerlist.options.autoZIndex = true;
             layerlist.options.zoomToExtentOnAdd = false;
@@ -148,7 +148,7 @@ describe("L.DNC.LayerList", function () {
         afterEach(function(){
         });
 
-        it("LayerList.removeLayer removes the cached layer and returns LayerList instance", function () {
+        it("removes the cached layer and returns LayerList instance", function () {
             var lookupId = L.stamp( layer );
             layerlist._layers[ lookupId ] = { foo: 'bar' };
             var returnedInstance = layerlist.removeLayer(layer);
@@ -239,7 +239,7 @@ describe("L.DNC.LayerList", function () {
             mockSelectRemove.restore();
         });
 
-        it("LayerList._handleLayerClick if the target is NOT selected", function () {
+        it("if the target is NOT selected", function () {
             layerlist._map = map;
             layerlist.domElement = document.createElement("div");
             layerlist.domElement.className = "test";
@@ -255,7 +255,7 @@ describe("L.DNC.LayerList", function () {
             expect(elPostEvent.className.indexOf("selected") !== -1).to.equal(true);
         });
 
-        it("LayerList._handleLayerClick if the target is already selected", function () {
+        it("if the target is already selected", function () {
             layerlist._map = map;
             layerlist.domElement = document.createElement("div");
             layerlist.domElement.className = "test";

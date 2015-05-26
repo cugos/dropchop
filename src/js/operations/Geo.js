@@ -25,7 +25,6 @@ L.DNC.Geo = L.Class.extend({
 
     buffer: {
         maxFeatures: 1,
-        additionalArgs: 0.1,
         description: 'Calculates a buffer for input features for a given radius. Units supported are miles, kilometers, and degrees.',
         parameters: [
             {

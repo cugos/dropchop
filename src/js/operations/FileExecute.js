@@ -7,7 +7,6 @@ L.DNC.FileExecute = L.DNC.BaseExecute.extend({
     /*
     **
     ** EXECUTE OPERATIONS FROM INPUT
-    ** Should be overwritten...
     **
     */
     execute: function ( action, parameters, options, layers, callback ) {
