@@ -25,9 +25,16 @@ L.DNC.FileExecute = L.DNC.BaseExecute.extend({
                 xhr.open('GET', encodeURI(url));
                 xhr.onload = function() {
                     if (xhr.status === 200) {
-                        var file = JSON.parse(xhr.responseText);
+                        var newLayer = JSON.parse(xhr.responseText);
                         var filename = xhr.responseURL.substring(xhr.responseURL.lastIndexOf('/')+1);
-                        callback({ add: [{ layer: file, name: filename }] });
+
+                        // if the new object is a feature collection and only has one layer,
+                        // remove it and just keep it as a feature
+                        if ( newLayer.geometry.type == "FeatureCollection" && newLayer.geometry.features.length == 1 ) {
+                            newLayer.geometry = this._unCollect( newLayer.geometry );
+                        }
+
+                        callback({ add: [{ geometry: newLayer, name: filename }] });
                     } else {
                         console.error('Request failed. Returned status of ' + xhr.status);
                     }

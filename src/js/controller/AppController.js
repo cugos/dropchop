@@ -153,7 +153,7 @@ L.DNC.AppController = L.Class.extend({
         if (resultPkg.add && resultPkg.add.length) {
             for (var i = 0; i < resultPkg.add.length; i++) {
                 var obj = resultPkg.add[i];
-                var mapLayer = L.mapbox.featureLayer( obj.layer.geometry );
+                var mapLayer = L.mapbox.featureLayer( obj.geometry );
                 this.layerlist.addLayer( mapLayer, obj.name );
 
                 this.notification.add({
