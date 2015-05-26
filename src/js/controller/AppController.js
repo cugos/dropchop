@@ -148,11 +148,13 @@ L.DNC.AppController = L.Class.extend({
         if (!resultPkg) {
             return console.warn("No results returned from operation.");
         }
+        var i;
+        var obj;
 
         // Add
         if (resultPkg.add && resultPkg.add.length) {
-            for (var i = 0; i < resultPkg.add.length; i++) {
-                var obj = resultPkg.add[i];
+            for (i = 0; i < resultPkg.add.length; i++) {
+                obj = resultPkg.add[i];
                 var mapLayer = L.mapbox.featureLayer( obj.geometry );
                 this.layerlist.addLayer( mapLayer, obj.name );
 
@@ -165,8 +167,8 @@ L.DNC.AppController = L.Class.extend({
         }
         // Remove
         if (resultPkg.remove && resultPkg.remove.length) {
-            for (var i = 0; i < resultPkg.remove.length; i++) {
-                var obj = resultPkg.remove[i];
+            for (i = 0; i < resultPkg.remove.length; i++) {
+                obj = resultPkg.remove[i];
                 this.layerlist.removeLayer(obj.layer);
                 this.notification.add({
                     text: '<strong>' + obj.name + '</strong> removed successfully.',
