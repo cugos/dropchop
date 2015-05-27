@@ -10,6 +10,7 @@ L.DNC.FileExecute = L.DNC.BaseExecute.extend({
     **
     */
     execute: function ( action, parameters, options, layers, callback ) {
+        var _this = this;
         var actions = {
             remove: function( action, parameters, options, layers ){
                 callback({
@@ -17,6 +18,10 @@ L.DNC.FileExecute = L.DNC.BaseExecute.extend({
                         function(l){ return { layer: l.layer, name: l.info.name };
                     })
                 });
+            },
+            upload: function ( action, parameters, options, layers ){
+                var files = document.querySelectorAll('input[type=file]')[0].files;
+                _this.fire('uploadedfiles', files);
             },
             'load from url': function ( action, parameters, options, layers ) {
                 var url = parameters[0];
@@ -33,7 +38,7 @@ L.DNC.FileExecute = L.DNC.BaseExecute.extend({
                             newLayer.geometry = this._unCollect( newLayer.geometry );
                         }
 
-                        callback({ add: [{ geometry: newLayer, name: filename }] });
+                        callback( { add: [{ geometry: newLayer, name: filename }] } );
                     } else {
                         console.error('Request failed. Returned status of ' + xhr.status);
                     }

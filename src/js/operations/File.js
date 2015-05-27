@@ -8,6 +8,15 @@ L.DNC.File = L.Class.extend({
         description: 'Removes a layer from the application.',
         disableForm: true,
     },
+    upload: {
+        parameters: [
+            {
+                description: 'File to upload.',
+                type: 'file',
+                extra: 'multiple',
+            }
+        ]
+    },
     "load from url": {
         description: 'Import file from a URL',
         parameters: [
