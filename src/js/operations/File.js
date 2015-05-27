@@ -24,7 +24,7 @@ L.DNC.File = L.Class.extend({
                 name: 'url',
                 description :'URL',
                 type: 'text',
-                default: 'http://'
+                default: 'http://',
             },
         ],
     }

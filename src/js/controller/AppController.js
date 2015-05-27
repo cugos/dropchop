@@ -111,15 +111,14 @@ L.DNC.AppController = L.Class.extend({
     */
     _handleFormSubmit: function( opsConfig, e ) {
         var config = opsConfig.operations[e.action];
-        var _this = this;
         opsConfig.executor.execute(
             e.action,
             e.parameters,
             config,
             this.getLayerSelection(),
             function(results) { // Callback
-                return _this._handleResults(results);
-            }
+                return this._handleResults(results);
+            }.bind(this)
         );
     },
 
