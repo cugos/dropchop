@@ -132,9 +132,9 @@ L.DNC.Forms = L.Class.extend({
     },
 
     _inputTypeDefault: function ( p ) {
-        var field = '<input class="param" name="' + p.name + '" type="'
-            + p.type + '" value="' + (p.default || '') + '"'
-            + (p.extra || '') + '>';
+        var field = '<input class="param" name="' + p.name + '" type="' +
+            p.type + '" value="' + (p.default || '') + '"' +
+            (p.extra || '') + '>';
         return field;
     },
 
