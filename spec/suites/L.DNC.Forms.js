@@ -17,8 +17,7 @@ describe("L.DNC.Forms", function () {
                     options: ['miles', 'feet', 'kilometers', 'meters', 'degrees'],
                     default: 'miles'
                 }
-            ],
-            createsLayer: true
+            ]
         },
         paramArray: {
             0: 10,
