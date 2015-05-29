@@ -8,6 +8,11 @@
 
 /* LAYER LIST */
 #layer-list {
+  * {
+    &::selection {
+      background:transparent;
+    }
+  }
   margin:0;
   list-style-type: none;
   padding:0;
@@ -22,6 +27,9 @@
     border-left:1px solid $grey;
     padding:8px;
     font-size:.8em;
+    &::selection {
+      background:transparent;
+    }
     &:hover {
       background:$grey;
       cursor:pointer;
