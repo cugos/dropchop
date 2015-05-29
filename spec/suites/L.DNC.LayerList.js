@@ -262,14 +262,14 @@ describe("L.DNC.LayerList", function () {
 
             layerlist.addLayer( layer, "test" );
             var el = layerlist.domElement.querySelectorAll(".layer-name")[0];
-            el.className = el.className + "selected";
+            el.className = el.className + " selected";
             layerlist._handleLayerClick( { layer: layer, name: "test" }, { currentTarget: el } );
             var elPostEvent = layerlist.domElement.querySelectorAll(".layer-name")[0];
 
             // assertions
-            expect(mockSelectAdd.called).to.equal(false);
-            expect(mockSelectRemove.called).to.equal(true);
-            expect(elPostEvent.className.indexOf("selected") === -1).to.equal(true);
+            expect(mockSelectAdd.called).to.equal(true);
+            expect(mockSelectRemove.called).to.equal(false);
+            expect(elPostEvent.className.indexOf("selected") !== 1).to.equal(true);
         });
 
     });
