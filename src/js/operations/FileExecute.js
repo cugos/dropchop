@@ -1,5 +1,5 @@
 L.DNC = L.DNC || {};
-L.DNC.FileExecute = L.Class.extend({
+L.DNC.FileExecute = L.DNC.BaseExecute.extend({
     includes: L.Mixin.Events,
 
     options: {},
@@ -9,61 +9,85 @@ L.DNC.FileExecute = L.Class.extend({
     ** EXECUTE OPERATIONS FROM INPUT
     **
     */
-    execute: function ( action, parameters, options, layers ) {
-
-        L.setOptions(this, options);
-        this.action = action;
-
-        if (layers.length === 0) {
-            // we must not have a layer to download... so bail
-            L.DNC.app.notification.add({
-                text: "Save requires a layer selected",
-                type: 'alert',
-                time: 3500
-            });
-            return;
-        }
-        // Prep
-        var params = this._prepareParameters( layers, options, parameters );
-        var name = this._prepareName( layers );
-
-        console.debug(action, params, name);
-
-        if ( action == 'Save GeoJSON') { 
-            console.debug("Saving GeoJSON");
-            for (var i=0; i<params.length-1; i++) {
-                var content = JSON.stringify(params[i]);
-                var meta = params[params.length-1];
-                if (meta) {
-                    if (i>0) {
-                        meta = meta+i;
+    execute: function ( action, parameters, options, layers, callback ) {
+        var _this = this;
+        var actions = {
+            'save geojson': function ( action, parameters, layers, callback ) {
+                console.debug("Saving GeoJSON");
+                for (var i=0; i<parameters.length-1; i++) {
+                    var content = JSON.stringify(parameters[i]);
+                    var meta = parameters[parameters.length-1];
+                    if (meta) {
+                        if (i>0) {
+                            meta = meta+i;
+                        }
+                        meta = meta + '.geojson';
+                    } else {
+                        meta = 'dnc'+i+'.geojson';
                     }
-                    meta = meta + '.geojson';
-                } else {
-                    meta = 'dnc'+i+'.geojson';
+                    saveAs(new Blob([content], {
+                        type: 'text/plain;charset=utf-8'
+                    }), meta);
                 }
-                saveAs(new Blob([content], {
-                    type: 'text/plain;charset=utf-8'
-                }), meta);
-            }
-        } else if (action == 'Save Shapefile') {
-            console.debug("Saving Shapefile");
-            try {
-                for (var ii=0; ii<params.length; ii++) {
-                    shpwrite.download(params[ii]);
-                }
-            }
-            catch(err) {
-                L.DNC.app.notification.add({
-                    text: "Error downloading one of the shapefiles... please try downloading in another format",
-                    type: 'alert',
-                    time: 3500
-                });
-            } 
-        }
-        return;
-    },
+            },
 
+            'save shapefile': function ( action, parameters, layers, callback ) {
+                console.debug("Saving Shapefile");
+                try {
+                    for (var ii=0; ii<parameters.length; ii++) {
+                        shpwrite.download(parameters[ii]);
+                    }
+                }
+                catch(err) {
+                    L.DNC.app.notification.add({
+                        text: "Error downloading one of the shapefiles... please try downloading in another format",
+                        type: 'alert',
+                        time: 3500
+                    });
+                } 
+            },
+
+            remove: function( action, parameters, options, layers ){
+                callback({
+                    remove: layers.map(
+                        function(l){ return { layer: l.layer, name: l.info.name };
+                    })
+                });
+            },
+
+            upload: function ( action, parameters, options, layers ){
+                var files = document.querySelectorAll('input[type=file]')[0].files;
+                _this.fire('uploadedfiles', files);
+            },
+
+            'load from url': function ( action, parameters, options, layers ) {
+                var url = parameters[0];
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', encodeURI(url));
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        var newLayer = JSON.parse(xhr.responseText);
+                        var filename = xhr.responseURL.substring(xhr.responseURL.lastIndexOf('/')+1);
+
+                        // if the new object is a feature collection and only has one layer,
+                        // remove it and just keep it as a feature
+                        if ( newLayer.geometry.type == "FeatureCollection" && newLayer.geometry.features.length == 1 ) {
+                            newLayer.geometry = this._unCollect( newLayer.geometry );
+                        }
+
+                        callback( { add: [{ geometry: newLayer, name: filename }] } );
+                    } else {
+                        console.error('Request failed. Returned status of ' + xhr.status);
+                    }
+                };
+                xhr.send();
+            }
+        };
+        if (typeof actions[action] !== 'function') {
+          throw new Error('Invalid action.');
+        }
+        return actions[action](action, parameters, options, layers);
+    },
 
     /*
     **
@@ -124,4 +148,5 @@ L.DNC.FileExecute = L.Class.extend({
     _unCollect: function( feature ) {
         return feature.features[0];
     }
+
 });

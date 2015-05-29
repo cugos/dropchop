@@ -3,7 +3,7 @@ describe("L.DNC.Menu", function () {
     var title = "Test Menu";
     var items = [];
     var parent = new L.DNC.MenuBar( { id: 'menu-bar' } );
-    var fakeOptions = { items: ['waka', 'flaka'] };
+    var fakeOptions = { items: ['waka', 'flaka'], menuDirection: 'below' };
 
     var begin_html =
         '<div class="menu">' +

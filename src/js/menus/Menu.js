@@ -7,6 +7,7 @@ L.DNC = L.DNC || {};
 */
 L.DNC.Menu = L.Class.extend({
     includes: L.Mixin.Events,
+    options: { items: [], menuDirection: 'below' },
 
     initialize: function ( title, options ) {
         L.setOptions(this, options);
@@ -28,7 +29,7 @@ L.DNC.Menu = L.Class.extend({
         var _this = this;
 
         // Dropdown tooling
-        if (this.domElement) {
+        if (this.domElement && this.children.length) { // Only if menu has child objects
             this.domElement.addEventListener('click', menuClick, false);
         }
         function menuClick() {
@@ -49,13 +50,15 @@ L.DNC.Menu = L.Class.extend({
             }
         }
 
-        if (this.children) {
+        if (this.children.length) {
             for ( var c = 0; c < this.children.length; c++ ) {
                 this.children[c].addEventListener('click', itemClick, false);
             }
+        } else {  // Handle menu with no sub-items (thus, the menu itself is the button)
+            this.domElement.addEventListener('click', itemClick, false);
         }
         function itemClick() {
-            _this.fire('clickedOperation', { action: this.id });
+            _this.fire('clickedOperation', { action: this.id || _this.title.toLowerCase() }); // Set action to operation id or lowercase menu title
         }
     },
 
@@ -95,16 +98,41 @@ L.DNC.Menu = L.Class.extend({
     **
     */
     _buildDomElement: function ( childElements ) {
+        // Create menu div
         var menu = document.createElement('div');
         menu.className = "menu";
-        menu.innerHTML = '<button class="menu-button">' + this.title + '<i class="fa fa-angle-down"></i></button>';
 
+        // Create button for menu
+        var button = document.createElement('button');
+        button.className = "menu-button";
+        button.innerHTML = this.title;
+
+        // Create icon for menu's button
+        var icon = document.createElement('i');
+        if ( this.options.iconClassName ){
+            icon.className = this.options.iconClassName;
+        } else if ( childElements.length ) { // Only if child elements
+            if ( this.options.menuDirection == 'above' ) {
+                icon.className = 'fa fa-angle-up';
+            } else {
+                icon.className = 'fa fa-angle-down';
+            }
+        }
+
+        // Create menu dropdown
         var menuDropdown = document.createElement('div');
         menuDropdown.className = 'menu-dropdown menu-expand';
-        for ( var e = 0; e < childElements.length; e++ ) {
+
+        if ( this.options.menuDirection == 'above' ) {
+            menuDropdown.className += ' opens-above'; // Menu dropdown opens to above menu
+        }
+        for ( var e = 0; e < childElements.length; e++ ) {  // Add childElements
             menuDropdown.appendChild(childElements[e]);
         }
 
+        // Join it all together
+        button.appendChild(icon);
+        menu.appendChild(button);
         menu.appendChild(menuDropdown);
         return menu;
     }

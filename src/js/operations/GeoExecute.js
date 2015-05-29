@@ -1,5 +1,5 @@
 L.DNC = L.DNC || {};
-L.DNC.GeoExecute = L.Class.extend({
+L.DNC.GeoExecute = L.DNC.BaseExecute.extend({
     includes: L.Mixin.Events,
 
     options: {},
@@ -9,7 +9,7 @@ L.DNC.GeoExecute = L.Class.extend({
     ** EXECUTE OPERATIONS FROM INPUT
     **
     */
-    execute: function ( action, parameters, options, layers ) {
+    execute: function ( action, parameters, options, layers, callback ) {
 
         L.setOptions(this, options);
         this.action = action;
@@ -17,8 +17,6 @@ L.DNC.GeoExecute = L.Class.extend({
         // Prep
         var params = this._prepareParameters( layers, options, parameters );
         var name = this._prepareName( layers );
-
-        console.debug(params, name);
 
         // Call func
         var newLayer = {
@@ -32,39 +30,7 @@ L.DNC.GeoExecute = L.Class.extend({
             newLayer.geometry = this._unCollect( newLayer.geometry );
         }
 
-        return newLayer;
-    },
-
-
-    /*
-    **
-    **  VALIDATE LAYERS
-    **  Checks if the proper number of layers are in the current selection to
-    **  allow Turf operations to run
-    **
-    */
-    validate: function ( layers, options ) {
-        var length = layers.length;
-
-        // TODO: This should live elsewhere
-        function ValidationError(message) {
-              this.name = 'ValidationError';
-              this.message = message || 'Validation Error';
-        }
-        ValidationError.prototype = Object.create(Error.prototype);
-        ValidationError.prototype.constructor = ValidationError;
-
-        if (!length) {
-            throw new ValidationError("Can't run " + this.title + " on empty selection.");
-        }
-
-        if (options.maxFeatures && length > options.maxFeatures) {
-            throw new ValidationError("Too many layers. Max is set to " + options.maxFeatures + ", got " + length + ".");
-        }
-
-        if (options.minFeatures && length < options.minFeatures) {
-            throw new ValidationError("Too few layers. Min is set to " + options.minFeatures + ", got " + length + ".");
-        }
+        callback({ add: [newLayer] });
     },
 
     /*
@@ -79,7 +45,6 @@ L.DNC.GeoExecute = L.Class.extend({
             layers = layers.slice(0, options.maxFeatures);
         }
         var layer_objs = layers.map(function(obj) { return obj.layer._geojson; });
-        console.debug(layer_objs, params);
 
         if ( params ) {
             for ( var l = 0; l < params.length; l++ ) {

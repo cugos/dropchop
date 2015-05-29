@@ -20,18 +20,37 @@ L.DNC.AppController = L.Class.extend({
 
         this.mapView = new L.DNC.MapView();
         this.dropzone = new L.DNC.DropZone( this.mapView._map, {} );
-        this.layerlist = new L.DNC.LayerList( { layerContainerId: 'dropzone' } ).addTo( this.mapView._map );
-
-        this.menubar = new L.DNC.MenuBar( { id: 'menu-bar' } ).addTo( document.body );
+        this.layerlist = new L.DNC.LayerList( this.mapView._map, { layerContainerId: 'sidebar' } );
+        this.menubar = new L.DNC.MenuBar(
+            { id: 'menu-bar' }
+        ).addTo( document.body );
+        this.bottom_menu = new L.DNC.MenuBar(
+            { id: 'add-remove', classList: ["bottom", "menu"] }
+        ).addTo( document.getElementById('sidebar') );
 
         // build out menus
         this.menus = {
+            // GEO
             geo: new L.DNC.Menu('Geoprocessing', {  // New dropdown menu
                 items: ['bezier', 'buffer', 'center', 'centroid', 'envelope', 'union', 'tin']
             }).addTo( this.menubar ),                // Append to menubar
+            
+            // FILE
             file: new L.DNC.Menu('File', {  // New dropdown menu
                 items: ['Save GeoJSON', 'Save Shapefile']          // Items in menu
-            }).addTo( this.menubar )         // Append to menubar
+            }).addTo( this.menubar ),         // Append to menubar
+
+            // ADD LAYER
+            addLayer: new L.DNC.Menu('Add', {       // New dropdown menu
+                items: ['upload', 'load from url'],
+                menuDirection: 'above',
+                iconClassName: "fa fa-plus",
+            }).addTo( this.bottom_menu ),           // Append to menubar
+
+            // REMOVE LAYER
+            removeLayer: new L.DNC.Menu('Remove', {
+                iconClassName: "fa fa-minus",
+            }).addTo( this.bottom_menu ),
         };
 
         this.geoOpsConfig = {
@@ -45,7 +64,6 @@ L.DNC.AppController = L.Class.extend({
         };
 
         this.forms = new L.DNC.Forms();
-
         this.notification = new L.DNC.Notifications();
         this._addEventHandlers();
 
@@ -53,12 +71,14 @@ L.DNC.AppController = L.Class.extend({
 
     _addEventHandlers: function(){
         this.dropzone.fileReader.on( 'fileparsed', this._handleParsedFile.bind( this ) );
+        this.fileOpsConfig.executor.on( 'uploadedfiles', this.dropzone.fileReader._handleFiles.bind(this.dropzone.fileReader) );
 
         // Handle clicks on items within geoMenu
         // NOTE: This is where an operation is tied to a menu item
         this.menus.geo.on( 'clickedOperation', this._handleOperationClick.bind( this, this.geoOpsConfig ) );
-
         this.menus.file.on( 'clickedOperation', this._handleOperationClick.bind( this, this.fileOpsConfig ) );
+        this.menus.addLayer.on( 'clickedOperation', this._handleOperationClick.bind( this, this.fileOpsConfig ) );
+        this.menus.removeLayer.on( 'clickedOperation', this._handleOperationClick.bind( this, this.fileOpsConfig ) );
     },
 
     /*
@@ -69,10 +89,9 @@ L.DNC.AppController = L.Class.extend({
     */
     _handleOperationClick: function( opsConfig, e ) {
         var config = opsConfig.operations[e.action];
-
         // Validate selection
         try {
-            opsConfig.executor.validate( this.getLayerSelection(), config );
+            opsConfig.executor.validate( e.action, this.getLayerSelection(), config );
         }
         catch(err) {
             this.notification.add({
@@ -84,11 +103,11 @@ L.DNC.AppController = L.Class.extend({
             return;
         }
 
-        if (config.parameters !== undefined) {
+        if (config.disableForm) {
+            return this._handleFormSubmit( opsConfig, e );
+        } else {
             var form = this.forms.render( e.action, config );
             form.on( 'submit', this._handleFormSubmit.bind( this, opsConfig ) );
-        } else {
-            this._handleFormSubmit(opsConfig,e);
         }
     },
 
@@ -100,28 +119,25 @@ L.DNC.AppController = L.Class.extend({
     */
     _handleFormSubmit: function( opsConfig, e ) {
         var config = opsConfig.operations[e.action];
-        var results = opsConfig.executor.execute(
+        opsConfig.executor.execute(
             e.action,
             e.parameters,
             config,
-            this.getLayerSelection()
+            this.getLayerSelection(),
+            function(results) { // Callback
+                return this._handleResults(results);
+            }.bind(this)
         );
-
-        if (config.createsLayer) {
-            this._handleGeoResult(results);
-        } else {
-            // TODO: Handle non-geo results
-        }
     },
 
     /*
     **
-    ** Take newly parsed file, add to make and layerlist
+    ** Take newly parsed file, add to map and layerlist
     **
     */
     _handleParsedFile: function( e ) {
         var layer = L.mapbox.featureLayer( e.file );
-        this.layerlist.addLayerToList( layer, e.fileInfo.name, true );
+        this.layerlist.addLayer( layer, e.fileInfo.name );
         this.mapView.numLayers++;
 
         this.notification.add({
@@ -136,15 +152,39 @@ L.DNC.AppController = L.Class.extend({
     ** Take new layer, add to map and layerlist
     **
     */
-    _handleGeoResult: function( layer ) {
-        var mapLayer = L.mapbox.featureLayer( layer.geometry );
-        this.layerlist.addLayerToList( mapLayer, layer.name, true );
+    _handleResults: function( resultPkg ) {
+        if (!resultPkg) {
+            return console.warn("No results returned from operation.");
+        }
+        var i;
+        var obj;
 
-        this.notification.add({
-            text: '<strong>' + layer.name + '</strong> created successfully.',
-            type: 'success',
-            time: 2500
-        });
+        // Add
+        if (resultPkg.add && resultPkg.add.length) {
+            for (i = 0; i < resultPkg.add.length; i++) {
+                obj = resultPkg.add[i];
+                var mapLayer = L.mapbox.featureLayer( obj.geometry );
+                this.layerlist.addLayer( mapLayer, obj.name );
+
+                this.notification.add({
+                    text: '<strong>' + obj.name + '</strong> created successfully.',
+                    type: 'success',
+                    time: 2500
+                });
+            }
+        }
+        // Remove
+        if (resultPkg.remove && resultPkg.remove.length) {
+            for (i = 0; i < resultPkg.remove.length; i++) {
+                obj = resultPkg.remove[i];
+                this.layerlist.removeLayer(obj.layer);
+                this.notification.add({
+                    text: '<strong>' + obj.name + '</strong> removed successfully.',
+                    type: 'success',
+                    time: 2500
+                });
+            }
+        }
     },
 
     getLayerSelection: function(){

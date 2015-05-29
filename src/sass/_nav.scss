@@ -18,6 +18,7 @@
   display:none;
   position:absolute;
   box-shadow:1px 1px 5px 0 rgba(0,0,0,0.3);
+  z-index:1;
   &.expanded {
     display:block;
   }
@@ -32,6 +33,7 @@
   letter-spacing:.05em;
   color:$black;
   cursor:pointer;
+  display:inline-block;
   &:focus {
     outline:none;
   }
@@ -50,4 +52,8 @@
     text-align:left;
     border-top:1px solid $grey-dark;
   }
+}
+
+.opens-above {
+    bottom: $menu-height;
 }
