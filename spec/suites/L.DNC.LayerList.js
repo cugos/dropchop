@@ -20,7 +20,7 @@ describe("L.DNC.LayerList", function () {
 
         });
 
-        it("LayerList.initialize options and members setup correctly", function () {
+        it("options and members setup correctly", function () {
             // options
             expect(layerlist.options.layerContainerId).to.equal('dropzone');
             expect(layerlist.options.autoZIndex).to.equal(true);
@@ -33,7 +33,7 @@ describe("L.DNC.LayerList", function () {
             expect(layerlist.layerContainer.getAttribute('id')).to.equal('dropzone');
         });
 
-        it("LayerList intialized correctly", function () {
+        it("intialized correctly", function () {
             expect(layerlist instanceof L.DNC.LayerList).to.equal(true);
         });
 
@@ -61,14 +61,17 @@ describe("L.DNC.LayerList", function () {
     });
 
     describe("addLayer", function () {
+        var name = "test";
         var layer;
         var layerlist;
         var mappySpy;
         var geojsonSpy;
+        var domElement;
 
         beforeEach(function () {
             layerlist = new L.DNC.LayerList( map, { layerContainerId: 'dropzone' } );
             layer = L.geoJson( window.testingData.polygon );
+            domElement = layerlist._buildListItemDomElement({ name: name, layer: layer });
 
             // add a spy to know when branching on zoomToExtentonAdd runs
             mappySpy = sinon.spy(map, "fitBounds");
@@ -81,17 +84,20 @@ describe("L.DNC.LayerList", function () {
             geojsonSpy.restore();
         });
 
-        it("LayerList.addLayer when options.autoZIndex is false", function () {
+        it("options.autoZIndex is false", function () {
             layerlist._map = map;
             layerlist.options.autoZIndex = false;
             layerlist.options.zoomToExtentOnAdd = true;
-            layerlist.addLayer( layer, "test", true );
+            layerlist.addLayer( layer, name, true );
             var lookupId = L.stamp( layer );
 
             // assertions
+            expect(layerlist._layers[lookupId].domElement.outerHTML).to.eql(domElement.outerHTML);
+            delete layerlist._layers[lookupId].domElement; // NOTE: Comparing DOM Element object always fails
+
             expect(layerlist._layers[lookupId]).to.eql({
                 layer: layer,
-                name: "test"
+                name: name,
             });
             expect(layerlist._lastZIndex).to.equal(0);
             expect(geojsonSpy.called).to.equal(false);
@@ -99,34 +105,40 @@ describe("L.DNC.LayerList", function () {
 
         });
 
-        it("LayerList.addLayer when options.autoZIndex is true", function () {
+        it("options.autoZIndex is true", function () {
             layerlist._map = map;
             layerlist.options.autoZIndex = true;
             layerlist.options.zoomToExtentOnAdd = true;
-            layerlist.addLayer( layer, "test", true );
+            layerlist.addLayer( layer, name, true );
             var lookupId = L.stamp( layer );
 
             // assertions
+            expect(layerlist._layers[lookupId].domElement.outerHTML).to.eql(domElement.outerHTML);
+            delete layerlist._layers[lookupId].domElement; // NOTE: Comparing DOM Element object always fails
+
             expect(layerlist._layers[lookupId]).to.eql({
                 layer: layer,
-                name: "test",
+                name: name,
             });
             expect(layerlist._lastZIndex).to.equal(1);
             expect(geojsonSpy.called).to.equal(true);
             expect(mappySpy.called).to.equal(true);
         });
 
-        it("LayerList.addLayer when options.zoomToExtentOnAdd is false", function () {
+        it("options.zoomToExtentOnAdd is false", function () {
             layerlist._map = map;
             layerlist.options.autoZIndex = true;
             layerlist.options.zoomToExtentOnAdd = false;
-            layerlist.addLayer( layer, "test", true );
+            layerlist.addLayer( layer, name, true );
             var lookupId = L.stamp( layer );
 
             // assertions
+            expect(layerlist._layers[lookupId].domElement.outerHTML).to.eql(domElement.outerHTML);
+            delete layerlist._layers[lookupId].domElement; // NOTE: Comparing DOM Element object always fails
+
             expect(layerlist._layers[lookupId]).to.eql({
                 layer: layer,
-                name: "test",
+                name: name,
             });
             expect(layerlist._lastZIndex).to.equal(1);
             expect(geojsonSpy.called).to.equal(true);
@@ -143,14 +155,12 @@ describe("L.DNC.LayerList", function () {
         beforeEach(function () {
             layerlist = new L.DNC.LayerList( map, { layerContainerId: 'dropzone' } );
             layer = L.geoJson( window.testingData.polygon );
+            layerlist.addLayer(layer);
         });
 
-        afterEach(function(){
-        });
-
-        it("LayerList.removeLayer removes the cached layer and returns LayerList instance", function () {
+        it("removes the cached layer and returns LayerList instance", function () {
             var lookupId = L.stamp( layer );
-            layerlist._layers[ lookupId ] = { foo: 'bar' };
+            expect(typeof layerlist._layers[ lookupId ]).to.not.equal("undefined");
             var returnedInstance = layerlist.removeLayer(layer);
 
             // assertions
@@ -239,7 +249,7 @@ describe("L.DNC.LayerList", function () {
             mockSelectRemove.restore();
         });
 
-        it("LayerList._handleLayerClick if the target is NOT selected", function () {
+        it("if the target is NOT selected", function () {
             layerlist._map = map;
             layerlist.domElement = document.createElement("div");
             layerlist.domElement.className = "test";
@@ -255,7 +265,7 @@ describe("L.DNC.LayerList", function () {
             expect(elPostEvent.className.indexOf("selected") !== -1).to.equal(true);
         });
 
-        it("LayerList._handleLayerClick if the target is already selected", function () {
+        it("if the target is already selected", function () {
             layerlist._map = map;
             layerlist.domElement = document.createElement("div");
             layerlist.domElement.className = "test";

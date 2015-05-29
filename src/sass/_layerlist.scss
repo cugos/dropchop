@@ -1,5 +1,4 @@
-/* DROPZONE */
-#dropzone {
+#sidebar {
   position:absolute;
   top:41px;
   bottom:0;
@@ -32,4 +31,10 @@
       color:$grey-light;
     }
   }
+}
+
+#add-remove {
+  width: 100%;
+  background-color:$white;
+  text-align:center;
 }

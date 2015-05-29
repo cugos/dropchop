@@ -17,16 +17,14 @@ L.DNC.Geo = L.Class.extend({
                 name: 'sharpness',
                 description :'a measure of how curvy the path should be between splines',
                 type: 'number',
-                default:  0.85 
+                default:  0.85
 
             }
         ],
-        createsLayer: true
     },
 
     buffer: {
         maxFeatures: 1,
-        additionalArgs: 0.1,
         description: 'Calculates a buffer for input features for a given radius. Units supported are miles, kilometers, and degrees.',
         parameters: [
             {
@@ -43,35 +41,30 @@ L.DNC.Geo = L.Class.extend({
                 default: 'miles'
             }
         ],
-        createsLayer: true
     },
 
     center: {
         minFeatures: 1,
         maxFeatures: 1,
         description: 'Creates a point in the center of the feature.',
-        createsLayer: true
     },
-    
+
     centroid: {
         minFeatures: 1,
         maxFeatures: 1,
         description: 'Creates a point in the centroid of the features.',
-        createsLayer: true
     },
 
     envelope: {
         minFeatures: 1,
         maxFeatures: 1,
         description: 'Extent of all the features.',
-        createsLayer: true
     },
 
     union: {
         minFeatures: 2,
         maxFeatures: 2,
         description: 'Takes two polygons and returns a combined polygon. If the input polygons are not contiguous, this function returns a MultiPolygon feature.',
-        createsLayer: true
     },
 
     tin: {
@@ -80,6 +73,6 @@ L.DNC.Geo = L.Class.extend({
         description: 'Triangulated irregular network, interpolation method',
     }
 
-    
+
 
 });
