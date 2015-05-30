@@ -297,6 +297,10 @@
 .pull-right {
   float: right; }
 
+.bottom {
+  position: absolute;
+  bottom: 0; }
+
 /* scaffolding & frameworks */
 * {
   box-sizing: border-box;
@@ -348,7 +352,8 @@ a {
 .menu-dropdown {
   display: none;
   position: absolute;
-  box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.3); }
+  box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.3);
+  z-index: 1; }
   .menu-dropdown.expanded {
     display: block; }
 
@@ -361,7 +366,8 @@ a {
   font-weight: 100;
   letter-spacing: .05em;
   color: #111;
-  cursor: pointer; }
+  cursor: pointer;
+  display: inline-block; }
   .menu-button:focus {
     outline: none; }
   .menu-button:hover {
@@ -374,6 +380,9 @@ a {
     text-align: left;
     border-top: 1px solid #c0c0c0; }
 
+.opens-above {
+  bottom: 30px; }
+
 #map {
   position: absolute;
   left: 250px;
@@ -384,8 +393,7 @@ a {
 .leaflet-top {
   margin-top: 50px; }
 
-/* DROPZONE */
-#dropzone {
+#sidebar {
   position: absolute;
   top: 41px;
   bottom: 0;
@@ -397,6 +405,8 @@ a {
   margin: 0;
   list-style-type: none;
   padding: 0; }
+  #layer-list *::selection {
+    background: transparent; }
   #layer-list .layer-element {
     border-bottom: 1px solid #c0c0c0; }
   #layer-list .layer-toggle {
@@ -406,12 +416,19 @@ a {
     border-left: 1px solid #e5e5e5;
     padding: 8px;
     font-size: .8em; }
+    #layer-list .layer-name::selection {
+      background: transparent; }
     #layer-list .layer-name:hover {
       background: #e5e5e5;
       cursor: pointer; }
     #layer-list .layer-name.selected {
       background: #0074D9;
       color: #f6f6f6; }
+
+#add-remove {
+  width: 100%;
+  background-color: #fff;
+  text-align: center; }
 
 #notifications {
   position: absolute;
