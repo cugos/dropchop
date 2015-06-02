@@ -209,7 +209,7 @@ L.DNC.LayerList = L.Control.extend({
                 }
                 var max = Math.max.apply(null, layerNumSelection);
                 var min = Math.min.apply(null, layerNumSelection);
-                for ( var x = min-1; x < max; x++ ) {
+                for ( var x = min; x < max+1; x++ ) {
                     if ( lyrs[x].className.indexOf('selected') == -1 ) {
                         lyrs[x].className += ' selected';
                         this.selection.add({
