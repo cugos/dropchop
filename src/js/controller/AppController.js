@@ -37,7 +37,7 @@ L.DNC.AppController = L.Class.extend({
             
             // FILE
             file: new L.DNC.Menu('File', {  // New dropdown menu
-                items: ['Save GeoJSON', 'Save Shapefile']          // Items in menu
+                items: ['save geojson', 'save shapefile']          // Items in menu
             }).addTo( this.menubar ),         // Append to menubar
 
             // ADD LAYER

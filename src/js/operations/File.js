@@ -16,7 +16,7 @@ L.DNC.File = L.Class.extend({
         createsLayer: false
     },
 
-    'Save Shapefile': {
+    'save shapefile': {
         minFeatures: 1,
         description: 'Write out shapefile file',
         createsLayer: false
@@ -37,7 +37,7 @@ L.DNC.File = L.Class.extend({
         ]
     },
 
-    "load from url": {
+    'load from url': {
         description: 'Import file from a URL',
         parameters: [
             {

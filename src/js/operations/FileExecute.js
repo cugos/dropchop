@@ -12,22 +12,23 @@ L.DNC.FileExecute = L.DNC.BaseExecute.extend({
     execute: function ( action, parameters, options, layers, callback ) {
         var _this = this;
         var actions = {
-            'save geojson': function ( action, parameters, layers, callback ) {
+            'save geojson': function ( action, parameters, options, layers, callback ) {
                 console.debug("Saving GeoJSON");
-                for (var i=0; i<parameters.length-1; i++) {
-                    var content = JSON.stringify(parameters[i]);
-                    var meta = parameters[parameters.length-1];
-                    if (meta) {
-                        if (i>0) {
-                            meta = meta+i;
-                        }
-                        meta = meta + '.geojson';
-                    } else {
-                        meta = 'dnc'+i+'.geojson';
-                    }
+
+                console.log(action);
+                console.log(parameters);
+                console.log(options);
+                console.log(layers);
+                console.log(callback);
+
+                for (var i=0; i<layers.length; i++) {
+                    var prefix = parameters[0];
+                    var content = JSON.stringify(layers[i].layer._geojson);
+                    var title = prefix + '_' + layers[i].info.name;
+                    console.log(title);
                     saveAs(new Blob([content], {
                         type: 'text/plain;charset=utf-8'
-                    }), meta);
+                    }), title);
                 }
             },
 
