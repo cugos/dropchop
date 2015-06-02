@@ -32,14 +32,16 @@ L.DNC.FileExecute = L.DNC.BaseExecute.extend({
                 }
             },
 
-            'save shapefile': function ( action, parameters, layers, callback ) {
+            'save shapefile': function ( action, parameters, options, layers, callback ) {
                 console.debug("Saving Shapefile");
                 try {
-                    for (var ii=0; ii<parameters.length; ii++) {
-                        shpwrite.download(parameters[ii]);
+                    for (var ii=0; ii<layers.length; ii++) {
+                        console.log(layers[ii]);
+                        shpwrite.download(layers[ii].layer._geojson);
                     }
                 }
                 catch(err) {
+                    console.log(err);
                     L.DNC.app.notification.add({
                         text: "Error downloading one of the shapefiles... please try downloading in another format",
                         type: 'alert',
