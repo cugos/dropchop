@@ -2,7 +2,6 @@ describe("L.DNC.Forms", function () {
     var expectedOptions = {
         options: {
             maxFeatures: 1,
-            additionalArgs: 0.1,
             description: 'Calculates a buffer for input features for a given radius. Units supported are miles, kilometers, and degrees.',
             parameters: [
                 {
@@ -18,8 +17,7 @@ describe("L.DNC.Forms", function () {
                     options: ['miles', 'feet', 'kilometers', 'meters', 'degrees'],
                     default: 'miles'
                 }
-            ],
-            createsLayer: true
+            ]
         },
         paramArray: {
             0: 10,
