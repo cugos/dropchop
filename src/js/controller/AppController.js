@@ -62,6 +62,11 @@ L.DNC.AppController = L.Class.extend({
 
     },
 
+    /*
+    **
+    ** Bind events to handlers
+    **
+    */
     _addEventHandlers: function(){
         this.dropzone.fileReader.on( 'fileparsed', this._handleParsedFile.bind( this ) );
         this.fileOpsConfig.executor.on( 'uploadedfiles', this.dropzone.fileReader._handleFiles.bind(this.dropzone.fileReader) );
@@ -141,7 +146,7 @@ L.DNC.AppController = L.Class.extend({
 
     /*
     **
-    ** Take new layer, add to map and layerlist
+    ** Take results from operation, handle accordingly
     **
     */
     _handleResults: function( resultPkg ) {
