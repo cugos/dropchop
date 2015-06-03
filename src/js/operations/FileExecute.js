@@ -18,12 +18,6 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
             'save geojson': function ( action, parameters, options, layers, callback ) {
                 console.debug("Saving GeoJSON");
 
-                console.log(action);
-                console.log(parameters);
-                console.log(options);
-                console.log(layers);
-                console.log(callback);
-
                 for (var i=0; i<layers.length; i++) {
                     var prefix = parameters[0];
                     var content = JSON.stringify(layers[i].layer._geojson);
@@ -39,8 +33,16 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                 console.debug("Saving Shapefile");
                 try {
                     for (var ii=0; ii<layers.length; ii++) {
+                        var shpOptions = {
+                            folder: 'myshapes',
+                            types: {
+                                point: 'mypoints',
+                                polygon: 'mypolygons',
+                                line: 'mylines'
+                            }
+                        };
                         console.log(layers[ii]);
-                        shpwrite.download(layers[ii].layer._geojson);
+                        shpwrite.download(layers[ii].layer._geojson, shpOptions);
                     }
                 }
                 catch(err) {

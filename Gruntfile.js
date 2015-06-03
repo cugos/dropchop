@@ -77,6 +77,12 @@ module.exports = function(grunt) {
         include: ['htmlprod', 'stylesheets', 'jsprod', 'tests']
       },
     },
+    concat: {
+        dist: {
+          src: ['src/js/*.js', 'src/js/menu/MenuBar.js', 'src/js/**/*.js'],
+          dest: 'dist/js/L.Dropchop.js'
+        },
+    },
     karma: {
       unit: {
           configFile: 'spec/karma.conf.js'
@@ -116,6 +122,7 @@ module.exports = function(grunt) {
 
   // Loading tasks.
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
@@ -131,8 +138,8 @@ module.exports = function(grunt) {
   grunt.registerTask('test', ['karma']);
   grunt.registerTask('lint', ['jshint']);
   // JS
-  grunt.registerTask('js:dev', ['jshint', 'browserify', 'uglify', 'test']);
-  grunt.registerTask('js:prod', ['browserify', 'uglify']);
+  grunt.registerTask('js:dev', ['jshint', 'concat', 'browserify', 'uglify', 'test']);
+  grunt.registerTask('js:prod', ['concat', 'browserify', 'uglify']);
   // CSS
   grunt.registerTask('css:dev', ['sass']);
   grunt.registerTask('css:prod', ['sass']);
