@@ -42,11 +42,10 @@
     "karma-sinon": "~1.0.4",
     "mapbox.js": "~2.1.9",
     "mocha": "^2.2.4",
-    "sinon": "~1.14.1",
-    "turf": "^2.0.2",
-    "uglify-js": "~2.4.3"
+    "sinon": "~1.14.1"
   },
   "dependencies": {
-    "shp-write": "^0.2.1"
+    "shp-write": "^0.2.1",
+    "turf": "^2.0.2"
   }
 }

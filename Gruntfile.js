@@ -120,7 +120,7 @@ module.exports = function(grunt) {
         src: [],
         dest: 'dist/js/vendor.js',
         options: {
-          require: ['shp-write']
+          require: ['shp-write', 'turf']
         }
       }
     }
