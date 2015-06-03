@@ -1,4 +1,4 @@
-describe("L.DNC.DropZone.FileReader", function () {
+describe("L.Dropchop.DropZone.FileReader", function () {
     var map;
 
 
@@ -14,7 +14,7 @@ describe("L.DNC.DropZone.FileReader", function () {
         beforeEach(function () {
             _console.debug = console.debug;
             console.debug = function(){};
-            fileReader = new L.DNC.DropZone.FileReader( map, fakeOptions );
+            fileReader = new L.Dropchop.DropZone.FileReader( map, fakeOptions );
         });
 
         afterEach(function(){
@@ -22,7 +22,7 @@ describe("L.DNC.DropZone.FileReader", function () {
         });
 
         it("fileReader instance is activated correctly", function () {
-            expect(fileReader instanceof L.DNC.DropZone.FileReader).to.equal(true);
+            expect(fileReader instanceof L.Dropchop.DropZone.FileReader).to.equal(true);
         });
 
         it("fileReader instance has passed options", function () {
@@ -41,7 +41,7 @@ describe("L.DNC.DropZone.FileReader", function () {
         map_filereader_enabled_dispatched = false;
 
         beforeEach(function () {
-            fileReader = new L.DNC.DropZone.FileReader( map, {} );
+            fileReader = new L.Dropchop.DropZone.FileReader( map, {} );
 
             fileReader.on( "enabled", function(e){
                 filereader_enabled_dispatched = true;
@@ -78,7 +78,7 @@ describe("L.DNC.DropZone.FileReader", function () {
         map_filereader_disabled_dispatched = false;
 
         beforeEach(function () {
-            fileReader = new L.DNC.DropZone.FileReader( map, {} );
+            fileReader = new L.Dropchop.DropZone.FileReader( map, {} );
 
             fileReader.on( "disabled", function(e){
                 filereader_disabled_dispatched = true;
@@ -116,7 +116,7 @@ describe("L.DNC.DropZone.FileReader", function () {
         var mockDomEvent = null;
 
         beforeEach(function () {
-            fileReader = new L.DNC.DropZone.FileReader( map, {} );
+            fileReader = new L.Dropchop.DropZone.FileReader( map, {} );
             fileReader._map = null; // determines that listeners are never created
 
             mockDomEvent = sinon.mock(L.DomEvent);
@@ -142,7 +142,7 @@ describe("L.DNC.DropZone.FileReader", function () {
         var mockDomEvent = null;
 
         beforeEach(function () {
-            fileReader = new L.DNC.DropZone.FileReader( map, {} );
+            fileReader = new L.Dropchop.DropZone.FileReader( map, {} );
 
             mockDomEvent = sinon.mock(L.DomEvent);
             mockDomEvent.expects("on").atLeast(3);
@@ -167,7 +167,7 @@ describe("L.DNC.DropZone.FileReader", function () {
         var mockDomEvent = null;
 
         beforeEach(function () {
-            fileReader = new L.DNC.DropZone.FileReader( map, {} );
+            fileReader = new L.Dropchop.DropZone.FileReader( map, {} );
             fileReader._map = null; // determines that listeners are never created
 
             mockDomEvent = sinon.mock(L.DomEvent);
@@ -193,7 +193,7 @@ describe("L.DNC.DropZone.FileReader", function () {
         var mockDomEvent = null;
 
         beforeEach(function () {
-            fileReader = new L.DNC.DropZone.FileReader( map, {} );
+            fileReader = new L.Dropchop.DropZone.FileReader( map, {} );
 
             mockDomEvent = sinon.mock(L.DomEvent);
             mockDomEvent.expects("off").atLeast(3);

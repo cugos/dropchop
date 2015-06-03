@@ -1,5 +1,5 @@
-L.DNC = L.DNC || {};
-L.DNC.MenuBar = L.Class.extend({
+L.Dropchop = L.Dropchop || {};
+L.Dropchop.MenuBar = L.Class.extend({
     includes: L.Mixin.Events,
     options: { id: '#menu-bar', classList: [] },
 

@@ -1,4 +1,4 @@
-L.DNC.Geo = L.Class.extend({
+L.Dropchop.Geo = L.Class.extend({
     includes: L.Mixin.Events,
 
     options: {},

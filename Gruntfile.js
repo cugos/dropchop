@@ -14,7 +14,7 @@ module.exports = function(grunt) {
           sourceMap: true
         },
         files: {
-          'dist/js/dropchop.min.js': ['dist/js/vendor.js', 'dist/js/L.DNC.js']
+          'dist/js/dropchop.min.js': ['dist/js/bundle.js']
         }
       }
     },
@@ -80,7 +80,7 @@ module.exports = function(grunt) {
     concat: {
         dist: {
           src: ['src/js/*.js', 'src/js/menu/MenuBar.js', 'src/js/**/*.js'],
-          dest: 'dist/js/L.DNC.js'
+          dest: 'dist/js/L.Dropchop.js'
         },
     },
     karma: {
@@ -116,13 +116,7 @@ module.exports = function(grunt) {
       }
     },
     browserify: {
-      vendor: {
-        src: [],
-        dest: 'dist/js/vendor.js',
-        options: {
-          require: ['shp-write', 'turf']
-        }
-      }
+      'dist/js/bundle.js': ['dist/js/L.Dropchop.js']
     }
   });
 
@@ -144,7 +138,7 @@ module.exports = function(grunt) {
   grunt.registerTask('test', ['karma']);
   grunt.registerTask('lint', ['jshint']);
   // JS
-  grunt.registerTask('js:dev', ['browserify', 'jshint', 'concat', 'uglify', 'test']);
+  grunt.registerTask('js:dev', ['jshint', 'browserify', 'uglify', 'test']);
   grunt.registerTask('js:prod', ['browserify', 'concat', 'uglify']);
   // CSS
   grunt.registerTask('css:dev', ['sass']);

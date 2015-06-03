@@ -1,5 +1,5 @@
-L.DNC = L.DNC || {};
-L.DNC.Notifications = L.Class.extend({
+L.Dropchop = L.Dropchop || {};
+L.Dropchop.Notifications = L.Class.extend({
 
     statics: {},
 

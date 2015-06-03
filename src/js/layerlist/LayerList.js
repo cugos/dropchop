@@ -1,5 +1,5 @@
-L.DNC = L.DNC || {};
-L.DNC.LayerList = L.Control.extend({
+L.Dropchop = L.Dropchop || {};
+L.Dropchop.LayerList = L.Control.extend({
 
     /*
     **

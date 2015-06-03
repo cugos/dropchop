@@ -1,13 +1,15 @@
+var turf = require('turf');
+
 (function(){
-    var DNC = {
+    var Dropchop = {
         version: '0.0.1-dev'
     };
 
     if (typeof module === 'object' && typeof module.exports === 'object') {
-        module.exports = DNC;
+        module.exports = Dropchop;
     }
 
     if (typeof window !== 'undefined' && window.L ) {
-        window.L.DNC = DNC;
+        window.L.Dropchop = Dropchop;
     }
 })();

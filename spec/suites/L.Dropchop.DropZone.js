@@ -1,4 +1,4 @@
-describe("L.DNC.DropZone", function () {
+describe("L.Dropchop.DropZone", function () {
     var map;
 
     beforeEach(function () {
@@ -10,11 +10,11 @@ describe("L.DNC.DropZone", function () {
         var dropzone = null;
 
         beforeEach(function () {
-            dropzone = new L.DNC.DropZone( map, fakeOptions );
+            dropzone = new L.Dropchop.DropZone( map, fakeOptions );
         });
 
         it("dropzone instance is activated correctly", function () {
-            expect(dropzone instanceof L.DNC.DropZone).to.equal(true);
+            expect(dropzone instanceof L.Dropchop.DropZone).to.equal(true);
         });
 
         it("dropzone instance options correctly set", function () {
@@ -22,7 +22,7 @@ describe("L.DNC.DropZone", function () {
         });
 
         it("dropzone instance has fileReader ref activated correctly", function () {
-            expect(dropzone.fileReader instanceof L.DNC.DropZone.FileReader).to.equal(true);
+            expect(dropzone.fileReader instanceof L.Dropchop.DropZone.FileReader).to.equal(true);
         });
     });
 

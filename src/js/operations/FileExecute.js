@@ -1,8 +1,8 @@
-// includes shp-write
+var shpwrite = require('shp-write');
 // includes filesaver.js
 
-L.DNC = L.DNC || {};
-L.DNC.FileExecute = L.DNC.BaseExecute.extend({
+L.Dropchop = L.Dropchop || {};
+L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
     includes: L.Mixin.Events,
 
     options: {},
@@ -45,7 +45,7 @@ L.DNC.FileExecute = L.DNC.BaseExecute.extend({
                 }
                 catch(err) {
                     console.log(err);
-                    L.DNC.app.notification.add({
+                    L.Dropchop.app.notification.add({
                         text: "Error downloading one of the shapefiles... please try downloading in another format",
                         type: 'alert',
                         time: 3500

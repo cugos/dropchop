@@ -1,5 +1,5 @@
-L.DNC.DropZone = L.DNC.DropZone || {};
-L.DNC.DropZone.FileReader = L.Handler.extend({
+L.Dropchop.DropZone = L.Dropchop.DropZone || {};
+L.Dropchop.DropZone.FileReader = L.Handler.extend({
     includes: L.Mixin.Events,
 
     // defaults

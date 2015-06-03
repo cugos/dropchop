@@ -1,4 +1,4 @@
-describe("L.DNC.Forms", function () {
+describe("L.Dropchop.Forms", function () {
     var expectedOptions = {
         options: {
             maxFeatures: 1,
@@ -29,9 +29,9 @@ describe("L.DNC.Forms", function () {
     
     // var expectedParameters = [Object, 10, "miles"];
 
-    var geo = new L.DNC.Geo();
+    var geo = new L.Dropchop.Geo();
     var buffer = geo.buffer;
-    var forms = new L.DNC.Forms();
+    var forms = new L.Dropchop.Forms();
 
     beforeEach(function () {
         form = forms.render('buffer', buffer);

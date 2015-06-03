@@ -1,5 +1,5 @@
-L.DNC = L.DNC || {};
-L.DNC.BaseExecute = L.Class.extend({
+L.Dropchop = L.Dropchop || {};
+L.Dropchop.BaseExecute = L.Class.extend({
     includes: L.Mixin.Events,
 
     options: {},
