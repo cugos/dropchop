@@ -10,14 +10,13 @@
   },
   "main": "src/main.js",
   "scripts": {
-    "start": "goat -e dist/index.html -p 8000",
+    "start": "grunt",
     "test": "grunt test"
   },
   "devDependencies": {
     "chai": "~2.3.0",
-    "goat": "^0.4.2",
     "grunt": "^0.4.5",
-    "grunt-browserify": "^3.6.0",
+    "grunt-browserify": "^3.8.0",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-clean": "0.5.x",
     "grunt-contrib-concat": "^0.5.1",
@@ -33,7 +32,6 @@
     "grunt-reload": "^0.2.0",
     "grunt-sass": "^1.0.0",
     "happen": "~0.1.3",
-    "jshint": "~2.3.0",
     "karma": "^0.12.31",
     "karma-browserify": "~4.1.2",
     "karma-chai": "~0.1.0",
@@ -47,5 +45,8 @@
     "sinon": "~1.14.1",
     "turf": "^2.0.2",
     "uglify-js": "~2.4.3"
+  },
+  "dependencies": {
+    "shp-write": "^0.2.1"
   }
 }

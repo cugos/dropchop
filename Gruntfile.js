@@ -14,7 +14,7 @@ module.exports = function(grunt) {
           sourceMap: true
         },
         files: {
-          'dist/js/L.DNC.min.js': ['dist/js/L.DNC.js']
+          'dist/js/dropchop.min.js': ['dist/js/vendor.js', 'dist/js/L.DNC.js']
         }
       }
     },
@@ -108,11 +108,20 @@ module.exports = function(grunt) {
         base: 'dist'
       },
       src: ['**']
-  },
+    },
     copy: {
       main: {
         src: 'src/CNAME',
         dest: 'dist/CNAME',
+      }
+    },
+    browserify: {
+      vendor: {
+        src: [],
+        dest: 'dist/js/vendor.js',
+        options: {
+          require: ['shp-write']
+        }
       }
     }
   });
@@ -129,13 +138,14 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-processhtml');
   grunt.loadNpmTasks('grunt-focus');
+  grunt.loadNpmTasks('grunt-browserify');
 
   // Tasks.
   grunt.registerTask('test', ['karma']);
   grunt.registerTask('lint', ['jshint']);
   // JS
-  grunt.registerTask('js:dev', ['jshint', 'concat', 'uglify', 'test']);
-  grunt.registerTask('js:prod', ['concat', 'uglify']);
+  grunt.registerTask('js:dev', ['browserify', 'jshint', 'concat', 'uglify', 'test']);
+  grunt.registerTask('js:prod', ['browserify', 'concat', 'uglify']);
   // CSS
   grunt.registerTask('css:dev', ['sass']);
   grunt.registerTask('css:prod', ['sass']);
