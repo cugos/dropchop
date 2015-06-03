@@ -3,6 +3,25 @@ L.DNC.File = L.Class.extend({
 
     options: {},
 
+    'save geojson': {
+        minFeatures: 1,
+        description: 'Write out geojson file',
+        parameters: [
+            {
+                name: 'filename',
+                description :'Filename prefix to write',
+                default: 'dnc'
+            }
+        ],
+        createsLayer: false
+    },
+
+    'save shapefile': {
+        minFeatures: 1,
+        description: 'Write out shapefile file',
+        createsLayer: false
+    },
+
     remove: {
         minFeatures: 1,
         description: 'Removes a layer from the application.',
@@ -17,7 +36,8 @@ L.DNC.File = L.Class.extend({
             }
         ]
     },
-    "load from url": {
+
+    'load from url': {
         description: 'Import file from a URL',
         parameters: [
             {

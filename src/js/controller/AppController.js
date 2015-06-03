@@ -30,33 +30,40 @@ L.DNC.AppController = L.Class.extend({
 
         // build out menus
         this.menus = {
+            // GEO
             geo: new L.DNC.Menu('Geoprocessing', {  // New dropdown menu
                 items: ['bezier', 'buffer', 'center', 'centroid', 'envelope', 'union', 'tin']
-            }).addTo( this.menubar ),               // Append to menubar
+            }).addTo( this.menubar ),                // Append to menubar
+            
+            // FILE
+            file: new L.DNC.Menu('File', {  // New dropdown menu
+                items: ['save geojson', 'save shapefile']          // Items in menu
+            }).addTo( this.menubar ),         // Append to menubar
 
+            // ADD LAYER
             addLayer: new L.DNC.Menu('Add', {       // New dropdown menu
                 items: ['upload', 'load from url'],
                 menuDirection: 'above',
                 iconClassName: "fa fa-plus",
             }).addTo( this.bottom_menu ),           // Append to menubar
 
+            // REMOVE LAYER
             removeLayer: new L.DNC.Menu('Remove', {
                 iconClassName: "fa fa-minus",
             }).addTo( this.bottom_menu ),
         };
+
         this.geoOpsConfig = {
             operations: new L.DNC.Geo(),        // Configurations of GeoOperations
             executor: new L.DNC.GeoExecute()    // Executor of GeoOperations
         };
 
         this.fileOpsConfig = {
-            operations: new L.DNC.File(),       // Configurations of FileOperations
+            operations: new L.DNC.File(),        // Configurations of GeoOperations
             executor: new L.DNC.FileExecute()    // Executor of GeoOperations
         };
 
-
         this.forms = new L.DNC.Forms();
-
         this.notification = new L.DNC.Notifications();
         this._addEventHandlers();
 
@@ -74,6 +81,7 @@ L.DNC.AppController = L.Class.extend({
         // Handle clicks on items within geoMenu
         // NOTE: This is where an operation is tied to a menu item
         this.menus.geo.on( 'clickedOperation', this._handleOperationClick.bind( this, this.geoOpsConfig ) );
+        this.menus.file.on( 'clickedOperation', this._handleOperationClick.bind( this, this.fileOpsConfig ) );
         this.menus.addLayer.on( 'clickedOperation', this._handleOperationClick.bind( this, this.fileOpsConfig ) );
         this.menus.removeLayer.on( 'clickedOperation', this._handleOperationClick.bind( this, this.fileOpsConfig ) );
     },
