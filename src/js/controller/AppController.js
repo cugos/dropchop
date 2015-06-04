@@ -1,11 +1,11 @@
-L.DNC = L.DNC || {};
+L.Dropchop = L.Dropchop || {};
 /*
 **
 ** AppController is the primary point of app initialization. It basically 'ties
 ** every together'
 **
 */
-L.DNC.AppController = L.Class.extend({
+L.Dropchop.AppController = L.Class.extend({
 
     statics: {},
 
@@ -18,53 +18,53 @@ L.DNC.AppController = L.Class.extend({
         // override defaults with passed options
         L.setOptions(this, options);
 
-        this.mapView = new L.DNC.MapView();
-        this.dropzone = new L.DNC.DropZone( this.mapView._map, {} );
-        this.layerlist = new L.DNC.LayerList( this.mapView._map, { layerContainerId: 'sidebar' } );
-        this.menubar = new L.DNC.MenuBar(
+        this.mapView = new L.Dropchop.MapView();
+        this.dropzone = new L.Dropchop.DropZone( this.mapView._map, {} );
+        this.layerlist = new L.Dropchop.LayerList( this.mapView._map, { layerContainerId: 'sidebar' } );
+        this.menubar = new L.Dropchop.MenuBar(
             { id: 'menu-bar' }
         ).addTo( document.body );
-        this.bottom_menu = new L.DNC.MenuBar(
+        this.bottom_menu = new L.Dropchop.MenuBar(
             { id: 'add-remove', classList: ["bottom", "menu"] }
         ).addTo( document.getElementById('sidebar') );
 
         // build out menus
         this.menus = {
             // GEO
-            geo: new L.DNC.Menu('Geoprocessing', {  // New dropdown menu
+            geo: new L.Dropchop.Menu('Geoprocessing', {  // New dropdown menu
                 items: ['bezier', 'buffer', 'center', 'centroid', 'envelope', 'union', 'tin']
             }).addTo( this.menubar ),                // Append to menubar
             
             // FILE
-            file: new L.DNC.Menu('File', {  // New dropdown menu
+            file: new L.Dropchop.Menu('File', {  // New dropdown menu
                 items: ['save geojson', 'save shapefile']          // Items in menu
             }).addTo( this.menubar ),         // Append to menubar
 
             // ADD LAYER
-            addLayer: new L.DNC.Menu('Add', {       // New dropdown menu
+            addLayer: new L.Dropchop.Menu('Add', {       // New dropdown menu
                 items: ['upload', 'load from url'],
                 menuDirection: 'above',
                 iconClassName: "fa fa-plus",
             }).addTo( this.bottom_menu ),           // Append to menubar
 
             // REMOVE LAYER
-            removeLayer: new L.DNC.Menu('Remove', {
+            removeLayer: new L.Dropchop.Menu('Remove', {
                 iconClassName: "fa fa-minus",
             }).addTo( this.bottom_menu ),
         };
 
         this.geoOpsConfig = {
-            operations: new L.DNC.Geo(),        // Configurations of GeoOperations
-            executor: new L.DNC.GeoExecute()    // Executor of GeoOperations
+            operations: new L.Dropchop.Geo(),        // Configurations of GeoOperations
+            executor: new L.Dropchop.GeoExecute()    // Executor of GeoOperations
         };
 
         this.fileOpsConfig = {
-            operations: new L.DNC.File(),        // Configurations of GeoOperations
-            executor: new L.DNC.FileExecute()    // Executor of GeoOperations
+            operations: new L.Dropchop.File(),        // Configurations of GeoOperations
+            executor: new L.Dropchop.FileExecute()    // Executor of GeoOperations
         };
 
-        this.forms = new L.DNC.Forms();
-        this.notification = new L.DNC.Notifications();
+        this.forms = new L.Dropchop.Forms();
+        this.notification = new L.Dropchop.Notifications();
         this._addEventHandlers();
 
     },

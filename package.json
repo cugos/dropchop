@@ -1,12 +1,12 @@
 {
-  "name": "DropnChop",
+  "name": "Dropchop",
   "version": "0.0.1",
   "description": "GIS in the browser.",
-  "homepage": "https://github.com/cugos/drop-n-chop",
-  "bugs": "https://github.com/cugos/drop-n-chop",
+  "homepage": "https://github.com/cugos/dropchop",
+  "bugs": "https://github.com/cugos/dropchop",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cugos/drop-n-chop"
+    "url": "https://github.com/cugos/dropchop"
   },
   "main": "src/main.js",
   "scripts": {

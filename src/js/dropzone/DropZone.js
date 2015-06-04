@@ -1,5 +1,5 @@
-L.DNC = L.DNC || {};
-L.DNC.DropZone = L.Class.extend({
+L.Dropchop = L.Dropchop || {};
+L.Dropchop.DropZone = L.Class.extend({
 
 
     statics: {
@@ -16,9 +16,9 @@ L.DNC.DropZone = L.Class.extend({
         // override defaults with passed options
         L.setOptions(this, options);
         this._map = map;
-        this.type = L.DNC.DropZone.TYPE;
+        this.type = L.Dropchop.DropZone.TYPE;
 
-        this.fileReader = new L.DNC.DropZone.FileReader( this._map, options );
+        this.fileReader = new L.Dropchop.DropZone.FileReader( this._map, options );
         this.fileReader.enable();
     }
 

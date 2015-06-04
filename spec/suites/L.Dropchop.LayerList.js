@@ -1,4 +1,4 @@
-describe("L.DNC.LayerList", function () {
+describe("L.Dropchop.LayerList", function () {
     var map;
 
     beforeEach(function () {
@@ -13,7 +13,7 @@ describe("L.DNC.LayerList", function () {
         var layerlist;
 
         beforeEach(function () {
-            layerlist = new L.DNC.LayerList( map, { layerContainerId: 'dropzone' } );
+            layerlist = new L.Dropchop.LayerList( map, { layerContainerId: 'dropzone' } );
         });
 
         afterEach(function(){
@@ -34,7 +34,7 @@ describe("L.DNC.LayerList", function () {
         });
 
         it("intialized correctly", function () {
-            expect(layerlist instanceof L.DNC.LayerList).to.equal(true);
+            expect(layerlist instanceof L.Dropchop.LayerList).to.equal(true);
         });
 
     });
@@ -43,7 +43,7 @@ describe("L.DNC.LayerList", function () {
         var layerlist;
 
         beforeEach(function () {
-            layerlist = new L.DNC.LayerList( map, { layerContainerId: 'dropzone' } );
+            layerlist = new L.Dropchop.LayerList( map, { layerContainerId: 'dropzone' } );
         });
 
         afterEach(function(){
@@ -69,7 +69,7 @@ describe("L.DNC.LayerList", function () {
         var domElement;
 
         beforeEach(function () {
-            layerlist = new L.DNC.LayerList( map, { layerContainerId: 'dropzone' } );
+            layerlist = new L.Dropchop.LayerList( map, { layerContainerId: 'dropzone' } );
             layer = L.geoJson( window.testingData.polygon );
             domElement = layerlist._buildListItemDomElement({ name: name, layer: layer });
 
@@ -153,7 +153,7 @@ describe("L.DNC.LayerList", function () {
         var layerlist;
 
         beforeEach(function () {
-            layerlist = new L.DNC.LayerList( map, { layerContainerId: 'dropzone' } );
+            layerlist = new L.Dropchop.LayerList( map, { layerContainerId: 'dropzone' } );
             layer = L.geoJson( window.testingData.polygon );
             layerlist.addLayer(layer);
         });
@@ -164,7 +164,7 @@ describe("L.DNC.LayerList", function () {
             var returnedInstance = layerlist.removeLayer(layer);
 
             // assertions
-            expect(returnedInstance instanceof L.DNC.LayerList).to.equal(true);
+            expect(returnedInstance instanceof L.Dropchop.LayerList).to.equal(true);
             expect(typeof returnedInstance._layers[ lookupId ]).to.equal("undefined");
         });
 
@@ -177,7 +177,7 @@ describe("L.DNC.LayerList", function () {
         var mockMapRemoveLayer;
 
         beforeEach(function () {
-            layerlist = new L.DNC.LayerList( map, { layerContainerId: 'dropzone' } );
+            layerlist = new L.Dropchop.LayerList( map, { layerContainerId: 'dropzone' } );
             layer = L.geoJson( window.testingData.polygon );
             layerlist.domElement = document.createElement("div");
             layerlist.domElement.className = "test";
@@ -238,7 +238,7 @@ describe("L.DNC.LayerList", function () {
         var mockSelectRemove;
 
         beforeEach(function () {
-            layerlist = new L.DNC.LayerList( map, { layerContainerId: 'dropzone' } );
+            layerlist = new L.Dropchop.LayerList( map, { layerContainerId: 'dropzone' } );
             layer = L.geoJson( window.testingData.polygon );
             mockSelectAdd = sinon.spy(layerlist.selection, "add");
             mockSelectRemove = sinon.spy(layerlist.selection, "remove");

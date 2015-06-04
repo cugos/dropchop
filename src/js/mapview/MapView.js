@@ -1,5 +1,5 @@
-L.DNC = L.DNC || {};
-L.DNC.MapView = L.Class.extend({
+L.Dropchop = L.Dropchop || {};
+L.Dropchop.MapView = L.Class.extend({
 
     statics: {},
 

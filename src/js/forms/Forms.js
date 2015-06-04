@@ -1,5 +1,5 @@
-L.DNC = L.DNC || {};
-L.DNC.Forms = L.Class.extend({
+L.Dropchop = L.Dropchop || {};
+L.Dropchop.Forms = L.Class.extend({
     includes: L.Mixin.Events,
 
     options: {},

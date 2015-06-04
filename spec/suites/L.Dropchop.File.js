@@ -1,4 +1,4 @@
-describe("L.DNC.FileExecute Operations", function(){
+describe("L.Dropchop.FileExecute Operations", function(){
 	var menu;
 	var ops;
 	var exampleData = true;

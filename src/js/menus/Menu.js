@@ -1,11 +1,11 @@
-L.DNC = L.DNC || {};
+L.Dropchop = L.Dropchop || {};
 
 /*
 **
 ** A dropdown menu
 **
 */
-L.DNC.Menu = L.Class.extend({
+L.Dropchop.Menu = L.Class.extend({
     includes: L.Mixin.Events,
     options: { items: [], menuDirection: 'below' },
 

@@ -1,8 +1,8 @@
-// includes shp-write
+var shpwrite = require('shp-write');
 // includes filesaver.js
 
-L.DNC = L.DNC || {};
-L.DNC.FileExecute = L.DNC.BaseExecute.extend({
+L.Dropchop = L.Dropchop || {};
+L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
     includes: L.Mixin.Events,
 
     options: {},
@@ -17,12 +17,6 @@ L.DNC.FileExecute = L.DNC.BaseExecute.extend({
         var actions = {
             'save geojson': function ( action, parameters, options, layers, callback ) {
                 console.debug("Saving GeoJSON");
-
-                console.log(action);
-                console.log(parameters);
-                console.log(options);
-                console.log(layers);
-                console.log(callback);
 
                 for (var i=0; i<layers.length; i++) {
                     var prefix = parameters[0];
@@ -39,13 +33,21 @@ L.DNC.FileExecute = L.DNC.BaseExecute.extend({
                 console.debug("Saving Shapefile");
                 try {
                     for (var ii=0; ii<layers.length; ii++) {
+                        var shpOptions = {
+                            folder: 'myshapes',
+                            types: {
+                                point: 'mypoints',
+                                polygon: 'mypolygons',
+                                line: 'mylines'
+                            }
+                        };
                         console.log(layers[ii]);
-                        shpwrite.download(layers[ii].layer._geojson);
+                        shpwrite.download(layers[ii].layer._geojson, shpOptions);
                     }
                 }
                 catch(err) {
                     console.log(err);
-                    L.DNC.app.notification.add({
+                    L.Dropchop.app.notification.add({
                         text: "Error downloading one of the shapefiles... please try downloading in another format",
                         type: 'alert',
                         time: 3500

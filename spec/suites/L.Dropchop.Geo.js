@@ -1,12 +1,12 @@
-describe("L.DNC.GeoExecute", function () {
+describe("L.Dropchop.GeoExecute", function () {
     var menu;
     var ops;
     var _console = {};
 
     beforeEach(function () {
         ops = {
-            geo: new L.DNC.Geo(),
-            geox: new L.DNC.GeoExecute()
+            geo: new L.Dropchop.Geo(),
+            geox: new L.Dropchop.GeoExecute()
         };
 
 

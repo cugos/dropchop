@@ -22,7 +22,7 @@ module.exports = function (config) {
         files: [
             "node_modules/mapbox.js/src/index.js",
             "node_modules/turf/turf.js",
-            "dist/js/L.DNC.js",
+            "dist/js/dropchop.min.js",
             "spec/**/*.js",
         ],
         exclude: [],

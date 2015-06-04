@@ -1,4 +1,4 @@
-L.DNC.File = L.Class.extend({
+L.Dropchop.File = L.Class.extend({
     includes: L.Mixin.Events,
 
     options: {},

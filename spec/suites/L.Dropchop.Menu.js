@@ -1,8 +1,8 @@
-describe("L.DNC.Menu", function () {
+describe("L.Dropchop.Menu", function () {
     var menu = null;
     var title = "Test Menu";
     var items = [];
-    var parent = new L.DNC.MenuBar( { id: 'menu-bar' } );
+    var parent = new L.Dropchop.MenuBar( { id: 'menu-bar' } );
     var fakeOptions = { items: ['waka', 'flaka'], menuDirection: 'below' };
 
     var begin_html =
@@ -21,20 +21,20 @@ describe("L.DNC.Menu", function () {
 
 
     beforeEach(function () {
-        menu = new L.DNC.Menu( title, fakeOptions ).addTo( parent );
+        menu = new L.Dropchop.Menu( title, fakeOptions ).addTo( parent );
     });
 
 
     /*
     **
-    **  Ensures all options passed through L.DNC.Menu are properly
+    **  Ensures all options passed through L.Dropchop.Menu are properly
     **  intialized in the app and equalt their expected values.
     **
     */
     describe("initialize options", function () {
 
         it("is activated correctly", function () {
-            expect( menu instanceof L.DNC.Menu ).to.equal( true );
+            expect( menu instanceof L.Dropchop.Menu ).to.equal( true );
         });
 
         it("options correctly set", function () {
@@ -120,7 +120,7 @@ describe("L.DNC.Menu", function () {
 
         it("unexpands one menu when other menu is clicked", function () {
             // Setup
-            var menu2 = new L.DNC.Menu( "Second Menu", fakeOptions ).addTo( parent );
+            var menu2 = new L.Dropchop.Menu( "Second Menu", fakeOptions ).addTo( parent );
             var dropdown2 = menu2.domElement.getElementsByClassName('menu-dropdown')[0];
             document.body.appendChild(menu.domElement);
             document.body.appendChild(menu2.domElement);
