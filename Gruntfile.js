@@ -138,7 +138,7 @@ module.exports = function(grunt) {
   grunt.registerTask('test', ['karma']);
   grunt.registerTask('lint', ['jshint']);
   // JS
-  grunt.registerTask('js:dev', ['jshint', 'concat', 'browserify', 'uglify', 'test']);
+  grunt.registerTask('js:dev', ['jshint', 'concat', 'browserify', 'test']);
   grunt.registerTask('js:prod', ['concat', 'browserify', 'uglify']);
   // CSS
   grunt.registerTask('css:dev', ['sass']);
