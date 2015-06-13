@@ -58,7 +58,7 @@ L.Dropchop.GeoExecute = L.Dropchop.BaseExecute.extend({
 
     _prepareName: function ( layers ) {
         // Get layer names
-        var layer_names = layers.map(function(obj) { return obj.info.name; });
+        var layer_names = layers.map(function(obj) { return obj.name; });
         var layer_names_str = '';
         if (layer_names.length === 1) {
             // Rm file extension
