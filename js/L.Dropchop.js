@@ -1,25 +1,27 @@
+require('mapbox.js');
+
 (function(){
-    var DNC = {
+    var Dropchop = {
         version: '0.0.1-dev'
     };
 
     if (typeof module === 'object' && typeof module.exports === 'object') {
-        module.exports = DNC;
+        module.exports = Dropchop;
     }
 
     if (typeof window !== 'undefined' && window.L ) {
-        window.L.DNC = DNC;
+        window.L.Dropchop = Dropchop;
     }
 })();
 
-L.DNC = L.DNC || {};
+L.Dropchop = L.Dropchop || {};
 /*
 **
 ** AppController is the primary point of app initialization. It basically 'ties
 ** every together'
 **
 */
-L.DNC.AppController = L.Class.extend({
+L.Dropchop.AppController = L.Class.extend({
 
     statics: {},
 
@@ -32,57 +34,73 @@ L.DNC.AppController = L.Class.extend({
         // override defaults with passed options
         L.setOptions(this, options);
 
-        this.mapView = new L.DNC.MapView();
-        this.dropzone = new L.DNC.DropZone( this.mapView._map, {} );
-        this.layerlist = new L.DNC.LayerList( this.mapView._map, { layerContainerId: 'sidebar' } );
-        this.menubar = new L.DNC.MenuBar(
+        this.mapView = new L.Dropchop.MapView();
+        this.dropzone = new L.Dropchop.DropZone( this.mapView._map, {} );
+        this.layerlist = new L.Dropchop.LayerList( this.mapView._map, { layerContainerId: 'sidebar' } );
+        this.menubar = new L.Dropchop.MenuBar(
             { id: 'menu-bar' }
         ).addTo( document.body );
-        this.bottom_menu = new L.DNC.MenuBar(
+        this.bottom_menu = new L.Dropchop.MenuBar(
             { id: 'add-remove', classList: ["bottom", "menu"] }
         ).addTo( document.getElementById('sidebar') );
 
         // build out menus
         this.menus = {
-            geo: new L.DNC.Menu('Geoprocessing', {  // New dropdown menu
-                items: ['bezier', 'buffer', 'center', 'centroid', 'envelope', 'union', 'tin']
-            }).addTo( this.menubar ),               // Append to menubar
+            // GEO
+            geo: new L.Dropchop.Menu('Geoprocessing', {     // New dropdown menu
+                items: [
+                    'bezier', 'buffer', 'center',           // Items in menu
+                    'centroid', 'envelope', 'union', 'tin'
+                ]
+            }).addTo( this.menubar ),                       // Append to menubar
 
-            addLayer: new L.DNC.Menu('Add', {       // New dropdown menu
+            // SAVE
+            save: new L.Dropchop.Menu('Save', {
+                items: ['save geojson', 'save shapefile']
+            }).addTo( this.menubar ),
+
+            // ADD LAYER
+            addLayer: new L.Dropchop.Menu('Add', {
                 items: ['upload', 'load from url'],
                 menuDirection: 'above',
                 iconClassName: "fa fa-plus",
             }).addTo( this.bottom_menu ),           // Append to menubar
 
-            removeLayer: new L.DNC.Menu('Remove', {
+            // REMOVE LAYER
+            removeLayer: new L.Dropchop.Menu('Remove', {
                 iconClassName: "fa fa-minus",
             }).addTo( this.bottom_menu ),
         };
+
         this.geoOpsConfig = {
-            operations: new L.DNC.Geo(),        // Configurations of GeoOperations
-            executor: new L.DNC.GeoExecute()    // Executor of GeoOperations
+            operations: new L.Dropchop.Geo(),        // Configurations of GeoOperations
+            executor: new L.Dropchop.TurfExecute()   // Executor of GeoOperations
         };
 
         this.fileOpsConfig = {
-            operations: new L.DNC.File(),       // Configurations of FileOperations
-            executor: new L.DNC.FileExecute()    // Executor of GeoOperations
+            operations: new L.Dropchop.File(),        // Configurations of FileOperations
+            executor: new L.Dropchop.FileExecute()    // Executor of FileOperations
         };
 
-
-        this.forms = new L.DNC.Forms();
-
-        this.notification = new L.DNC.Notifications();
+        this.forms = new L.Dropchop.Forms();
+        this.notification = new L.Dropchop.Notifications();
         this._addEventHandlers();
 
     },
 
+    /*
+    **
+    ** Bind events to handlers
+    **
+    */
     _addEventHandlers: function(){
         this.dropzone.fileReader.on( 'fileparsed', this._handleParsedFile.bind( this ) );
         this.fileOpsConfig.executor.on( 'uploadedfiles', this.dropzone.fileReader._handleFiles.bind(this.dropzone.fileReader) );
 
-        // Handle clicks on items within geoMenu
+        // Handle clicks on items within menus
         // NOTE: This is where an operation is tied to a menu item
         this.menus.geo.on( 'clickedOperation', this._handleOperationClick.bind( this, this.geoOpsConfig ) );
+        this.menus.save.on( 'clickedOperation', this._handleOperationClick.bind( this, this.fileOpsConfig ) );
         this.menus.addLayer.on( 'clickedOperation', this._handleOperationClick.bind( this, this.fileOpsConfig ) );
         this.menus.removeLayer.on( 'clickedOperation', this._handleOperationClick.bind( this, this.fileOpsConfig ) );
     },
@@ -155,7 +173,7 @@ L.DNC.AppController = L.Class.extend({
 
     /*
     **
-    ** Take new layer, add to map and layerlist
+    ** Take results from operation, handle accordingly
     **
     */
     _handleResults: function( resultPkg ) {
@@ -199,8 +217,8 @@ L.DNC.AppController = L.Class.extend({
 
 });
 
-L.DNC = L.DNC || {};
-L.DNC.DropZone = L.Class.extend({
+L.Dropchop = L.Dropchop || {};
+L.Dropchop.DropZone = L.Class.extend({
 
 
     statics: {
@@ -217,16 +235,16 @@ L.DNC.DropZone = L.Class.extend({
         // override defaults with passed options
         L.setOptions(this, options);
         this._map = map;
-        this.type = L.DNC.DropZone.TYPE;
+        this.type = L.Dropchop.DropZone.TYPE;
 
-        this.fileReader = new L.DNC.DropZone.FileReader( this._map, options );
+        this.fileReader = new L.Dropchop.DropZone.FileReader( this._map, options );
         this.fileReader.enable();
     }
 
 });
 
-L.DNC.DropZone = L.DNC.DropZone || {};
-L.DNC.DropZone.FileReader = L.Handler.extend({
+L.Dropchop.DropZone = L.Dropchop.DropZone || {};
+L.Dropchop.DropZone.FileReader = L.Handler.extend({
     includes: L.Mixin.Events,
 
     // defaults
@@ -329,8 +347,8 @@ L.DNC.DropZone.FileReader = L.Handler.extend({
 
 });
 
-L.DNC = L.DNC || {};
-L.DNC.Forms = L.Class.extend({
+L.Dropchop = L.Dropchop || {};
+L.Dropchop.Forms = L.Class.extend({
     includes: L.Mixin.Events,
 
     options: {},
@@ -480,8 +498,8 @@ L.DNC.Forms = L.Class.extend({
     }
 });
 
-L.DNC = L.DNC || {};
-L.DNC.LayerList = L.Control.extend({
+L.Dropchop = L.Dropchop || {};
+L.Dropchop.LayerList = L.Control.extend({
 
     /*
     **
@@ -589,7 +607,7 @@ L.DNC.LayerList = L.Control.extend({
             }
             this._map.fitBounds(bounds);
         }
-
+        return obj;
     },
 
     /*
@@ -657,11 +675,39 @@ L.DNC.LayerList = L.Control.extend({
     **
     */
     _handleLayerChange: function(obj, e){
-        var inputEl = e.target;
+        var inputEl = e.currentTarget;
+        var isSelected = obj.domElement.getElementsByClassName('layer-name')[0].classList.contains('selected');
+        var i;
         if (inputEl.checked) {
-            this._map.addLayer(obj.layer);
+
+            // If changed element in selection, alter entire selection
+            if (isSelected) {
+                for (i = 0; i < this.selection.list.length; i++) {
+                    obj = this.selection.list[i];
+
+                    // Set input to checked
+                    obj.domElement.getElementsByTagName('input')[0].checked = true;
+                    // Add to map
+                    this._map.addLayer(obj.layer);
+                }
+            } else {
+                this._map.addLayer(obj.layer);
+            }
+
         } else {
-            if (this._map.hasLayer(obj.layer)) this._map.removeLayer(obj.layer);
+
+            if (isSelected) {
+                for (i = 0; i < this.selection.list.length; i++) {
+                    obj = this.selection.list[i];
+
+                    // Set input to unchecked
+                    obj.domElement.getElementsByTagName('input')[0].checked = false;
+                    // Rm from map
+                    if (this._map.hasLayer(obj.layer)) this._map.removeLayer(obj.layer);
+                }
+            } else {
+                if (this._map.hasLayer(obj.layer)) this._map.removeLayer(obj.layer);
+            }
         }
     },
 
@@ -671,15 +717,18 @@ L.DNC.LayerList = L.Control.extend({
     **
     */
     _handleLayerClick: function( obj, e ) {
+
         var lyrs = document.getElementsByClassName('layer-name');
         elem = e.currentTarget;
+
+        // Select if not selected
         if (elem.className.indexOf('selected') == -1) {
 
             // if holding meta key (command on mac)
             if ( e.metaKey ) {
                 // do nothing for now, but maybe we want to do something
                 // down the road?
-            } 
+            }
             else if ( e.shiftKey ) {
                 // get layer number, and other currently selected
                 // layers, and select everything in between
@@ -691,13 +740,10 @@ L.DNC.LayerList = L.Control.extend({
                 }
                 var max = Math.max.apply(null, layerNumSelection);
                 var min = Math.min.apply(null, layerNumSelection);
-                for ( var x = min-1; x < max; x++ ) {
+                for ( var x = min; x < max+1; x++ ) {
                     if ( lyrs[x].className.indexOf('selected') == -1 ) {
                         lyrs[x].className += ' selected';
-                        this.selection.add({
-                            info: this._layers[lyrs[x].getAttribute('data-id')],
-                            layer: this._layers[lyrs[x].getAttribute('data-id')].layer
-                        });
+                        this.selection.add(this._layers[lyrs[x].getAttribute('data-id')]);
                     }
                 }
                 return;
@@ -709,21 +755,16 @@ L.DNC.LayerList = L.Control.extend({
             // add the class
             elem.className += ' selected';
             // add to select list
-            this.selection.add({
-                info: obj,
-                layer: obj.layer
-            });
+            this.selection.add(obj);
+
+        // Unselect if selected
         } else {
             if ( e.metaKey ) {
                 this.selection.remove(obj.layer);
                 elem.className = elem.className.replace(/\b selected\b/, '');
             } else {
                 this.selection.clear();
-                // remove selection
-                this.selection.add({
-                    info: obj,
-                    layer: obj.layer
-                });
+                this.selection.add(obj);
                 elem.className += ' selected';
             }
         }
@@ -731,8 +772,8 @@ L.DNC.LayerList = L.Control.extend({
 
 });
 
-L.DNC = L.DNC || {};
-L.DNC.MapView = L.Class.extend({
+L.Dropchop = L.Dropchop || {};
+L.Dropchop.MapView = L.Class.extend({
 
     statics: {},
 
@@ -783,14 +824,14 @@ L.DNC.MapView = L.Class.extend({
 
 });
 
-L.DNC = L.DNC || {};
+L.Dropchop = L.Dropchop || {};
 
 /*
 **
 ** A dropdown menu
 **
 */
-L.DNC.Menu = L.Class.extend({
+L.Dropchop.Menu = L.Class.extend({
     includes: L.Mixin.Events,
     options: { items: [], menuDirection: 'below' },
 
@@ -923,8 +964,8 @@ L.DNC.Menu = L.Class.extend({
     }
 });
 
-L.DNC = L.DNC || {};
-L.DNC.MenuBar = L.Class.extend({
+L.Dropchop = L.Dropchop || {};
+L.Dropchop.MenuBar = L.Class.extend({
     includes: L.Mixin.Events,
     options: { id: '#menu-bar', classList: [] },
 
@@ -961,8 +1002,8 @@ L.DNC.MenuBar = L.Class.extend({
     }
 });
 
-L.DNC = L.DNC || {};
-L.DNC.Notifications = L.Class.extend({
+L.Dropchop = L.Dropchop || {};
+L.Dropchop.Notifications = L.Class.extend({
 
     statics: {},
 
@@ -1017,8 +1058,8 @@ L.DNC.Notifications = L.Class.extend({
 
 });
 
-L.DNC = L.DNC || {};
-L.DNC.BaseExecute = L.Class.extend({
+L.Dropchop = L.Dropchop || {};
+L.Dropchop.BaseExecute = L.Class.extend({
     includes: L.Mixin.Events,
 
     options: {},
@@ -1063,10 +1104,29 @@ L.DNC.BaseExecute = L.Class.extend({
 
 });
 
-L.DNC.File = L.Class.extend({
+L.Dropchop.File = L.Class.extend({
     includes: L.Mixin.Events,
 
     options: {},
+
+    'save geojson': {
+        minFeatures: 1,
+        description: 'Write out geojson file',
+        parameters: [
+            {
+                name: 'filename',
+                description :'Filename prefix to write',
+                default: 'dnc'
+            }
+        ],
+        createsLayer: false
+    },
+
+    'save shapefile': {
+        minFeatures: 1,
+        description: 'Write out shapefile file',
+        createsLayer: false
+    },
 
     remove: {
         minFeatures: 1,
@@ -1082,7 +1142,8 @@ L.DNC.File = L.Class.extend({
             }
         ]
     },
-    "load from url": {
+
+    'load from url': {
         description: 'Import file from a URL',
         parameters: [
             {
@@ -1095,8 +1156,11 @@ L.DNC.File = L.Class.extend({
     }
 });
 
-L.DNC = L.DNC || {};
-L.DNC.FileExecute = L.DNC.BaseExecute.extend({
+var shpwrite = require('shp-write');
+var saveAs = require('browser-filesaver');
+
+L.Dropchop = L.Dropchop || {};
+L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
     includes: L.Mixin.Events,
 
     options: {},
@@ -1109,17 +1173,59 @@ L.DNC.FileExecute = L.DNC.BaseExecute.extend({
     execute: function ( action, parameters, options, layers, callback ) {
         var _this = this;
         var actions = {
+            'save geojson': function ( action, parameters, options, layers, callback ) {
+                console.debug("Saving GeoJSON");
+
+                for (var i=0; i<layers.length; i++) {
+                    var prefix = parameters[0];
+                    var content = JSON.stringify(layers[i].layer._geojson);
+                    var title = prefix + '_' + layers[i].name;
+                    console.log(title);
+                    saveAs(new Blob([content], {
+                        type: 'text/plain;charset=utf-8'
+                    }), title);
+                }
+            },
+
+            'save shapefile': function ( action, parameters, options, layers, callback ) {
+                console.debug("Saving Shapefile");
+                try {
+                    for (var ii=0; ii<layers.length; ii++) {
+                        var shpOptions = {
+                            folder: 'myshapes',
+                            types: {
+                                point: 'mypoints',
+                                polygon: 'mypolygons',
+                                line: 'mylines'
+                            }
+                        };
+                        console.log(layers[ii]);
+                        shpwrite.download(layers[ii].layer._geojson, shpOptions);
+                    }
+                }
+                catch(err) {
+                    console.log(err);
+                    L.Dropchop.app.notification.add({
+                        text: "Error downloading one of the shapefiles... please try downloading in another format",
+                        type: 'alert',
+                        time: 3500
+                    });
+                }
+            },
+
             remove: function( action, parameters, options, layers ){
                 callback({
                     remove: layers.map(
-                        function(l){ return { layer: l.layer, name: l.info.name };
+                        function(l){ return { layer: l.layer, name: l.name };
                     })
                 });
             },
+
             upload: function ( action, parameters, options, layers ){
                 var files = document.querySelectorAll('input[type=file]')[0].files;
                 _this.fire('uploadedfiles', files);
             },
+
             'load from url': function ( action, parameters, options, layers ) {
                 var url = parameters[0];
                 var xhr = new XMLHttpRequest();
@@ -1149,9 +1255,69 @@ L.DNC.FileExecute = L.DNC.BaseExecute.extend({
         return actions[action](action, parameters, options, layers);
     },
 
+    /*
+    **
+    **  VALIDATE LAYERS
+    **  Checks if the proper number of layers are in the current selection to
+    **  allow Turf operations to run
+    **
+    */
+    validate: function ( layers, options ) {
+        return true;
+    },
+
+    /*
+    **
+    **  PREPARE DATA
+    **  Prepares the selected data to be run through Turf operations
+    **  and builds the new layer name
+    **
+    */
+    _prepareParameters: function ( layers, options, params ) {
+        if (options.maxFeatures) {
+            layers = layers.slice(0, options.maxFeatures);
+        }
+        var layer_objs = layers.map(function(obj) { return obj.layer._geojson; });
+        console.debug(layer_objs, params);
+
+        if ( params ) {
+            for ( var l = 0; l < params.length; l++ ) {
+                layer_objs.push(params[l]);
+            }
+        }
+        return layer_objs;
+    },
+
+    _prepareName: function ( layers ) {
+        // Get layer names
+        var layer_names = layers.map(function(obj) { return obj.name; });
+        var layer_names_str = '';
+        if (layer_names.length === 1) {
+            // Rm file extension
+            layer_names_str = layer_names[0].split('.')[0];
+        } else {
+            // Merge layer names w/o extensions
+            layer_names_str = layer_names.reduce(function(a, b) {
+                return a.split('.')[0] + '_' + b.split('.')[0];
+            });
+        }
+        return layer_names_str;
+    },
+
+    /*
+    **
+    **  Used to standardize features if they exist as feature collections,
+    **  which tend to break during certain Turf functions.
+    **  Issue: drop-n-chop/issues/5
+    **
+    */
+    _unCollect: function( feature ) {
+        return feature.features[0];
+    }
+
 });
 
-L.DNC.Geo = L.Class.extend({
+L.Dropchop.Geo = L.Class.extend({
     includes: L.Mixin.Events,
 
     options: {},
@@ -1230,8 +1396,10 @@ L.DNC.Geo = L.Class.extend({
 
 });
 
-L.DNC = L.DNC || {};
-L.DNC.GeoExecute = L.DNC.BaseExecute.extend({
+var turf = require('turf');
+
+L.Dropchop = L.Dropchop || {};
+L.Dropchop.TurfExecute = L.Dropchop.BaseExecute.extend({
     includes: L.Mixin.Events,
 
     options: {},
@@ -1288,7 +1456,7 @@ L.DNC.GeoExecute = L.DNC.BaseExecute.extend({
 
     _prepareName: function ( layers ) {
         // Get layer names
-        var layer_names = layers.map(function(obj) { return obj.info.name; });
+        var layer_names = layers.map(function(obj) { return obj.name; });
         var layer_names_str = '';
         if (layer_names.length === 1) {
             // Rm file extension
