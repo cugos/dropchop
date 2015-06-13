@@ -1,5 +1,5 @@
 var shpwrite = require('shp-write');
-// includes filesaver.js
+var saveAs = require('browser-filesaver');
 
 L.Dropchop = L.Dropchop || {};
 L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
