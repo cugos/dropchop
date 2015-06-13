@@ -31,17 +31,20 @@ L.Dropchop.AppController = L.Class.extend({
         // build out menus
         this.menus = {
             // GEO
-            geo: new L.Dropchop.Menu('Geoprocessing', {  // New dropdown menu
-                items: ['bezier', 'buffer', 'center', 'centroid', 'envelope', 'union', 'tin']
-            }).addTo( this.menubar ),                // Append to menubar
-            
-            // FILE
-            file: new L.Dropchop.Menu('File', {  // New dropdown menu
-                items: ['save geojson', 'save shapefile']          // Items in menu
-            }).addTo( this.menubar ),         // Append to menubar
+            geo: new L.Dropchop.Menu('Geoprocessing', {     // New dropdown menu
+                items: [
+                    'bezier', 'buffer', 'center',           // Items in menu
+                    'centroid', 'envelope', 'union', 'tin'
+                ]
+            }).addTo( this.menubar ),                       // Append to menubar
+
+            // SAVE
+            save: new L.Dropchop.Menu('Save', {
+                items: ['save geojson', 'save shapefile']
+            }).addTo( this.menubar ),
 
             // ADD LAYER
-            addLayer: new L.Dropchop.Menu('Add', {       // New dropdown menu
+            addLayer: new L.Dropchop.Menu('Add', {
                 items: ['upload', 'load from url'],
                 menuDirection: 'above',
                 iconClassName: "fa fa-plus",
@@ -55,12 +58,12 @@ L.Dropchop.AppController = L.Class.extend({
 
         this.geoOpsConfig = {
             operations: new L.Dropchop.Geo(),        // Configurations of GeoOperations
-            executor: new L.Dropchop.GeoExecute()    // Executor of GeoOperations
+            executor: new L.Dropchop.TurfExecute()   // Executor of GeoOperations
         };
 
         this.fileOpsConfig = {
-            operations: new L.Dropchop.File(),        // Configurations of GeoOperations
-            executor: new L.Dropchop.FileExecute()    // Executor of GeoOperations
+            operations: new L.Dropchop.File(),        // Configurations of FileOperations
+            executor: new L.Dropchop.FileExecute()    // Executor of FileOperations
         };
 
         this.forms = new L.Dropchop.Forms();
@@ -78,10 +81,10 @@ L.Dropchop.AppController = L.Class.extend({
         this.dropzone.fileReader.on( 'fileparsed', this._handleParsedFile.bind( this ) );
         this.fileOpsConfig.executor.on( 'uploadedfiles', this.dropzone.fileReader._handleFiles.bind(this.dropzone.fileReader) );
 
-        // Handle clicks on items within geoMenu
+        // Handle clicks on items within menus
         // NOTE: This is where an operation is tied to a menu item
         this.menus.geo.on( 'clickedOperation', this._handleOperationClick.bind( this, this.geoOpsConfig ) );
-        this.menus.file.on( 'clickedOperation', this._handleOperationClick.bind( this, this.fileOpsConfig ) );
+        this.menus.save.on( 'clickedOperation', this._handleOperationClick.bind( this, this.fileOpsConfig ) );
         this.menus.addLayer.on( 'clickedOperation', this._handleOperationClick.bind( this, this.fileOpsConfig ) );
         this.menus.removeLayer.on( 'clickedOperation', this._handleOperationClick.bind( this, this.fileOpsConfig ) );
     },

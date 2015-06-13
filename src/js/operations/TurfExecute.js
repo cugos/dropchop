@@ -1,7 +1,7 @@
 var turf = require('turf');
 
 L.Dropchop = L.Dropchop || {};
-L.Dropchop.GeoExecute = L.Dropchop.BaseExecute.extend({
+L.Dropchop.TurfExecute = L.Dropchop.BaseExecute.extend({
     includes: L.Mixin.Events,
 
     options: {},

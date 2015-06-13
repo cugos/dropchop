@@ -1,4 +1,4 @@
-describe("L.Dropchop.GeoExecute", function () {
+describe("L.Dropchop.TurfExecute", function () {
     var menu;
     var ops;
     var _console = {};
@@ -6,7 +6,7 @@ describe("L.Dropchop.GeoExecute", function () {
     beforeEach(function () {
         ops = {
             geo: new L.Dropchop.Geo(),
-            geox: new L.Dropchop.GeoExecute()
+            geox: new L.Dropchop.TurfExecute()
         };
 
 
