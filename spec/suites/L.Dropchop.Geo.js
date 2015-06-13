@@ -32,10 +32,7 @@ describe("L.Dropchop.GeoExecute", function () {
             };
 
             var inputLayers = [{
-                info: {
-                    name: "line.geojson",
-                    overlay: true
-                },
+                name: "line.geojson",
                 layer: {
                     _geojson: window.testingData.line
                 }
@@ -81,7 +78,7 @@ describe("L.Dropchop.GeoExecute", function () {
             };
 
             var inputLayers = [{
-                info: { name: "union1.geojson" },
+                name: "union1.geojson",
                 layer: { _geojson: window.testingData.polygon }
             }];
 
@@ -163,10 +160,7 @@ describe("L.Dropchop.GeoExecute", function () {
             };
 
             var inputLayers = [{
-                info: {
-                    name: "center1.geojson",
-                    overlay: true
-                },
+                name: "center1.geojson",
                 layer: {
                     _geojson: window.testingData.polygon
                 }
@@ -213,7 +207,7 @@ describe("L.Dropchop.GeoExecute", function () {
             };
 
             var inputLayers = [{
-                info: { name: "center1.geojson" },
+                name: "center1.geojson",
                 layer: { _geojson: window.testingData.polygon }
             }];
 
@@ -258,7 +252,7 @@ describe("L.Dropchop.GeoExecute", function () {
             };
 
             var inputLayers = [{
-                info: { name: "feature.geojson" },
+                name: "feature.geojson",
                 layer: {
                     _geojson: window.testingData.fc_points
                 }
@@ -326,10 +320,7 @@ describe("L.Dropchop.GeoExecute", function () {
             };
 
             var inputLayers = [{
-                info: {
-                    name: "points.geojson",
-                    overlay: true
-                },
+                name: "points.geojson",
                 layer: {
                     _geojson: window.testingData.fc_points
                 }

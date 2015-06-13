@@ -107,7 +107,7 @@ L.Dropchop.LayerList = L.Control.extend({
             }
             this._map.fitBounds(bounds);
         }
-
+        return obj;
     },
 
     /*
@@ -175,11 +175,39 @@ L.Dropchop.LayerList = L.Control.extend({
     **
     */
     _handleLayerChange: function(obj, e){
-        var inputEl = e.target;
+        var inputEl = e.currentTarget;
+        var isSelected = obj.domElement.getElementsByClassName('layer-name')[0].classList.contains('selected');
+        var i;
         if (inputEl.checked) {
-            this._map.addLayer(obj.layer);
+
+            // If changed element in selection, alter entire selection
+            if (isSelected) {
+                for (i = 0; i < this.selection.list.length; i++) {
+                    obj = this.selection.list[i];
+
+                    // Set input to checked
+                    obj.domElement.getElementsByTagName('input')[0].checked = true;
+                    // Add to map
+                    this._map.addLayer(obj.layer);
+                }
+            } else {
+                this._map.addLayer(obj.layer);
+            }
+
         } else {
-            if (this._map.hasLayer(obj.layer)) this._map.removeLayer(obj.layer);
+
+            if (isSelected) {
+                for (i = 0; i < this.selection.list.length; i++) {
+                    obj = this.selection.list[i];
+
+                    // Set input to unchecked
+                    obj.domElement.getElementsByTagName('input')[0].checked = false;
+                    // Rm from map
+                    if (this._map.hasLayer(obj.layer)) this._map.removeLayer(obj.layer);
+                }
+            } else {
+                if (this._map.hasLayer(obj.layer)) this._map.removeLayer(obj.layer);
+            }
         }
     },
 
@@ -189,15 +217,18 @@ L.Dropchop.LayerList = L.Control.extend({
     **
     */
     _handleLayerClick: function( obj, e ) {
+
         var lyrs = document.getElementsByClassName('layer-name');
         elem = e.currentTarget;
+
+        // Select if not selected
         if (elem.className.indexOf('selected') == -1) {
 
             // if holding meta key (command on mac)
             if ( e.metaKey ) {
                 // do nothing for now, but maybe we want to do something
                 // down the road?
-            } 
+            }
             else if ( e.shiftKey ) {
                 // get layer number, and other currently selected
                 // layers, and select everything in between
@@ -212,10 +243,7 @@ L.Dropchop.LayerList = L.Control.extend({
                 for ( var x = min; x < max+1; x++ ) {
                     if ( lyrs[x].className.indexOf('selected') == -1 ) {
                         lyrs[x].className += ' selected';
-                        this.selection.add({
-                            info: this._layers[lyrs[x].getAttribute('data-id')],
-                            layer: this._layers[lyrs[x].getAttribute('data-id')].layer
-                        });
+                        this.selection.add(this._layers[lyrs[x].getAttribute('data-id')]);
                     }
                 }
                 return;
@@ -227,21 +255,16 @@ L.Dropchop.LayerList = L.Control.extend({
             // add the class
             elem.className += ' selected';
             // add to select list
-            this.selection.add({
-                info: obj,
-                layer: obj.layer
-            });
+            this.selection.add(obj);
+
+        // Unselect if selected
         } else {
             if ( e.metaKey ) {
                 this.selection.remove(obj.layer);
                 elem.className = elem.className.replace(/\b selected\b/, '');
             } else {
                 this.selection.clear();
-                // remove selection
-                this.selection.add({
-                    info: obj,
-                    layer: obj.layer
-                });
+                this.selection.add(obj);
                 elem.className += ' selected';
             }
         }
