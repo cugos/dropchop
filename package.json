@@ -45,6 +45,7 @@
     "sinon": "~1.14.1"
   },
   "dependencies": {
+    "browser-filesaver": "^1.0.0",
     "shp-write": "^0.2.1",
     "turf": "^2.0.2"
   }

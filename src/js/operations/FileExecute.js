@@ -1,5 +1,5 @@
 var shpwrite = require('shp-write');
-// includes filesaver.js
+var saveAs = require('browser-filesaver');
 
 L.Dropchop = L.Dropchop || {};
 L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
@@ -52,7 +52,7 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                         type: 'alert',
                         time: 3500
                     });
-                } 
+                }
             },
 
             remove: function( action, parameters, options, layers ){
