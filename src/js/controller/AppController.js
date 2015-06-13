@@ -55,7 +55,7 @@ L.Dropchop.AppController = L.Class.extend({
 
         this.geoOpsConfig = {
             operations: new L.Dropchop.Geo(),        // Configurations of GeoOperations
-            executor: new L.Dropchop.GeoExecute()    // Executor of GeoOperations
+            executor: new L.Dropchop.TurfExecute()   // Executor of GeoOperations
         };
 
         this.fileOpsConfig = {
