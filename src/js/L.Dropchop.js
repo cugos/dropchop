@@ -1,4 +1,4 @@
-var turf = require('turf');
+require('mapbox.js');
 
 (function(){
     var Dropchop = {

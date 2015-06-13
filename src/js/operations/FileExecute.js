@@ -1,5 +1,5 @@
 var shpwrite = require('shp-write');
-// includes filesaver.js
+var saveAs = require('browser-filesaver');
 
 L.Dropchop = L.Dropchop || {};
 L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
@@ -21,7 +21,7 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                 for (var i=0; i<layers.length; i++) {
                     var prefix = parameters[0];
                     var content = JSON.stringify(layers[i].layer._geojson);
-                    var title = prefix + '_' + layers[i].info.name;
+                    var title = prefix + '_' + layers[i].name;
                     console.log(title);
                     saveAs(new Blob([content], {
                         type: 'text/plain;charset=utf-8'
@@ -52,13 +52,13 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                         type: 'alert',
                         time: 3500
                     });
-                } 
+                }
             },
 
             remove: function( action, parameters, options, layers ){
                 callback({
                     remove: layers.map(
-                        function(l){ return { layer: l.layer, name: l.info.name };
+                        function(l){ return { layer: l.layer, name: l.name };
                     })
                 });
             },
@@ -132,7 +132,7 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
 
     _prepareName: function ( layers ) {
         // Get layer names
-        var layer_names = layers.map(function(obj) { return obj.info.name; });
+        var layer_names = layers.map(function(obj) { return obj.name; });
         var layer_names_str = '';
         if (layer_names.length === 1) {
             // Rm file extension
