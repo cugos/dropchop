@@ -173,6 +173,7 @@ describe("L.Dropchop.LayerList", function () {
     describe("_handleLayerChanged", function () {
         var layerlist;
         var layer;
+        var domElement;
         var mockMapAddLayer;
         var mockMapRemoveLayer;
 
@@ -182,6 +183,8 @@ describe("L.Dropchop.LayerList", function () {
             layerlist.domElement = document.createElement("div");
             layerlist.domElement.className = "test";
             layerlist.addLayer( layer, "test" );  // Adds to layerlist & map
+
+            domElement = layerlist._buildListItemDomElement({layer: layer, name: "test"});
 
             mockMapAddLayer = sinon.spy(map, "addLayer" );
             mockMapRemoveLayer = sinon.spy(map, "removeLayer" );
@@ -197,7 +200,10 @@ describe("L.Dropchop.LayerList", function () {
 
             var el = layerlist.domElement.querySelectorAll("input")[0];
             el.checked = true;
-            layerlist._handleLayerChange( { layer: layer, name: "test" }, { target: el } );
+            layerlist._handleLayerChange(
+                { layer: layer, name: "test", domElement: domElement },
+                { currentTarget: el }
+            );
 
             // assertions
             expect(layerlist._map.hasLayer( layer )).to.equal(true);
@@ -210,7 +216,10 @@ describe("L.Dropchop.LayerList", function () {
 
             var el = layerlist.domElement.querySelectorAll("input")[0];
             el.checked = false;
-            layerlist._handleLayerChange( { layer: layer, name: "test" }, { target: el } );
+            layerlist._handleLayerChange(
+                { layer: layer, name: "test", domElement: domElement },
+                { currentTarget: el }
+            );
 
             // assertions
             expect(layerlist._map.hasLayer( layer )).to.equal(false); // because it was never there to begin with
@@ -221,7 +230,10 @@ describe("L.Dropchop.LayerList", function () {
         it("removes unchecked layer from map", function () {
             var el = layerlist.domElement.querySelectorAll("input")[0];
             el.checked = false;
-            layerlist._handleLayerChange( { layer: layer, name: "test" }, { target: el } );
+            layerlist._handleLayerChange(
+                { layer: layer, name: "test", domElement: domElement },
+                { currentTarget: el }
+            );
 
             // assertions
             expect(layerlist._map.hasLayer( layer )).to.equal(false); // because it was removed
@@ -249,7 +261,7 @@ describe("L.Dropchop.LayerList", function () {
             mockSelectRemove.restore();
         });
 
-        it("if the target is NOT selected", function () {
+        it("if the currentTarget is NOT selected", function () {
             layerlist._map = map;
             layerlist.domElement = document.createElement("div");
             layerlist.domElement.className = "test";
@@ -265,7 +277,7 @@ describe("L.Dropchop.LayerList", function () {
             expect(elPostEvent.className.indexOf("selected") !== -1).to.equal(true);
         });
 
-        it("if the target is already selected", function () {
+        it("if the currentTarget is already selected", function () {
             layerlist._map = map;
             layerlist.domElement = document.createElement("div");
             layerlist.domElement.className = "test";
@@ -282,6 +294,191 @@ describe("L.Dropchop.LayerList", function () {
             expect(elPostEvent.className.indexOf("selected") !== 1).to.equal(true);
         });
 
+    });
+    describe("_handleLayerClick", function () {
+        var layers;
+
+        beforeEach(function () {
+            var leftovers = document.getElementsByClassName('layer-name');
+            for (var i = leftovers.length; i > 0; i--) {
+                var element = leftovers[i-1];
+                element.parentNode.removeChild(element);
+                delete element;
+            };
+
+            layers = [];
+            layerlist = new L.Dropchop.LayerList( map, { layerContainerId: 'dropzone' } );
+
+            // Populate layerlist
+            for (var i = 1; i < 4; i++) {
+                layer = L.geoJson( window.testingData.polygon );
+                obj = layerlist.addLayer(layer, 'layer' + i);
+                layers.push(obj);
+            };
+        });
+
+        it("selects single layer on layerclick", function () {
+            layerlist._handleLayerClick(layers[0], {
+                currentTarget: layers[0].domElement.getElementsByClassName('layer-name')[0],
+            });
+            expect(layers[0].domElement.getElementsByClassName('layer-name')[0].className).to.contain('selected');
+            expect(layerlist.selection.list).to.contain(layers[0]);
+
+            expect(layers[1].domElement.getElementsByClassName('layer-name')[0].className).to.not.contain('selected');
+            expect(layerlist.selection.list).to.not.contain(layers[1]);
+
+            expect(layers[2].domElement.getElementsByClassName('layer-name')[0].className).to.not.contain('selected');
+            expect(layerlist.selection.list).to.not.contain(layers[2]);
+        });
+
+        it("selects multiple layers on layerclick with metaKey", function () {
+            layerlist._handleLayerClick(layers[0], {
+                currentTarget: layers[0].domElement.getElementsByClassName('layer-name')[0],
+            });
+            layerlist._handleLayerClick(layers[2], {
+                currentTarget: layers[2].domElement.getElementsByClassName('layer-name')[0],
+                metaKey: true
+            });
+            expect(layers[0].domElement.getElementsByClassName('layer-name')[0].className).to.contain('selected');
+            expect(layerlist.selection.list).to.contain(layers[0]);
+
+            expect(layers[1].domElement.getElementsByClassName('layer-name')[0].className).to.not.contain('selected');
+            expect(layerlist.selection.list).to.not.contain(layers[1]);
+
+            expect(layers[2].domElement.getElementsByClassName('layer-name')[0].className).to.contain('selected');
+            expect(layerlist.selection.list).to.contain(layers[2]);
+        });
+
+        it("selects all layers between selected layer and layerclick with shiftKey", function () {
+            layerlist._handleLayerClick(layers[0], {
+                currentTarget: layers[0].domElement.getElementsByClassName('layer-name')[0],
+            });
+
+            layerlist._handleLayerClick(layers[2], {
+                currentTarget: layers[2].domElement.getElementsByClassName('layer-name')[0],
+                shiftKey: true
+            });
+            expect(layers[0].domElement.getElementsByClassName('layer-name')[0].className).to.contain('selected');
+            expect(layerlist.selection.list).to.contain(layers[0]);
+
+            expect(layers[1].domElement.getElementsByClassName('layer-name')[0].className).to.contain('selected');
+            expect(layerlist.selection.list).to.contain(layers[1]);
+
+            expect(layers[2].domElement.getElementsByClassName('layer-name')[0].className).to.contain('selected');
+            expect(layerlist.selection.list).to.contain(layers[2]);
+        });
+
+        it("checking unselected layer does not affect selected layer", function () {
+            layerlist.selection.add(layers[0]);
+            layerlist.selection.add(layers[1]);
+            layers[0].domElement.getElementsByClassName('layer-name')[0].classList.add('selected');
+            layers[1].domElement.getElementsByClassName('layer-name')[0].classList.add('selected');
+            layers[0].domElement.getElementsByClassName('layer-toggle')[0].checked = false;
+            layers[1].domElement.getElementsByClassName('layer-toggle')[0].checked = false;
+            layers[2].domElement.getElementsByClassName('layer-toggle')[0].checked = false;
+
+            // Ensure proper setup
+            expect(layers[0].domElement.getElementsByClassName('layer-name')[0].className).to.contain('selected');
+            expect(layers[1].domElement.getElementsByClassName('layer-name')[0].className).to.contain('selected');
+            expect(layers[2].domElement.getElementsByClassName('layer-name')[0].className).to.not.contain('selected');
+            expect(layers[0].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(false);
+            expect(layers[1].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(false);
+            expect(layers[2].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(false);
+
+            // Change setup
+            layers[2].domElement.getElementsByClassName('layer-toggle')[0].checked = true;
+            layers[2].domElement.getElementsByClassName('layer-toggle')[0].onchange(
+                { currentTarget: layers[0].domElement.getElementsByClassName('layer-toggle')[0], }
+            );
+
+            // Ensure layers adjust properly
+            expect(layers[0].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(false);
+            expect(layers[1].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(false);
+            expect(layers[2].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(true);
+
+        });
+
+        it("checking one selected layer checks other unchecked selected layers", function () {
+            layerlist.selection.add(layers[0]);
+            layerlist.selection.add(layers[2]);
+            layers[0].domElement.getElementsByClassName('layer-name')[0].classList.add('selected');
+            layers[2].domElement.getElementsByClassName('layer-name')[0].classList.add('selected');
+            layers[0].domElement.getElementsByClassName('layer-toggle')[0].checked = false;
+            layers[1].domElement.getElementsByClassName('layer-toggle')[0].checked = false;
+            layers[2].domElement.getElementsByClassName('layer-toggle')[0].checked = false;
+
+            // Ensure proper setup
+            expect(layers[0].domElement.getElementsByClassName('layer-name')[0].className).to.contain('selected');
+            expect(layers[1].domElement.getElementsByClassName('layer-name')[0].className).to.not.contain('selected');
+            expect(layers[2].domElement.getElementsByClassName('layer-name')[0].className).to.contain('selected');
+            expect(layers[0].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(false);
+            expect(layers[1].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(false);
+            expect(layers[2].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(false);
+
+            // Change setup
+            layers[0].domElement.getElementsByClassName('layer-toggle')[0].checked = true;
+            layers[0].domElement.getElementsByClassName('layer-toggle')[0].onchange(
+                { currentTarget: layers[0].domElement.getElementsByClassName('layer-toggle')[0], }
+            );
+
+            // Ensure layers adjust properly
+            expect(layers[0].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(true);
+            expect(layers[1].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(false);
+            expect(layers[2].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(true);
+        });
+
+        it("unchecking one selected layer unchecks other checked selected layers", function () {
+            layerlist.selection.add(layers[0]);
+            layerlist.selection.add(layers[2]);
+            layers[0].domElement.getElementsByClassName('layer-name')[0].classList.add('selected');
+            layers[2].domElement.getElementsByClassName('layer-name')[0].classList.add('selected');
+
+            // Ensure proper setup
+            expect(layers[0].domElement.getElementsByClassName('layer-name')[0].className).to.contain('selected');
+            expect(layers[1].domElement.getElementsByClassName('layer-name')[0].className).to.not.contain('selected');
+            expect(layers[2].domElement.getElementsByClassName('layer-name')[0].className).to.contain('selected');
+            expect(layers[0].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(true);
+            expect(layers[1].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(true);
+            expect(layers[2].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(true);
+
+            // Change setup
+            layers[0].domElement.getElementsByClassName('layer-toggle')[0].checked = false;
+            layers[0].domElement.getElementsByClassName('layer-toggle')[0].onchange(
+                { currentTarget: layers[0].domElement.getElementsByClassName('layer-toggle')[0], }
+            );
+
+            // Ensure layers adjust properly
+            expect(layers[0].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(false);
+            expect(layers[1].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(true);
+            expect(layers[2].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(false);
+        });
+
+        it("checking one selected layer does not uncheck already checked selected layer", function () {
+            layerlist.selection.add(layers[0]);
+            layerlist.selection.add(layers[1]);
+            layers[0].domElement.getElementsByClassName('layer-name')[0].classList.add('selected');
+            layers[1].domElement.getElementsByClassName('layer-name')[0].classList.add('selected');
+            layers[0].domElement.getElementsByClassName('layer-toggle')[0].checked = false;
+
+            // Ensure proper setup
+            expect(layers[0].domElement.getElementsByClassName('layer-name')[0].className).to.contain('selected');
+            expect(layers[1].domElement.getElementsByClassName('layer-name')[0].className).to.contain('selected');
+            expect(layers[2].domElement.getElementsByClassName('layer-name')[0].className).to.not.contain('selected');
+            expect(layers[0].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(false);
+            expect(layers[1].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(true);
+            expect(layers[2].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(true);
+
+            // Change setup
+            layers[0].domElement.getElementsByClassName('layer-toggle')[0].checked = true;
+            layers[0].domElement.getElementsByClassName('layer-toggle')[0].onchange(
+                { currentTarget: layers[0].domElement.getElementsByClassName('layer-toggle')[0], }
+            );
+
+            // Ensure layers adjust properly
+            expect(layers[0].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(true);
+            expect(layers[1].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(true);
+            expect(layers[2].domElement.getElementsByClassName('layer-toggle')[0].checked).to.equal(true);
+        });
     });
 
 });
