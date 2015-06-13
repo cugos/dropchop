@@ -40,12 +40,12 @@
     "karma-mocha": "^0.1.10",
     "karma-phantomjs-launcher": "~0.1.4",
     "karma-sinon": "~1.0.4",
-    "mapbox.js": "~2.1.9",
     "mocha": "^2.2.4",
     "sinon": "~1.14.1"
   },
   "dependencies": {
     "browser-filesaver": "^1.0.0",
+    "mapbox.js": "^2.1.9",
     "shp-write": "^0.2.1",
     "turf": "^2.0.2"
   }

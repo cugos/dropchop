@@ -1,3 +1,5 @@
+require('mapbox.js');
+
 (function(){
     var Dropchop = {
         version: '0.0.1-dev'
