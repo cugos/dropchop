@@ -13,7 +13,6 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
     **
     */
     execute: function ( action, parameters, options, layers, callback ) {
-        var _this = this;
         var actions = {
             'save geojson': function ( action, parameters, options, layers, callback ) {
                 console.debug("Saving GeoJSON");
@@ -46,7 +45,7 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                     }
                 }
                 catch(err) {
-                    console.log(err);
+                    console.error(err);
                     L.Dropchop.app.notification.add({
                         text: "Error downloading one of the shapefiles... please try downloading in another format",
                         type: 'alert',
@@ -65,7 +64,7 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
 
             upload: function ( action, parameters, options, layers ){
                 var files = document.querySelectorAll('input[type=file]')[0].files;
-                _this.fire('uploadedfiles', files);
+                this.fire('uploadedfiles', files);
             },
 
             'load from url': function ( action, parameters, options, layers ) {
@@ -74,27 +73,41 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                 xhr.open('GET', encodeURI(url));
                 xhr.onload = function() {
                     if (xhr.status === 200) {
-                        var newLayer = JSON.parse(xhr.responseText);
                         var filename = xhr.responseURL.substring(xhr.responseURL.lastIndexOf('/')+1);
-
-                        // if the new object is a feature collection and only has one layer,
-                        // remove it and just keep it as a feature
-                        if ( newLayer.geometry.type == "FeatureCollection" && newLayer.geometry.features.length == 1 ) {
-                            newLayer.geometry = this._unCollect( newLayer.geometry );
-                        }
-
-                        callback( { add: [{ geometry: newLayer, name: filename }] } );
+                        return this._addJsonAsLayer(xhr.responseText, filename, callback);
                     } else {
                         console.error('Request failed. Returned status of ' + xhr.status);
                     }
-                };
+                }.bind(this);
                 xhr.send();
-            }
+            },
+
+            'load from gist': function ( action, parameters, options, layers ) {
+                var gist = parameters[0];
+                gist = gist.split('/')[gist.split('/').length-1];
+                console.debug('Retrieving gist ' + gist);
+                url = 'https://api.github.com/gists/' + gist;
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', encodeURI(url));
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.responseText);
+                        for (var filename in data.files) {
+                            var file = data.files[filename];
+                            this._addJsonAsLayer(file.content, file.filename, callback);
+                        }
+                    } else {
+                        console.error('Request failed. Returned status of ' + xhr.status);
+                    }
+                }.bind(this);
+                xhr.send();
+            },
         };
         if (typeof actions[action] !== 'function') {
           throw new Error('Invalid action.');
         }
-        return actions[action](action, parameters, options, layers);
+        return actions[action].call(this, action, parameters, options, layers);
     },
 
     /*
@@ -155,6 +168,33 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
     */
     _unCollect: function( feature ) {
         return feature.features[0];
+    },
+
+    /*
+    **
+    ** Add raw JSON string to system as a new layer
+    **
+    */
+    _addJsonAsLayer: function (raw_content, filename, callback) {
+        try {
+            var newLayer = JSON.parse(raw_content);
+
+            // if the new object is a feature collection and only has one layer,
+            // remove it and just keep it as a feature
+            if ( newLayer.geometry && newLayer.geometry.type == "FeatureCollection" && newLayer.geometry.features.length == 1 ) {
+                newLayer.geometry = this._unCollect( newLayer.geometry );
+            }
+
+            return callback( { add: [{ geometry: newLayer, name: filename }] } );
+        } catch(err) {
+            L.Dropchop.app.notification.add({
+                text: 'Failed to add ' + filename,
+                type: 'alert',
+                time: 2500
+            });
+            console.error(err);
+            return;
+        }
     }
 
 });
