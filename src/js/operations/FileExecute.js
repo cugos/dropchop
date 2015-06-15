@@ -69,17 +69,14 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
 
             'load from url': function ( action, parameters, options, layers ) {
                 var url = parameters[0];
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', encodeURI(url));
-                xhr.onload = function() {
+                this.getRequest(url, function(xhr) {
                     if (xhr.status === 200) {
                         var filename = xhr.responseURL.substring(xhr.responseURL.lastIndexOf('/')+1);
                         return this._addJsonAsLayer(xhr.responseText, filename, callback);
                     } else {
                         console.error('Request failed. Returned status of ' + xhr.status);
                     }
-                }.bind(this);
-                xhr.send();
+                });
             },
 
             'load from gist': function ( action, parameters, options, layers ) {
@@ -88,9 +85,7 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                 console.debug('Retrieving gist ' + gist);
                 url = 'https://api.github.com/gists/' + gist;
 
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', encodeURI(url));
-                xhr.onload = function() {
+                this.getRequest(url, function(xhr) {
                     if (xhr.status === 200) {
                         var data = JSON.parse(xhr.responseText);
                         for (var filename in data.files) {
@@ -100,8 +95,7 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                     } else {
                         console.error('Request failed. Returned status of ' + xhr.status);
                     }
-                }.bind(this);
-                xhr.send();
+                });
             },
         };
         if (typeof actions[action] !== 'function') {
@@ -112,51 +106,14 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
 
     /*
     **
-    **  VALIDATE LAYERS
-    **  Checks if the proper number of layers are in the current selection to
-    **  allow Turf operations to run
+    ** Ajax GET
     **
     */
-    validate: function ( layers, options ) {
-        return true;
-    },
-
-    /*
-    **
-    **  PREPARE DATA
-    **  Prepares the selected data to be run through Turf operations
-    **  and builds the new layer name
-    **
-    */
-    _prepareParameters: function ( layers, options, params ) {
-        if (options.maxFeatures) {
-            layers = layers.slice(0, options.maxFeatures);
-        }
-        var layer_objs = layers.map(function(obj) { return obj.layer._geojson; });
-        console.debug(layer_objs, params);
-
-        if ( params ) {
-            for ( var l = 0; l < params.length; l++ ) {
-                layer_objs.push(params[l]);
-            }
-        }
-        return layer_objs;
-    },
-
-    _prepareName: function ( layers ) {
-        // Get layer names
-        var layer_names = layers.map(function(obj) { return obj.name; });
-        var layer_names_str = '';
-        if (layer_names.length === 1) {
-            // Rm file extension
-            layer_names_str = layer_names[0].split('.')[0];
-        } else {
-            // Merge layer names w/o extensions
-            layer_names_str = layer_names.reduce(function(a, b) {
-                return a.split('.')[0] + '_' + b.split('.')[0];
-            });
-        }
-        return layer_names_str;
+    getRequest: function ( url, callback ) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', encodeURI(url));
+        xhr.onload = callback.bind(this, xhr);
+        xhr.send();
     },
 
     /*
