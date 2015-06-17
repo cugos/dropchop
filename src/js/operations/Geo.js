@@ -121,16 +121,37 @@ L.Dropchop.Geo = L.Class.extend({
         description: 'Takes two points and returns a point midway between them.',
     },
 
-    union: {
-        minFeatures: 2,
-        maxFeatures: 2,
-        description: 'Takes two polygons and returns a combined polygon. If the input polygons are not contiguous, this function returns a MultiPolygon feature.',
+    simplify: {
+        minFeatures: 1,
+        maxFeatures: 1,
+        description: 'Takes a LineString or Polygon and returns a simplified version. Internally uses simplify-js to perform simplification.',
+        parameters: [
+            {
+                name: 'tolerance',
+                description :'simplification tolerance',
+                type: 'number',
+                default: 0.1
+            },
+            {
+                name: 'high quality',
+                type: 'select',
+                description: 'whether or not to spend more time to create a higher-quality simplification with a different algorithm',
+                options: ['true', 'false'],
+                default: 'false'
+            }
+        ]
     },
 
     tin: {
         minFeatures: 1,
         maxFeatures: 1,
         description: 'Triangulated irregular network, interpolation method',
+    },
+
+    union: {
+        minFeatures: 2,
+        maxFeatures: 2,
+        description: 'Takes two polygons and returns a combined polygon. If the input polygons are not contiguous, this function returns a MultiPolygon feature.',
     }
 
 

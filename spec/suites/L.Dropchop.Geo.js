@@ -483,6 +483,47 @@ describe("L.Dropchop.TurfExecute", function () {
 
     /*
     **
+    ** SIMPLIFY TEST
+    **
+    */
+    describe("simplify", function () {
+
+        it("data output", function () {
+            var formData = {
+                action: 'simplify',
+                parameters: [0.1, false],
+            };
+
+            var inputLayers = [
+                {
+                    name: "sf.geojson",
+                    layer: {
+                        _geojson: window.testingData.sf
+                    }
+                }
+            ];
+
+            var callback = sinon.spy();
+            
+            ops.geox.execute(
+                formData.action,
+                formData.parameters,
+                ops.geo[formData.action],
+                inputLayers,
+                callback
+            );
+
+            assert(callback.calledWith({
+                add: [{
+                    name: 'simplify_sf.geojson',
+                    geometry: {"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-122.47970581054688,37.80761398306056],[-122.51815795898436,37.57179370689751],[-122.20367431640624,37.53913285079332],[-122.47970581054688,37.80761398306056]]]},"properties":{}}
+                }]
+            }));
+        });
+    });
+
+    /*
+    **
     ** TIN TEST
     **
     */
