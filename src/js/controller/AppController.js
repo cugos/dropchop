@@ -40,6 +40,7 @@ L.Dropchop.AppController = L.Class.extend({
                     'centroid',
                     'destination',
                     'envelope',
+                    'explode',
                     'midpoint',
                     'union',
                     'tin'

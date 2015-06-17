@@ -109,6 +109,12 @@ L.Dropchop.Geo = L.Class.extend({
         description: 'Takes any number of features and returns a rectangular Polygon that encompasses all vertices.',
     },
 
+    explode: {
+        minFeatures: 1,
+        maxFeatures: 1,
+        description: 'Takes a feature or set of features and returns all positions as points.',
+    },
+
     midpoint: {
         minFeatures: 2,
         maxFeatures: 2,

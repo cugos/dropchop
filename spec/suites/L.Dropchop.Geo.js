@@ -397,6 +397,44 @@ describe("L.Dropchop.TurfExecute", function () {
 
     /*
     **
+    ** EXPLODE TEST
+    **
+    */
+    describe("explode", function () {
+
+        it("data output", function () {
+            var formData = {
+                action: 'explode',
+                parameters: [],
+            };
+
+            var inputLayers = [{
+                name: "polygon.geojson",
+                layer: {
+                    _geojson: window.testingData.polygon
+                }
+            }];
+
+
+            var callback = sinon.spy();
+            ops.geox.execute(
+                formData.action,
+                formData.parameters,
+                ops.geo[formData.action],
+                inputLayers,
+                callback
+            );
+            assert(callback.calledWith({
+                add: [{
+                    name: "explode_polygon.geojson",
+                    geometry: {"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":[-122.33714103698729,47.64000546596801]},"properties":{}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-122.33714103698729,47.640583778456666]},"properties":{}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-122.33593940734862,47.640583778456666]},"properties":{}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-122.33593940734862,47.64000546596801]},"properties":{}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-122.33714103698729,47.64000546596801]},"properties":{}}]}
+                }]
+            }));
+        });
+    });
+
+    /*
+    **
     ** MIDPOINT TEST
     **
     */
@@ -433,9 +471,6 @@ describe("L.Dropchop.TurfExecute", function () {
                 inputLayers,
                 callback
             );
-
-
-            console.log(callback);
 
             assert(callback.calledWith({
                 add: [{
