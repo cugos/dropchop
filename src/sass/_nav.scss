@@ -12,15 +12,17 @@
 
 .menu {
   display: inline-block;
-}
+  .menu-dropdown {
+    display:none;
+    position:absolute;
+    box-shadow:$ui-shadow;
+    z-index:1;
+    &.expanded {
+      display:block;
+    }
+  }
+  .menu-container {
 
-.menu-dropdown {
-  display:none;
-  position:absolute;
-  box-shadow:1px 1px 5px 0 rgba(0,0,0,0.3);
-  z-index:1;
-  &.expanded {
-    display:block;
   }
 }
 .menu-button {
@@ -58,4 +60,63 @@
 
 .opens-above {
     bottom: $menu-height;
+}
+
+#side-menu {
+  position: absolute;
+  left: 250px;
+  top: 41px;
+
+  .side-menu-button {
+    position:relative;
+    width:$menu-side-dimension;
+    height:$menu-side-dimension;
+    min-width:$menu-side-dimension;
+    opacity:$menu-side-inactive-opacity;
+    border-top:1px solid transparent;
+
+    &.available {
+      opacity:$menu-side-available-opacity;
+    }
+    &.active {
+      opacity:$menu-side-active-opacity;
+      width:45px;
+      max-width:45px;
+      &:hover {
+        &:before {
+          display:none;
+        }
+        &:after {
+          display:none;
+        }
+      }
+    }
+
+    &:hover {
+      &:after {
+        z-index: 10;
+        content: " ";
+        position: absolute;
+        left: $menu-side-dimension-tooltip;
+        top: 14px;
+        margin-left: -6px;
+        border-top: 6px solid transparent;
+        border-right: 6px solid $menu-side-tooltip-background;
+        border-bottom: 6px solid transparent;
+      }
+      &:before {
+        z-index: 10;
+        content: attr(id);
+        text-transform: uppercase;
+        position: absolute;
+        left: $menu-side-dimension-tooltip;
+        top: 5px;
+        padding: 5px 10px;
+        line-height: 19px;
+        height: 20px;
+        background: $menu-side-tooltip-background;
+      }
+    }
+  }
+
 }

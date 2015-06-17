@@ -27,6 +27,13 @@ $menu-height: 30px;
 $menu-bottom-background: $menu-background;
 $menu-bottom-text: $theme-gray;
 
+$menu-side-dimension: 40px;
+$menu-side-dimension-tooltip: $menu-side-dimension + 10px;
+$menu-side-inactive-opacity: 0.5;
+$menu-side-available-opacity: 0.8;
+$menu-side-active-opacity: 1;
+$menu-side-tooltip-background: $theme-dark;
+
 // LAYERLIST
 $layerlist-background: $color-light-gray;
 $layer-hover: $theme-tan;

@@ -27,6 +27,9 @@ L.Dropchop.AppController = L.Class.extend({
         this.bottom_menu = new L.Dropchop.MenuBar(
             { id: 'add-remove', classList: ["bottom", "menu"] }
         ).addTo( document.getElementById('sidebar') );
+        this.side_menu = new L.Dropchop.MenuBar(
+            { id: 'side-menu' }
+        ).addTo( document.body );
 
         // build out menus
         this.menus = {
@@ -35,8 +38,9 @@ L.Dropchop.AppController = L.Class.extend({
                 items: [
                     'bezier', 'buffer', 'center',           // Items in menu
                     'centroid', 'envelope', 'union', 'tin'
-                ]
-            }).addTo( this.menubar ),                       // Append to menubar
+                ],
+                expand: false
+            }).addTo( this.side_menu ),                       // Append to menubar
 
             // SAVE
             save: new L.Dropchop.Menu('Save', {

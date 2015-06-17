@@ -12,10 +12,14 @@ L.Dropchop.Forms = L.Class.extend({
     // TODO: write tests for Forms
     render: function ( title, options ) {
 
+        // TODO: remove any existing forms
+        // if (document.getElementById('DROPCHOP-FORM').length) this.closeForm();
+
         this.title = title;
         this.paramArray = [];
         this.options = {}; // reset options for next form
         L.setOptions(this, options);
+        console.log(this);
 
         var html = '<div class="form-inner"><div class="form">'+
                 '<button type="button" class="btn close form-close"><i class="fa fa-times"></i></button>'+
@@ -53,20 +57,48 @@ L.Dropchop.Forms = L.Class.extend({
         html += '<button type="button" class="btn form-submit" id="operation-submit">Execute<i class="fa fa-thumbs-o-up push-left"></i></button>';
         html += '</div></div>';
 
-        var div = document.createElement('div');
-        div.className = 'form-outer';
-        div.id = 'DNC-FORM';
-        div.innerHTML = html;
-        document.body.appendChild(div);
-        this.domElement = div;
+        var formDiv = document.createElement('div');
+        var formClassName;
 
-        this._formHandlers(div);
+        var destinationElement = document.getElementById(this.title);
+        if (destinationElement.className.indexOf('side-menu-button') == -1) {
+            formClassName = 'form-outer default';
+        } else {
+
+            if (document.getElementById('DROPCHOP-FORM')) this.closeForm();
+
+            // remove 'active' from any other side-menu-button
+            var sideMenuButtons = document.getElementsByClassName('side-menu-button');
+            for (var s=0; s < sideMenuButtons.length; s++){
+                sideMenuButtons[s].className = sideMenuButtons[s].className.replace(/\b active\b/,'');
+            }
+
+            // add 'active' to this current button
+            destinationElement.className += ' active';
+            formClassName = 'form-outer side-menu';
+
+            var rect = destinationElement.getBoundingClientRect();
+            console.log(rect);
+            formDiv.style.left = rect.right;
+            formDiv.style.top = rect.top;
+        }
+
+        formDiv.className = formClassName;
+        formDiv.id = 'DROPCHOP-FORM';
+        formDiv.innerHTML = html;
+        document.body.appendChild(formDiv);
+        this.domElement = formDiv;
+        this._formHandlers(formDiv);
 
         return this;
     },
 
     closeForm: function ( event ) {
-        var child = document.getElementById('DNC-FORM');
+        var sideMenuButtons = document.getElementsByClassName('side-menu-button');
+        for (var s=0; s < sideMenuButtons.length; s++){
+            sideMenuButtons[s].className = sideMenuButtons[s].className.replace(/\b active\b/,'');
+        }
+        var child = document.getElementById('DROPCHOP-FORM');
         child.parentElement.removeChild(child);
     },
 

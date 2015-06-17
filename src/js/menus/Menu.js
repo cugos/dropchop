@@ -85,8 +85,20 @@ L.Dropchop.Menu = L.Class.extend({
         for ( var i = 0; i < items.length; i++ ) {
             var menuItem = document.createElement('button');
             menuItem.className = 'menu-button menu-button-action';
+            
             menuItem.id = items[i];
-            menuItem.innerHTML = items[i];
+
+            // if this is a side menu button, add the class
+            if (this.options.expand === false) {
+                menuItem.className += ' side-menu-button';
+            }
+
+            // put the name of the action into the button unless
+            // it's supposed to be a side button and not expand
+            if (this.options.expand !== false) {
+                menuItem.innerHTML = items[i];    
+            }
+            
             tempArray.push(menuItem);
         }
         return tempArray;
@@ -98,41 +110,53 @@ L.Dropchop.Menu = L.Class.extend({
     **
     */
     _buildDomElement: function ( childElements ) {
+
         // Create menu div
         var menu = document.createElement('div');
         menu.className = "menu";
-
-        // Create button for menu
-        var button = document.createElement('button');
-        button.className = "menu-button";
-        button.innerHTML = this.title;
-
-        // Create icon for menu's button
-        var icon = document.createElement('i');
-        if ( this.options.iconClassName ){
-            icon.className = this.options.iconClassName;
-        } else if ( childElements.length ) { // Only if child elements
-            if ( this.options.menuDirection == 'above' ) {
-                icon.className = 'fa fa-angle-up';
-            } else {
-                icon.className = 'fa fa-angle-down';
-            }
+        if (this.options.expand === false) {
+            menu.className += " no-expand";
         }
+
+
+        if (this.options.expand !== false) {
+            // Create button for menu
+            var button = document.createElement('button');
+            button.className = "menu-button";
+            button.innerHTML = this.title;
+
+            // Create icon for menu's button
+            var icon = document.createElement('i');
+            if ( this.options.iconClassName ){
+                icon.className = this.options.iconClassName;
+            } else if ( childElements.length ) { // Only if child elements
+                if ( this.options.menuDirection == 'above' ) {
+                    icon.className = 'fa fa-angle-up';
+                } else {
+                    icon.className = 'fa fa-angle-down';
+                }
+            }
+            button.appendChild(icon);
+            menu.appendChild(button);
+        }
+
 
         // Create menu dropdown
         var menuDropdown = document.createElement('div');
-        menuDropdown.className = 'menu-dropdown menu-expand';
+        if (this.options.expand === false) {
+            menuDropdown.className = 'menu-container';
+        } else {
+            menuDropdown.className = 'menu-dropdown menu-expand';
+        }
 
         if ( this.options.menuDirection == 'above' ) {
             menuDropdown.className += ' opens-above'; // Menu dropdown opens to above menu
         }
+
         for ( var e = 0; e < childElements.length; e++ ) {  // Add childElements
             menuDropdown.appendChild(childElements[e]);
-        }
-
-        // Join it all together
-        button.appendChild(icon);
-        menu.appendChild(button);
+        }        
+        
         menu.appendChild(menuDropdown);
         return menu;
     }

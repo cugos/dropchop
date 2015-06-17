@@ -1,13 +1,15 @@
 .form-outer {
-  display: table;
   position: absolute;
-  width: 100%;
-  height: 100%;
-  background:rgba(0,0,0,0.2);
+  &.default {
+    display: table;
+    width: 100%;
+    height: 100%;
+    background:rgba(0,0,0,0.2);
 
-  .form-inner {
-    display:table-cell;
-    vertical-align:middle;
+    .form-inner {
+      display:table-cell;
+      vertical-align:middle;
+    }
   }
 }
 
