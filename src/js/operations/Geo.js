@@ -61,6 +61,12 @@ L.Dropchop.Geo = L.Class.extend({
         description: 'Extent of all the features.',
     },
 
+    midpoint: {
+        minFeatures: 2,
+        maxFeatures: 2,
+        description: 'Takes two points and returns a point midway between them.',
+    },
+
     union: {
         minFeatures: 2,
         maxFeatures: 2,

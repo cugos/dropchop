@@ -308,6 +308,57 @@ describe("L.Dropchop.TurfExecute", function () {
 
     /*
     **
+    ** MIDPOINT TEST
+    **
+    */
+    describe("midpoint", function () {
+
+        it("data output", function () {
+            var formData = {
+                action: 'midpoint',
+                parameters: [],
+            };
+
+            var inputLayers = [
+                {
+                    name: "one.geojson",
+                    layer: {
+                        _geojson: window.testingData.point_1
+                    }
+                },
+                {
+                    name: "two.geojson",
+                    layer: {
+                        _geojson: window.testingData.point_2
+                    }
+                },
+            ];
+
+
+            var callback = sinon.spy();
+            
+            ops.geox.execute(
+                formData.action,
+                formData.parameters,
+                ops.geo[formData.action],
+                inputLayers,
+                callback
+            );
+
+
+            console.log(callback);
+
+            assert(callback.calledWith({
+                add: [{
+                    name: 'midpoint_one_two.geojson',
+                    geometry: {"type":"Feature","geometry":{"type":"Point","coordinates":[-82.79296875,37.150939581046316]},"properties":{}}
+                }]
+            }));
+        });
+    });
+
+    /*
+    **
     ** TIN TEST
     **
     */

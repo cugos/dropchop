@@ -108,7 +108,31 @@
 			      	[-73.157958, 20.210656]
 			    ]
   			}
-		}
+		},
+
+        "point_1": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -81.650390625,
+              38.34165619279595
+            ]
+          }
+        },
+
+        "point_2": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -83.935546875,
+              35.96022296929667
+            ]
+          }
+        }
 
     }
 
