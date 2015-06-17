@@ -5,13 +5,13 @@
 
   .notification {
     padding:.5em 1em;
-    font-size:.7em;
+    font-size:.9em;
     text-transform:uppercase;
     letter-spacing: .1em;
     margin-bottom:.5em;
-    background:$blue;
-    color: $white;
-    width:300px;
+    background:$notification-default-background;
+    color:$notification-default-text;
+    // width:300px;
 
     &:before {
       font-family:"FontAwesome";
@@ -20,14 +20,16 @@
     }
 
     &.alert {
-      background:$alert;
+      background:$notification-alert-background;
+      color:$notification-alert-text;
       &:before {
         content:"\f06a";
       }
     }
 
     &.success {
-      background:$success;
+      background:$notification-success-background;
+      color:$notification-success-text;
       &:before {
         content:"\f00c";
       }

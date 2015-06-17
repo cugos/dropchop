@@ -6,7 +6,7 @@
   top:0;
   left:0;
   width:100%;
-  background:$white;
+  background:$menu-background;
   padding:5px;
 }
 
@@ -24,14 +24,16 @@
   }
 }
 .menu-button {
-  background:$white;
+  font-family:$font-input;
+  background:$menu-background;
   border-radius:0;
   border:none;
   padding:8px;
-  font-size:.8em;
+  font-size:.9em;
+  text-transform:uppercase;
   font-weight:100;
   letter-spacing:.05em;
-  color:$black;
+  color:$menu-text;
   cursor:pointer;
   display:inline-block;
   &:focus {
@@ -50,7 +52,7 @@
     display:block;
     min-width:150px;
     text-align:left;
-    border-top:1px solid $grey-dark;
+    border-top:1px solid $menu-border;
   }
 }
 
