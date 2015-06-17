@@ -20,6 +20,43 @@ describe("L.Dropchop.TurfExecute", function () {
 
     /*
     **
+    ** ALONG TEST
+    **
+    */
+    describe("along", function () {
+
+        it("data output", function () {
+            var formData = {
+                action: 'along',
+                parameters: [1000, 'miles'],
+            };
+
+            var inputLayers = [{
+                name: "line.geojson",
+                layer: {
+                    _geojson: window.testingData.line_2
+                }
+            }];
+
+            var callback = sinon.spy();
+            ops.geox.execute(
+                formData.action,
+                formData.parameters,
+                ops.geo[formData.action],
+                inputLayers,
+                callback
+            );
+            assert(callback.calledWith({
+                add: [{
+                    name: "along_line.geojson",
+                    geometry: {"type":"Feature","geometry":{"type":"Point","coordinates":[-10.839132601858164,38.352329563649434]},"properties":{}}
+                }]
+            }));
+        });
+    });
+
+    /*
+    **
     ** BEZIER TEST
     **
     */

@@ -3,6 +3,26 @@ L.Dropchop.Geo = L.Class.extend({
 
     options: {},
 
+    along: {
+        minFeatures: 1,
+        description: 'Takes a line and returns a point at a specified distance along the line.',
+        parameters: [
+            {
+                name: 'distance',
+                description :'distance along the line',
+                type: 'number',
+                default: 10
+            },
+            {
+                name: 'units',
+                type: 'select',
+                description: '',
+                options: ['miles', 'kilometers', 'radians', 'degrees'],
+                default: 'miles'
+            }
+        ],
+    },
+
     bezier: {
         minFeatures: 1,
         description: 'Takes a line and returns a curved version by applying a Bezier spline algorithm.',

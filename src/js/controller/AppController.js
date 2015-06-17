@@ -33,6 +33,7 @@ L.Dropchop.AppController = L.Class.extend({
             // GEO
             geo: new L.Dropchop.Menu('Geoprocessing', {     // New dropdown menu
                 items: [
+                    'along',
                     'bezier',
                     'buffer',
                     'center',
