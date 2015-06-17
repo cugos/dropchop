@@ -8,10 +8,21 @@
   width:100%;
   background:$menu-background;
   padding:5px;
+  .menu {
+    vertical-align:middle;
+    margin-left:15px;
+  }
 }
 
 .menu {
-  display: inline-block;
+  display:inline-block;
+}
+
+.logo {
+  max-width:80px;
+  display:inline-block;
+  vertical-align:middle;
+  pointer-events:none;
 }
 
 .menu-dropdown {

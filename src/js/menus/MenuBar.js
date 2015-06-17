@@ -6,7 +6,7 @@ L.Dropchop.MenuBar = L.Class.extend({
     initialize: function ( options ) {
         L.setOptions( this, options );
         this.children = [];
-        this.domElement = this._buildDomElement(this.options.id, this.options.classList);
+        this.domElement = this._buildDomElement(this.options.id, this.options.classList, this.options.logo_src, this.options.logo_class);
     },
 
     /*
@@ -26,12 +26,21 @@ L.Dropchop.MenuBar = L.Class.extend({
     ** Create the DOM element
     **
     */
-    _buildDomElement: function ( id, classList ) {
+    _buildDomElement: function ( id, classList, logo_src, logo_class ) {
         var nav = document.createElement('nav');
         nav.id = id;
         for (var i=0; i < classList.length; i++) {
             nav.classList.add(classList[i]);
         }
+
+        // add logo
+        if (logo_src) {
+            var logo = document.createElement('img');
+            logo.className = logo_class;
+            logo.src = logo_src;
+            nav.appendChild(logo);
+        }
+
         return nav;
     }
 });

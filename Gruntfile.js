@@ -111,6 +111,11 @@ module.exports = function(grunt) {
     },
     copy: {
       main: {
+        files: [
+          { expand: true, cwd: 'src/', src: ['images/*'], dest: 'dist/' }
+        ]
+      },
+      cname: {
         src: 'src/CNAME',
         dest: 'dist/CNAME',
       }
@@ -144,8 +149,8 @@ module.exports = function(grunt) {
   grunt.registerTask('css:dev', ['sass']);
   grunt.registerTask('css:prod', ['sass']);
   // Build wrappers
-  grunt.registerTask('build:dev', ['js:dev', 'css:dev', 'processhtml:dev']);
-  grunt.registerTask('build:prod', ['js:prod', 'css:prod', 'processhtml:prod']);
+  grunt.registerTask('build:dev', ['js:dev', 'css:dev', 'processhtml:dev', 'copy:main']);
+  grunt.registerTask('build:prod', ['js:prod', 'css:prod', 'processhtml:prod', 'copy']);
   // Serve locally on :8000
   grunt.registerTask('serve:dev', ['connect:dev', 'focus:dev']);
   grunt.registerTask('serve:prod', ['connect:prod', 'focus:prod']);

@@ -22,7 +22,7 @@ L.Dropchop.AppController = L.Class.extend({
         this.dropzone = new L.Dropchop.DropZone( this.mapView._map, {} );
         this.layerlist = new L.Dropchop.LayerList( this.mapView._map, { layerContainerId: 'sidebar' } );
         this.menubar = new L.Dropchop.MenuBar(
-            { id: 'menu-bar' }
+            { id: 'menu-bar', logo_src: '/images/dropchop-logo.svg', logo_class: 'logo' }
         ).addTo( document.body );
         this.bottom_menu = new L.Dropchop.MenuBar(
             { id: 'add-remove', classList: ["bottom", "menu"] }
