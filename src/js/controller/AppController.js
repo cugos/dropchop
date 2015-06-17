@@ -45,7 +45,7 @@ L.Dropchop.AppController = L.Class.extend({
 
             // ADD LAYER
             addLayer: new L.Dropchop.Menu('Add', {
-                items: ['upload', 'load from url'],
+                items: ['upload', 'load from url', 'load from gist'],
                 menuDirection: 'above',
                 iconClassName: "fa fa-plus",
             }).addTo( this.bottom_menu ),           // Append to menubar
@@ -69,7 +69,7 @@ L.Dropchop.AppController = L.Class.extend({
         this.forms = new L.Dropchop.Forms();
         this.notification = new L.Dropchop.Notifications();
         this._addEventHandlers();
-
+        this._handleGetParams();
     },
 
     /*
@@ -79,7 +79,7 @@ L.Dropchop.AppController = L.Class.extend({
     */
     _addEventHandlers: function(){
         this.dropzone.fileReader.on( 'fileparsed', this._handleParsedFile.bind( this ) );
-        this.fileOpsConfig.executor.on( 'uploadedfiles', this.dropzone.fileReader._handleFiles.bind(this.dropzone.fileReader) );
+        this.fileOpsConfig.executor.on( 'uploadedfiles', this.dropzone.fileReader._handleFiles.bind(this) );
 
         // Handle clicks on items within menus
         // NOTE: This is where an operation is tied to a menu item
@@ -132,9 +132,7 @@ L.Dropchop.AppController = L.Class.extend({
             e.parameters,
             config,
             this.getLayerSelection(),
-            function(results) { // Callback
-                return this._handleResults(results);
-            }.bind(this)
+            this._handleResults.bind(this) // Callback
         );
     },
 
@@ -197,6 +195,55 @@ L.Dropchop.AppController = L.Class.extend({
 
     getLayerSelection: function(){
         return this.layerlist.selection.list || [];
-    }
+    },
 
+    /*
+    **
+    **
+    ** Parse URL GET parameters into JSON object
+    **
+    */
+    _getJsonFromUrl: function() {
+        var query = location.search.substr(1);
+        var result = {};
+        query.split("&").forEach(function(part) {
+            var item = part.split("=");
+            if (!result[item[0]]) {
+                result[item[0]] = [];
+            }
+            result[item[0]].push(decodeURIComponent(item[1]));
+        });
+        return result;
+    },
+
+    /*
+    **
+    **
+    ** Handle URL GET parameters
+    **
+    */
+    _handleGetParams: function() {
+        var i, url;
+        var data = this._getJsonFromUrl();
+
+        // Handle 'url' Parameter
+        if (data.url && data.url.length) {
+            for (i = 0; i < data.url.length; i++) {
+                url = data.url[i];
+                this.fileOpsConfig.executor.execute(
+                    'load from url', [url], null, null, this._handleResults.bind(this)
+                );
+            }
+        }
+
+        // Handle 'gist' Parameter
+        if (data.gist && data.gist.length) {
+            for (i = 0; i < data.gist.length; i++) {
+                var gist = data.gist[i];
+                this.fileOpsConfig.executor.execute(
+                    'load from gist', [gist], null, null, this._handleResults.bind(this)
+                );
+            }
+        }
+    }
 });
