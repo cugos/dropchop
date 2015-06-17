@@ -1,13 +1,64 @@
-// UI
-$selected: $blue;
-$menu-hover: $grey;
+// THEME COLORS
+$theme-dark: #174C4F;
+$theme-gray: #207178;
+$theme-orange: #FF9666;
+$theme-yellow: #FFE184;
+$theme-tan: #F5E9BE;
+$color-white: #ffffff;
+$color-light-gray: #f6f6f6;
 
-// UI COLORS
-$alert: $red;
-$success: $green;
+// FONTS
+$font-sans: 'Roboto', sans-serif;
+$font-mono: 'Inconsolata', monospace;
+$font-input: $font-mono;
 
-// UI
-$shadow: 1px 1px 5px 0 rgba(0,0,0,0.3);
+
+
+
+// BODY
+$body-text-base: 15px;
 
 // MENU
+$menu-background: $theme-dark;
+$menu-text: $color-white;
+$menu-hover: $theme-gray;
+$menu-border: $theme-gray;
 $menu-height: 30px;
+$menu-bottom-background: $menu-background;
+$menu-bottom-text: $theme-gray;
+
+// LAYERLIST
+$layerlist-background: $color-light-gray;
+$layer-hover: $theme-tan;
+$layer-selected-background: $theme-gray;
+$layer-selected-text: $layerlist-background;
+$layer-fontsize: 0.9em;
+
+// NOTIFICATIONS
+$notification-default-background: $color-light-gray;
+$notification-default-text: $theme-dark;
+$notification-alert-background: $theme-orange;
+$notification-alert-text: $color-light-gray;
+$notification-success-background: $theme-yellow;
+$notification-success-text: $theme-gray;
+
+// FORMS
+$form-background: $color-white;
+$form-information-background: $theme-dark;
+$form-information-text: $color-light-gray;
+$form-description-text: $color-light-gray;
+$form-description-font: $font-sans;
+$form-param-text: $theme-orange;
+$form-param-description: $theme-gray;
+$form-param-border: 1px solid $color-light-gray;
+$form-submit-background: $theme-yellow;
+$form-submit-text: $theme-dark;
+
+// BUTTONS
+$button-default-background: $color-white;
+$button-default-color: $theme-dark;
+$button-close-background: $theme-orange;
+$button-close-color: $color-light-gray;
+
+// UI
+$ui-shadow: 1px 1px 5px 0 rgba(0,0,0,0.3);

@@ -3,7 +3,7 @@
   top:41px;
   bottom:0;
   width:250px;
-  background:$grey-light;
+  background:$layerlist-background;
 }
 
 /* LAYER LIST */
@@ -13,36 +13,41 @@
       background:transparent;
     }
   }
+
   margin:0;
   list-style-type: none;
   padding:0;
+
   .layer-element {
-    border-bottom:1px solid $grey-dark;
+    position:relative;
   }
+
   .layer-toggle {
-    margin:10px;
+    position: absolute;
+    top: 5px;
+    left: 3px;
   }
+
   .layer-name {
-    display:inline-block;
-    border-left:1px solid $grey;
     padding:8px;
-    font-size:.8em;
+    font-size: $layer-fontsize;
+    padding-left:26px;
     &::selection {
       background:transparent;
     }
     &:hover {
-      background:$grey;
+      background:$layer-hover;
       cursor:pointer;
     }
     &.selected {
-      background:$selected;
-      color:$grey-light;
+      background:$layer-selected-background;
+      color:$layer-selected-text;
     }
   }
 }
 
 #add-remove {
   width: 100%;
-  background-color:$white;
+  background-color:$menu-bottom-background;
   text-align:center;
 }

@@ -12,17 +12,18 @@
 }
 
 .form {
+  font-size:1.1em;
   display:block;
   position:relative;
   margin:auto;
   width:300px;
-  background:$white;
-  box-shadow:$shadow;
+  background:$form-background;
+  box-shadow:$ui-shadow;
 
   .form-information {
     padding:10px;
-    background:$black;
-    color:$white;
+    background:$form-information-background;
+    color:$form-information-text;
   }
 
   .form-inputs {}
@@ -32,28 +33,29 @@
   }
 
   .form-description {
-    font-size:.8em;
     padding:5px 0;
-    color:$grey-light;
+    color:$form-description-text;
+    font-family: $form-description-font;
+    font-weight: 300;
+    font-size: .85em;
   }
 
   .parameter {
     display:block;
     padding:10px;
-    border-top:1px solid $grey;
+    border-top: $form-param-border;
 
     .parameter-name {
       text-transform: uppercase;
       display: inline-block;
-      font-size: .75em;
       font-weight:900;
-      color:$red;
+      color:$form-param-text;
       letter-spacing: .1em;
     }
 
     input, select {
       display:block;
-      font-family:$ff;
+      font-family:$font-input;
       width:100%;
       font-size:.9em;
       padding:.3em;
@@ -61,20 +63,19 @@
 
     .parameter-description {
       font-size:.7em;
-      color:$gray;
+      color:$form-param-description;
     }
   }
 
   .form-submit {
-    background:$olive;
-    color:$white;
+    background:$form-submit-background;
+    color:$form-submit-text;
     float:left;
   }
 
   .form-close {
     position:absolute;
-    top:-24px;
     right:0;
-    box-shadow:$shadow;
+    font-size:.9em;
   }
 }

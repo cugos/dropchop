@@ -1,8 +1,4 @@
 /* globals */
-
-/* font-family */
-$ff: 'Open Sans', sans-serif;
-
 .btn {
   font-size: .7em;
   text-transform: uppercase;
@@ -12,9 +8,8 @@ $ff: 'Open Sans', sans-serif;
   cursor:pointer;
   &.close {
     padding:.2em .2em .3em .35em;
-    font-size:1em;
-    background:$white;
-    color:$red;
+    background:$button-close-background;
+    color:$button-close-color;
   }
 }
 

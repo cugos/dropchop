@@ -23,8 +23,9 @@ ol {
 body {
   padding:0;
   margin:0;
-  font-family:$ff;
+  font-family:$font-mono;
   @include transition(.3s);
+  font-size: $body-text-base;
 }
 
 body.dragging {
