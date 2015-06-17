@@ -55,10 +55,38 @@ L.Dropchop.Geo = L.Class.extend({
         description: 'Creates a point in the centroid of the features.',
     },
 
+    destination: {
+        minFeatures: 1,
+        maxFeatures: 1,
+        description: 'Takes a Point and calculates the location of a destination point given a distance in degrees, radians, miles, or kilometers; and bearing in degrees. This uses the Haversine formula to account for global curvature.',
+        parameters: [
+            {
+                name: 'distance',
+                description :'distance from the starting point',
+                type: 'number',
+                default: 10
+            },
+            {
+                name: 'bearing',
+                description :'ranging from -180 to 180',
+                type: 'number',
+                default:  0
+
+            },
+            {
+                name: 'units',
+                type: 'select',
+                description: '',
+                options: ['miles', 'kilometers', 'radians', 'degrees'],
+                default: 'miles'
+            }
+        ],
+    },
+
     envelope: {
         minFeatures: 1,
         maxFeatures: 1,
-        description: 'Extent of all the features.',
+        description: 'Takes any number of features and returns a rectangular Polygon that encompasses all vertices.',
     },
 
     midpoint: {

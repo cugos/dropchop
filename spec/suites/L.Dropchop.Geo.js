@@ -240,6 +240,58 @@ describe("L.Dropchop.TurfExecute", function () {
 
     /*
     **
+    ** DESTINATION TEST
+    **
+    */
+    describe("destination", function () {
+
+        it("data output", function () {
+            var formData = {
+                action: 'destination',
+                parameters: [10, 0, 'miles'],
+            };
+
+            var inputLayers = [
+                {
+                    name: "point.geojson",
+                    layer: {
+                        _geojson: window.testingData.point_1
+                    }
+                }
+            ];
+
+
+            var callback = sinon.spy();
+            
+            ops.geox.execute(
+                formData.action,
+                formData.parameters,
+                ops.geo[formData.action],
+                inputLayers,
+                callback
+            );
+
+            assert(callback.calledWith({
+                add: [{
+                    name: 'destination_point.geojson',
+                    geometry: {
+                      "type": "Feature",
+                      "geometry": {
+                        "type": "Point",
+                        "coordinates": [
+                          -81.650390625,
+                          38.486342504697674
+                        ]
+                      },
+                      "properties": {}
+                    }
+                }]
+            }));
+        });
+    });
+
+    /*
+    **
     ** ENVELOPE TEST
     **
     */
