@@ -653,8 +653,8 @@ L.Dropchop.LayerList = L.Control.extend({
         li.className = 'layer-element ' + obj.name;
 
         // Put it all together
-        li.appendChild(inputEl);
         li.appendChild(layerItem);
+        li.appendChild(inputEl);
         return li;
 
         // used to count how many layers currently exist
