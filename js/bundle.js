@@ -62,7 +62,7 @@ L.Dropchop.AppController = L.Class.extend({
 
             // ADD LAYER
             addLayer: new L.Dropchop.Menu('Add', {
-                items: ['upload', 'load from url'],
+                items: ['upload', 'load from url', 'load from gist'],
                 menuDirection: 'above',
                 iconClassName: "fa fa-plus",
             }).addTo( this.bottom_menu ),           // Append to menubar
@@ -86,7 +86,7 @@ L.Dropchop.AppController = L.Class.extend({
         this.forms = new L.Dropchop.Forms();
         this.notification = new L.Dropchop.Notifications();
         this._addEventHandlers();
-
+        this._handleGetParams();
     },
 
     /*
@@ -96,7 +96,7 @@ L.Dropchop.AppController = L.Class.extend({
     */
     _addEventHandlers: function(){
         this.dropzone.fileReader.on( 'fileparsed', this._handleParsedFile.bind( this ) );
-        this.fileOpsConfig.executor.on( 'uploadedfiles', this.dropzone.fileReader._handleFiles.bind(this.dropzone.fileReader) );
+        this.fileOpsConfig.executor.on( 'uploadedfiles', this.dropzone.fileReader._handleFiles.bind(this) );
 
         // Handle clicks on items within menus
         // NOTE: This is where an operation is tied to a menu item
@@ -149,9 +149,7 @@ L.Dropchop.AppController = L.Class.extend({
             e.parameters,
             config,
             this.getLayerSelection(),
-            function(results) { // Callback
-                return this._handleResults(results);
-            }.bind(this)
+            this._handleResults.bind(this) // Callback
         );
     },
 
@@ -214,8 +212,57 @@ L.Dropchop.AppController = L.Class.extend({
 
     getLayerSelection: function(){
         return this.layerlist.selection.list || [];
-    }
+    },
 
+    /*
+    **
+    **
+    ** Parse URL GET parameters into JSON object
+    **
+    */
+    _getJsonFromUrl: function() {
+        var query = location.search.substr(1);
+        var result = {};
+        query.split("&").forEach(function(part) {
+            var item = part.split("=");
+            if (!result[item[0]]) {
+                result[item[0]] = [];
+            }
+            result[item[0]].push(decodeURIComponent(item[1]));
+        });
+        return result;
+    },
+
+    /*
+    **
+    **
+    ** Handle URL GET parameters
+    **
+    */
+    _handleGetParams: function() {
+        var i, url;
+        var data = this._getJsonFromUrl();
+
+        // Handle 'url' Parameter
+        if (data.url && data.url.length) {
+            for (i = 0; i < data.url.length; i++) {
+                url = data.url[i];
+                this.fileOpsConfig.executor.execute(
+                    'load from url', [url], null, null, this._handleResults.bind(this)
+                );
+            }
+        }
+
+        // Handle 'gist' Parameter
+        if (data.gist && data.gist.length) {
+            for (i = 0; i < data.gist.length; i++) {
+                var gist = data.gist[i];
+                this.fileOpsConfig.executor.execute(
+                    'load from gist', [gist], null, null, this._handleResults.bind(this)
+                );
+            }
+        }
+    }
 });
 
 L.Dropchop = L.Dropchop || {};
@@ -1154,6 +1201,17 @@ L.Dropchop.File = L.Class.extend({
                 default: 'http://',
             },
         ],
+    },
+
+    'load from gist': {
+        description: 'Import files from a Github Gist',
+        parameters: [
+            {
+                name: 'gist',
+                description :'Gist ID or URL',
+                type: 'text',
+            },
+        ],
     }
 });
 
@@ -1172,7 +1230,6 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
     **
     */
     execute: function ( action, parameters, options, layers, callback ) {
-        var _this = this;
         var actions = {
             'save geojson': function ( action, parameters, options, layers, callback ) {
                 console.debug("Saving GeoJSON");
@@ -1205,7 +1262,7 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                     }
                 }
                 catch(err) {
-                    console.log(err);
+                    console.error(err);
                     L.Dropchop.app.notification.add({
                         text: "Error downloading one of the shapefiles... please try downloading in another format",
                         type: 'alert',
@@ -1224,85 +1281,56 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
 
             upload: function ( action, parameters, options, layers ){
                 var files = document.querySelectorAll('input[type=file]')[0].files;
-                _this.fire('uploadedfiles', files);
+                this.fire('uploadedfiles', files);
             },
 
             'load from url': function ( action, parameters, options, layers ) {
                 var url = parameters[0];
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', encodeURI(url));
-                xhr.onload = function() {
+                this.getRequest(url, function(xhr) {
                     if (xhr.status === 200) {
-                        var newLayer = JSON.parse(xhr.responseText);
                         var filename = xhr.responseURL.substring(xhr.responseURL.lastIndexOf('/')+1);
-
-                        // if the new object is a feature collection and only has one layer,
-                        // remove it and just keep it as a feature
-                        if ( newLayer.geometry.type == "FeatureCollection" && newLayer.geometry.features.length == 1 ) {
-                            newLayer.geometry = this._unCollect( newLayer.geometry );
-                        }
-
-                        callback( { add: [{ geometry: newLayer, name: filename }] } );
+                        return this._addJsonAsLayer(xhr.responseText, filename, callback);
                     } else {
                         console.error('Request failed. Returned status of ' + xhr.status);
                     }
-                };
-                xhr.send();
-            }
+                });
+            },
+
+            'load from gist': function ( action, parameters, options, layers ) {
+                var gist = parameters[0];
+                gist = gist.split('/')[gist.split('/').length-1];
+                console.debug('Retrieving gist ' + gist);
+                url = 'https://api.github.com/gists/' + gist;
+
+                this.getRequest(url, function(xhr) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.responseText);
+                        for (var filename in data.files) {
+                            var file = data.files[filename];
+                            this._addJsonAsLayer(file.content, file.filename, callback);
+                        }
+                    } else {
+                        console.error('Request failed. Returned status of ' + xhr.status);
+                    }
+                });
+            },
         };
         if (typeof actions[action] !== 'function') {
           throw new Error('Invalid action.');
         }
-        return actions[action](action, parameters, options, layers);
+        return actions[action].call(this, action, parameters, options, layers);
     },
 
     /*
     **
-    **  VALIDATE LAYERS
-    **  Checks if the proper number of layers are in the current selection to
-    **  allow Turf operations to run
+    ** Ajax GET
     **
     */
-    validate: function ( layers, options ) {
-        return true;
-    },
-
-    /*
-    **
-    **  PREPARE DATA
-    **  Prepares the selected data to be run through Turf operations
-    **  and builds the new layer name
-    **
-    */
-    _prepareParameters: function ( layers, options, params ) {
-        if (options.maxFeatures) {
-            layers = layers.slice(0, options.maxFeatures);
-        }
-        var layer_objs = layers.map(function(obj) { return obj.layer._geojson; });
-        console.debug(layer_objs, params);
-
-        if ( params ) {
-            for ( var l = 0; l < params.length; l++ ) {
-                layer_objs.push(params[l]);
-            }
-        }
-        return layer_objs;
-    },
-
-    _prepareName: function ( layers ) {
-        // Get layer names
-        var layer_names = layers.map(function(obj) { return obj.name; });
-        var layer_names_str = '';
-        if (layer_names.length === 1) {
-            // Rm file extension
-            layer_names_str = layer_names[0].split('.')[0];
-        } else {
-            // Merge layer names w/o extensions
-            layer_names_str = layer_names.reduce(function(a, b) {
-                return a.split('.')[0] + '_' + b.split('.')[0];
-            });
-        }
-        return layer_names_str;
+    getRequest: function ( url, callback ) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', encodeURI(url));
+        xhr.onload = callback.bind(this, xhr);
+        xhr.send();
     },
 
     /*
@@ -1314,6 +1342,33 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
     */
     _unCollect: function( feature ) {
         return feature.features[0];
+    },
+
+    /*
+    **
+    ** Add raw JSON string to system as a new layer
+    **
+    */
+    _addJsonAsLayer: function (raw_content, filename, callback) {
+        try {
+            var newLayer = JSON.parse(raw_content);
+
+            // if the new object is a feature collection and only has one layer,
+            // remove it and just keep it as a feature
+            if ( newLayer.geometry && newLayer.geometry.type == "FeatureCollection" && newLayer.geometry.features.length == 1 ) {
+                newLayer.geometry = this._unCollect( newLayer.geometry );
+            }
+
+            return callback( { add: [{ geometry: newLayer, name: filename }] } );
+        } catch(err) {
+            L.Dropchop.app.notification.add({
+                text: 'Failed to add ' + filename,
+                type: 'alert',
+                time: 2500
+            });
+            console.error(err);
+            return;
+        }
     }
 
 });
