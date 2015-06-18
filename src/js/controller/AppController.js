@@ -23,7 +23,7 @@ L.Dropchop.AppController = L.Class.extend({
         this.layerlist = new L.Dropchop.LayerList( this.mapView._map, { layerContainerId: 'sidebar' } );
         this.menubar = new L.Dropchop.MenuBar(
             { id: 'menu-bar' }
-        ).addTo( document.body );
+        ).addTo( document.getElementById('sidebar') );
         this.bottom_menu = new L.Dropchop.MenuBar(
             { id: 'add-remove', classList: ["bottom", "menu"] }
         ).addTo( document.getElementById('sidebar') );

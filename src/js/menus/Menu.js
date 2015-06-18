@@ -58,7 +58,8 @@ L.Dropchop.Menu = L.Class.extend({
             this.domElement.addEventListener('click', itemClick, false);
         }
         function itemClick() {
-            _this.fire('clickedOperation', { action: this.id || _this.title.toLowerCase() }); // Set action to operation id or lowercase menu title
+            // Set action to operation id or lowercase menu title
+            _this.fire('clickedOperation', { action: this.id || _this.title.toLowerCase() });
         }
     },
 
@@ -95,10 +96,10 @@ L.Dropchop.Menu = L.Class.extend({
 
             // put the name of the action into the button unless
             // it's supposed to be a side button and not expand
-            if (this.options.expand !== false) {
+            // if (this.options.expand !== false) {
                 menuItem.innerHTML = items[i];    
-            }
-            
+            // }
+
             tempArray.push(menuItem);
         }
         return tempArray;

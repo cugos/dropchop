@@ -19,7 +19,6 @@ L.Dropchop.Forms = L.Class.extend({
         this.paramArray = [];
         this.options = {}; // reset options for next form
         L.setOptions(this, options);
-        console.log(this);
 
         var html = '<div class="form-inner"><div class="form">'+
                 '<button type="button" class="btn close form-close"><i class="fa fa-times"></i></button>'+
@@ -78,8 +77,7 @@ L.Dropchop.Forms = L.Class.extend({
             formClassName = 'form-outer side-menu';
 
             var rect = destinationElement.getBoundingClientRect();
-            console.log(rect);
-            formDiv.style.left = rect.right;
+            formDiv.style.left = rect.right - 4;
             formDiv.style.top = rect.top;
         }
 
