@@ -115,12 +115,12 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
 
         xhr.onload = callback.bind(this, xhr);
         xhr.onerror = function( xhr ) {
+            console.error(xhr);
             this.notification.add({
                 text: 'Unable to access ' + url,
                 type: 'alert',
                 time: 2500
             });
-            console.error(xhr);
         };
 
         xhr.send();
