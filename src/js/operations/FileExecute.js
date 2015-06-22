@@ -46,7 +46,7 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                 }
                 catch(err) {
                     console.error(err);
-                    this.options.notifications.add({
+                    this.notification.add({
                         text: "Error downloading one of the shapefiles... please try downloading in another format",
                         type: 'alert',
                         time: 3500
@@ -115,7 +115,7 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
 
         xhr.onload = callback.bind(this, xhr);
         xhr.onerror = function( xhr ) {
-            this.options.notifications.add({
+            this.notification.add({
                 text: 'Unable to access ' + url,
                 type: 'alert',
                 time: 2500
@@ -154,12 +154,12 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
 
             return callback( { add: [{ geometry: newLayer, name: filename }] } );
         } catch(err) {
-            this.options.notifications.add({
+            console.error(err);
+            this.notification.add({
                 text: 'Failed to add ' + filename,
                 type: 'alert',
                 time: 2500
             });
-            console.error(err);
             return;
         }
     }

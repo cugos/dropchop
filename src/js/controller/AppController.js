@@ -60,14 +60,12 @@ L.Dropchop.AppController = L.Class.extend({
 
         this.geoOpsConfig = {
             operations: new L.Dropchop.Geo(),        // Configurations of GeoOperations
-            executor: new L.Dropchop.TurfExecute()   // Executor of GeoOperations
+            executor: new L.Dropchop.TurfExecute( this.notification )   // Executor of GeoOperations
         };
 
         this.fileOpsConfig = {
             operations: new L.Dropchop.File(),        // Configurations of FileOperations
-            executor: new L.Dropchop.FileExecute(     // Executor of FileOperations
-                {'notifications': this.notification}
-            )
+            executor: new L.Dropchop.FileExecute( this.notification ) // Executor of FileOperations
         };
 
         this.forms = new L.Dropchop.Forms();
