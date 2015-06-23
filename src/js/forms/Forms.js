@@ -86,7 +86,8 @@ L.Dropchop.Forms = L.Class.extend({
                 paramValue = inputs[p].options[inputs[p].selectedIndex].value;
             } else {
                 paramValue = inputs[p].value;
-                if (inputs[p].type == 'number') paramValue = parseInt(paramValue);
+                if (inputs[p].type == 'number') paramValue = parseFloat(paramValue);
+                if (inputs[p].type == 'checkbox') paramValue = inputs[p].checked;
             }
             this.paramArray.push(paramValue);
         }
@@ -133,8 +134,13 @@ L.Dropchop.Forms = L.Class.extend({
 
     _inputTypeDefault: function ( p ) {
         var field = '<input class="param" name="' + p.name + '" type="' +
-            p.type + '" value="' + (p.default || '') + '"' +
-            (p.extra || '') + '>';
+            p.type + '"';
+        if ( p.type == 'checkbox' ) {
+            if (p.default) field += ' checked';
+        } else {
+            field += 'value="' + (p.default || '') + '"';
+        }
+        field += (p.extra || '') + '>';
         return field;
     },
 
@@ -147,4 +153,5 @@ L.Dropchop.Forms = L.Class.extend({
         }
         return select + '</select>';
     }
+
 });

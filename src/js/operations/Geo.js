@@ -134,10 +134,9 @@ L.Dropchop.Geo = L.Class.extend({
             },
             {
                 name: 'high quality',
-                type: 'select',
+                type: 'checkbox',
                 description: 'whether or not to spend more time to create a higher-quality simplification with a different algorithm',
-                options: ['true', 'false'],
-                default: 'false'
+                default: false
             }
         ]
     },
