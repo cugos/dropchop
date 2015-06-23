@@ -21,6 +21,8 @@ L.Dropchop.AppController = L.Class.extend({
         this.mapView = new L.Dropchop.MapView();
         this.dropzone = new L.Dropchop.DropZone( this.mapView._map, {} );
         this.layerlist = new L.Dropchop.LayerList( this.mapView._map, { layerContainerId: 'sidebar' } );
+        this.notification = new L.Dropchop.Notifications();
+
         this.menubar = new L.Dropchop.MenuBar(
             { id: 'menu-bar' }
         ).addTo( document.body );
@@ -68,16 +70,15 @@ L.Dropchop.AppController = L.Class.extend({
 
         this.geoOpsConfig = {
             operations: new L.Dropchop.Geo(),        // Configurations of GeoOperations
-            executor: new L.Dropchop.TurfExecute()   // Executor of GeoOperations
+            executor: new L.Dropchop.TurfExecute( this.notification )   // Executor of GeoOperations
         };
 
         this.fileOpsConfig = {
             operations: new L.Dropchop.File(),        // Configurations of FileOperations
-            executor: new L.Dropchop.FileExecute()    // Executor of FileOperations
+            executor: new L.Dropchop.FileExecute( this.notification ) // Executor of FileOperations
         };
 
         this.forms = new L.Dropchop.Forms();
-        this.notification = new L.Dropchop.Notifications();
         this._addEventHandlers();
         this._handleGetParams();
     },
