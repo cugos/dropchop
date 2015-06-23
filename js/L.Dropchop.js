@@ -49,8 +49,18 @@ L.Dropchop.AppController = L.Class.extend({
             // GEO
             geo: new L.Dropchop.Menu('Geoprocessing', {     // New dropdown menu
                 items: [
-                    'bezier', 'buffer', 'center',           // Items in menu
-                    'centroid', 'envelope', 'union', 'tin'
+                    'along',
+                    'bezier',
+                    'buffer',
+                    'center',
+                    'centroid',
+                    'destination',
+                    'envelope',
+                    'explode',
+                    'midpoint',
+                    'simplify',
+                    'union',
+                    'tin'
                 ]
             }).addTo( this.menubar ),                       // Append to menubar
 
@@ -482,7 +492,8 @@ L.Dropchop.Forms = L.Class.extend({
                 paramValue = inputs[p].options[inputs[p].selectedIndex].value;
             } else {
                 paramValue = inputs[p].value;
-                if (inputs[p].type == 'number') paramValue = parseInt(paramValue);
+                if (inputs[p].type == 'number') paramValue = parseFloat(paramValue);
+                if (inputs[p].type == 'checkbox') paramValue = inputs[p].checked;
             }
             this.paramArray.push(paramValue);
         }
@@ -529,8 +540,13 @@ L.Dropchop.Forms = L.Class.extend({
 
     _inputTypeDefault: function ( p ) {
         var field = '<input class="param" name="' + p.name + '" type="' +
-            p.type + '" value="' + (p.default || '') + '"' +
-            (p.extra || '') + '>';
+            p.type + '"';
+        if ( p.type == 'checkbox' ) {
+            if (p.default) field += ' checked';
+        } else {
+            field += 'value="' + (p.default || '') + '"';
+        }
+        field += (p.extra || '') + '>';
         return field;
     },
 
@@ -543,6 +559,7 @@ L.Dropchop.Forms = L.Class.extend({
         }
         return select + '</select>';
     }
+
 });
 
 L.Dropchop = L.Dropchop || {};
@@ -847,7 +864,8 @@ L.Dropchop.MapView = L.Class.extend({
 
         L.mapbox.accessToken = 'pk.eyJ1Ijoic3ZtYXR0aGV3cyIsImEiOiJVMUlUR0xrIn0.NweS_AttjswtN5wRuWCSNA';
         this._map = L.mapbox.map('map', null, {
-            zoomControl: false
+            zoomControl: false,
+            worldCopyJump: true,
         }).setView([0,0], 3);
 
         var baseLayers = {
@@ -1377,6 +1395,26 @@ L.Dropchop.Geo = L.Class.extend({
 
     options: {},
 
+    along: {
+        minFeatures: 1,
+        description: 'Takes a line and returns a point at a specified distance along the line.',
+        parameters: [
+            {
+                name: 'distance',
+                description :'distance along the line',
+                type: 'number',
+                default: 10
+            },
+            {
+                name: 'units',
+                type: 'select',
+                description: '',
+                options: ['miles', 'kilometers', 'radians', 'degrees'],
+                default: 'miles'
+            }
+        ],
+    },
+
     bezier: {
         minFeatures: 1,
         description: 'Takes a line and returns a curved version by applying a Bezier spline algorithm.',
@@ -1429,22 +1467,82 @@ L.Dropchop.Geo = L.Class.extend({
         description: 'Creates a point in the centroid of the features.',
     },
 
+    destination: {
+        minFeatures: 1,
+        maxFeatures: 1,
+        description: 'Takes a Point and calculates the location of a destination point given a distance in degrees, radians, miles, or kilometers; and bearing in degrees. This uses the Haversine formula to account for global curvature.',
+        parameters: [
+            {
+                name: 'distance',
+                description :'distance from the starting point',
+                type: 'number',
+                default: 10
+            },
+            {
+                name: 'bearing',
+                description :'ranging from -180 to 180',
+                type: 'number',
+                default:  0
+
+            },
+            {
+                name: 'units',
+                type: 'select',
+                description: '',
+                options: ['miles', 'kilometers', 'radians', 'degrees'],
+                default: 'miles'
+            }
+        ],
+    },
+
     envelope: {
         minFeatures: 1,
         maxFeatures: 1,
-        description: 'Extent of all the features.',
+        description: 'Takes any number of features and returns a rectangular Polygon that encompasses all vertices.',
     },
 
-    union: {
+    explode: {
+        minFeatures: 1,
+        maxFeatures: 1,
+        description: 'Takes a feature or set of features and returns all positions as points.',
+    },
+
+    midpoint: {
         minFeatures: 2,
         maxFeatures: 2,
-        description: 'Takes two polygons and returns a combined polygon. If the input polygons are not contiguous, this function returns a MultiPolygon feature.',
+        description: 'Takes two points and returns a point midway between them.',
+    },
+
+    simplify: {
+        minFeatures: 1,
+        maxFeatures: 1,
+        description: 'Takes a LineString or Polygon and returns a simplified version. Internally uses simplify-js to perform simplification.',
+        parameters: [
+            {
+                name: 'tolerance',
+                description :'simplification tolerance',
+                type: 'number',
+                default: 0.1
+            },
+            {
+                name: 'high quality',
+                type: 'checkbox',
+                description: 'whether or not to spend more time to create a higher-quality simplification with a different algorithm',
+                default: false
+            }
+        ]
     },
 
     tin: {
         minFeatures: 1,
         maxFeatures: 1,
         description: 'Triangulated irregular network, interpolation method',
+    },
+
+    union: {
+        minFeatures: 2,
+        maxFeatures: 2,
+        description: 'Takes two polygons and returns a combined polygon. If the input polygons are not contiguous, this function returns a MultiPolygon feature.',
     }
 
 
