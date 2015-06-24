@@ -49,7 +49,7 @@ describe("L.Dropchop.TurfExecute", function () {
             assert(callback.calledWith({
                 add: [{
                     name: "along_line.geojson",
-                    geometry: {"type":"Feature","geometry":{"type":"Point","coordinates":[-10.839132601858164,38.352329563649434]},"properties":{}}
+                    geojson: {"type":"Feature","geometry":{"type":"Point","coordinates":[-10.839132601858164,38.352329563649434]},"properties":{}}
                 }]
             }));
         });
@@ -86,7 +86,7 @@ describe("L.Dropchop.TurfExecute", function () {
             assert(callback.calledWith({
                 add: [{
                     name: "bezier_line.geojson",
-                    geometry: {
+                    geojson: {
                         "type": "Feature",
                         "geometry": {
                             "type": "LineString",
@@ -130,7 +130,7 @@ describe("L.Dropchop.TurfExecute", function () {
             assert(callback.calledWith({
                 add: [{
                     name: "buffer_union1.geojson",
-                    geometry: {
+                    geojson: {
                       "type":"Feature",
                       "geometry":{
                         "type":"Polygon",
@@ -214,7 +214,7 @@ describe("L.Dropchop.TurfExecute", function () {
             assert(callback.calledWith({
                 add: [{
                     name: "center_center1.geojson",
-                    geometry: {
+                    geojson: {
                         "type": "Feature",
                         "geometry": {
                             "type": "Point",
@@ -259,7 +259,7 @@ describe("L.Dropchop.TurfExecute", function () {
             assert(callback.calledWith({
                 add: [{
                     name: "centroid_center1.geojson",
-                    geometry: {
+                    geojson: {
                         "type": "Feature",
                         "geometry": {
                             "type": "Point",
@@ -299,7 +299,7 @@ describe("L.Dropchop.TurfExecute", function () {
 
 
             var callback = sinon.spy();
-            
+
             ops.geox.execute(
                 formData.action,
                 formData.parameters,
@@ -311,7 +311,7 @@ describe("L.Dropchop.TurfExecute", function () {
             assert(callback.calledWith({
                 add: [{
                     name: 'destination_point.geojson',
-                    geometry: {
+                    geojson: {
                       "type": "Feature",
                       "geometry": {
                         "type": "Point",
@@ -359,7 +359,7 @@ describe("L.Dropchop.TurfExecute", function () {
             assert(callback.calledWith({
                 add: [{
                     name: "envelope_feature.geojson",
-                    geometry: {
+                    geojson: {
                         "type": "Feature",
                         "geometry": {
                             "type": "Polygon",
@@ -427,7 +427,7 @@ describe("L.Dropchop.TurfExecute", function () {
             assert(callback.calledWith({
                 add: [{
                     name: "explode_polygon.geojson",
-                    geometry: {"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":[-122.33714103698729,47.64000546596801]},"properties":{}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-122.33714103698729,47.640583778456666]},"properties":{}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-122.33593940734862,47.640583778456666]},"properties":{}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-122.33593940734862,47.64000546596801]},"properties":{}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-122.33714103698729,47.64000546596801]},"properties":{}}]}
+                    geojson: {"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":[-122.33714103698729,47.64000546596801]},"properties":{}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-122.33714103698729,47.640583778456666]},"properties":{}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-122.33593940734862,47.640583778456666]},"properties":{}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-122.33593940734862,47.64000546596801]},"properties":{}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-122.33714103698729,47.64000546596801]},"properties":{}}]}
                 }]
             }));
         });
@@ -463,7 +463,7 @@ describe("L.Dropchop.TurfExecute", function () {
 
 
             var callback = sinon.spy();
-            
+
             ops.geox.execute(
                 formData.action,
                 formData.parameters,
@@ -475,7 +475,7 @@ describe("L.Dropchop.TurfExecute", function () {
             assert(callback.calledWith({
                 add: [{
                     name: 'midpoint_one_two.geojson',
-                    geometry: {"type":"Feature","geometry":{"type":"Point","coordinates":[-82.79296875,37.150939581046316]},"properties":{}}
+                    geojson: {"type":"Feature","geometry":{"type":"Point","coordinates":[-82.79296875,37.150939581046316]},"properties":{}}
                 }]
             }));
         });
@@ -504,7 +504,7 @@ describe("L.Dropchop.TurfExecute", function () {
             ];
 
             var callback = sinon.spy();
-            
+
             ops.geox.execute(
                 formData.action,
                 formData.parameters,
@@ -516,7 +516,7 @@ describe("L.Dropchop.TurfExecute", function () {
             assert(callback.calledWith({
                 add: [{
                     name: 'simplify_sf.geojson',
-                    geometry: {"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-122.47970581054688,37.80761398306056],[-122.51815795898436,37.57179370689751],[-122.20367431640624,37.53913285079332],[-122.47970581054688,37.80761398306056]]]},"properties":{}}
+                    geojson: {"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-122.47970581054688,37.80761398306056],[-122.51815795898436,37.57179370689751],[-122.20367431640624,37.53913285079332],[-122.47970581054688,37.80761398306056]]]},"properties":{}}
                 }]
             }));
         });
@@ -553,7 +553,7 @@ describe("L.Dropchop.TurfExecute", function () {
             assert(callback.calledWith({
                 add: [{
                     name: "tin_points.geojson",
-                    geometry: {
+                    geojson: {
                         "type": "Feature",
                         "geometry": {
                             "type": "Polygon",

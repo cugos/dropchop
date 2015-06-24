@@ -4,6 +4,12 @@ L.Dropchop.BaseExecute = L.Class.extend({
 
     options: {},
 
+    initialize: function (notification, options) {
+        self.notification = notification;
+        // override defaults with passed options
+        L.setOptions(this, options);
+    },
+
     /*
     **
     ** EXECUTE OPERATIONS FROM INPUT

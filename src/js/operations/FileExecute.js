@@ -21,7 +21,6 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                     var prefix = parameters[0];
                     var content = JSON.stringify(layers[i].layer._geojson);
                     var title = prefix + '_' + layers[i].name;
-                    console.log(title);
                     saveAs(new Blob([content], {
                         type: 'text/plain;charset=utf-8'
                     }), title);
@@ -40,13 +39,12 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                                 line: 'mylines'
                             }
                         };
-                        console.log(layers[ii]);
                         shpwrite.download(layers[ii].layer._geojson, shpOptions);
                     }
                 }
                 catch(err) {
                     console.error(err);
-                    L.Dropchop.app.notification.add({
+                    this.notification.add({
                         text: "Error downloading one of the shapefiles... please try downloading in another format",
                         type: 'alert',
                         time: 3500
@@ -54,7 +52,7 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                 }
             },
 
-            remove: function( action, parameters, options, layers ){
+            remove: function( action, parameters, options, layers, callback ){
                 callback({
                     remove: layers.map(
                         function(l){ return { layer: l.layer, name: l.name };
@@ -62,13 +60,14 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                 });
             },
 
-            upload: function ( action, parameters, options, layers ){
+            upload: function ( action, parameters, options, layers, callback ){
                 var files = document.querySelectorAll('input[type=file]')[0].files;
                 this.fire('uploadedfiles', files);
             },
 
-            'load from url': function ( action, parameters, options, layers ) {
+            'load from url': function ( action, parameters, options, layers, callback ) {
                 var url = parameters[0];
+                console.debug('Retrieving url ' + url);
                 this.getRequest(url, function(xhr) {
                     if (xhr.status === 200) {
                         var filename = xhr.responseURL.substring(xhr.responseURL.lastIndexOf('/')+1);
@@ -79,7 +78,7 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                 });
             },
 
-            'load from gist': function ( action, parameters, options, layers ) {
+            'load from gist': function ( action, parameters, options, layers, callback ) {
                 var gist = parameters[0];
                 gist = gist.split('/')[gist.split('/').length-1];
                 console.debug('Retrieving gist ' + gist);
@@ -101,7 +100,7 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
         if (typeof actions[action] !== 'function') {
           throw new Error('Invalid action.');
         }
-        return actions[action].call(this, action, parameters, options, layers);
+        return actions[action].call(this, action, parameters, options, layers, callback);
     },
 
     /*
@@ -112,7 +111,17 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
     getRequest: function ( url, callback ) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', encodeURI(url));
+
         xhr.onload = callback.bind(this, xhr);
+        xhr.onerror = function( xhr ) {
+            console.error(xhr);
+            this.notification.add({
+                text: 'Unable to access ' + url,
+                type: 'alert',
+                time: 2500
+            });
+        };
+
         xhr.send();
     },
 
@@ -134,22 +143,25 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
     */
     _addJsonAsLayer: function (raw_content, filename, callback) {
         try {
-            var newLayer = JSON.parse(raw_content);
+            var newLayer = {
+                geojson: JSON.parse(raw_content),
+                name: filename
+            };
 
             // if the new object is a feature collection and only has one layer,
             // remove it and just keep it as a feature
-            if ( newLayer.geometry && newLayer.geometry.type == "FeatureCollection" && newLayer.geometry.features.length == 1 ) {
-                newLayer.geometry = this._unCollect( newLayer.geometry );
+            if ( newLayer.geojson.type == "FeatureCollection" && newLayer.geojson.features.length == 1 ) {
+                newLayer.geojson = this._unCollect( newLayer.geojson );
             }
 
-            return callback( { add: [{ geometry: newLayer, name: filename }] } );
+            return callback( { add: [newLayer] } );
         } catch(err) {
-            L.Dropchop.app.notification.add({
+            console.error(err);
+            this.notification.add({
                 text: 'Failed to add ' + filename,
                 type: 'alert',
                 time: 2500
             });
-            console.error(err);
             return;
         }
     }
