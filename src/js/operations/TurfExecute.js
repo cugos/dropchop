@@ -22,14 +22,14 @@ L.Dropchop.TurfExecute = L.Dropchop.BaseExecute.extend({
 
         // Call func
         var newLayer = {
-            geometry: turf[this.action].apply(null, params),
+            geojson: turf[this.action].apply(null, params),
             name: this.action + '_' + name + '.geojson'
         };
 
         // if the new object is a feature collection and only has one layer,
         // remove it and just keep it as a feature
-        if ( newLayer.geometry.type == "FeatureCollection" && newLayer.geometry.features.length == 1 ) {
-            newLayer.geometry = this._unCollect( newLayer.geometry );
+        if ( newLayer.geojson.type == "FeatureCollection" && newLayer.geojson.features.length == 1 ) {
+            newLayer.geojson = this._unCollect( newLayer.geojson );
         }
 
         callback({ add: [newLayer] });

@@ -84,6 +84,9 @@ describe("L.Dropchop.AppController", function () {
             mock.expects('execute').withArgs('load from gist', ['abcd'], null, null);
 
             app._handleGetParams();
+
+            mock.restore();
+            stub.restore();
         });
     });
 });

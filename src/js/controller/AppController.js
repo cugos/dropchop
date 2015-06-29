@@ -180,7 +180,7 @@ L.Dropchop.AppController = L.Class.extend({
         if (resultPkg.add && resultPkg.add.length) {
             for (i = 0; i < resultPkg.add.length; i++) {
                 obj = resultPkg.add[i];
-                var mapLayer = L.mapbox.featureLayer( obj.geometry );
+                var mapLayer = L.mapbox.featureLayer( obj.geojson );
                 this.layerlist.addLayer( mapLayer, obj.name );
 
                 this.notification.add({
