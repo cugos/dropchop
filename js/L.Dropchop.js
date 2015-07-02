@@ -37,6 +37,8 @@ L.Dropchop.AppController = L.Class.extend({
         this.mapView = new L.Dropchop.MapView();
         this.dropzone = new L.Dropchop.DropZone( this.mapView._map, {} );
         this.layerlist = new L.Dropchop.LayerList( this.mapView._map, { layerContainerId: 'sidebar' } );
+        this.notification = new L.Dropchop.Notifications();
+
         this.menubar = new L.Dropchop.MenuBar(
             { id: 'menu-bar' }
         ).addTo( document.body );
@@ -84,16 +86,15 @@ L.Dropchop.AppController = L.Class.extend({
 
         this.geoOpsConfig = {
             operations: new L.Dropchop.Geo(),        // Configurations of GeoOperations
-            executor: new L.Dropchop.TurfExecute()   // Executor of GeoOperations
+            executor: new L.Dropchop.TurfExecute( this.notification )   // Executor of GeoOperations
         };
 
         this.fileOpsConfig = {
             operations: new L.Dropchop.File(),        // Configurations of FileOperations
-            executor: new L.Dropchop.FileExecute()    // Executor of FileOperations
+            executor: new L.Dropchop.FileExecute( this.notification ) // Executor of FileOperations
         };
 
         this.forms = new L.Dropchop.Forms();
-        this.notification = new L.Dropchop.Notifications();
         this._addEventHandlers();
         this._handleGetParams();
     },
@@ -105,7 +106,7 @@ L.Dropchop.AppController = L.Class.extend({
     */
     _addEventHandlers: function(){
         this.dropzone.fileReader.on( 'fileparsed', this._handleParsedFile.bind( this ) );
-        this.fileOpsConfig.executor.on( 'uploadedfiles', this.dropzone.fileReader._handleFiles.bind(this) );
+        this.fileOpsConfig.executor.on( 'uploadedfiles', this.dropzone.fileReader._handleFiles.bind( this.dropzone.fileReader ) );
 
         // Handle clicks on items within menus
         // NOTE: This is where an operation is tied to a menu item
@@ -195,7 +196,7 @@ L.Dropchop.AppController = L.Class.extend({
         if (resultPkg.add && resultPkg.add.length) {
             for (i = 0; i < resultPkg.add.length; i++) {
                 obj = resultPkg.add[i];
-                var mapLayer = L.mapbox.featureLayer( obj.geometry );
+                var mapLayer = L.mapbox.featureLayer( obj.geojson );
                 this.layerlist.addLayer( mapLayer, obj.name );
 
                 this.notification.add({
@@ -1129,6 +1130,12 @@ L.Dropchop.BaseExecute = L.Class.extend({
 
     options: {},
 
+    initialize: function (notification, options) {
+        self.notification = notification;
+        // override defaults with passed options
+        L.setOptions(this, options);
+    },
+
     /*
     **
     ** EXECUTE OPERATIONS FROM INPUT
@@ -1255,7 +1262,6 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                     var prefix = parameters[0];
                     var content = JSON.stringify(layers[i].layer._geojson);
                     var title = prefix + '_' + layers[i].name;
-                    console.log(title);
                     saveAs(new Blob([content], {
                         type: 'text/plain;charset=utf-8'
                     }), title);
@@ -1274,13 +1280,12 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                                 line: 'mylines'
                             }
                         };
-                        console.log(layers[ii]);
                         shpwrite.download(layers[ii].layer._geojson, shpOptions);
                     }
                 }
                 catch(err) {
                     console.error(err);
-                    L.Dropchop.app.notification.add({
+                    this.notification.add({
                         text: "Error downloading one of the shapefiles... please try downloading in another format",
                         type: 'alert',
                         time: 3500
@@ -1288,7 +1293,7 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                 }
             },
 
-            remove: function( action, parameters, options, layers ){
+            remove: function( action, parameters, options, layers, callback ){
                 callback({
                     remove: layers.map(
                         function(l){ return { layer: l.layer, name: l.name };
@@ -1296,13 +1301,14 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                 });
             },
 
-            upload: function ( action, parameters, options, layers ){
+            upload: function ( action, parameters, options, layers, callback ){
                 var files = document.querySelectorAll('input[type=file]')[0].files;
                 this.fire('uploadedfiles', files);
             },
 
-            'load from url': function ( action, parameters, options, layers ) {
+            'load from url': function ( action, parameters, options, layers, callback ) {
                 var url = parameters[0];
+                console.debug('Retrieving url ' + url);
                 this.getRequest(url, function(xhr) {
                     if (xhr.status === 200) {
                         var filename = xhr.responseURL.substring(xhr.responseURL.lastIndexOf('/')+1);
@@ -1313,7 +1319,7 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                 });
             },
 
-            'load from gist': function ( action, parameters, options, layers ) {
+            'load from gist': function ( action, parameters, options, layers, callback ) {
                 var gist = parameters[0];
                 gist = gist.split('/')[gist.split('/').length-1];
                 console.debug('Retrieving gist ' + gist);
@@ -1335,7 +1341,7 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
         if (typeof actions[action] !== 'function') {
           throw new Error('Invalid action.');
         }
-        return actions[action].call(this, action, parameters, options, layers);
+        return actions[action].call(this, action, parameters, options, layers, callback);
     },
 
     /*
@@ -1346,7 +1352,17 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
     getRequest: function ( url, callback ) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', encodeURI(url));
+
         xhr.onload = callback.bind(this, xhr);
+        xhr.onerror = function( xhr ) {
+            console.error(xhr);
+            this.notification.add({
+                text: 'Unable to access ' + url,
+                type: 'alert',
+                time: 2500
+            });
+        };
+
         xhr.send();
     },
 
@@ -1368,22 +1384,25 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
     */
     _addJsonAsLayer: function (raw_content, filename, callback) {
         try {
-            var newLayer = JSON.parse(raw_content);
+            var newLayer = {
+                geojson: JSON.parse(raw_content),
+                name: filename
+            };
 
             // if the new object is a feature collection and only has one layer,
             // remove it and just keep it as a feature
-            if ( newLayer.geometry && newLayer.geometry.type == "FeatureCollection" && newLayer.geometry.features.length == 1 ) {
-                newLayer.geometry = this._unCollect( newLayer.geometry );
+            if ( newLayer.geojson.type == "FeatureCollection" && newLayer.geojson.features.length == 1 ) {
+                newLayer.geojson = this._unCollect( newLayer.geojson );
             }
 
-            return callback( { add: [{ geometry: newLayer, name: filename }] } );
+            return callback( { add: [newLayer] } );
         } catch(err) {
-            L.Dropchop.app.notification.add({
+            console.error(err);
+            this.notification.add({
                 text: 'Failed to add ' + filename,
                 type: 'alert',
                 time: 2500
             });
-            console.error(err);
             return;
         }
     }
@@ -1573,14 +1592,14 @@ L.Dropchop.TurfExecute = L.Dropchop.BaseExecute.extend({
 
         // Call func
         var newLayer = {
-            geometry: turf[this.action].apply(null, params),
+            geojson: turf[this.action].apply(null, params),
             name: this.action + '_' + name + '.geojson'
         };
 
         // if the new object is a feature collection and only has one layer,
         // remove it and just keep it as a feature
-        if ( newLayer.geometry.type == "FeatureCollection" && newLayer.geometry.features.length == 1 ) {
-            newLayer.geometry = this._unCollect( newLayer.geometry );
+        if ( newLayer.geojson.type == "FeatureCollection" && newLayer.geojson.features.length == 1 ) {
+            newLayer.geojson = this._unCollect( newLayer.geojson );
         }
 
         callback({ add: [newLayer] });

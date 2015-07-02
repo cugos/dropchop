@@ -38,6 +38,8 @@ L.Dropchop.AppController = L.Class.extend({
         this.mapView = new L.Dropchop.MapView();
         this.dropzone = new L.Dropchop.DropZone( this.mapView._map, {} );
         this.layerlist = new L.Dropchop.LayerList( this.mapView._map, { layerContainerId: 'sidebar' } );
+        this.notification = new L.Dropchop.Notifications();
+
         this.menubar = new L.Dropchop.MenuBar(
             { id: 'menu-bar' }
         ).addTo( document.body );
@@ -85,16 +87,15 @@ L.Dropchop.AppController = L.Class.extend({
 
         this.geoOpsConfig = {
             operations: new L.Dropchop.Geo(),        // Configurations of GeoOperations
-            executor: new L.Dropchop.TurfExecute()   // Executor of GeoOperations
+            executor: new L.Dropchop.TurfExecute( this.notification )   // Executor of GeoOperations
         };
 
         this.fileOpsConfig = {
             operations: new L.Dropchop.File(),        // Configurations of FileOperations
-            executor: new L.Dropchop.FileExecute()    // Executor of FileOperations
+            executor: new L.Dropchop.FileExecute( this.notification ) // Executor of FileOperations
         };
 
         this.forms = new L.Dropchop.Forms();
-        this.notification = new L.Dropchop.Notifications();
         this._addEventHandlers();
         this._handleGetParams();
     },
@@ -106,7 +107,7 @@ L.Dropchop.AppController = L.Class.extend({
     */
     _addEventHandlers: function(){
         this.dropzone.fileReader.on( 'fileparsed', this._handleParsedFile.bind( this ) );
-        this.fileOpsConfig.executor.on( 'uploadedfiles', this.dropzone.fileReader._handleFiles.bind(this) );
+        this.fileOpsConfig.executor.on( 'uploadedfiles', this.dropzone.fileReader._handleFiles.bind( this.dropzone.fileReader ) );
 
         // Handle clicks on items within menus
         // NOTE: This is where an operation is tied to a menu item
@@ -196,7 +197,7 @@ L.Dropchop.AppController = L.Class.extend({
         if (resultPkg.add && resultPkg.add.length) {
             for (i = 0; i < resultPkg.add.length; i++) {
                 obj = resultPkg.add[i];
-                var mapLayer = L.mapbox.featureLayer( obj.geometry );
+                var mapLayer = L.mapbox.featureLayer( obj.geojson );
                 this.layerlist.addLayer( mapLayer, obj.name );
 
                 this.notification.add({
@@ -1130,6 +1131,12 @@ L.Dropchop.BaseExecute = L.Class.extend({
 
     options: {},
 
+    initialize: function (notification, options) {
+        self.notification = notification;
+        // override defaults with passed options
+        L.setOptions(this, options);
+    },
+
     /*
     **
     ** EXECUTE OPERATIONS FROM INPUT
@@ -1256,7 +1263,6 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                     var prefix = parameters[0];
                     var content = JSON.stringify(layers[i].layer._geojson);
                     var title = prefix + '_' + layers[i].name;
-                    console.log(title);
                     saveAs(new Blob([content], {
                         type: 'text/plain;charset=utf-8'
                     }), title);
@@ -1275,13 +1281,12 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                                 line: 'mylines'
                             }
                         };
-                        console.log(layers[ii]);
                         shpwrite.download(layers[ii].layer._geojson, shpOptions);
                     }
                 }
                 catch(err) {
                     console.error(err);
-                    L.Dropchop.app.notification.add({
+                    this.notification.add({
                         text: "Error downloading one of the shapefiles... please try downloading in another format",
                         type: 'alert',
                         time: 3500
@@ -1289,7 +1294,7 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                 }
             },
 
-            remove: function( action, parameters, options, layers ){
+            remove: function( action, parameters, options, layers, callback ){
                 callback({
                     remove: layers.map(
                         function(l){ return { layer: l.layer, name: l.name };
@@ -1297,13 +1302,14 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                 });
             },
 
-            upload: function ( action, parameters, options, layers ){
+            upload: function ( action, parameters, options, layers, callback ){
                 var files = document.querySelectorAll('input[type=file]')[0].files;
                 this.fire('uploadedfiles', files);
             },
 
-            'load from url': function ( action, parameters, options, layers ) {
+            'load from url': function ( action, parameters, options, layers, callback ) {
                 var url = parameters[0];
+                console.debug('Retrieving url ' + url);
                 this.getRequest(url, function(xhr) {
                     if (xhr.status === 200) {
                         var filename = xhr.responseURL.substring(xhr.responseURL.lastIndexOf('/')+1);
@@ -1314,7 +1320,7 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                 });
             },
 
-            'load from gist': function ( action, parameters, options, layers ) {
+            'load from gist': function ( action, parameters, options, layers, callback ) {
                 var gist = parameters[0];
                 gist = gist.split('/')[gist.split('/').length-1];
                 console.debug('Retrieving gist ' + gist);
@@ -1336,7 +1342,7 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
         if (typeof actions[action] !== 'function') {
           throw new Error('Invalid action.');
         }
-        return actions[action].call(this, action, parameters, options, layers);
+        return actions[action].call(this, action, parameters, options, layers, callback);
     },
 
     /*
@@ -1347,7 +1353,17 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
     getRequest: function ( url, callback ) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', encodeURI(url));
+
         xhr.onload = callback.bind(this, xhr);
+        xhr.onerror = function( xhr ) {
+            console.error(xhr);
+            this.notification.add({
+                text: 'Unable to access ' + url,
+                type: 'alert',
+                time: 2500
+            });
+        };
+
         xhr.send();
     },
 
@@ -1369,22 +1385,25 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
     */
     _addJsonAsLayer: function (raw_content, filename, callback) {
         try {
-            var newLayer = JSON.parse(raw_content);
+            var newLayer = {
+                geojson: JSON.parse(raw_content),
+                name: filename
+            };
 
             // if the new object is a feature collection and only has one layer,
             // remove it and just keep it as a feature
-            if ( newLayer.geometry && newLayer.geometry.type == "FeatureCollection" && newLayer.geometry.features.length == 1 ) {
-                newLayer.geometry = this._unCollect( newLayer.geometry );
+            if ( newLayer.geojson.type == "FeatureCollection" && newLayer.geojson.features.length == 1 ) {
+                newLayer.geojson = this._unCollect( newLayer.geojson );
             }
 
-            return callback( { add: [{ geometry: newLayer, name: filename }] } );
+            return callback( { add: [newLayer] } );
         } catch(err) {
-            L.Dropchop.app.notification.add({
+            console.error(err);
+            this.notification.add({
                 text: 'Failed to add ' + filename,
                 type: 'alert',
                 time: 2500
             });
-            console.error(err);
             return;
         }
     }
@@ -1574,14 +1593,14 @@ L.Dropchop.TurfExecute = L.Dropchop.BaseExecute.extend({
 
         // Call func
         var newLayer = {
-            geometry: turf[this.action].apply(null, params),
+            geojson: turf[this.action].apply(null, params),
             name: this.action + '_' + name + '.geojson'
         };
 
         // if the new object is a feature collection and only has one layer,
         // remove it and just keep it as a feature
-        if ( newLayer.geometry.type == "FeatureCollection" && newLayer.geometry.features.length == 1 ) {
-            newLayer.geometry = this._unCollect( newLayer.geometry );
+        if ( newLayer.geojson.type == "FeatureCollection" && newLayer.geojson.features.length == 1 ) {
+            newLayer.geojson = this._unCollect( newLayer.geojson );
         }
 
         callback({ add: [newLayer] });
@@ -2259,7 +2278,6 @@ exports.SlowBuffer = SlowBuffer
 exports.INSPECT_MAX_BYTES = 50
 Buffer.poolSize = 8192 // not used by this implementation
 
-var kMaxLength = 0x3fffffff
 var rootParent = {}
 
 /**
@@ -2296,6 +2314,12 @@ Buffer.TYPED_ARRAY_SUPPORT = (function () {
     return false
   }
 })()
+
+function kMaxLength () {
+  return Buffer.TYPED_ARRAY_SUPPORT
+    ? 0x7fffffff
+    : 0x3fffffff
+}
 
 /**
  * Class: Buffer
@@ -2447,9 +2471,9 @@ function allocate (that, length) {
 function checked (length) {
   // Note: cannot use `length < kMaxLength` here because that fails when
   // length is NaN (which is otherwise coerced to zero.)
-  if (length >= kMaxLength) {
+  if (length >= kMaxLength()) {
     throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
-                         'size: 0x' + kMaxLength.toString(16) + ' bytes')
+                         'size: 0x' + kMaxLength().toString(16) + ' bytes')
   }
   return length | 0
 }
@@ -2541,29 +2565,38 @@ Buffer.concat = function concat (list, length) {
 }
 
 function byteLength (string, encoding) {
-  if (typeof string !== 'string') string = String(string)
+  if (typeof string !== 'string') string = '' + string
 
-  if (string.length === 0) return 0
+  var len = string.length
+  if (len === 0) return 0
 
-  switch (encoding || 'utf8') {
-    case 'ascii':
-    case 'binary':
-    case 'raw':
-      return string.length
-    case 'ucs2':
-    case 'ucs-2':
-    case 'utf16le':
-    case 'utf-16le':
-      return string.length * 2
-    case 'hex':
-      return string.length >>> 1
-    case 'utf8':
-    case 'utf-8':
-      return utf8ToBytes(string).length
-    case 'base64':
-      return base64ToBytes(string).length
-    default:
-      return string.length
+  // Use a for loop to avoid recursion
+  var loweredCase = false
+  for (;;) {
+    switch (encoding) {
+      case 'ascii':
+      case 'binary':
+      // Deprecated
+      case 'raw':
+      case 'raws':
+        return len
+      case 'utf8':
+      case 'utf-8':
+        return utf8ToBytes(string).length
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return len * 2
+      case 'hex':
+        return len >>> 1
+      case 'base64':
+        return base64ToBytes(string).length
+      default:
+        if (loweredCase) return utf8ToBytes(string).length // assume utf8
+        encoding = ('' + encoding).toLowerCase()
+        loweredCase = true
+    }
   }
 }
 Buffer.byteLength = byteLength
@@ -2572,8 +2605,7 @@ Buffer.byteLength = byteLength
 Buffer.prototype.length = undefined
 Buffer.prototype.parent = undefined
 
-// toString(encoding, start=0, end=buffer.length)
-Buffer.prototype.toString = function toString (encoding, start, end) {
+function slowToString (encoding, start, end) {
   var loweredCase = false
 
   start = start | 0
@@ -2614,6 +2646,13 @@ Buffer.prototype.toString = function toString (encoding, start, end) {
         loweredCase = true
     }
   }
+}
+
+Buffer.prototype.toString = function toString () {
+  var length = this.length | 0
+  if (length === 0) return ''
+  if (arguments.length === 0) return utf8Slice(this, 0, length)
+  return slowToString.apply(this, arguments)
 }
 
 Buffer.prototype.equals = function equals (b) {
@@ -4620,6 +4659,106 @@ function hasOwnProperty(obj, prop) {
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./support/isBuffer":10,"_process":9,"inherits":8}],12:[function(require,module,exports){
+function corslite(url, callback, cors) {
+    var sent = false;
+
+    if (typeof window.XMLHttpRequest === 'undefined') {
+        return callback(Error('Browser not supported'));
+    }
+
+    if (typeof cors === 'undefined') {
+        var m = url.match(/^\s*https?:\/\/[^\/]*/);
+        cors = m && (m[0] !== location.protocol + '//' + location.domain +
+                (location.port ? ':' + location.port : ''));
+    }
+
+    var x = new window.XMLHttpRequest();
+
+    function isSuccessful(status) {
+        return status >= 200 && status < 300 || status === 304;
+    }
+
+    if (cors && !('withCredentials' in x)) {
+        // IE8-9
+        x = new window.XDomainRequest();
+
+        // Ensure callback is never called synchronously, i.e., before
+        // x.send() returns (this has been observed in the wild).
+        // See https://github.com/mapbox/mapbox.js/issues/472
+        var original = callback;
+        callback = function() {
+            if (sent) {
+                original.apply(this, arguments);
+            } else {
+                var that = this, args = arguments;
+                setTimeout(function() {
+                    original.apply(that, args);
+                }, 0);
+            }
+        }
+    }
+
+    function loaded() {
+        if (
+            // XDomainRequest
+            x.status === undefined ||
+            // modern browsers
+            isSuccessful(x.status)) callback.call(x, null, x);
+        else callback.call(x, x, null);
+    }
+
+    // Both `onreadystatechange` and `onload` can fire. `onreadystatechange`
+    // has [been supported for longer](http://stackoverflow.com/a/9181508/229001).
+    if ('onload' in x) {
+        x.onload = loaded;
+    } else {
+        x.onreadystatechange = function readystate() {
+            if (x.readyState === 4) {
+                loaded();
+            }
+        };
+    }
+
+    // Call the callback with the XMLHttpRequest object as an error and prevent
+    // it from ever being called again by reassigning it to `noop`
+    x.onerror = function error(evt) {
+        // XDomainRequest provides no evt parameter
+        callback.call(this, evt || true, null);
+        callback = function() { };
+    };
+
+    // IE9 must have onprogress be set to a unique function.
+    x.onprogress = function() { };
+
+    x.ontimeout = function(evt) {
+        callback.call(this, evt, null);
+        callback = function() { };
+    };
+
+    x.onabort = function(evt) {
+        callback.call(this, evt, null);
+        callback = function() { };
+    };
+
+    // GET is the only supported HTTP Verb by XDomainRequest and is the
+    // only one supported here.
+    x.open('GET', url, true);
+
+    // Send the request. Sending data is not supported.
+    x.send(null);
+    sent = true;
+
+    return x;
+}
+
+if (typeof module !== 'undefined') module.exports = corslite;
+
+},{}],13:[function(require,module,exports){
+module.exports = Array.isArray || function (arr) {
+  return Object.prototype.toString.call(arr) == '[object Array]';
+};
+
+},{}],14:[function(require,module,exports){
 /*
  Leaflet, a JavaScript library for mobile-friendly interactive maps. http://leafletjs.com
  (c) 2010-2013, Vladimir Agafonkin
@@ -13800,106 +13939,6 @@ L.Map.include({
 
 
 }(window, document));
-},{}],13:[function(require,module,exports){
-function corslite(url, callback, cors) {
-    var sent = false;
-
-    if (typeof window.XMLHttpRequest === 'undefined') {
-        return callback(Error('Browser not supported'));
-    }
-
-    if (typeof cors === 'undefined') {
-        var m = url.match(/^\s*https?:\/\/[^\/]*/);
-        cors = m && (m[0] !== location.protocol + '//' + location.domain +
-                (location.port ? ':' + location.port : ''));
-    }
-
-    var x = new window.XMLHttpRequest();
-
-    function isSuccessful(status) {
-        return status >= 200 && status < 300 || status === 304;
-    }
-
-    if (cors && !('withCredentials' in x)) {
-        // IE8-9
-        x = new window.XDomainRequest();
-
-        // Ensure callback is never called synchronously, i.e., before
-        // x.send() returns (this has been observed in the wild).
-        // See https://github.com/mapbox/mapbox.js/issues/472
-        var original = callback;
-        callback = function() {
-            if (sent) {
-                original.apply(this, arguments);
-            } else {
-                var that = this, args = arguments;
-                setTimeout(function() {
-                    original.apply(that, args);
-                }, 0);
-            }
-        }
-    }
-
-    function loaded() {
-        if (
-            // XDomainRequest
-            x.status === undefined ||
-            // modern browsers
-            isSuccessful(x.status)) callback.call(x, null, x);
-        else callback.call(x, x, null);
-    }
-
-    // Both `onreadystatechange` and `onload` can fire. `onreadystatechange`
-    // has [been supported for longer](http://stackoverflow.com/a/9181508/229001).
-    if ('onload' in x) {
-        x.onload = loaded;
-    } else {
-        x.onreadystatechange = function readystate() {
-            if (x.readyState === 4) {
-                loaded();
-            }
-        };
-    }
-
-    // Call the callback with the XMLHttpRequest object as an error and prevent
-    // it from ever being called again by reassigning it to `noop`
-    x.onerror = function error(evt) {
-        // XDomainRequest provides no evt parameter
-        callback.call(this, evt || true, null);
-        callback = function() { };
-    };
-
-    // IE9 must have onprogress be set to a unique function.
-    x.onprogress = function() { };
-
-    x.ontimeout = function(evt) {
-        callback.call(this, evt, null);
-        callback = function() { };
-    };
-
-    x.onabort = function(evt) {
-        callback.call(this, evt, null);
-        callback = function() { };
-    };
-
-    // GET is the only supported HTTP Verb by XDomainRequest and is the
-    // only one supported here.
-    x.open('GET', url, true);
-
-    // Send the request. Sending data is not supported.
-    x.send(null);
-    sent = true;
-
-    return x;
-}
-
-if (typeof module !== 'undefined') module.exports = corslite;
-
-},{}],14:[function(require,module,exports){
-module.exports = Array.isArray || function (arr) {
-  return Object.prototype.toString.call(arr) == '[object Array]';
-};
-
 },{}],15:[function(require,module,exports){
 /*!
  * mustache.js - Logic-less {{mustache}} templates with JavaScript
@@ -16929,7 +16968,7 @@ module.exports={
   },
   "name": "mapbox.js",
   "description": "mapbox javascript api",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "homepage": "http://mapbox.com/",
   "repository": {
     "type": "git",
@@ -16965,155 +17004,17 @@ module.exports={
   "engines": {
     "node": "*"
   },
-  "gitHead": "e13cd8b00072fc208cd4670411292478e0718b91",
+  "readme": "# mapbox.js\n\n[![Build Status](https://travis-ci.org/mapbox/mapbox.js.png?branch=v1)](https://travis-ci.org/mapbox/mapbox.js)\n\nThis is the Mapbox Javascript API, version 2.x. It's built as a [Leaflet](http://leafletjs.com/)\nplugin. You can [read about its launch](http://mapbox.com/blog/mapbox-js-with-leaflet/).\n\n## [API](http://mapbox.com/mapbox.js/api/)\n\nManaged as Markdown in `API.md`, following the standards in `DOCUMENTING.md`\n\n## [Examples](http://mapbox.com/mapbox.js/example/v1.0.0/)\n\n## Usage\n\nRecommended usage is via the Mapbox CDN:\n\n```html\n<script src='https://api.tiles.mapbox.com/mapbox.js/v2.2.1/mapbox.js'></script>\n<link href='https://api.tiles.mapbox.com/mapbox.js/v2.2.1/mapbox.css' rel='stylesheet' />\n```\n\nThe `mapbox.js` file includes the Leaflet library. Alternatively, you can use `mapbox.standalone.js`, which does not include Leaflet (you will have to provide it yourself).\n\nSee the [API documentation](http://mapbox.com/mapbox.js/api/) and [Examples](http://mapbox.com/mapbox.js/example/v1.0.0/) for further help.\n\n## Usage with [Browserify](http://browserify.org/)\n\nInstall the mapbox.js module and add it to `dependencies` in package.json:\n\n```sh\nnpm install mapbox.js --save\n```\n\nRequire mapbox in your script:\n\n```js\n// main.js\n\nrequire('mapbox.js'); // <-- auto-attaches to window.L\n```\n\nBrowserify it:\n\n```sh\nbrowserify main.js -o bundle.js\n```\n\n## Usage with Bower\n\nYou can install `mapbox.js` with [bower](http://bower.io/) by running\n\n```sh\nbower install mapbox.js\n```\n\n## Usage as Download\n\nYou can [download a built release at the mapbox.js-bower repository](https://github.com/mapbox/mapbox.js-bower/releases).\n\n## Building\n\nRequires [node.js](http://nodejs.org/) installed on your system.\n\n``` sh\ngit clone https://github.com/mapbox/mapbox.js.git\ncd mapbox.js\nnpm install\nmake\n```\n\nThis project uses [browserify](https://github.com/substack/node-browserify) to combine\ndependencies and installs a local copy when you run `npm install`.\n`make` will build the project in `dist/`.\n\n### Tests\n\nTest with [phantomjs](http://phantomjs.org/):\n\n``` sh\nnpm test\n```\n\nTo test in a browser, run a [local development server](https://gist.github.com/tmcw/4989751)\nand go to `/test`.\n\n### Version v0.x.x\n\n[Version v0.x.x can be accessed in the v0 branch.](https://github.com/mapbox/mapbox.js/tree/v0).\n\n### Editing Icons\n\nRequirements:\n\n    inkscape\n    pngquant\n    convert (part of imagemagick)\n\n1. Make edits to `theme/images/icons.svg`.\n2. Run `./theme/images/render.sh` to update sprites from your edits.\n3. Add a CSS reference with the appropriate pixel coordinate if adding a new icon.\n",
+  "readmeFilename": "README.md",
   "bugs": {
     "url": "https://github.com/mapbox/mapbox.js/issues"
   },
-  "_id": "mapbox.js@2.2.0",
-  "_shasum": "fc1fd2ededad514b55d71d0d59fab0acf4806bca",
-  "_from": "mapbox.js@2.2.0",
-  "_npmVersion": "2.10.1",
-  "_nodeVersion": "0.12.4",
-  "_npmUser": {
-    "name": "tmcw",
-    "email": "tom@macwright.org"
-  },
-  "maintainers": [
-    {
-      "name": "tmcw",
-      "email": "macwright@gmail.com"
-    },
-    {
-      "name": "tristen",
-      "email": "tristen.brown@gmail.com"
-    },
-    {
-      "name": "ansis",
-      "email": "ansis.brammanis@gmail.com"
-    },
-    {
-      "name": "yhahn",
-      "email": "young@developmentseed.org"
-    },
-    {
-      "name": "willwhite",
-      "email": "will@mapbox.com"
-    },
-    {
-      "name": "jfirebaugh",
-      "email": "john.firebaugh@gmail.com"
-    },
-    {
-      "name": "heyitsgarrett",
-      "email": "heyitsgarrett@gmail.com"
-    },
-    {
-      "name": "mourner",
-      "email": "agafonkin@gmail.com"
-    },
-    {
-      "name": "mapbox",
-      "email": "accounts@mapbox.com"
-    },
-    {
-      "name": "edenh",
-      "email": "eden@mapbox.com"
-    },
-    {
-      "name": "sgillies",
-      "email": "sean@mapbox.com"
-    },
-    {
-      "name": "lbud",
-      "email": "lauren@mapbox.com"
-    },
-    {
-      "name": "bsudekum",
-      "email": "bobby@mapbox.com"
-    },
-    {
-      "name": "dnomadb",
-      "email": "damon@mapbox.com"
-    },
-    {
-      "name": "ian29",
-      "email": "ian.villeda@gmail.com"
-    },
-    {
-      "name": "dvncan",
-      "email": "duncan@mapbox.com"
-    },
-    {
-      "name": "nickidlugash",
-      "email": "nicki@mapbox.com"
-    },
-    {
-      "name": "samanbb",
-      "email": "saman@mapbox.com"
-    },
-    {
-      "name": "ajashton",
-      "email": "aj.ashton@gmail.com"
-    },
-    {
-      "name": "lxbarth",
-      "email": "alex@developmentseed.org"
-    },
-    {
-      "name": "mikemorris",
-      "email": "michael.patrick.morris@gmail.com"
-    },
-    {
-      "name": "ianshward",
-      "email": "ian@mapbox.com"
-    },
-    {
-      "name": "ingalls",
-      "email": "nicholas.ingalls@gmail.com"
-    },
-    {
-      "name": "miccolis",
-      "email": "jeff@miccolis.net"
-    },
-    {
-      "name": "gretacb",
-      "email": "carol@mapbox.com"
-    },
-    {
-      "name": "aaronlidman",
-      "email": "aaronlidman@gmail.com"
-    },
-    {
-      "name": "morganherlocker",
-      "email": "morgan.herlocker@gmail.com"
-    },
-    {
-      "name": "camilleanne",
-      "email": "camille@mapbox.com"
-    },
-    {
-      "name": "rclark",
-      "email": "ryan.clark.j@gmail.com"
-    },
-    {
-      "name": "springmeyer",
-      "email": "dane@mapbox.com"
-    },
-    {
-      "name": "kkaefer",
-      "email": "kkaefer@gmail.com"
-    },
-    {
-      "name": "dthompson",
-      "email": "dthompson@gmail.com"
-    }
-  ],
+  "_id": "mapbox.js@2.2.1",
   "dist": {
-    "shasum": "fc1fd2ededad514b55d71d0d59fab0acf4806bca",
-    "tarball": "http://registry.npmjs.org/mapbox.js/-/mapbox.js-2.2.0.tgz"
+    "shasum": "301715e8730bbfc10a56da440d65d3f537bd4cfc"
   },
-  "directories": {},
-  "_resolved": "https://registry.npmjs.org/mapbox.js/-/mapbox.js-2.2.0.tgz"
+  "_from": "mapbox.js@^2.1.9",
+  "_resolved": "https://registry.npmjs.org/mapbox.js/-/mapbox.js-2.2.1.tgz"
 }
 
 },{}],19:[function(require,module,exports){
@@ -17287,11 +17188,7 @@ module.exports = function(url, options) {
     util.strict(url, 'string');
 
     if (url.indexOf('/') === -1) {
-        if (options.proximity) {
-            url = urlhelper('/geocode/' + url + '/{query}.json?proximity={proximity}', options.accessToken);
-        } else {
-            url = urlhelper('/geocode/' + url + '/{query}.json', options.accessToken);
-        }
+        url = urlhelper('/geocode/' + url + '/{query}.json', options.accessToken);
     }
 
     geocoder.getURL = function() {
@@ -17300,8 +17197,7 @@ module.exports = function(url, options) {
 
     geocoder.queryURL = function(_) {
         var isObject = !(isArray(_) || typeof _ === 'string'),
-            query = isObject ? _.query : _,
-            proximity = isObject ? _.proximity : false;
+            query = isObject ? _.query : _;
 
         if (isArray(query)) {
             var parts = [];
@@ -17315,11 +17211,14 @@ module.exports = function(url, options) {
 
         feedback.record({ geocoding: query });
 
-        return L.Util.template(geocoder.getURL(), {
-            proximity: proximity ?
-                encodeURIComponent(proximity.lng + ',' + proximity.lat) : '',
-            query: query
-        });
+        var url = L.Util.template(geocoder.getURL(), {query: query});
+
+        if (isObject && _.proximity) {
+            var proximity = L.latLng(_.proximity);
+            url += '&proximity=' + proximity.lng + ',' + proximity.lat;
+        }
+
+        return url;
     };
 
     geocoder.query = function(_, callback) {
@@ -17383,7 +17282,7 @@ module.exports = function(url, options) {
     return geocoder;
 };
 
-},{"./feedback":21,"./request":36,"./url":40,"./util":41,"isarray":14}],23:[function(require,module,exports){
+},{"./feedback":21,"./request":36,"./url":40,"./util":41,"isarray":13}],23:[function(require,module,exports){
 'use strict';
 
 var geocoder = require('./geocoder'),
@@ -17565,7 +17464,7 @@ var GeocoderControl = L.Control.extend({
         L.DomUtil.addClass(this._container, 'searching');
         this.geocoder.query({
             query: this._input.value,
-            proximity: this.options.proximity ? [this._map.getCenter().lng, this._map.getCenter().lat] : false
+            proximity: this.options.proximity ? this._map.getCenter() : false
         }, this._updateSubmit);
     },
 
@@ -18157,7 +18056,7 @@ module.exports.infoControl = function(options) {
 },{"sanitize-caja":16}],29:[function(require,module,exports){
 module.exports = window.L = require('leaflet/dist/leaflet-src');
 
-},{"leaflet/dist/leaflet-src":12}],30:[function(require,module,exports){
+},{"leaflet/dist/leaflet-src":14}],30:[function(require,module,exports){
 'use strict';
 
 var LegendControl = L.Control.extend({
@@ -18676,7 +18575,7 @@ module.exports = function(url, callback) {
     return corslite(url, onload);
 };
 
-},{"./config":19,"./util":41,"corslite":13}],37:[function(require,module,exports){
+},{"./config":19,"./util":41,"corslite":12}],37:[function(require,module,exports){
 'use strict';
 
 var urlhelper = require('./url');
