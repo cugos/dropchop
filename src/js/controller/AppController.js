@@ -90,7 +90,7 @@ L.Dropchop.AppController = L.Class.extend({
     */
     _addEventHandlers: function(){
         this.dropzone.fileReader.on( 'fileparsed', this._handleParsedFile.bind( this ) );
-        this.fileOpsConfig.executor.on( 'uploadedfiles', this.dropzone.fileReader._handleFiles.bind(this) );
+        this.fileOpsConfig.executor.on( 'uploadedfiles', this.dropzone.fileReader._handleFiles.bind( this.dropzone.fileReader ) );
 
         // Handle clicks on items within menus
         // NOTE: This is where an operation is tied to a menu item
