@@ -7,7 +7,7 @@ L.Dropchop = L.Dropchop || {};
 */
 L.Dropchop.Menu = L.Class.extend({
     includes: L.Mixin.Events,
-    options: { items: [], menuDirection: 'below' },
+    options: { items: [], menuDirection: 'below', expand: true },
 
     initialize: function ( title, options ) {
         L.setOptions(this, options);
@@ -29,13 +29,14 @@ L.Dropchop.Menu = L.Class.extend({
         var _this = this;
 
         // Dropdown tooling
-        if (this.domElement && this.children.length) { // Only if menu has child objects
+        if (this.domElement && this.children.length && this.options.expand) { // Only if menu has child objects
             this.domElement.addEventListener('click', menuClick, false);
         }
         function menuClick() {
+
             var menuExpand = this.querySelector('.menu-dropdown');
 
-            if (menuExpand.className.indexOf('expanded') == -1) {
+            if (menuExpand && menuExpand.className.indexOf('expanded') == -1) {
                 // Close open menus
                 var openMenus = document.getElementsByClassName('expanded');
                 for (var i=0; i < openMenus.length; i++){

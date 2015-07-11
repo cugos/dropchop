@@ -3,7 +3,7 @@ describe("L.Dropchop.Menu", function () {
     var title = "Test Menu";
     var items = [];
     var parent = new L.Dropchop.MenuBar( { id: 'menu-bar' } );
-    var fakeOptions = { items: ['waka', 'flaka'], menuDirection: 'below' };
+    var fakeOptions = { items: ['waka', 'flaka'], menuDirection: 'below', expand: true };
 
     var begin_html =
         '<div class="menu">' +
