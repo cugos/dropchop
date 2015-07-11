@@ -96,9 +96,11 @@ L.Dropchop.Menu = L.Class.extend({
 
             // put the name of the action into the button unless
             // it's supposed to be a side button and not expand
-            // if (this.options.expand !== false) {
+            if (this.options.expand !== false) {
                 menuItem.innerHTML = items[i];    
-            // }
+            } else { // add an icon
+                menuItem.innerHTML = '<img class="icon" src="/icons/turf-'+items[i]+'.svg">';
+            }
 
             tempArray.push(menuItem);
         }

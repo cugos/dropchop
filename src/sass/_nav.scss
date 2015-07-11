@@ -2,10 +2,6 @@
 
 /* NAV */
 #menu-bar {
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
   background:$menu-background;
   padding:5px;
 }
@@ -75,7 +71,9 @@
     background-color:$menu-side-default-background-color;
     color:$menu-side-default-text;
     border-top:1px solid transparent;
+    padding:0;
     margin:1px auto auto 1px;
+    box-sizing: content-box;
 
     &:hover {
       &:after,
@@ -113,8 +111,7 @@
     &.active {
       color:$menu-side-active-text;
       background-color:$menu-side-active-background-color;
-      width:45px;
-      max-width:45px;
+      border-right: 5px solid $menu-side-active-background-color;
       &:hover {
         background-color:$menu-side-active-background-color;
         &:before,
@@ -122,6 +119,12 @@
           visibility:hidden;
         }
       }
+    }
+
+    .icon {
+      width: $menu-side-dimension / 2;
+      margin: auto;
+      display: block;
     }
 
   }

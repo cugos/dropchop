@@ -25,7 +25,7 @@ L.Dropchop.MapView = L.Class.extend({
     _setupMap : function () {
 
         L.mapbox.accessToken = 'pk.eyJ1Ijoic3ZtYXR0aGV3cyIsImEiOiJVMUlUR0xrIn0.NweS_AttjswtN5wRuWCSNA';
-        this._map = L.mapbox.map('map', null, {
+        this._map = L.mapbox.map('mapview', null, {
             zoomControl: false
         }).setView([0,0], 3);
 
