@@ -47,5 +47,16 @@ L.Dropchop.File = L.Class.extend({
                 default: 'http://',
             },
         ],
+    },
+
+    'load from gist': {
+        description: 'Import files from a Github Gist',
+        parameters: [
+            {
+                name: 'gist',
+                description :'Gist ID or URL',
+                type: 'text',
+            },
+        ],
     }
 });

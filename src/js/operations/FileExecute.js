@@ -13,7 +13,6 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
     **
     */
     execute: function ( action, parameters, options, layers, callback ) {
-        var _this = this;
         var actions = {
             'save geojson': function ( action, parameters, options, layers, callback ) {
                 console.debug("Saving GeoJSON");
@@ -22,7 +21,6 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                     var prefix = parameters[0];
                     var content = JSON.stringify(layers[i].layer._geojson);
                     var title = prefix + '_' + layers[i].name;
-                    console.log(title);
                     saveAs(new Blob([content], {
                         type: 'text/plain;charset=utf-8'
                     }), title);
@@ -41,13 +39,12 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                                 line: 'mylines'
                             }
                         };
-                        console.log(layers[ii]);
                         shpwrite.download(layers[ii].layer._geojson, shpOptions);
                     }
                 }
                 catch(err) {
-                    console.log(err);
-                    L.Dropchop.app.notification.add({
+                    console.error(err);
+                    this.notification.add({
                         text: "Error downloading one of the shapefiles... please try downloading in another format",
                         type: 'alert',
                         time: 3500
@@ -55,7 +52,7 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                 }
             },
 
-            remove: function( action, parameters, options, layers ){
+            remove: function( action, parameters, options, layers, callback ){
                 callback({
                     remove: layers.map(
                         function(l){ return { layer: l.layer, name: l.name };
@@ -63,87 +60,69 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                 });
             },
 
-            upload: function ( action, parameters, options, layers ){
+            upload: function ( action, parameters, options, layers, callback ){
                 var files = document.querySelectorAll('input[type=file]')[0].files;
-                _this.fire('uploadedfiles', files);
+                this.fire('uploadedfiles', files);
             },
 
-            'load from url': function ( action, parameters, options, layers ) {
+            'load from url': function ( action, parameters, options, layers, callback ) {
                 var url = parameters[0];
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', encodeURI(url));
-                xhr.onload = function() {
+                console.debug('Retrieving url ' + url);
+                this.getRequest(url, function(xhr) {
                     if (xhr.status === 200) {
-                        var newLayer = JSON.parse(xhr.responseText);
                         var filename = xhr.responseURL.substring(xhr.responseURL.lastIndexOf('/')+1);
-
-                        // if the new object is a feature collection and only has one layer,
-                        // remove it and just keep it as a feature
-                        if ( newLayer.geometry.type == "FeatureCollection" && newLayer.geometry.features.length == 1 ) {
-                            newLayer.geometry = this._unCollect( newLayer.geometry );
-                        }
-
-                        callback( { add: [{ geometry: newLayer, name: filename }] } );
+                        return this._addJsonAsLayer(xhr.responseText, filename, callback);
                     } else {
                         console.error('Request failed. Returned status of ' + xhr.status);
                     }
-                };
-                xhr.send();
-            }
+                });
+            },
+
+            'load from gist': function ( action, parameters, options, layers, callback ) {
+                var gist = parameters[0];
+                gist = gist.split('/')[gist.split('/').length-1];
+                console.debug('Retrieving gist ' + gist);
+                url = 'https://api.github.com/gists/' + gist;
+
+                this.getRequest(url, function(xhr) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.responseText);
+                        for (var filename in data.files) {
+                            var file = data.files[filename];
+                            this._addJsonAsLayer(file.content, file.filename, callback);
+                        }
+                    } else {
+                        console.error('Request failed. Returned status of ' + xhr.status);
+                    }
+                });
+            },
         };
         if (typeof actions[action] !== 'function') {
           throw new Error('Invalid action.');
         }
-        return actions[action](action, parameters, options, layers);
+        return actions[action].call(this, action, parameters, options, layers, callback);
     },
 
     /*
     **
-    **  VALIDATE LAYERS
-    **  Checks if the proper number of layers are in the current selection to
-    **  allow Turf operations to run
+    ** Ajax GET
     **
     */
-    validate: function ( layers, options ) {
-        return true;
-    },
+    getRequest: function ( url, callback ) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', encodeURI(url));
 
-    /*
-    **
-    **  PREPARE DATA
-    **  Prepares the selected data to be run through Turf operations
-    **  and builds the new layer name
-    **
-    */
-    _prepareParameters: function ( layers, options, params ) {
-        if (options.maxFeatures) {
-            layers = layers.slice(0, options.maxFeatures);
-        }
-        var layer_objs = layers.map(function(obj) { return obj.layer._geojson; });
-        console.debug(layer_objs, params);
-
-        if ( params ) {
-            for ( var l = 0; l < params.length; l++ ) {
-                layer_objs.push(params[l]);
-            }
-        }
-        return layer_objs;
-    },
-
-    _prepareName: function ( layers ) {
-        // Get layer names
-        var layer_names = layers.map(function(obj) { return obj.name; });
-        var layer_names_str = '';
-        if (layer_names.length === 1) {
-            // Rm file extension
-            layer_names_str = layer_names[0].split('.')[0];
-        } else {
-            // Merge layer names w/o extensions
-            layer_names_str = layer_names.reduce(function(a, b) {
-                return a.split('.')[0] + '_' + b.split('.')[0];
+        xhr.onload = callback.bind(this, xhr);
+        xhr.onerror = function( xhr ) {
+            console.error(xhr);
+            this.notification.add({
+                text: 'Unable to access ' + url,
+                type: 'alert',
+                time: 2500
             });
-        }
-        return layer_names_str;
+        };
+
+        xhr.send();
     },
 
     /*
@@ -155,6 +134,36 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
     */
     _unCollect: function( feature ) {
         return feature.features[0];
+    },
+
+    /*
+    **
+    ** Add raw JSON string to system as a new layer
+    **
+    */
+    _addJsonAsLayer: function (raw_content, filename, callback) {
+        try {
+            var newLayer = {
+                geojson: JSON.parse(raw_content),
+                name: filename
+            };
+
+            // if the new object is a feature collection and only has one layer,
+            // remove it and just keep it as a feature
+            if ( newLayer.geojson.type == "FeatureCollection" && newLayer.geojson.features.length == 1 ) {
+                newLayer.geojson = this._unCollect( newLayer.geojson );
+            }
+
+            return callback( { add: [newLayer] } );
+        } catch(err) {
+            console.error(err);
+            this.notification.add({
+                text: 'Failed to add ' + filename,
+                type: 'alert',
+                time: 2500
+            });
+            return;
+        }
     }
 
 });

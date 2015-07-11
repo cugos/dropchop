@@ -20,6 +20,43 @@ describe("L.Dropchop.TurfExecute", function () {
 
     /*
     **
+    ** ALONG TEST
+    **
+    */
+    describe("along", function () {
+
+        it("data output", function () {
+            var formData = {
+                action: 'along',
+                parameters: [1000, 'miles'],
+            };
+
+            var inputLayers = [{
+                name: "line.geojson",
+                layer: {
+                    _geojson: window.testingData.line_2
+                }
+            }];
+
+            var callback = sinon.spy();
+            ops.geox.execute(
+                formData.action,
+                formData.parameters,
+                ops.geo[formData.action],
+                inputLayers,
+                callback
+            );
+            assert(callback.calledWith({
+                add: [{
+                    name: "along_line.geojson",
+                    geojson: {"type":"Feature","geometry":{"type":"Point","coordinates":[-10.839132601858164,38.352329563649434]},"properties":{}}
+                }]
+            }));
+        });
+    });
+
+    /*
+    **
     ** BEZIER TEST
     **
     */
@@ -49,7 +86,7 @@ describe("L.Dropchop.TurfExecute", function () {
             assert(callback.calledWith({
                 add: [{
                     name: "bezier_line.geojson",
-                    geometry: {
+                    geojson: {
                         "type": "Feature",
                         "geometry": {
                             "type": "LineString",
@@ -93,7 +130,7 @@ describe("L.Dropchop.TurfExecute", function () {
             assert(callback.calledWith({
                 add: [{
                     name: "buffer_union1.geojson",
-                    geometry: {
+                    geojson: {
                       "type":"Feature",
                       "geometry":{
                         "type":"Polygon",
@@ -177,7 +214,7 @@ describe("L.Dropchop.TurfExecute", function () {
             assert(callback.calledWith({
                 add: [{
                     name: "center_center1.geojson",
-                    geometry: {
+                    geojson: {
                         "type": "Feature",
                         "geometry": {
                             "type": "Point",
@@ -222,7 +259,7 @@ describe("L.Dropchop.TurfExecute", function () {
             assert(callback.calledWith({
                 add: [{
                     name: "centroid_center1.geojson",
-                    geometry: {
+                    geojson: {
                         "type": "Feature",
                         "geometry": {
                             "type": "Point",
@@ -232,6 +269,58 @@ describe("L.Dropchop.TurfExecute", function () {
                             ]
                         },
                         "properties": {}
+                    }
+                }]
+            }));
+        });
+    });
+
+    /*
+    **
+    ** DESTINATION TEST
+    **
+    */
+    describe("destination", function () {
+
+        it("data output", function () {
+            var formData = {
+                action: 'destination',
+                parameters: [10, 0, 'miles'],
+            };
+
+            var inputLayers = [
+                {
+                    name: "point.geojson",
+                    layer: {
+                        _geojson: window.testingData.point_1
+                    }
+                }
+            ];
+
+
+            var callback = sinon.spy();
+
+            ops.geox.execute(
+                formData.action,
+                formData.parameters,
+                ops.geo[formData.action],
+                inputLayers,
+                callback
+            );
+
+            assert(callback.calledWith({
+                add: [{
+                    name: 'destination_point.geojson',
+                    geojson: {
+                      "type": "Feature",
+                      "geometry": {
+                        "type": "Point",
+                        "coordinates": [
+                          -81.650390625,
+                          38.486342504697674
+                        ]
+                      },
+                      "properties": {}
                     }
                 }]
             }));
@@ -270,7 +359,7 @@ describe("L.Dropchop.TurfExecute", function () {
             assert(callback.calledWith({
                 add: [{
                     name: "envelope_feature.geojson",
-                    geometry: {
+                    geojson: {
                         "type": "Feature",
                         "geometry": {
                             "type": "Polygon",
@@ -308,6 +397,133 @@ describe("L.Dropchop.TurfExecute", function () {
 
     /*
     **
+    ** EXPLODE TEST
+    **
+    */
+    describe("explode", function () {
+
+        it("data output", function () {
+            var formData = {
+                action: 'explode',
+                parameters: [],
+            };
+
+            var inputLayers = [{
+                name: "polygon.geojson",
+                layer: {
+                    _geojson: window.testingData.polygon
+                }
+            }];
+
+
+            var callback = sinon.spy();
+            ops.geox.execute(
+                formData.action,
+                formData.parameters,
+                ops.geo[formData.action],
+                inputLayers,
+                callback
+            );
+            assert(callback.calledWith({
+                add: [{
+                    name: "explode_polygon.geojson",
+                    geojson: {"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":[-122.33714103698729,47.64000546596801]},"properties":{}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-122.33714103698729,47.640583778456666]},"properties":{}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-122.33593940734862,47.640583778456666]},"properties":{}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-122.33593940734862,47.64000546596801]},"properties":{}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-122.33714103698729,47.64000546596801]},"properties":{}}]}
+                }]
+            }));
+        });
+    });
+
+    /*
+    **
+    ** MIDPOINT TEST
+    **
+    */
+    describe("midpoint", function () {
+
+        it("data output", function () {
+            var formData = {
+                action: 'midpoint',
+                parameters: [],
+            };
+
+            var inputLayers = [
+                {
+                    name: "one.geojson",
+                    layer: {
+                        _geojson: window.testingData.point_1
+                    }
+                },
+                {
+                    name: "two.geojson",
+                    layer: {
+                        _geojson: window.testingData.point_2
+                    }
+                },
+            ];
+
+
+            var callback = sinon.spy();
+
+            ops.geox.execute(
+                formData.action,
+                formData.parameters,
+                ops.geo[formData.action],
+                inputLayers,
+                callback
+            );
+
+            assert(callback.calledWith({
+                add: [{
+                    name: 'midpoint_one_two.geojson',
+                    geojson: {"type":"Feature","geometry":{"type":"Point","coordinates":[-82.79296875,37.150939581046316]},"properties":{}}
+                }]
+            }));
+        });
+    });
+
+    /*
+    **
+    ** SIMPLIFY TEST
+    **
+    */
+    describe("simplify", function () {
+
+        it("data output", function () {
+            var formData = {
+                action: 'simplify',
+                parameters: [0.1, false],
+            };
+
+            var inputLayers = [
+                {
+                    name: "sf.geojson",
+                    layer: {
+                        _geojson: window.testingData.sf
+                    }
+                }
+            ];
+
+            var callback = sinon.spy();
+
+            ops.geox.execute(
+                formData.action,
+                formData.parameters,
+                ops.geo[formData.action],
+                inputLayers,
+                callback
+            );
+
+            assert(callback.calledWith({
+                add: [{
+                    name: 'simplify_sf.geojson',
+                    geojson: {"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-122.47970581054688,37.80761398306056],[-122.51815795898436,37.57179370689751],[-122.20367431640624,37.53913285079332],[-122.47970581054688,37.80761398306056]]]},"properties":{}}
+                }]
+            }));
+        });
+    });
+
+    /*
+    **
     ** TIN TEST
     **
     */
@@ -337,7 +553,7 @@ describe("L.Dropchop.TurfExecute", function () {
             assert(callback.calledWith({
                 add: [{
                     name: "tin_points.geojson",
-                    geometry: {
+                    geojson: {
                         "type": "Feature",
                         "geometry": {
                             "type": "Polygon",
