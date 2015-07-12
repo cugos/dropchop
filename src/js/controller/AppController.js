@@ -20,10 +20,11 @@ L.Dropchop.AppController = L.Class.extend({
 
         this.mapView = new L.Dropchop.MapView();
         this.dropzone = new L.Dropchop.DropZone( this.mapView._map, {} );
-        this.menubar = new L.Dropchop.MenuBar(
+        this.menubar = new L.Dropchop.MenuBar( // comes before layerlist for proper DOM order on the sidebar
             { id: 'menu-bar' }
         ).addTo( document.getElementById('sidebar') );
         this.layerlist = new L.Dropchop.LayerList( this.mapView._map, { layerContainerId: 'sidebar' } );
+        this.notification = new L.Dropchop.Notifications();
         this.bottom_menu = new L.Dropchop.MenuBar(
             { id: 'add-remove', classList: ["bottom", "menu"] }
         ).addTo( document.getElementById('sidebar') );
