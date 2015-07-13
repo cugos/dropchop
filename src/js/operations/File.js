@@ -58,5 +58,10 @@ L.Dropchop.File = L.Class.extend({
                 type: 'text',
             },
         ],
+    },
+
+    'view attributes': {
+        description: 'View tabulated attribute information of a layer.',
+        disableForm: true
     }
 });

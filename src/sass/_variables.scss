@@ -6,6 +6,7 @@ $theme-yellow: #FFE184;
 $theme-tan: #F5E9BE;
 $color-white: #ffffff;
 $color-light-gray: #f6f6f6;
+$color-gray: #e5e5e5;
 
 // FONTS
 $font-sans: 'Roboto', sans-serif;
@@ -40,6 +41,9 @@ $menu-side-tooltip-background: $theme-dark;
 $menu-side-tooltip-opacity: 1;
 $menu-side-tooltip-text: $color-light-gray;
 
+// SIDEBAR
+$sidebar-width: 250px;
+
 // LAYERLIST
 $layerlist-background: $color-light-gray;
 $layer-hover: $theme-tan;
@@ -72,6 +76,15 @@ $button-default-background: $color-white;
 $button-default-color: $theme-dark;
 $button-close-background: $theme-orange;
 $button-close-color: $color-light-gray;
+
+// TABLES
+$table-left: $sidebar-width;
+$table-background-color: $color-white;
+$table-border: 1px solid $color-gray;
+$table-th-padding: 5px;
+$table-th-background-color: $theme-dark;
+$table-th-color: $color-light-gray;
+$table-rowNum-background-color: $color-light-gray;
 
 // UI
 $ui-shadow: 1px 1px 5px 0 rgba(0,0,0,0.3);

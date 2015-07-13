@@ -1,0 +1,35 @@
+.table {
+  &.table_attributes {
+    position:absolute;
+    bottom: 0;
+    left: $table-left;
+    right: 0;
+    height: 500px;
+    overflow: scroll;
+    background-color: $table-background-color;
+  }
+
+  table {
+    width: 100%;
+    position: relative;
+  }
+  table, th, td {
+    border: $table-border;
+    border-collapse: collapse;
+  }
+  td {
+    padding: 0 5px;
+  }
+  th {
+    background-color: $table-th-background-color;
+    color: $table-th-color;
+    padding: $table-th-padding;
+  }
+  tr:hover {
+    background: $color-light-gray;
+  }
+  .rowNum {
+    font-weight: 900;
+    text-align:center;
+  }
+}

@@ -96,6 +96,43 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
                     }
                 });
             },
+
+            'view attributes': function ( action, parameters, options, layers, callback ) {
+                
+                // TODO: show multiple tables
+                // This only works for a single layer selected but it would be good
+                // to have this work for multiple layers in the future, and show
+                // multiple tables.
+                var attributeTable = {
+                    header: [],
+                    rows: []
+                };
+
+                // loop through layer features
+                if ( layers.length > 1 ) { 
+                    this.notification.add({
+                        text: 'Too many layers selected. Please select one layer.',
+                        type: 'alert',
+                        time: 3500
+                    });
+                } else {
+                    var layer = layers[0].layer._geojson;
+                    if (layer.type == 'FeatureCollection') { // TODO: make other cases for things other than feature collections
+                        // loop through each layer's properties
+                        for (var l = 0; l < layer.features.length; l++) {
+                            var atts = layer.features[l].properties;
+                            // fill the headers with each key for the first loop
+                            if (!l) {
+                                for (var key in atts) {
+                                    attributeTable.header.push(key);
+                                }
+                            }
+                            attributeTable.rows.push(atts);
+                        }
+                    }
+                    this._buildAttributeTable(attributeTable);
+                }
+            }
         };
         if (typeof actions[action] !== 'function') {
           throw new Error('Invalid action.');
@@ -164,6 +201,32 @@ L.Dropchop.FileExecute = L.Dropchop.BaseExecute.extend({
             });
             return;
         }
+    },
+
+    _buildAttributeTable: function (table) {
+        console.log(table);
+        var tableContainer = document.createElement('div');
+        tableContainer.className = 'table table_attributes';
+
+        var tableElem = document.createElement('table');
+        var tableHeaderRow = document.createElement('tr');
+        tableHeaderRow.innerHTML += '<th>row</th>';
+        for (var h = 0; h < table.header.length; h++) {
+            tableHeaderRow.innerHTML += '<th>' + table.header[h] + '</th>';
+        }
+        tableElem.appendChild(tableHeaderRow);
+
+        for (var r = 0; r < table.rows.length; r++) {
+            var row = document.createElement('tr');
+            row.innerHTML += '<td class="rowNum">' + (r+1) + '</td>'; // row number
+            for (var rowKey in table.rows[r]) {
+                row.innerHTML += '<td>' + table.rows[r][rowKey] + '</td>';
+            }
+            tableElem.appendChild(row);
+        }
+
+        tableContainer.appendChild(tableElem);
+        document.body.appendChild(tableContainer);
     }
 
 });

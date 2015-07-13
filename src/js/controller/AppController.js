@@ -55,7 +55,7 @@ L.Dropchop.AppController = L.Class.extend({
 
             // SAVE
             save: new L.Dropchop.Menu('Save', {
-                items: ['save geojson', 'save shapefile']
+                items: ['save geojson', 'save shapefile', 'view attributes']
             }).addTo( this.menubar ),
 
             // ADD LAYER
