@@ -113,6 +113,12 @@ module.exports = function(grunt) {
       main: {
         src: 'src/CNAME',
         dest: 'dist/CNAME',
+      },
+      assets: {
+        expand: true,
+        cwd: 'src/assets/',
+        src: ['*.*', '**/*.*'],
+        dest: 'dist/assets/'
       }
     },
     browserify: {
