@@ -8,11 +8,11 @@
 
 ![Dropchop Logo](assets/drop-n-chop-logo.png)
 
-Dropchop is a browser-based GIS powered by [Mapbox.js](http://mapbox.com/mapbox.js) and [Turf.js](http://turfjs.org). The project currently a proof-of-concept and explores [three hypotheses](https://github.com/cugos/dropchop/wiki/Dropchop-Inspiration):
+Dropchop is a browser-based GIS powered by [Mapbox.js](http://mapbox.com/mapbox.js) and [Turf.js](http://turfjs.org). The need for small-scale GIS operations comes up quite frequently in our work, especially for those without much time. Dropchop aims to empower your spatial data by removing complexity. This project is currently a proof-of-concept and explores [three hypotheses](https://github.com/cugos/dropchop/wiki/Dropchop-Inspiration):
 
-#### 1. GIS can be data-first, not operation-first.
-#### 2. GIS doesn't require a server.
-#### 3. GIS is open.
+1. **GIS can be data-first, not operation-first.**
+2. **GIS doesn't always require a server.**
+3. **GIS is open.**
 
 ![buffer > buffer > union](assets/dc-readme.gif)
 
