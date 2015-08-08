@@ -37,15 +37,17 @@ L.Dropchop.AppController = L.Class.extend({
 
         this.mapView = new L.Dropchop.MapView();
         this.dropzone = new L.Dropchop.DropZone( this.mapView._map, {} );
+        this.menubar = new L.Dropchop.MenuBar( // comes before layerlist for proper DOM order on the sidebar
+            { id: 'menu-bar' }
+        ).addTo( document.getElementById('sidebar') );
         this.layerlist = new L.Dropchop.LayerList( this.mapView._map, { layerContainerId: 'sidebar' } );
         this.notification = new L.Dropchop.Notifications();
-
-        this.menubar = new L.Dropchop.MenuBar(
-            { id: 'menu-bar' }
-        ).addTo( document.body );
         this.bottom_menu = new L.Dropchop.MenuBar(
             { id: 'add-remove', classList: ["bottom", "menu"] }
         ).addTo( document.getElementById('sidebar') );
+        this.side_menu = new L.Dropchop.MenuBar(
+            { id: 'side-menu' }
+        ).addTo( document.body );
 
         // build out menus
         this.menus = {
@@ -64,8 +66,9 @@ L.Dropchop.AppController = L.Class.extend({
                     'simplify',
                     'union',
                     'tin'
-                ]
-            }).addTo( this.menubar ),                       // Append to menubar
+                ],
+                expand: false
+            }).addTo( this.side_menu ),
 
             // SAVE
             save: new L.Dropchop.Menu('Save', {
@@ -420,6 +423,9 @@ L.Dropchop.Forms = L.Class.extend({
     // TODO: write tests for Forms
     render: function ( title, options ) {
 
+        // TODO: remove any existing forms
+        // if (document.getElementById('DROPCHOP-FORM').length) this.closeForm();
+
         this.title = title;
         this.paramArray = [];
         this.options = {}; // reset options for next form
@@ -461,20 +467,47 @@ L.Dropchop.Forms = L.Class.extend({
         html += '<button type="button" class="btn form-submit" id="operation-submit">Execute<i class="fa fa-thumbs-o-up push-left"></i></button>';
         html += '</div></div>';
 
-        var div = document.createElement('div');
-        div.className = 'form-outer';
-        div.id = 'DNC-FORM';
-        div.innerHTML = html;
-        document.body.appendChild(div);
-        this.domElement = div;
+        var formDiv = document.createElement('div');
+        var formClassName;
 
-        this._formHandlers(div);
+        var destinationElement = document.getElementById(this.title);
+        if (destinationElement.className.indexOf('side-menu-button') == -1) {
+            formClassName = 'form-outer default';
+        } else {
+
+            if (document.getElementById('DROPCHOP-FORM')) this.closeForm();
+
+            // remove 'active' from any other side-menu-button
+            var sideMenuButtons = document.getElementsByClassName('side-menu-button');
+            for (var s=0; s < sideMenuButtons.length; s++){
+                sideMenuButtons[s].className = sideMenuButtons[s].className.replace(/\b active\b/,'');
+            }
+
+            // add 'active' to this current button
+            destinationElement.className += ' active';
+            formClassName = 'form-outer side-menu';
+
+            var rect = destinationElement.getBoundingClientRect();
+            formDiv.style.left = rect.right - 4;
+            formDiv.style.top = rect.top;
+        }
+
+        formDiv.className = formClassName;
+        formDiv.id = 'DROPCHOP-FORM';
+        formDiv.innerHTML = html;
+        document.body.appendChild(formDiv);
+        this.domElement = formDiv;
+        this._formHandlers(formDiv);
 
         return this;
     },
 
     closeForm: function ( event ) {
-        var child = document.getElementById('DNC-FORM');
+        var sideMenuButtons = document.getElementsByClassName('side-menu-button');
+        for (var s=0; s < sideMenuButtons.length; s++){
+            sideMenuButtons[s].className = sideMenuButtons[s].className.replace(/\b active\b/,'');
+        }
+        var child = document.getElementById('DROPCHOP-FORM');
         child.parentElement.removeChild(child);
     },
 
@@ -852,7 +885,6 @@ L.Dropchop.MapView = L.Class.extend({
         // override defaults with passed options
         L.setOptions(this, options);
 
-
         this.numLayers = 0;
         this._map = null;
 
@@ -864,12 +896,16 @@ L.Dropchop.MapView = L.Class.extend({
 
     _setupMap : function () {
 
+        // mapbox token
         L.mapbox.accessToken = 'pk.eyJ1Ijoic3ZtYXR0aGV3cyIsImEiOiJVMUlUR0xrIn0.NweS_AttjswtN5wRuWCSNA';
+            
+        // create a map object on the `map` element id
         this._map = L.mapbox.map('map', null, {
             zoomControl: false,
-            worldCopyJump: true,
+            worldCopyJump: true
         }).setView([0,0], 3);
 
+        // define our baselayers from mapbox defaults
         var baseLayers = {
             "Mapbox Streets": L.mapbox.tileLayer('mapbox.streets'),
             "Mapbox Outdoors": L.mapbox.tileLayer('mapbox.outdoors'),
@@ -878,11 +914,16 @@ L.Dropchop.MapView = L.Class.extend({
             "Mapbox Satellite": L.mapbox.tileLayer('mapbox.satellite')
         };
 
+        // sets the base layer default as mapbox streets
         baseLayers['Mapbox Streets'].addTo(this._map);
+
+        // sets location of base layer control to the bottom right
         L.control.layers(baseLayers, {}, {
             position: 'bottomright',
             collapsed: false
         }).addTo(this._map);
+
+        // sets the location of the zoom buttons to the top right
         L.control.zoom({
             position: 'topright'
         }).addTo(this._map);
@@ -900,7 +941,7 @@ L.Dropchop = L.Dropchop || {};
 */
 L.Dropchop.Menu = L.Class.extend({
     includes: L.Mixin.Events,
-    options: { items: [], menuDirection: 'below' },
+    options: { items: [], menuDirection: 'below', expand: true },
 
     initialize: function ( title, options ) {
         L.setOptions(this, options);
@@ -922,13 +963,14 @@ L.Dropchop.Menu = L.Class.extend({
         var _this = this;
 
         // Dropdown tooling
-        if (this.domElement && this.children.length) { // Only if menu has child objects
+        if (this.domElement && this.children.length && this.options.expand) { // Only if menu has child objects
             this.domElement.addEventListener('click', menuClick, false);
         }
         function menuClick() {
+
             var menuExpand = this.querySelector('.menu-dropdown');
 
-            if (menuExpand.className.indexOf('expanded') == -1) {
+            if (menuExpand && menuExpand.className.indexOf('expanded') == -1) {
                 // Close open menus
                 var openMenus = document.getElementsByClassName('expanded');
                 for (var i=0; i < openMenus.length; i++){
@@ -951,7 +993,8 @@ L.Dropchop.Menu = L.Class.extend({
             this.domElement.addEventListener('click', itemClick, false);
         }
         function itemClick() {
-            _this.fire('clickedOperation', { action: this.id || _this.title.toLowerCase() }); // Set action to operation id or lowercase menu title
+            // Set action to operation id or lowercase menu title
+            _this.fire('clickedOperation', { action: this.id || _this.title.toLowerCase() });
         }
     },
 
@@ -978,8 +1021,22 @@ L.Dropchop.Menu = L.Class.extend({
         for ( var i = 0; i < items.length; i++ ) {
             var menuItem = document.createElement('button');
             menuItem.className = 'menu-button menu-button-action';
+            
             menuItem.id = items[i];
-            menuItem.innerHTML = items[i];
+
+            // if this is a side menu button, add the class
+            if (this.options.expand === false) {
+                menuItem.className += ' side-menu-button';
+            }
+
+            // put the name of the action into the button unless
+            // it's supposed to be a side button and not expand
+            if (this.options.expand !== false) {
+                menuItem.innerHTML = items[i];    
+            } else { // add an icon
+                menuItem.innerHTML = '<img class="icon" src="/icons/turf-'+items[i]+'.svg">';
+            }
+
             tempArray.push(menuItem);
         }
         return tempArray;
@@ -991,41 +1048,53 @@ L.Dropchop.Menu = L.Class.extend({
     **
     */
     _buildDomElement: function ( childElements ) {
+
         // Create menu div
         var menu = document.createElement('div');
         menu.className = "menu";
-
-        // Create button for menu
-        var button = document.createElement('button');
-        button.className = "menu-button";
-        button.innerHTML = this.title;
-
-        // Create icon for menu's button
-        var icon = document.createElement('i');
-        if ( this.options.iconClassName ){
-            icon.className = this.options.iconClassName;
-        } else if ( childElements.length ) { // Only if child elements
-            if ( this.options.menuDirection == 'above' ) {
-                icon.className = 'fa fa-angle-up';
-            } else {
-                icon.className = 'fa fa-angle-down';
-            }
+        if (this.options.expand === false) {
+            menu.className += " no-expand";
         }
+
+
+        if (this.options.expand !== false) {
+            // Create button for menu
+            var button = document.createElement('button');
+            button.className = "menu-button";
+            button.innerHTML = this.title;
+
+            // Create icon for menu's button
+            var icon = document.createElement('i');
+            if ( this.options.iconClassName ){
+                icon.className = this.options.iconClassName;
+            } else if ( childElements.length ) { // Only if child elements
+                if ( this.options.menuDirection == 'above' ) {
+                    icon.className = 'fa fa-angle-up';
+                } else {
+                    icon.className = 'fa fa-angle-down';
+                }
+            }
+            button.appendChild(icon);
+            menu.appendChild(button);
+        }
+
 
         // Create menu dropdown
         var menuDropdown = document.createElement('div');
-        menuDropdown.className = 'menu-dropdown menu-expand';
+        if (this.options.expand === false) {
+            menuDropdown.className = 'menu-container';
+        } else {
+            menuDropdown.className = 'menu-dropdown menu-expand';
+        }
 
         if ( this.options.menuDirection == 'above' ) {
             menuDropdown.className += ' opens-above'; // Menu dropdown opens to above menu
         }
+
         for ( var e = 0; e < childElements.length; e++ ) {  // Add childElements
             menuDropdown.appendChild(childElements[e]);
-        }
-
-        // Join it all together
-        button.appendChild(icon);
-        menu.appendChild(button);
+        }        
+        
         menu.appendChild(menuDropdown);
         return menu;
     }

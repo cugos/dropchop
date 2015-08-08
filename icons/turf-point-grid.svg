@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Generator: Adobe Illustrator 18.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
+<g id="turf-point-grid">
+	<circle cx="11.528" cy="88.472" r="5.824"/>
+	<circle cx="88.472" cy="11.528" r="5.824"/>
+	<circle cx="69.236" cy="11.528" r="5.824"/>
+	<circle cx="50" cy="11.528" r="5.824"/>
+	<circle cx="30.764" cy="11.528" r="5.824"/>
+	<circle cx="11.528" cy="11.528" r="5.824"/>
+	<g>
+		<circle cx="88.472" cy="88.472" r="5.824"/>
+		<circle cx="88.472" cy="69.236" r="5.824"/>
+		<circle cx="88.472" cy="50" r="5.824"/>
+		<circle cx="88.472" cy="30.764" r="5.824"/>
+		<circle cx="69.472" cy="88.472" r="5.824"/>
+		<circle cx="69.472" cy="69.236" r="5.824"/>
+		<circle cx="69.472" cy="50" r="5.824"/>
+		<circle cx="69.472" cy="30.764" r="5.824"/>
+		<circle cx="50.472" cy="88.472" r="5.824"/>
+		<circle cx="50.472" cy="69.236" r="5.824"/>
+		<circle cx="50.472" cy="50" r="5.824"/>
+		<circle cx="50.472" cy="30.764" r="5.824"/>
+		<circle cx="30.472" cy="88.472" r="5.824"/>
+		<circle cx="30.472" cy="69.236" r="5.824"/>
+		<circle cx="30.472" cy="50" r="5.824"/>
+		<circle cx="30.472" cy="30.764" r="5.824"/>
+		<circle cx="11.472" cy="69.236" r="5.824"/>
+		<circle cx="11.472" cy="50" r="5.824"/>
+		<circle cx="11.472" cy="30.764" r="5.824"/>
+		<circle cx="88.472" cy="11.528" r="5.824"/>
+	</g>
+	<circle cx="69.236" cy="11.528" r="5.824"/>
+	<circle cx="50" cy="11.528" r="5.824"/>
+	<circle cx="30.764" cy="11.528" r="5.824"/>
+	<circle cx="11.528" cy="11.528" r="5.824"/>
+</g>
+<g id="Layer_1">
+</g>
+</svg>
