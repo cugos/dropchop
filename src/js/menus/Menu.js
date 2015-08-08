@@ -7,7 +7,7 @@ L.Dropchop = L.Dropchop || {};
 */
 L.Dropchop.Menu = L.Class.extend({
     includes: L.Mixin.Events,
-    options: { items: [], menuDirection: 'below' },
+    options: { items: [], menuDirection: 'below', expand: true },
 
     initialize: function ( title, options ) {
         L.setOptions(this, options);
@@ -29,13 +29,14 @@ L.Dropchop.Menu = L.Class.extend({
         var _this = this;
 
         // Dropdown tooling
-        if (this.domElement && this.children.length) { // Only if menu has child objects
+        if (this.domElement && this.children.length && this.options.expand) { // Only if menu has child objects
             this.domElement.addEventListener('click', menuClick, false);
         }
         function menuClick() {
+
             var menuExpand = this.querySelector('.menu-dropdown');
 
-            if (menuExpand.className.indexOf('expanded') == -1) {
+            if (menuExpand && menuExpand.className.indexOf('expanded') == -1) {
                 // Close open menus
                 var openMenus = document.getElementsByClassName('expanded');
                 for (var i=0; i < openMenus.length; i++){
@@ -58,7 +59,8 @@ L.Dropchop.Menu = L.Class.extend({
             this.domElement.addEventListener('click', itemClick, false);
         }
         function itemClick() {
-            _this.fire('clickedOperation', { action: this.id || _this.title.toLowerCase() }); // Set action to operation id or lowercase menu title
+            // Set action to operation id or lowercase menu title
+            _this.fire('clickedOperation', { action: this.id || _this.title.toLowerCase() });
         }
     },
 
@@ -85,8 +87,22 @@ L.Dropchop.Menu = L.Class.extend({
         for ( var i = 0; i < items.length; i++ ) {
             var menuItem = document.createElement('button');
             menuItem.className = 'menu-button menu-button-action';
+            
             menuItem.id = items[i];
-            menuItem.innerHTML = items[i];
+
+            // if this is a side menu button, add the class
+            if (this.options.expand === false) {
+                menuItem.className += ' side-menu-button';
+            }
+
+            // put the name of the action into the button unless
+            // it's supposed to be a side button and not expand
+            if (this.options.expand !== false) {
+                menuItem.innerHTML = items[i];    
+            } else { // add an icon
+                menuItem.innerHTML = '<img class="icon" src="/icons/turf-'+items[i]+'.svg">';
+            }
+
             tempArray.push(menuItem);
         }
         return tempArray;
@@ -98,41 +114,53 @@ L.Dropchop.Menu = L.Class.extend({
     **
     */
     _buildDomElement: function ( childElements ) {
+
         // Create menu div
         var menu = document.createElement('div');
         menu.className = "menu";
-
-        // Create button for menu
-        var button = document.createElement('button');
-        button.className = "menu-button";
-        button.innerHTML = this.title;
-
-        // Create icon for menu's button
-        var icon = document.createElement('i');
-        if ( this.options.iconClassName ){
-            icon.className = this.options.iconClassName;
-        } else if ( childElements.length ) { // Only if child elements
-            if ( this.options.menuDirection == 'above' ) {
-                icon.className = 'fa fa-angle-up';
-            } else {
-                icon.className = 'fa fa-angle-down';
-            }
+        if (this.options.expand === false) {
+            menu.className += " no-expand";
         }
+
+
+        if (this.options.expand !== false) {
+            // Create button for menu
+            var button = document.createElement('button');
+            button.className = "menu-button";
+            button.innerHTML = this.title;
+
+            // Create icon for menu's button
+            var icon = document.createElement('i');
+            if ( this.options.iconClassName ){
+                icon.className = this.options.iconClassName;
+            } else if ( childElements.length ) { // Only if child elements
+                if ( this.options.menuDirection == 'above' ) {
+                    icon.className = 'fa fa-angle-up';
+                } else {
+                    icon.className = 'fa fa-angle-down';
+                }
+            }
+            button.appendChild(icon);
+            menu.appendChild(button);
+        }
+
 
         // Create menu dropdown
         var menuDropdown = document.createElement('div');
-        menuDropdown.className = 'menu-dropdown menu-expand';
+        if (this.options.expand === false) {
+            menuDropdown.className = 'menu-container';
+        } else {
+            menuDropdown.className = 'menu-dropdown menu-expand';
+        }
 
         if ( this.options.menuDirection == 'above' ) {
             menuDropdown.className += ' opens-above'; // Menu dropdown opens to above menu
         }
+
         for ( var e = 0; e < childElements.length; e++ ) {  // Add childElements
             menuDropdown.appendChild(childElements[e]);
-        }
-
-        // Join it all together
-        button.appendChild(icon);
-        menu.appendChild(button);
+        }        
+        
         menu.appendChild(menuDropdown);
         return menu;
     }

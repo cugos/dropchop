@@ -114,6 +114,12 @@ module.exports = function(grunt) {
         src: 'src/CNAME',
         dest: 'dist/CNAME',
       },
+      icons: {
+        cwd: 'node_modules/geoglyphs/dist',
+        src: '**/*.svg',
+        dest: 'dist/icons',
+        expand: true
+      },
       assets: {
         expand: true,
         cwd: 'src/assets/',
@@ -144,7 +150,7 @@ module.exports = function(grunt) {
   grunt.registerTask('test', ['karma']);
   grunt.registerTask('lint', ['jshint']);
   // JS
-  grunt.registerTask('js:dev', ['jshint', 'concat', 'browserify', 'test']);
+  grunt.registerTask('js:dev', ['browserify', 'jshint', 'concat']);
   grunt.registerTask('js:prod', ['concat', 'browserify', 'uglify']);
   // CSS
   grunt.registerTask('css:dev', ['sass']);

@@ -20,15 +20,17 @@ L.Dropchop.AppController = L.Class.extend({
 
         this.mapView = new L.Dropchop.MapView();
         this.dropzone = new L.Dropchop.DropZone( this.mapView._map, {} );
+        this.menubar = new L.Dropchop.MenuBar( // comes before layerlist for proper DOM order on the sidebar
+            { id: 'menu-bar' }
+        ).addTo( document.getElementById('sidebar') );
         this.layerlist = new L.Dropchop.LayerList( this.mapView._map, { layerContainerId: 'sidebar' } );
         this.notification = new L.Dropchop.Notifications();
-
-        this.menubar = new L.Dropchop.MenuBar(
-            { id: 'menu-bar' }
-        ).addTo( document.body );
         this.bottom_menu = new L.Dropchop.MenuBar(
             { id: 'add-remove', classList: ["bottom", "menu"] }
         ).addTo( document.getElementById('sidebar') );
+        this.side_menu = new L.Dropchop.MenuBar(
+            { id: 'side-menu' }
+        ).addTo( document.body );
 
         // build out menus
         this.menus = {
@@ -47,8 +49,9 @@ L.Dropchop.AppController = L.Class.extend({
                     'simplify',
                     'union',
                     'tin'
-                ]
-            }).addTo( this.menubar ),                       // Append to menubar
+                ],
+                expand: false
+            }).addTo( this.side_menu ),
 
             // SAVE
             save: new L.Dropchop.Menu('Save', {
