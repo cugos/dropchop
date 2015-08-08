@@ -119,6 +119,12 @@ module.exports = function(grunt) {
         src: '**/*.svg',
         dest: 'dist/icons',
         expand: true
+      },
+      assets: {
+        expand: true,
+        cwd: 'src/assets/',
+        src: ['*.*', '**/*.*'],
+        dest: 'dist/assets/'
       }
     },
     browserify: {
