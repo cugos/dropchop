@@ -1,5 +1,6 @@
 .form-outer {
   position: absolute;
+  z-index: 1000;
   &.default {
     display: table;
     width: 100%;
@@ -28,7 +29,7 @@
   }
 
   .form-inputs {}
-  
+
   .form-title {
     text-transform:uppercase;
   }
