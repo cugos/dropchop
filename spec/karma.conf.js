@@ -24,6 +24,8 @@ module.exports = function (config) {
             "node_modules/turf/turf.js",
             "dist/js/bundle.js",
             "spec/**/*.js",
+            // this is supposed to remove the 404 errors during tests, but doesn't seem to work
+            {pattern: "dist/icons/*.svg", watched: false, included: false, served: true},
         ],
         exclude: [],
 
