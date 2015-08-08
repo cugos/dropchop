@@ -143,6 +143,5 @@ describe("L.Dropchop.Menu", function () {
             menu.domElement.click();
             // TODO: Expect that dropdown is visible
         });
-
     });
 });

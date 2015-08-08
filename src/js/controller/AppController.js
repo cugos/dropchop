@@ -91,6 +91,7 @@ L.Dropchop.AppController = L.Class.extend({
     ** Bind events to handlers
     **
     */
+    clicked: false,
     _addEventHandlers: function(){
         this.dropzone.fileReader.on( 'fileparsed', this._handleParsedFile.bind( this ) );
         this.fileOpsConfig.executor.on( 'uploadedfiles', this.dropzone.fileReader._handleFiles.bind( this.dropzone.fileReader ) );
@@ -129,7 +130,10 @@ L.Dropchop.AppController = L.Class.extend({
             return this._handleFormSubmit( opsConfig, e );
         } else {
             var form = this.forms.render( e.action, config );
-            form.on( 'submit', this._handleFormSubmit.bind( this, opsConfig ) );
+            if (!this.clicked) {
+                this.clicked = true;
+                form.on( 'submit', this._handleFormSubmit.bind( this, opsConfig ) );
+            }
         }
     },
 
@@ -148,6 +152,9 @@ L.Dropchop.AppController = L.Class.extend({
             this.getLayerSelection(),
             this._handleResults.bind(this) // Callback
         );
+
+        // resest current event so new ones can execute
+        this.clicked = false;
     },
 
     /*
