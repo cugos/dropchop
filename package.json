@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "browser-filesaver": "^1.0.0",
-    "geoglyphs": "0.0.9",
+    "geoglyphs": "0.0.10",
     "mapbox.js": "^2.1.9",
     "shp-write": "^0.2.1",
     "turf": "^2.0.2"
