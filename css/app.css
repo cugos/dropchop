@@ -232,7 +232,8 @@ a {
         content: "\f00c"; }
 
 .form-outer {
-  position: absolute; }
+  position: absolute;
+  z-index: 1000; }
   .form-outer.default {
     display: table;
     width: 100%;
