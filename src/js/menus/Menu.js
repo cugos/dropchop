@@ -58,9 +58,8 @@ L.Dropchop.Menu = L.Class.extend({
         } else {  // Handle menu with no sub-items (thus, the menu itself is the button)
             this.domElement.addEventListener('click', itemClick, false);
         }
-        function itemClick() {
-            // Set action to operation id or lowercase menu title
-            _this.fire('clickedOperation', { action: this.id || _this.title.toLowerCase() });
+        function itemClick(e) {
+            _this.fire('clickedOperation', { action: this.id || _this.title.toLowerCase() });              
         }
     },
 
