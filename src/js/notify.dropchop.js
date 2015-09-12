@@ -6,7 +6,7 @@ var dropchop = (function(dc) {
   dc.notify = function(type, text, time) {
     var note = $('<div>').addClass('notification')
       .addClass(type)
-      .text(text);
+      .html(text);
 
     $(dc.$elem).append(note);
 

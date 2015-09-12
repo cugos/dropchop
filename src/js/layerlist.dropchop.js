@@ -29,6 +29,7 @@ var dropchop = (function(dc) {
     remove.on('click', function(event) {
       event.preventDefault();
       $(dc.layers).trigger('layer:removed', [$(this).parent().attr('data-stamp')]);
+      dc.selection.clear();
       return false;
     });
     

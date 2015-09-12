@@ -35,10 +35,16 @@ var dropchop = (function(dc) {
   dc.layers.remove = function(event, stamp) {
     // trigger layer:removed
     console.log(stamp);
-    $(dc.map).trigger('layer:removed', [stamp]);
-    $(dc.layerlist).trigger('layer:removed', [stamp]);
-    $(dc.selection).trigger('layer:removed', [stamp]);
-    delete dc.layers.list[stamp];
+    try {
+      $(dc.map).trigger('layer:removed', [stamp]);
+      $(dc.layerlist).trigger('layer:removed', [stamp]);
+      dc.notify('info', '<strong>' + dc.layers.list[stamp].name + '</strong> has been removed.');
+      delete dc.layers.list[stamp];
+    } catch (err) {
+      dc.notify('error', 'There was a problem removing the layer.');
+      throw err;
+    }
+    
   };
 
   function _makeLayer(f, b) {
