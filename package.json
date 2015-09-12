@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "browser-filesaver": "^1.0.0",
+    "font-awesome": "^4.4.0",
     "geoglyphs": "0.0.10",
     "jquery": "^2.1.4",
     "mapbox.js": "^2.1.9",

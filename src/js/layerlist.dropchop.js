@@ -16,6 +16,7 @@ var dropchop = (function(dc) {
     dc.layerlist.$elem.append(liHelper);
 
     $(dc.layerlist).on('layer:added', dc.layerlist.addLayerListItem);
+    $(dc.layerlist).on('layer:removed', dc.layerlist.removeLayerListItem);
   };
 
   // triggered in dropchop.js
@@ -23,6 +24,13 @@ var dropchop = (function(dc) {
     var layerlistItem = $('<li>').addClass('layer-element').attr('data-stamp', layer.stamp);
     var layerDiv = $('<div>').addClass('layer-name').text(layer.name);
     var checkbox = $('<input>').addClass('layer-toggle').prop({'type': 'checkbox', 'checked': true});
+    var remove = $('<button>').addClass('layer-remove').html('<i class="fa fa-times"></i>');
+    
+    remove.on('click', function(event) {
+      event.preventDefault();
+      $(dc.layers).trigger('layer:removed', [$(this).parent().attr('data-stamp')]);
+      return false;
+    });
     
     checkbox.on('change', function(e) {
       if (this.checked) {
@@ -39,6 +47,7 @@ var dropchop = (function(dc) {
 
     layerlistItem.append(layerDiv);
     layerlistItem.append(checkbox);
+    layerlistItem.append(remove);
     dc.layerlist.$elem.append(layerlistItem);
 
     dc.layerlist.elems[layer.stamp] = layerlistItem;
@@ -59,6 +68,12 @@ var dropchop = (function(dc) {
     }
     dc.form.remove();
   }
+
+  dc.layerlist.removeLayerListItem = function(event, stamp) {
+    $('[data-stamp='+stamp+']').fadeOut(300, function() {
+      $(this).remove();
+    });
+  };
 
   return dc;
 

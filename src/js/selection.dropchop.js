@@ -10,6 +10,7 @@ var dropchop = (function(dc) {
   dc.selection.init = function() {
     $(dc.selection).on('layer:selected', dc.selection.add);
     $(dc.selection).on('layer:unselected', dc.selection.remove);
+    $(dc.selection).on('layer:removed', _layerRemoved);
   };
 
   dc.selection.add = function(event, layer) {
@@ -28,8 +29,15 @@ var dropchop = (function(dc) {
 
   dc.selection.clear = function() {
     $('.layer-name.selected').removeClass('selected');
+    $('.operation-geo').addClass('operation-inactive');
+    $('.operation-geo').prop('disabled', true);
     dc.selection.list = [];
   };
+
+  function _layerRemoved(event, stamp) {
+    dc.selection.remove({}, {stamp: stamp});
+    dc.selection.clear();
+  }
 
   return dc;
 

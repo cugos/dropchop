@@ -8,6 +8,7 @@ var dropchop = (function(dc) {
 
   dc.layers.prepare = function() {
     $(dc.layers).on('file:added', dc.layers.add);
+    $(dc.layers).on('layer:removed', dc.layers.remove);
   };
 
 /**
@@ -28,12 +29,16 @@ var dropchop = (function(dc) {
   };
 
 /**
- * Remove a layer, which triggers layer:removed
- * @param {string} layer ID
+ * Remove a layer, which triggers layer:removed for the rest of the app
+ * @param {string} layer stamp
  */
-  dc.layers.remove = function(layerID) {
+  dc.layers.remove = function(event, stamp) {
     // trigger layer:removed
-    delete dc.layers.list[layerID];
+    console.log(stamp);
+    $(dc.map).trigger('layer:removed', [stamp]);
+    $(dc.layerlist).trigger('layer:removed', [stamp]);
+    $(dc.selection).trigger('layer:removed', [stamp]);
+    delete dc.layers.list[stamp];
   };
 
   function _makeLayer(f, b) {

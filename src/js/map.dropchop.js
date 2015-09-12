@@ -9,6 +9,8 @@ var dropchop = (function(dc) {
     dc.map.$elem = $('<div>').prop('id', 'dropchop-map').addClass('map');
     dc.$elem.append(dc.map.$elem);
 
+    $(dc.map).on('layer:removed', dc.map.removeLayer);
+
     _makeMap();
   };
 
@@ -26,6 +28,7 @@ var dropchop = (function(dc) {
       "Mapbox Dark": L.mapbox.tileLayer('mapbox.dark'),
       "Mapbox Satellite": L.mapbox.tileLayer('mapbox.satellite')
     };
+
     baseLayers['Mapbox Streets'].addTo(dc.map.m);
     // sets location of base layer control to the bottom right
     L.control.layers(baseLayers, {}, {
@@ -57,6 +60,10 @@ var dropchop = (function(dc) {
     dc.map.layergroup.addLayer(layer.featurelayer);
   };
   
+  dc.map.removeLayer = function(event, stamp) {
+    dc.map.layergroup.removeLayer(dc.layers.list[stamp].featurelayer);
+  };
+
   return dc;
 
 })(dropchop || {});

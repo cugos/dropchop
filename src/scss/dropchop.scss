@@ -113,6 +113,28 @@ $width: 280px;
       }
     }
   }
+  .layer-remove {
+    border: none;
+    background: #f6f6f6;
+    position: absolute;
+    top: 6px;
+    padding: 5px 6px;
+    right: 9px;
+    text-align: center;
+    display: none;
+    color: #ff7a72;
+    cursor: pointer;
+    border-radius: 50%;
+    &:hover {
+      background: $red;
+      color: white;
+    }
+  }
+  &:hover {
+    .layer-remove {
+      display: block;
+    }
+  }
 }
 
 .map {

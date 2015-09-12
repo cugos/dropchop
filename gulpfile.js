@@ -16,7 +16,8 @@ gulp.task('sass', function(){
 });
 
 var vendorCSS = [
-  './node_modules/mapbox.js/dist/mapbox.css'
+  './node_modules/mapbox.js/dist/mapbox.css',
+  './node_modules/font-awesome/css/font-awesome.css'
 ];
 
 gulp.task('css_vendor', function() {
@@ -76,6 +77,11 @@ gulp.task('assets', function() {
     .pipe(gulp.dest('./dist/assets'));
 });
 
+gulp.task('fa-fonts', function() {
+  return gulp.src('./node_modules/font-awesome/fonts/**.*')
+    .pipe(gulp.dest('./dist/static/fonts'));
+});
+
 gulp.task('watch', function() {
   gulp.watch('./src/js/**/*.js', ['js']);
   gulp.watch('./src/scss/**/*.scss', ['sass']);
@@ -100,7 +106,7 @@ gulp.task('test', function() {
     });
 });
 
-gulp.task('vendor', ['js_vendor', 'css_vendor', 'mapbox_assets']);
+gulp.task('vendor', ['js_vendor', 'css_vendor', 'mapbox_assets', 'fa-fonts']);
 gulp.task('js', ['lint', 'js_dropchop']);
 gulp.task('build', ['js', 'html', 'sass', 'assets']);
 gulp.task('default', ['build', 'connect', 'watch']);
