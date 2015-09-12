@@ -70,7 +70,7 @@ var testFiles = [
 ];
 
 gulp.task('html', function() {
-  return gulp.src('./src/html/index.html')
+  return gulp.src('./src/html/**.html')
     .pipe(gulp.dest('./dist'));
 });
 
@@ -87,7 +87,7 @@ gulp.task('fa-fonts', function() {
 gulp.task('watch', function() {
   gulp.watch('./src/js/**/*.js', ['js']);
   gulp.watch('./src/scss/**/*.scss', ['sass']);
-  gulp.watch('./src/html/index.html', ['html']);
+  gulp.watch('./src/html/**.html', ['html']);
 });
 
 gulp.task('connect', function() {

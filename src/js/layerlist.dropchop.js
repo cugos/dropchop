@@ -52,6 +52,9 @@ var dropchop = (function(dc) {
     dc.layerlist.$elem.append(layerlistItem);
 
     dc.layerlist.elems[layer.stamp] = layerlistItem;
+
+    // hide helper text
+    $('.layer-help').hide();
   };
 
   function toggleSelection($item, layer) {
@@ -73,6 +76,12 @@ var dropchop = (function(dc) {
   dc.layerlist.removeLayerListItem = function(event, stamp) {
     $('[data-stamp='+stamp+']').fadeOut(300, function() {
       $(this).remove();
+
+      // show helper text if no layers exist
+      // this has to check inside since there is a 300 ms delay with the fade
+      if ($('.layer-element').length === 0) {
+        $('.layer-help').show();
+      }
     });
   };
 

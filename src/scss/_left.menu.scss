@@ -56,5 +56,15 @@
         color: #f6f6f6;
       }
     }
+    &.dropchop-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      background: lighten($fuscia, 20);
+      color: white;
+      &:hover {
+        background: darken($fuscia, 10);
+      }
+    }
   }
 }

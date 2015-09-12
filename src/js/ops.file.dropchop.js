@@ -119,6 +119,15 @@ var dropchop = (function(dc) {
         dc.selection.clear();
       },
       disableForm: true,
+    },
+
+    info: {
+      type: 'info',
+      description: 'Learn more about dropchop',
+      icon: '<i class="fa fa-info"></i>',
+      execute: function() {
+        window.location = '/about.html'
+      }
     }
   };
 

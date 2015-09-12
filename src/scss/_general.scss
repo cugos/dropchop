@@ -31,7 +31,9 @@ label,
   font-family: "Inconsolata", monospace; 
 }
 
-.dropchop-btn {
+.dropchop-btn,
+a.dropchop-btn {
+  text-decoration: none;
   border: none;
   padding: 0.5em 1em;
   font-size: 1em;
@@ -44,6 +46,15 @@ label,
       background: darken($green, 10);
     }
   }
+
+  &.dropchop-btn-blue {
+    background: $blue;
+    color: white;
+    &:hover {
+      background: darken($blue, 10);
+    }
+  }
+
   &.dropchop-btn-cancel {
     background: transparent;
     color: red;
