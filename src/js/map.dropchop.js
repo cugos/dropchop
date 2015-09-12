@@ -14,9 +14,31 @@ var dropchop = (function(dc) {
 
   function _makeMap() {
     dc.map.token = L.mapbox.accessToken = 'pk.eyJ1Ijoic3ZtYXR0aGV3cyIsImEiOiJVMUlUR0xrIn0.NweS_AttjswtN5wRuWCSNA';
-    dc.map.m = L.mapbox.map('dropchop-map', 'mapbox.streets');
+    dc.map.m = L.mapbox.map('dropchop-map', null, {
+      zoomControl: false,
+      worldCopyJump: true
+    }).setView([0,0], 3);
+
+    var baseLayers = {
+      "Mapbox Streets": L.mapbox.tileLayer('mapbox.streets'),
+      "Mapbox Outdoors": L.mapbox.tileLayer('mapbox.outdoors'),
+      "Mapbox Light": L.mapbox.tileLayer('mapbox.light'),
+      "Mapbox Dark": L.mapbox.tileLayer('mapbox.dark'),
+      "Mapbox Satellite": L.mapbox.tileLayer('mapbox.satellite')
+    };
+    baseLayers['Mapbox Streets'].addTo(dc.map.m);
+    // sets location of base layer control to the bottom right
+    L.control.layers(baseLayers, {}, {
+      position: 'bottomright',
+      collapsed: false
+    }).addTo(dc.map.m);
+
+    // sets the location of the zoom buttons to the top right
+    L.control.zoom({
+      position: 'topright'
+    }).addTo(dc.map.m);
+
     dc.map.layergroup = L.layerGroup().addTo(dc.map.m);
-    dc.map.m.zoomControl.removeFrom(dc.map.m);
 
     $(dc.map).on('layer:added', dc.map.addLayer);
     $(dc.map).on('layer:hide', dc.map.hideLayer);
