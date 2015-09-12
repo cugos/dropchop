@@ -45,37 +45,13 @@ var dropchop = (function(dc) {
   }
 
   /**
-   * Prepare parameters for executing within a turf function using .apply() - returns an array
-   * @param {array} options from the user passed from the original event trigger
-   */
-  dc.ops.prepareTurfParams = function(params) {
-    var data = {};
-    data.options = [];
-
-    var geoms = [];
-    // get geometry array from selection
-    $(dc.selection.list).each(function(i) {
-      geoms.push(dc.selection.list[i].raw);
-    });
-
-    // merge params with options array
-    data.options = $.merge(geoms, params);
-    console.log(data.options);
-
-    // prepare name here?
-    data.name = 'waka';
-    
-    return data;
-  }; 
-
-  /**
    * Execute a turf function based on button operation click.
    * @param {object} original event that triggered this function
    * @param {string} operation to be executed via turf
    * @param {array} series of parameters to be applied to turf operation
    */
   dc.ops.geoExecute = function(event, operation, parameters) {
-    var prep = dc.ops.prepareTurfParams(parameters);
+    var prep = dc.ops.prepareTurfParams(operation, parameters);
     var result = turf[operation].apply(null, prep.options);
 
     var newFile = {
@@ -84,6 +60,32 @@ var dropchop = (function(dc) {
     };
 
     $(dc.layers).trigger('file:added', [newFile, result]);
+  };
+
+  /**
+   * Prepare parameters for executing within a turf function using .apply() - returns an array
+   * @param {array} options from the user passed from the original event trigger
+   */
+  dc.ops.prepareTurfParams = function(operation, params) {
+    var data = {};
+    data.options = [];
+
+    var geoms = [];
+    var nameArray = [];
+    // get geometry array from selection
+    $(dc.selection.list).each(function(i) {
+      geoms.push(dc.selection.list[i].raw);
+      nameArray.push(dc.selection.list[i].name);
+    });
+
+    // merge params with options array
+    data.options = $.merge(geoms, params);
+    console.log(data.options);
+
+    // create name array
+    data.name = dc.util.concat(nameArray, '_', operation);
+    
+    return data;
   };
 
   dc.ops.geoCheck = function(event, layer) {

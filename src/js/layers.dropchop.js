@@ -40,7 +40,7 @@ var dropchop = (function(dc) {
     var fl = L.mapbox.featureLayer(b);
 
     var layer = {
-      name: f.name,
+      name: dc.util.removeFileExtension(f.name),
       stamp: L.stamp(fl),
       raw: b,
       featurelayer: fl,
