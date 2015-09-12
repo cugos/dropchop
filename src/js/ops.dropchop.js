@@ -52,7 +52,14 @@ var dropchop = (function(dc) {
    */
   dc.ops.geoExecute = function(event, operation, parameters) {
     var prep = dc.ops.prepareTurfParams(operation, parameters);
-    var result = turf[operation].apply(null, prep.options);
+    var result = null;
+    try {
+      result = turf[operation].apply(null, prep.options, 5000);
+    } catch(err) {
+      dc.notify('error', err);
+      throw err;
+    }
+    
 
     var newFile = {
       name: prep.name,

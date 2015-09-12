@@ -1,4 +1,7 @@
 $grey: #c0c0c0;
+$green: #2ECC40;
+$red: #ff7a72;
+
 body {
   padding: 0;
   margin: 0;
@@ -11,6 +14,49 @@ body {
     }
   }
 }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+  font-family: "Inconsolata", monospace;
+}
+p {
+  margin: 0;
+  padding: 0;
+}
+input,
+label,
+.dropchop-btn {
+  font-family: "Inconsolata", monospace; 
+}
+
+.dropchop-btn {
+  border: none;
+  padding: 0.5em 1em;
+  font-size: 1em;
+  cursor: pointer;
+
+  &.dropchop-btn-green {
+    background: $green;
+    color: white;
+    &:hover {
+      background: darken($green, 10);
+    }
+  }
+  &.dropchop-btn-cancel {
+    background: transparent;
+    color: red;
+    &:hover {
+      background: #f6f6f6;
+    }
+  }
+}
+
 
 
 #dropchop {
@@ -48,18 +94,23 @@ $width: 280px;
     margin-right: 5px;
     position: absolute;
     top: 8px;
-    left: 4px;
+    left: 9px;
   }
   .layer-name {
     display: block;
-    padding: 8px 0 8px 25px;
-    font-size: 0.9em;
+    padding: 8px 10px 8px 30px;
+    font-size: 0.85em;
+    color: #999;
+    word-wrap: break-word;
     &:hover {
       background: #f6f6f6;
     }
     &.selected {
       background: #333;
       color: #f6f6f6;
+      &:hover {
+        background: #444;
+      }
     }
   }
 }
@@ -79,8 +130,14 @@ $width: 280px;
   clear: both;
   padding: 5px;
   margin: 10px 10px 0 0;
-  background: limegreen;
-  color: white;
+  &.success {
+    background: $green;
+    color: white;
+  }
+  &.error {
+    background: $red;
+    color: white;
+  }
 }
 
 
@@ -118,4 +175,39 @@ $width: 280px;
   margin-left: 1px;
   background: white;
   padding: 10px;
+  .dropchop-form-title {}
+  .dropchop-form-description {
+    font-size: 0.9em;
+    color: #999;
+    border-bottom: 1px solid #f6f6f6;
+    padding: 0.5em 0;
+    margin-bottom: 0.8em;
+  }
+  .dropchop-form-submit,
+  .dropchop-form-cancel {
+    float:right;
+    margin-left: 10px;
+  }
+}
+.dropchop-form-parameter {
+  margin-bottom: 1em;
+  label {
+    display: block;
+    color: #555;
+    font-size: 1.1em;
+    text-transform: uppercase;
+    font-weight: 900;
+  }
+  input,
+  select {
+    display: block;
+    width: 100%;
+    padding: 0.5em;
+    font-size: 0.9em;
+  }
+  .dropchop-form-parameter-description {
+    font-size: 0.8em;
+    text-transform: none;
+    font-weight: 100;
+  }
 }

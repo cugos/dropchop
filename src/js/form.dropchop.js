@@ -17,7 +17,7 @@ var dropchop = (function(dc) {
     var $html = $('<form>').addClass('dropchop-form dropchop-form-'+trigger)
       .attr('id', 'dropchop-form')
       .attr('data', name);
-    var $title = $('<h3>').addClass('dropchop-form-title').text(name).appendTo($html);
+    var $title = $('<h2>').addClass('dropchop-form-title').text(name).appendTo($html);
     var $desc = $('<p>').addClass('dropchop-form-description').text(info.description).appendTo($html);
 
     // create params
@@ -29,7 +29,13 @@ var dropchop = (function(dc) {
     }
 
     // create submit button
-    var $submit = $('<button>').addClass('dropchop-form-submit').text('Execute').attr('for', name);
+    var $submit = $('<button>').addClass('dropchop-btn dropchop-btn-green dropchop-form-submit').text('Execute').attr('for', name);
+    var $cancel = $('<button>').addClass('dropchop-btn dropchop-btn-cancel dropchop-form-cancel').text('Cancel').attr('type', 'button');
+    $cancel.on('click', function(event) {
+      event.preventDefault();
+      dc.form.remove();
+      return false;
+    });
     $html.on('submit', function(event) {
       event.preventDefault();
       // get the parameters from the form
@@ -45,6 +51,8 @@ var dropchop = (function(dc) {
       return false;
     });
     $html.append($submit);
+    $html.append($cancel);
+
     dc.$elem.append($html);
     // submit button needs trigger operation:geo with op and parameter array
   };
@@ -83,6 +91,12 @@ var dropchop = (function(dc) {
     },
     text: function(p) {
       var $i = $('<input>').attr('type', 'text')
+        .attr('name', p.name)
+        .attr('value', p.default);
+      return $i;
+    },
+    checkbox: function(p) {
+      var $i = $('<input>').attr('type', 'checkbox')
         .attr('name', p.name)
         .attr('value', p.default);
       return $i;

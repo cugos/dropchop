@@ -20,7 +20,7 @@ var dropchop = (function(dc) {
     var l = _makeLayer(file, blob);
     dc.layers.list[l.stamp] = l;
 
-    dc.notify('new', l.name + ' has been added!', 5000);
+    dc.notify('success', l.name + ' has been added!', 5000);
 
     // trigger layer:added
     $(dc.layerlist).trigger('layer:added', [l]);
