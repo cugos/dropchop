@@ -69,3 +69,24 @@ $width: 280px;
   color: white;
 }
 
+
+.operations-geo {
+  position: absolute;
+  left: 280px;
+}
+.operation {
+  border: none;
+  &.operation-geo {
+    padding:5px;
+    display: block;
+    width: 100px;
+    font-size: 0.9em;
+    background: white;
+    margin: 1px 0 0 1px;
+    text-align: left;
+  }
+  &.operation-inactive {
+    opacity: 0.5;
+    text-decoration: line-through;
+  }
+}

@@ -16,6 +16,7 @@ var dropchop = (function(dc) {
     dc.map.token = L.mapbox.accessToken = 'pk.eyJ1Ijoic3ZtYXR0aGV3cyIsImEiOiJVMUlUR0xrIn0.NweS_AttjswtN5wRuWCSNA';
     dc.map.m = L.mapbox.map('dropchop-map', 'mapbox.streets');
     dc.map.layergroup = L.layerGroup().addTo(dc.map.m);
+    dc.map.m.zoomControl.removeFrom(dc.map.m);
 
     $(dc.map).on('layer:added', dc.map.addLayer);
     $(dc.map).on('layer:hide', dc.map.hideLayer);

@@ -19,7 +19,7 @@ var dropchop = (function(dc) {
 
   dc.selection.remove = function(event, layer) {
     console.log(dc.selection.list);
-    delete dc.selection.list[layer.stamp]
+    delete dc.selection.list[layer.stamp];
   };
 
   dc.selection.clear = function() {

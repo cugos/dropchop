@@ -45,10 +45,12 @@ var dropchop = (function(dc) {
       // remove from selection
       // trigger layer:selected
       $(dc.selection).trigger('layer:selected', [layer]);
+      $(dc.ops).trigger('layer:selected', [layer]);
     } else {
       // add to selection
       // trigger layer:unselected
       $(dc.selection).trigger('layer:unselected', [layer]);
+      $(dc.ops).trigger('layer:unselected', [layer]);
     }
   }
 

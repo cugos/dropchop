@@ -20,6 +20,9 @@ var dropchop = (function(dc) {
     // setup dropzone
     dc.dropzone($('body'));
 
+    // setup operations
+    dc.ops.init();
+    
   };
 
   dc.boom = function() {
