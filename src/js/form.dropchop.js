@@ -39,13 +39,11 @@ var dropchop = (function(dc) {
     $html.on('submit', function(event) {
       event.preventDefault();
       // get the parameters from the form
-      console.log('operation:' + trigger, name);
       var parameters = [];
       var data = $(this).serializeArray();
       $(data).each(function(i) {
         parameters.push(data[i].value);
       });
-      console.log(data, parameters);
       $(dc.ops).trigger('operation:' + trigger, [name, parameters]);
       dc.form.remove();
       return false;

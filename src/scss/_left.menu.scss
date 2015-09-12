@@ -5,6 +5,10 @@
   bottom: 0;
   width: 41px;
   background: #f6f6f6;
+  .menu-action-break {
+    height: 15px;
+    background: transparent;
+  }
   .menu-action {
     position:relative;
     padding: 13px 0;
@@ -18,7 +22,8 @@
     box-sizing: content-box;
 
     &:hover {
-      background: #f6f6f6;
+      background: $fuscia;
+      color: white;
       cursor: pointer;
       &:after,
       &:before {

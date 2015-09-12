@@ -29,12 +29,17 @@ var dropchop = (function(dc) {
     // setup ops file
     var leftMenu = $('<div>').addClass('dropchop-menu-left');
     for (var fileOp in dc.ops.file) {
-      var fileBtn = $('<button>').addClass('menu-action')
-        .html(dc.ops.file[fileOp].icon || 'A')
-        .attr('data-operation', fileOp)
-        .attr('data-tooltip', dc.ops.file[fileOp].description);
-      fileBtn.on('click', _fileBtnClick);
-      leftMenu.append(fileBtn);
+      if(dc.ops.file[fileOp].type !== 'break') {
+        var fileBtn = $('<button>').addClass('menu-action')
+          .html(dc.ops.file[fileOp].icon || 'A')
+          .attr('data-operation', fileOp)
+          .attr('data-tooltip', dc.ops.file[fileOp].description);
+        fileBtn.on('click', _fileBtnClick);
+        leftMenu.append(fileBtn);
+      } else {
+        var $breakSpace = $('<div>').addClass('menu-action-break');
+        leftMenu.append($breakSpace);
+      }
     }
     dc.$elem.append(leftMenu);
   };

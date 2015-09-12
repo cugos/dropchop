@@ -1,8 +1,3 @@
-$grey: #c0c0c0;
-$green: lighten(#2ECC40, 15);
-$red: lighten(#ff4136, 15);
-$blue: lighten(#0074D9, 15);
-
 body {
   padding: 0;
   margin: 0;
@@ -68,6 +63,7 @@ label,
 
 $left-menu-width: 41px;
 $width: 280px;
+$geo-button-width: 100px;
 
 .layerlist {
   position: absolute;
@@ -198,7 +194,7 @@ $width: 280px;
   z-index: 10;
   top: 1px;
   width: 400px;
-  left: 381px;
+  left: $left-menu-width + $width + $geo-button-width + 1px;
   margin-left: 1px;
   background: white;
   padding: 10px;
@@ -216,6 +212,7 @@ $width: 280px;
     margin-left: 10px;
   }
 }
+
 .dropchop-form-parameter {
   margin-bottom: 1em;
   label {

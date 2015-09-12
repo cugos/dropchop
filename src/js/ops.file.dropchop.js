@@ -6,6 +6,57 @@ var dropchop = (function(dc) {
   dc.ops = dc.ops || {};
 
   dc.ops.file = {
+    upload: {
+      description: 'Upload from your computer',
+      icon: '<i class="fa fa-upload"></i>',
+      execute: function() {
+        // inspired from geojson.io
+        // https://github.com/mapbox/geojson.io/blob/gh-pages/src/ui/file_bar.js#L390
+        var $blindInput = $('<input>')
+          .attr('type', 'file')
+          .attr('multiple', 'true')
+          .css('visibility', 'hidden')
+          .css('position', 'absolute')
+          .css('height', '0')
+          .on('change', function() {
+            var files = this.files;
+            $(files).each(function(i) {
+              dc.dropzone.read(files[i]);
+            });
+            $blindInput.remove();
+          });
+        $('body').append($blindInput);
+        $blindInput.click();
+      }
+    },
+
+    'load-url': {
+        description: 'Import file from a URL',
+        icon: '<i class="fa fa-link"></i>',
+        parameters: [
+            {
+                name: 'url',
+                description :'URL',
+                type: 'text',
+                default: 'http://',
+            },
+        ],
+    },
+
+    'load-gist': {
+        description: 'Import files from Gist',
+        icon: '<i class="fa fa-github"></i>',
+        parameters: [
+            {
+                name: 'gist',
+                description :'Gist ID or URL',
+                type: 'text',
+            },
+        ],
+    },
+
+    'break1': { type: 'break' },
+
     'save-geojson': {
       minFeatures: 1,
       description: 'Save as GeoJSON',
@@ -55,6 +106,8 @@ var dropchop = (function(dc) {
       createsLayer: false
     },
 
+    'break2': { type: 'break' },
+
     remove: {
       minFeatures: 1,
       description: 'Remove selected layers',
@@ -66,42 +119,6 @@ var dropchop = (function(dc) {
         dc.selection.clear();
       },
       disableForm: true,
-    },
-    upload: {
-        description: 'Upload from your computer',
-        icon: '<i class="fa fa-upload"></i>',
-        parameters: [
-            {
-                description: 'File to upload.',
-                type: 'file',
-                extra: 'multiple',
-            }
-        ]
-    },
-
-    'load-url': {
-        description: 'Import file from a URL',
-        icon: '<i class="fa fa-link"></i>',
-        parameters: [
-            {
-                name: 'url',
-                description :'URL',
-                type: 'text',
-                default: 'http://',
-            },
-        ],
-    },
-
-    'load-gist': {
-        description: 'Import files from Gist',
-        icon: '<i class="fa fa-github"></i>',
-        parameters: [
-            {
-                name: 'gist',
-                description :'Gist ID or URL',
-                type: 'text',
-            },
-        ],
     }
   };
 
