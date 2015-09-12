@@ -28,6 +28,7 @@ var dropchop = (function(dc) {
     $container.on('drop', function(event) {
       event.preventDefault();
       event.stopPropagation();
+      $(this).removeClass('dragging');
       var files = event.originalEvent.dataTransfer.files;
       $(files).each(function(i) {
         dc.dropzone.read(files[i]);
@@ -39,7 +40,7 @@ var dropchop = (function(dc) {
     var reader = new FileReader();
     reader.readAsText(file, 'UTF-8');
     reader.onload = function() {
-      $(dc.layers).trigger('file:added', [file, reader.result]);
+      $(dc.layers).trigger('file:added', [file, JSON.parse(reader.result)]);
     };
   };
 

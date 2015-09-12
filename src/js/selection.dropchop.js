@@ -5,7 +5,7 @@ var dropchop = (function(dc) {
   dc = dc || {};
   
   dc.selection = {};
-  dc.selection.list = {};
+  dc.selection.list = [];
 
   dc.selection.init = function() {
     $(dc.selection).on('layer:selected', dc.selection.add);
@@ -13,18 +13,22 @@ var dropchop = (function(dc) {
   };
 
   dc.selection.add = function(event, layer) {
-    console.log(dc.selection.list);
-    dc.selection.list[layer.stamp] = layer;
+    dc.selection.list.push(layer);
   };
 
   dc.selection.remove = function(event, layer) {
-    console.log(dc.selection.list);
-    delete dc.selection.list[layer.stamp];
+    var index = null;
+    $(dc.selection.list).each(function(i) {
+      if (dc.selection.list[i].stamp === layer.stamp) {
+        index = i;
+      }
+    });
+    dc.selection.list.splice(index, 1); // remove outside of the loop so we don't break our count
   };
 
   dc.selection.clear = function() {
-      $('.layer-name.selected').removeClass('selected');
-      dc.selection.list = {};
+    $('.layer-name.selected').removeClass('selected');
+    dc.selection.list = [];
   };
 
   return dc;

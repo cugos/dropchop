@@ -22,7 +22,10 @@ var dropchop = (function(dc) {
 
     // setup operations
     dc.ops.init();
-    
+
+    // setup forms
+    dc.form.init();
+
   };
 
   dc.boom = function() {

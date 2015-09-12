@@ -8,6 +8,7 @@ var dropchop = (function(dc) {
   dc.ops.geo = {
     along: {
       minFeatures: 1,
+      maxFeatures: 1,
       requirements: {
         type: ['Feature'],
         geometry: ['LineString']
@@ -32,6 +33,7 @@ var dropchop = (function(dc) {
 
     bezier: {
       minFeatures: 1,
+      maxFeatures: 1,
       requirements: {
         type: ['Feature'],
         geometry: ['LineString']
@@ -56,6 +58,7 @@ var dropchop = (function(dc) {
 
     buffer: {
       maxFeatures: 1,
+      minFeatures: 1,
       requirements: {
         type: ['Feature', 'FeatureCollection']
       },
@@ -148,6 +151,10 @@ var dropchop = (function(dc) {
     midpoint: {
       minFeatures: 2,
       maxFeatures: 2,
+      requirements: {
+        type: ['Feature'],
+        geometry: ['Point']
+      },
       description: 'Takes two points and returns a point midway between them.',
     },
 
@@ -188,6 +195,10 @@ var dropchop = (function(dc) {
     union: {
       minFeatures: 2,
       maxFeatures: 2,
+      requirements: {
+        type: ['Feature'],
+        geometry: ['Polygon']
+      },
       description: 'Takes two polygons and returns a combined polygon. If the input polygons are not contiguous, this function returns a MultiPolygon feature.',
     }
   };

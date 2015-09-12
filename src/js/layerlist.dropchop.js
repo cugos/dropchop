@@ -10,6 +10,11 @@ var dropchop = (function(dc) {
     dc.layerlist.$elem = $('<ol>').addClass(name);
     dc.$elem.append(dc.layerlist.$elem);
 
+    var liHelper = $('<li>').addClass('layer-help')
+      .text('Drag and drop files and they will show up in the layer list below.');
+
+    dc.layerlist.$elem.append(liHelper);
+
     $(dc.layerlist).on('layer:added', dc.layerlist.addLayerListItem);
   };
 
@@ -52,6 +57,7 @@ var dropchop = (function(dc) {
       $(dc.selection).trigger('layer:unselected', [layer]);
       $(dc.ops).trigger('layer:unselected', [layer]);
     }
+    dc.form.remove();
   }
 
   return dc;

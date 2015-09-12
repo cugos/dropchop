@@ -37,13 +37,12 @@ var dropchop = (function(dc) {
   };
 
   function _makeLayer(f, b) {
-    var parsed = JSON.parse(b);
-    var fl = L.mapbox.featureLayer(parsed);
+    var fl = L.mapbox.featureLayer(b);
 
     var layer = {
       name: f.name,
       stamp: L.stamp(fl),
-      raw: parsed,
+      raw: b,
       featurelayer: fl,
       dateAdded: f.lastModifiedDate
     };
