@@ -1,0 +1,71 @@
+$grey: #c0c0c0;
+body {
+  padding: 0;
+  margin: 0;
+  background: $grey;
+  font-family:"Helvetica Neue", arial, sans-serif;
+}
+
+
+#dropchop {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+$width: 280px;
+
+.layerlist {
+  position: absolute;
+  left: 0;
+  top:0;
+  bottom: 0;
+  background: #fff;
+  margin: 0;
+  padding: 0;
+  width: $width;
+  list-style-type: none;
+}
+.layer-element {
+  position: relative;
+  cursor:pointer;
+  .layer-toggle {
+    float: left;
+    margin-right: 5px;
+    position: absolute;
+    top: 8px;
+    left: 4px;
+  }
+  .layer-name {
+    display: block;
+    padding: 8px 0 8px 25px;
+    font-size: 0.9em;
+    &:hover {
+      background: #f6f6f6;
+    }
+    &.selected {
+      background: #333;
+      color: #f6f6f6;
+    }
+  }
+}
+
+.map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: $width;
+}
+
+.notification {
+  float: right;
+  position: relative;
+  z-index: 10;
+  clear: both;
+  padding: 5px;
+  margin: 10px 10px 0 0;
+  background: limegreen;
+  color: white;
+}
+

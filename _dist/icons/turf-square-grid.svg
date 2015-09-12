@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Generator: Adobe Illustrator 18.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
+<g id="turf-square-grid">
+	<circle cx="88.472" cy="11.528" r="5.824"/>
+	<circle cx="88.472" cy="88.472" r="5.824"/>
+	<circle cx="50" cy="50" r="5.824"/>
+	<circle cx="11.528" cy="88.472" r="5.824"/>
+	<circle cx="11.528" cy="11.528" r="5.824"/>
+	<path d="M48,40.382V12H21.328c-0.241,5.04-4.288,9.087-9.328,9.328V48h28.382C41.174,44.185,44.185,41.174,48,40.382z"/>
+	<path d="M59.618,48H88V21.328c-5.04-0.241-9.087-4.288-9.329-9.328H52v28.382C55.815,41.174,58.826,44.185,59.618,48z"/>
+	<path d="M40.382,52H12v26.671c5.04,0.241,9.087,4.289,9.328,9.329H48V59.618C44.185,58.826,41.174,55.815,40.382,52z"/>
+	<path d="M88,78.671V52H59.618c-0.792,3.815-3.803,6.826-7.618,7.618V88h26.671C78.912,82.96,82.96,78.912,88,78.671z"/>
+</g>
+<g id="Layer_1">
+</g>
+</svg>
