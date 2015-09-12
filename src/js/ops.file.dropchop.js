@@ -34,6 +34,24 @@ var dropchop = (function(dc) {
         minFeatures: 1,
         description: 'Save as Shapefile',
         icon: '<i class="fa fa-file"></i>',
+        execute: function() {
+          $(dc.selection.list).each(function(i) {
+            try {
+              var options = {
+                folder: 'dropchop_' + dc.selection.list[i].name,
+                types: {
+                  point: 'dropchop_' + dc.selection.list[i].name + '_point',
+                  polygon: 'dropchop_' + dc.selection.list[i].name + '_poly',
+                  line: 'dropchop_' + dc.selection.list[i].name + '_line'
+                }
+              };
+              shpwrite.download(dc.selection.list[i].raw, options);
+            } catch (err) {
+              dc.notify('Error', 'There was a problem downloading the shapefile.' + err);
+              throw err;
+            }
+          });
+        },
         createsLayer: false
     },
 
