@@ -1,0 +1,240 @@
+$grey: #c0c0c0;
+$green: lighten(#2ECC40, 15);
+$red: lighten(#ff4136, 15);
+$blue: ligten(#0074D9, 15);
+
+body {
+  padding: 0;
+  margin: 0;
+  background: $grey;
+  font-family:"Helvetica Neue", arial, sans-serif;
+  &.dragging {
+    opacity: 0.8;
+    .layer-help {
+      border: 1px solid #333;
+    }
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+  font-family: "Inconsolata", monospace;
+}
+p {
+  margin: 0;
+  padding: 0;
+}
+input,
+label,
+.dropchop-btn {
+  font-family: "Inconsolata", monospace; 
+}
+
+.dropchop-btn {
+  border: none;
+  padding: 0.5em 1em;
+  font-size: 1em;
+  cursor: pointer;
+
+  &.dropchop-btn-green {
+    background: $green;
+    color: white;
+    &:hover {
+      background: darken($green, 10);
+    }
+  }
+  &.dropchop-btn-cancel {
+    background: transparent;
+    color: red;
+    &:hover {
+      background: #f6f6f6;
+    }
+  }
+}
+
+
+
+#dropchop {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+$left-menu-width: 41px;
+$width: 280px;
+
+.layerlist {
+  position: absolute;
+  left: $left-menu-width;
+  top:0;
+  bottom: 0;
+  background: #fff;
+  margin: 0;
+  padding: 0;
+  width: $width;
+  list-style-type: none;
+  .layer-help {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    color: #999;
+    font-size: 0.9em;
+    border: 1px dashed #c0c0c0;
+  }
+}
+.layer-element {
+  position: relative;
+  cursor:pointer;
+  .layer-toggle {
+    float: left;
+    margin-right: 5px;
+    position: absolute;
+    top: 8px;
+    left: 9px;
+  }
+  .layer-name {
+    display: block;
+    padding: 8px 10px 8px 30px;
+    font-size: 0.85em;
+    color: #999;
+    word-wrap: break-word;
+    &:hover {
+      background: #f6f6f6;
+    }
+    &.selected {
+      background: #333;
+      color: #f6f6f6;
+      &:hover {
+        background: #444;
+      }
+    }
+  }
+  .layer-remove {
+    border: none;
+    background: #f6f6f6;
+    position: absolute;
+    top: 6px;
+    padding: 5px 6px;
+    right: 9px;
+    text-align: center;
+    display: none;
+    color: #ff7a72;
+    cursor: pointer;
+    border-radius: 50%;
+    &:hover {
+      background: $red;
+      color: white;
+    }
+  }
+  &:hover {
+    .layer-remove {
+      display: block;
+    }
+  }
+}
+
+.map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: $width + $left-menu-width;
+}
+
+.notification {
+  float: right;
+  position: relative;
+  z-index: 10;
+  clear: both;
+  padding: 7px;
+  font-size: 0.85em;
+  margin: 5px 5px 0 0;
+  color: white;
+  &.success {
+    background: $green;
+  }
+  &.error {
+    background: $red;
+  }
+  &.info {
+    background: $blue;
+  }
+}
+
+
+.operations-geo {
+  position: absolute;
+  left: $left-menu-width + $width;
+}
+.operation {
+  border: none;
+  &.operation-geo {
+    padding:5px;
+    display: block;
+    width: 100px;
+    font-size: 0.9em;
+    background: white;
+    margin: 1px 0 0 1px;
+    text-align: left;
+  }
+  &.operation-inactive {
+    // opacity: 0.5;
+    // text-decoration: line-through;
+  }
+  &:disabled {
+    opacity: 0.5;
+    text-decoration: line-through;
+  }
+}
+
+.dropchop-form {
+  position: absolute;
+  z-index: 10;
+  top: 1px;
+  width: 400px;
+  left: 381px;
+  margin-left: 1px;
+  background: white;
+  padding: 10px;
+  .dropchop-form-title {}
+  .dropchop-form-description {
+    font-size: 0.9em;
+    color: #999;
+    border-bottom: 1px solid #f6f6f6;
+    padding: 0.5em 0;
+    margin-bottom: 0.8em;
+  }
+  .dropchop-form-submit,
+  .dropchop-form-cancel {
+    float:right;
+    margin-left: 10px;
+  }
+}
+.dropchop-form-parameter {
+  margin-bottom: 1em;
+  label {
+    display: block;
+    color: #555;
+    font-size: 1.1em;
+    text-transform: uppercase;
+    font-weight: 900;
+  }
+  input,
+  select {
+    display: block;
+    width: 100%;
+    padding: 0.5em;
+    font-size: 0.9em;
+  }
+  .dropchop-form-parameter-description {
+    font-size: 0.8em;
+    text-transform: none;
+    font-weight: 100;
+  }
+}

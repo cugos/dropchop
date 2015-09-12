@@ -11,20 +11,32 @@ var dropchop = (function(dc) {
     dc.$elem.append(geoContainer);
 
     // create geo buttons & forms
-    for (var op in dc.ops.geo) {
-      var btn = $('<button>').addClass('operation operation-geo operation-inactive')
-        .text(op)
+    for (var geoOp in dc.ops.geo) {
+      var geoBtn = $('<button>').addClass('operation operation-geo operation-inactive')
+        .text(geoOp)
         .prop('disabled', true)
-        .attr('data-operation', op);
-      btn.on('click', _geoBtnClick);
+        .attr('data-operation', geoOp);
+      geoBtn.on('click', _geoBtnClick);
 
-      geoContainer.append(btn);
+      geoContainer.append(geoBtn);
     }
 
     // when layers are selected or unselected, lets check our geo operations
     $(dc.ops).on('layer:selected', dc.ops.geoCheck);
     $(dc.ops).on('layer:unselected', dc.ops.geoCheck);
     $(dc.ops).on('operation:geo', dc.ops.geoExecute);
+
+    // setup ops file
+    var leftMenu = $('<div>').addClass('dropchop-menu-left');
+    for (var fileOp in dc.ops.file) {
+      var fileBtn = $('<button>').addClass('menu-action')
+        .html(dc.ops.file[fileOp].icon || 'A')
+        .attr('data-operation', fileOp)
+        .attr('data-tooltip', dc.ops.file[fileOp].description);
+      fileBtn.on('click', _fileBtnClick);
+      leftMenu.append(fileBtn);
+    }
+    dc.$elem.append(leftMenu);
   };
 
   function _createGeoForm(operation) {
@@ -42,6 +54,18 @@ var dropchop = (function(dc) {
     var operation = $(this).attr('data-operation');
     var paramsArray = [10, 'miles'];
     $(dc.form).trigger('form:geo', [operation]);
+  }
+
+  function _fileBtnClick(event) {
+    event.preventDefault();
+
+    var operation = $(this).attr('data-operation');
+    try {
+      dc.ops.file[operation].execute();
+    } catch (err) {
+      dc.notify('error', 'This operation doesn\'t exist!');
+      throw err;
+    }
   }
 
   /**
