@@ -31,16 +31,34 @@ var dropchop = (function(dc) {
     },
 
     'load-url': {
-        description: 'Import file from a URL',
-        icon: '<i class="fa fa-link"></i>',
-        parameters: [
-            {
-                name: 'url',
-                description :'URL',
-                type: 'text',
-                default: 'http://',
-            },
-        ],
+      description: 'Import file from a URL',
+      icon: '<i class="fa fa-link"></i>',
+      parameters: [
+        {
+          name: 'url',
+          description :'URL',
+          type: 'text',
+          default: 'http://',
+        },
+      ],
+      execute: function() {
+        // https://gist.githubusercontent.com/mapsam/eace9bf13d3853bdf273/raw/3cd4b92accd1e04394840ceb93b8d4dd03038611/locations.geojson
+        $(dc.form).trigger('form:file', ['load-url']);
+      },
+      get: function(event, name, parameters) {
+        var url = parameters[0];
+        dc.util.xhr(url, this.file[name].callback);
+      },
+      callback: function(xhr, xhrEvent) {
+        if (xhr.status === 200) {
+          var data = JSON.parse(xhr.responseText);
+          // get filename based on the end of the url - not sure if this is sustainable
+          var name = xhr.responseURL.substring(xhr.responseURL.lastIndexOf('/')+1);
+          $(dc.layers).trigger('file:added', [name, data]);
+        } else {
+          dc.notify('error', xhr.status + ': could not retrieve Gist. Please check your URL');
+        }
+      }
     },
 
     'load-gist': {
@@ -59,14 +77,14 @@ var dropchop = (function(dc) {
       get: function(event, name, parameters) {
         var gist = parameters[0].split('/')[parameters[0].split('/').length-1];
         var url = 'https://api.github.com/gists/' + gist;
-        dc.util.xhr(url, this.file['load-gist'].callback);
+        dc.util.xhr(url, this.file[name].callback);
       },
       callback: function(xhr, xhrEvent) {
         if (xhr.status === 200) {
           var data = JSON.parse(xhr.responseText);
           for (var filename in data.files) {
-            var file = data.files[filename];
-            $(dc.layers).trigger('file:added', [file.filename, JSON.parse(file.content)]);
+            var name = data.files[filename];
+            $(dc.layers).trigger('file:added', [name, JSON.parse(file.content)]);
           }
           // dc.notify('success', 'Succesfully retrieved gist')
         } else {
@@ -128,6 +146,17 @@ var dropchop = (function(dc) {
 
     'break2': { type: 'break' },
 
+    extent: {
+      minFeatures: 1,
+      description: 'View extent of layers',
+      icon: '<i class="fa fa-globe"></i>',
+      execute: function() {
+        dc.map.m.fitBounds(dc.map.layergroup.getBounds());
+      }
+    },
+
+    'break3': { type: 'break' },
+
     remove: {
       minFeatures: 1,
       description: 'Remove selected layers',
@@ -146,7 +175,7 @@ var dropchop = (function(dc) {
       description: 'Learn more about dropchop',
       icon: '<i class="fa fa-info"></i>',
       execute: function() {
-        window.location = '/about.html'
+        window.location = '/about.html';
       }
     }
   };

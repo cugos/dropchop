@@ -41,7 +41,7 @@ var dropchop = (function(dc) {
       position: 'topright'
     }).addTo(dc.map.m);
 
-    dc.map.layergroup = L.layerGroup().addTo(dc.map.m);
+    dc.map.layergroup = L.mapbox.featureLayer().addTo(dc.map.m);
 
     $(dc.map).on('layer:added', dc.map.addLayer);
     $(dc.map).on('layer:hide', dc.map.hideLayer);
