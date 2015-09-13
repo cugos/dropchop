@@ -36,6 +36,45 @@ var dropchop = (function(dc) {
     xhr.send();
   };
 
+  dc.util.readFile = function(file) {
+    var reader = new FileReader();
+    reader.readAsText(file, 'UTF-8');
+    reader.onload = function() {
+      $(dc.layers).trigger('file:added', [file.name, JSON.parse(reader.result)]);
+    };
+  };
+
+  dc.util.jsonFromUrl = function() {
+    var query = location.search.substr(1);
+    var result = {};
+    query.split("&").forEach(function(part) {
+      var item = part.split("=");
+      if (!result[item[0]]) {
+        result[item[0]] = [];
+      }
+      result[item[0]].push(decodeURIComponent(item[1]));
+    });
+    return result;
+  };
+
+  dc.util.executeUrlParams = function() {
+    var data = dc.util.jsonFromUrl();
+
+    // load gist
+    if (data.gist && data.gist.length) {
+      $(data.gist).each(function(i) {
+        dc.ops.file['load-gist'].get({}, 'load-gist', [data.gist[i]]);
+      });
+    }
+
+    // load
+    if (data.url && data.url.length) {
+      $(data.url).each(function(i) {
+        dc.ops.file['load-url'].get({}, 'load-url', [data.url[i]]);
+      });
+    }
+  }
+
   return dc;
 
 

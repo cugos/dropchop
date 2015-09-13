@@ -21,7 +21,7 @@ var dropchop = (function(dc) {
           .on('change', function() {
             var files = this.files;
             $(files).each(function(i) {
-              dc.dropzone.read(files[i]);
+              dc.util.readFile(files[i]);
             });
             $blindInput.remove();
           });
@@ -47,7 +47,7 @@ var dropchop = (function(dc) {
       },
       get: function(event, name, parameters) {
         var url = parameters[0];
-        dc.util.xhr(url, this.file[name].callback);
+        dc.util.xhr(url, dc.ops.file[name].callback);
       },
       callback: function(xhr, xhrEvent) {
         if (xhr.status === 200) {
@@ -77,7 +77,7 @@ var dropchop = (function(dc) {
       get: function(event, name, parameters) {
         var gist = parameters[0].split('/')[parameters[0].split('/').length-1];
         var url = 'https://api.github.com/gists/' + gist;
-        dc.util.xhr(url, this.file[name].callback);
+        dc.util.xhr(url, dc.ops.file[name].callback);
       },
       callback: function(xhr, xhrEvent) {
         if (xhr.status === 200) {

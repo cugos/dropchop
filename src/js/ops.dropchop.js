@@ -113,7 +113,6 @@ var dropchop = (function(dc) {
 
     // merge params with options array
     data.options = $.merge(geoms, params);
-    console.log(data.options);
 
     // create name array
     data.name = dc.util.concat(nameArray, '_', operation);

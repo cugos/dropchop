@@ -31,18 +31,10 @@ var dropchop = (function(dc) {
       $(this).removeClass('dragging');
       var files = event.originalEvent.dataTransfer.files;
       $(files).each(function(i) {
-        dc.dropzone.read(files[i]);
+        dc.util.readFile(files[i]);
       });
     });
   }
-
-  dc.dropzone.read = function(file) {
-    var reader = new FileReader();
-    reader.readAsText(file, 'UTF-8');
-    reader.onload = function() {
-      $(dc.layers).trigger('file:added', [file.name, JSON.parse(reader.result)]);
-    };
-  };
 
   return dc;
 

@@ -26,6 +26,11 @@ var dropchop = (function(dc) {
     // setup forms
     dc.form.init();
 
+    // get URL information if it exists
+    if(location.search.length) {
+      dc.util.executeUrlParams();
+    }
+
   };
 
   dc.boom = function() {
