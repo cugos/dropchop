@@ -25,12 +25,18 @@ L.Dropchop.MapView = L.Class.extend({
 
         // mapbox token
         L.mapbox.accessToken = 'pk.eyJ1Ijoic3ZtYXR0aGV3cyIsImEiOiJVMUlUR0xrIn0.NweS_AttjswtN5wRuWCSNA';
-            
+
         // create a map object on the `map` element id
         this._map = L.mapbox.map('map', null, {
             zoomControl: false,
             worldCopyJump: true
         }).setView([0,0], 3);
+
+        //add locate me control to map
+        L.control.locate({
+          position: 'topleft',
+        }).addTo(this._map);
+
 
         // define our baselayers from mapbox defaults
         var baseLayers = {
@@ -54,6 +60,8 @@ L.Dropchop.MapView = L.Class.extend({
         L.control.zoom({
             position: 'topright'
         }).addTo(this._map);
+
+
 
     }
 

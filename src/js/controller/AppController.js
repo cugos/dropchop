@@ -1,8 +1,8 @@
 L.Dropchop = L.Dropchop || {};
 /*
 **
-** AppController is the primary point of app initialization. It basically 'ties
-** every together'
+** AppController is the primary point of app initialization. It basically "ties
+** everything together"
 **
 */
 L.Dropchop.AppController = L.Class.extend({
