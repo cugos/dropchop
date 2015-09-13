@@ -40,7 +40,7 @@ var dropchop = (function(dc) {
     var reader = new FileReader();
     reader.readAsText(file, 'UTF-8');
     reader.onload = function() {
-      $(dc.layers).trigger('file:added', [file, JSON.parse(reader.result)]);
+      $(dc.layers).trigger('file:added', [file.name, JSON.parse(reader.result)]);
     };
   };
 

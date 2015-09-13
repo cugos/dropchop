@@ -25,6 +25,17 @@ var dropchop = (function(dc) {
     return string;
   };
 
+  dc.util.xhr = function(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', encodeURI(url));
+    xhr.onload = callback.bind(this, xhr);
+    xhr.onerror = function( xhr ) {
+        console.error(xhr);
+        dc.notify('error', 'Unable to access ' + url, 2500);
+    };
+    xhr.send();
+  };
+
   return dc;
 
 

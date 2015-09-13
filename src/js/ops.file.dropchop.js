@@ -44,15 +44,35 @@ var dropchop = (function(dc) {
     },
 
     'load-gist': {
-        description: 'Import files from Gist',
-        icon: '<i class="fa fa-github"></i>',
-        parameters: [
-            {
-                name: 'gist',
-                description :'Gist ID or URL',
-                type: 'text',
-            },
-        ],
+      description: 'Import files from Gist',
+      icon: '<i class="fa fa-github"></i>',
+      parameters: [
+        {
+          name: 'gist',
+          description :'Gist ID or URL',
+          type: 'text',
+        },
+      ],
+      execute: function() {
+        $(dc.form).trigger('form:file', ['load-gist']);
+      },
+      get: function(event, name, parameters) {
+        var gist = parameters[0].split('/')[parameters[0].split('/').length-1];
+        var url = 'https://api.github.com/gists/' + gist;
+        dc.util.xhr(url, this.file['load-gist'].callback);
+      },
+      callback: function(xhr, xhrEvent) {
+        if (xhr.status === 200) {
+          var data = JSON.parse(xhr.responseText);
+          for (var filename in data.files) {
+            var file = data.files[filename];
+            $(dc.layers).trigger('file:added', [file.filename, JSON.parse(file.content)]);
+          }
+          // dc.notify('success', 'Succesfully retrieved gist')
+        } else {
+          dc.notify('error', xhr.status + ': could not retrieve Gist. Please check your URL');
+        }
+      }
     },
 
     'break1': { type: 'break' },

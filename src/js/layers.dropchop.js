@@ -17,8 +17,8 @@ var dropchop = (function(dc) {
  * @param {object} file object
  * @param {string} file blob to be converted with JSON.parse()
  */
-  dc.layers.add = function(event, file, blob) {
-    var l = _makeLayer(file, blob);
+  dc.layers.add = function(event, name, blob) {
+    var l = _makeLayer(name, blob);
     dc.layers.list[l.stamp] = l;
 
     dc.notify('success', l.name + ' has been added!', 5000);
@@ -47,15 +47,15 @@ var dropchop = (function(dc) {
     
   };
 
-  function _makeLayer(f, b) {
-    var fl = L.mapbox.featureLayer(b);
+  function _makeLayer(name, json) {
+    var fl = L.mapbox.featureLayer(json);
 
     var layer = {
-      name: dc.util.removeFileExtension(f.name),
+      name: dc.util.removeFileExtension(name),
       stamp: L.stamp(fl),
-      raw: b,
+      raw: json,
       featurelayer: fl,
-      dateAdded: f.lastModifiedDate
+      dateAdded: new Date()
     };
     return layer;
   }

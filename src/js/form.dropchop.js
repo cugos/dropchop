@@ -6,10 +6,15 @@ var dropchop = (function(dc) {
   dc.form = dc.form || {};
   dc.form.init = function() {
     $(dc.form).on('form:geo', dc.form.geo);
+    $(dc.form).on('form:file', dc.form.file);
   };
 
   dc.form.geo = function(event, operation) {
     dc.form.create(operation, dc.ops.geo[operation], 'geo');
+  };
+
+  dc.form.file = function(event, operation) {
+    dc.form.create(operation, dc.ops.file[operation], 'file:' + operation);
   };
 
   dc.form.create = function(name, info, trigger) {

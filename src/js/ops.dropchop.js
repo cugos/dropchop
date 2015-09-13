@@ -25,6 +25,7 @@ var dropchop = (function(dc) {
     $(dc.ops).on('layer:selected', dc.ops.geoCheck);
     $(dc.ops).on('layer:unselected', dc.ops.geoCheck);
     $(dc.ops).on('operation:geo', dc.ops.geoExecute);
+    $(dc.ops).on('operation:file:load-gist', dc.ops.file['load-gist'].get);
 
     // setup ops file
     var leftMenu = $('<div>').addClass('dropchop-menu-left');
@@ -89,14 +90,8 @@ var dropchop = (function(dc) {
       dc.notify('error', err);
       throw err;
     }
-    
 
-    var newFile = {
-      name: prep.name,
-      lastModifiedDate: new Date()
-    };
-
-    $(dc.layers).trigger('file:added', [newFile, result]);
+    $(dc.layers).trigger('file:added', [prep.name, result]);
   };
 
   /**
