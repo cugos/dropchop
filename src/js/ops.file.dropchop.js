@@ -82,9 +82,9 @@ var dropchop = (function(dc) {
       callback: function(xhr, xhrEvent) {
         if (xhr.status === 200) {
           var data = JSON.parse(xhr.responseText);
-          for (var filename in data.files) {
-            var name = data.files[filename];
-            $(dc.layers).trigger('file:added', [name, JSON.parse(file.content)]);
+          for (var f in data.files) {
+            var name = data.files[f].filename;
+            $(dc.layers).trigger('file:added', [name, JSON.parse(data.files[f].content)]);
           }
           // dc.notify('success', 'Succesfully retrieved gist')
         } else {
@@ -151,7 +151,20 @@ var dropchop = (function(dc) {
       description: 'View extent of layers',
       icon: '<i class="fa fa-globe"></i>',
       execute: function() {
-        dc.map.m.fitBounds(dc.map.layergroup.getBounds());
+        if(!dc.selection.list.length) {
+          // extent of entire layer list if nothing selected
+          dc.map.m.fitBounds(dc.map.layergroup.getBounds());  
+        } else {
+          // otherwise build the bounds based on selected layers
+          var bounds;
+          $(dc.selection.list).each(function(l) {
+            var fl = dc.selection.list[l].featurelayer;
+            if(!l) bounds = fl.getBounds();
+            else bounds.extend(fl.getBounds());
+          });
+          dc.map.m.fitBounds(bounds);
+        }
+        
       }
     },
 
