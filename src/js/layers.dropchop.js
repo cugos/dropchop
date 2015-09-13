@@ -34,7 +34,6 @@ var dropchop = (function(dc) {
  */
   dc.layers.remove = function(event, stamp) {
     // trigger layer:removed
-    console.log(stamp);
     try {
       $(dc.map).trigger('layer:removed', [stamp]);
       $(dc.layerlist).trigger('layer:removed', [stamp]);

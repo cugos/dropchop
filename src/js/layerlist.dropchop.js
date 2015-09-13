@@ -12,8 +12,12 @@ var dropchop = (function(dc) {
 
     var liHelper = $('<li>').addClass('layer-help')
       .html('Welcome to <strong>dropchop</strong>! Here you can drag and drop files and they will show up in the layer list below.<br><br>To the left you can upload and save your files.<br><br>To the right you\'ll notice some geospatial operations that become available based on selecting specific layers.' );
-
     dc.layerlist.$elem.append(liHelper);
+
+    var toggleLayers = $('<li>').addClass('layer-toggleAll')
+      .html('<label><input type="checkbox" checked>Toggle all layers</label>');
+    toggleLayers.on('change', dc.layerlist.toggleAll);
+    dc.layerlist.$elem.append(toggleLayers);
 
     $(dc.layerlist).on('layer:added', dc.layerlist.addLayerListItem);
     $(dc.layerlist).on('layer:removed', dc.layerlist.removeLayerListItem);
@@ -55,6 +59,7 @@ var dropchop = (function(dc) {
 
     // hide helper text
     $('.layer-help').hide();
+    $('.layer-toggleAll').show();
   };
 
   function toggleSelection($item, layer) {
@@ -73,6 +78,27 @@ var dropchop = (function(dc) {
     dc.form.remove();
   }
 
+  dc.layerlist.toggleAll = function(event) {
+    // turn them on
+    if ($(this).find('input').prop('checked')) {
+      for (var i in dc.layers.list) {
+        elemToggle(dc.layers.list[i].stamp, true);
+      }
+    // turn them off
+    } else {
+      for (var i in dc.layers.list) {
+        elemToggle(dc.layers.list[i].stamp, false);
+      }
+    }
+
+    function elemToggle(stamp, bool) {
+      $('.layer-element[data-stamp='+stamp+']')
+        .find('.layer-toggle')
+        .prop('checked', bool)
+        .trigger('change'); // sets off a chain reaction
+    }
+  };
+
   dc.layerlist.removeLayerListItem = function(event, stamp) {
     $('[data-stamp='+stamp+']').fadeOut(300, function() {
       $(this).remove();
@@ -81,6 +107,7 @@ var dropchop = (function(dc) {
       // this has to check inside since there is a 300 ms delay with the fade
       if ($('.layer-element').length === 0) {
         $('.layer-help').show();
+        $('.layer-toggleAll').hide();
       }
     });
   };
