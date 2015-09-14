@@ -154,8 +154,26 @@ $geo-button-width: 100px;
       color: white;
     }
   }
+  .layer-duplicate {
+    border: none;
+    background: #f6f6f6;
+    position: absolute;
+    top: 6px;
+    padding: 5px 6px;
+    right: 35px;
+    text-align: center;
+    display: none;
+    color: $blue;
+    cursor: pointer;
+    border-radius: 50%;
+    &:hover {
+      background: $blue;
+      color: white;
+    }
+  }
   &:hover {
-    .layer-remove {
+    .layer-remove,
+    .layer-duplicate {
       display: block;
     }
   }

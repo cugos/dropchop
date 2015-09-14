@@ -35,6 +35,7 @@ var vendorJS = [
   './node_modules/jquery/dist/jquery.js',
   './node_modules/browser-filesaver/FileSaver.js',
   './node_modules/shp-write/shpwrite.js',
+  './node_modules/shpjs/dist/shp.js',
   './node_modules/turf/turf.js',
   './node_modules/mapbox.js/dist/mapbox.js' // requires to be built
 ];

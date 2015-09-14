@@ -35,6 +35,14 @@ var dropchop = (function(dc) {
       });
     var checkbox = $('<input>').addClass('layer-toggle').prop({'type': 'checkbox', 'checked': true});
     var remove = $('<button>').addClass('layer-remove').html('<i class="fa fa-times"></i>');
+    var duplicate = $('<button>').addClass('layer-duplicate').html('<i class="fa fa-files-o"></i>');
+
+    duplicate.on('click', function(event) {
+      event.preventDefault();
+      console.log('make a dupe');
+      $(dc.layers).trigger('layer:duplicate', [$(this).parent().attr('data-stamp')]);
+      return false;
+    });
     
     remove.on('click', function(event) {
       event.preventDefault();
@@ -43,7 +51,7 @@ var dropchop = (function(dc) {
       return false;
     });
     
-    checkbox.on('change', function(e) {
+    checkbox.on('change', function(event) {
       if (this.checked) {
         // trigger layer:show
         $(dc.map).trigger('layer:show', [layer]);
@@ -59,6 +67,7 @@ var dropchop = (function(dc) {
     layerlistItem.append(layerDiv);
     layerlistItem.append(checkbox);
     layerlistItem.append(remove);
+    layerlistItem.append(duplicate);
     dc.layerlist.$elem.append(layerlistItem);
 
     dc.layerlist.elems[layer.stamp] = layerlistItem;

@@ -21,6 +21,7 @@
     "jquery": "^2.1.4",
     "mapbox.js": "^2.1.9",
     "shp-write": "^0.2.4",
+    "shpjs": "^3.2.1",
     "turf": "^2.0.2"
   },
   "devDependencies": {

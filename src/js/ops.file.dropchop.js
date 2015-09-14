@@ -7,7 +7,7 @@ var dropchop = (function(dc) {
 
   dc.ops.file = {
     upload: {
-      description: 'Upload from your computer',
+      description: 'Upload from your computer. Supports .shp',
       icon: '<i class="fa fa-upload"></i>',
       execute: function() {
         // inspired from geojson.io
@@ -21,7 +21,19 @@ var dropchop = (function(dc) {
           .on('change', function() {
             var files = this.files;
             $(files).each(function(i) {
-              dc.util.readFile(files[i]);
+              // var ext = dc.util.getFileExtension(files[i].name);
+              
+              // // if it is a shapefile or zip file
+              // if (ext === 'shp' || ext === 'zip') {
+              //   // upload a shapefile and add the layer
+              //   dc.util.readShpFile
+              //   shp("files/pandr").then(function(geojson){
+              //     //do something with your geojson 
+              //   });
+              // } else {
+                dc.util.readFile(files[i]);
+              // }
+
             });
             $blindInput.remove();
           });

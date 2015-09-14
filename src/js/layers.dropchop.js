@@ -9,6 +9,7 @@ var dropchop = (function(dc) {
   dc.layers.prepare = function() {
     $(dc.layers).on('file:added', dc.layers.add);
     $(dc.layers).on('layer:removed', dc.layers.remove);
+    $(dc.layers).on('layer:duplicate', dc.layers.duplicate);
   };
 
 /**
@@ -44,6 +45,12 @@ var dropchop = (function(dc) {
       throw err;
     }
     
+  };
+
+  dc.layers.duplicate = function(event, stamp) {
+    var lyr = dc.layers.list[stamp];
+    // need to create new layer so we can get a uniqe L.stamp()
+    dc.layers.add({}, 'copy_'+lyr.name, lyr.raw);
   };
 
   function _makeLayer(name, json) {

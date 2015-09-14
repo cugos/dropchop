@@ -75,6 +75,10 @@ var dropchop = (function(dc) {
     }
   };
 
+  dc.util.getFileExtension = function(filename) {
+    return filename.substr(filename.lastIndexOf('.')+1);
+  };
+
   return dc;
 
 
