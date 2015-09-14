@@ -60,7 +60,6 @@ var dropchop = (function(dc) {
   function _geoBtnClick(event) {
     event.preventDefault();
     var operation = $(this).attr('data-operation');
-    var paramsArray = [10, 'miles'];
     $(dc.form).trigger('form:geo', [operation]);
   }
 
@@ -88,7 +87,7 @@ var dropchop = (function(dc) {
     try {
       result = turf[operation].apply(null, prep.options, 5000);
     } catch(err) {
-      dc.notify('error', err);
+      dc.notify('That operation isn\'t possible. Try changing the order of your selection.');
       throw err;
     }
 
@@ -107,7 +106,14 @@ var dropchop = (function(dc) {
     var nameArray = [];
     // get geometry array from selection
     $(dc.selection.list).each(function(i) {
-      geoms.push(dc.selection.list[i].raw);
+      console.log(params);
+      console.log('switch-' + dc.selection.list[i].stamp + ' in array', $.inArray('switch-' + dc.selection.list[i].stamp, params));
+      if ($.inArray('switch-' + dc.selection.list[i].stamp, params) === -1) {
+        geoms.push(dc.selection.list[i].raw);
+      } else {
+        console.log('oh this one should go first', dc.selection.list[i].stamp);
+        geoms.unshift(dc.selection.list[i].raw);
+      }
       nameArray.push(dc.selection.list[i].name);
     });
 

@@ -73,7 +73,7 @@ var dropchop = (function(dc) {
         dc.ops.file['load-url'].get({}, 'load-url', [data.url[i]]);
       });
     }
-  }
+  };
 
   return dc;
 

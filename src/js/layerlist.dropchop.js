@@ -26,7 +26,13 @@ var dropchop = (function(dc) {
   // triggered in dropchop.js
   dc.layerlist.addLayerListItem = function(event, layer) {
     var layerlistItem = $('<li>').addClass('layer-element').attr('data-stamp', layer.stamp);
-    var layerDiv = $('<div>').addClass('layer-name').text(layer.name);
+    var layerDiv = $('<div>')
+      .addClass('layer-name layer-new')
+      .text(layer.name)
+      .delay(3000)
+      .queue(function(next) {
+        $(this).removeClass('layer-new');
+      });
     var checkbox = $('<input>').addClass('layer-toggle').prop({'type': 'checkbox', 'checked': true});
     var remove = $('<button>').addClass('layer-remove').html('<i class="fa fa-times"></i>');
     
@@ -86,8 +92,8 @@ var dropchop = (function(dc) {
       }
     // turn them off
     } else {
-      for (var i in dc.layers.list) {
-        elemToggle(dc.layers.list[i].stamp, false);
+      for (var o in dc.layers.list) {
+        elemToggle(dc.layers.list[o].stamp, false);
       }
     }
 

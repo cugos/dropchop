@@ -123,6 +123,9 @@ $geo-button-width: 100px;
     font-size: 0.85em;
     color: #999;
     word-wrap: break-word;
+    &.layer-new {
+      background: #ffffcc;
+    }
     &:hover {
       background: #f6f6f6;
     }
@@ -238,12 +241,21 @@ $geo-button-width: 100px;
 
 .dropchop-form-parameter {
   margin-bottom: 1em;
-  label {
+  .dropchop-form-parameter-label {
     display: block;
     color: #555;
     font-size: 1.1em;
     text-transform: uppercase;
     font-weight: 900;
+    .sub-label {
+      display: block;
+      text-transform: none;
+      font-size: 0.9em;
+      font-weight: 300;
+      margin: 3px;
+      color: #777;
+      font-family: "Helvetica Neue", arial, sans-serif;
+    }
   }
   input,
   select {
@@ -251,6 +263,10 @@ $geo-button-width: 100px;
     width: 100%;
     padding: 0.5em;
     font-size: 0.9em;
+  }
+  input[type="radio"] {
+    display: inline-block;
+    width: auto;
   }
   .dropchop-form-parameter-description {
     font-size: 0.8em;

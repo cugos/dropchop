@@ -200,6 +200,23 @@ var dropchop = (function(dc) {
         geometry: ['Polygon']
       },
       description: 'Takes two polygons and returns a combined polygon. If the input polygons are not contiguous, this function returns a MultiPolygon feature.',
+    },
+
+    within: {
+      minFeatures: 2,
+      maxFeatures: 2,
+      requirements: {
+        type: ['FeatureCollection']
+      },
+      description: 'Takes a set of points and a set of polygons and returns the points that fall within the polygons. First input should be the points.',
+      parameters: [
+        {
+          name: 'Points to clip',
+          description :'Select the layer that represents the points you want to clip. This assumes the other layer is your clipping polygon.',
+          type: 'switch'
+          // default: dc.selection.list[0]
+        }
+      ]
     }
   };
 

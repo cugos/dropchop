@@ -69,6 +69,7 @@ var dropchop = (function(dc) {
           name: 'gist',
           description :'Gist ID or URL',
           type: 'text',
+          default: 'https://gist.github.com/'
         },
       ],
       execute: function() {

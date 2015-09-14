@@ -66,7 +66,7 @@ var dropchop = (function(dc) {
 
   dc.form.createParam = function(param) {
     var $input = $('<div>').addClass('dropchop-form-parameter');
-    var $label = $('<label>').text(param.name);
+    var $label = $('<label>').text(param.name).addClass('dropchop-form-parameter-label');
     var $field = dc.form.inputs[param.type](param);
     $field.appendTo($label);
     if(param.description.length) {
@@ -102,6 +102,23 @@ var dropchop = (function(dc) {
       var $i = $('<input>').attr('type', 'checkbox')
         .attr('name', p.name)
         .attr('value', p.default);
+      return $i;
+    },
+    switch: function(p) {
+      console.log('switching');
+      var $i = $('<div>');
+      $(dc.selection.list).each(function(i) {
+        var $lbl = $('<label>')
+          .addClass('sub-label');
+        var $opt = $('<input>')
+          .attr('type', 'radio')
+          .val('switch-' + dc.selection.list[i].stamp)
+          .attr('name', p.name);
+        $opt.appendTo($lbl);
+        $lbl.append(dc.selection.list[i].name);
+        $lbl.appendTo($i);
+      });
+      console.log($i);
       return $i;
     }
   };
