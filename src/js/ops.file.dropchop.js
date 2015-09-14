@@ -216,7 +216,7 @@ var dropchop = (function(dc) {
         };
         if (dc.selection.list.length > 0) {
           $(dc.selection.list).each(function(f) {
-            if (dc.selection.list[f] !== 'FeatureCollection') {
+            if (dc.selection.list[f].raw.type !== 'FeatureCollection') {
               fc.features.push(dc.selection.list[f].raw);
             } else {
               dc.notify('info', dc.selection.list[f].name + ' was not added because it is already a FeatureCollection');
