@@ -7,7 +7,7 @@ var dropchop = (function(dc) {
 
   dc.ops.file = {
     upload: {
-      description: 'Upload from your computer. Supports .shp',
+      description: 'Upload from your computer (.shp, .geojson)',
       icon: '<i class="fa fa-upload"></i>',
       execute: function() {
         // inspired from geojson.io
@@ -178,6 +178,54 @@ var dropchop = (function(dc) {
           dc.map.m.fitBounds(bounds);
         }
         
+      }
+    },
+
+    expand: {
+      minFeatures: 1,
+      description: 'Convert FeatureCollection into separate features',
+      icon: '<i class="fa fa-expand"></i>',
+      execute: function() {
+        var count = 0;
+        if (dc.selection.list.length === 1) {
+          var fc = dc.selection.list[0];
+          if (fc.raw.type === 'FeatureCollection') {
+            $(fc.raw.features).each(function(f) {
+              $(dc.layers).trigger('file:added', [fc.name + count + '_' + fc.raw.features[f].geometry.type, fc.raw.features[f]]);
+              count++;
+            });
+          } else {
+            var err = new Error('That needs to be a feature collection!');
+            dc.notify('error', 'Layer is not a FeatureCollection.');
+            throw err;
+          }
+        } else {
+          dc.notify('info', 'Please select a single layer!');
+        }
+      }
+    },
+
+    combine: {
+      minFeatures: 1,
+      description: 'Combines selected features into a single FeatureCollection',
+      icon: '<i class="fa fa-compress"></i>',
+      execute: function() {
+        var fc = {
+          type: 'FeatureCollection',
+          features: []
+        };
+        if (dc.selection.list.length > 0) {
+          $(dc.selection.list).each(function(f) {
+            if (dc.selection.list[f] !== 'FeatureCollection') {
+              fc.features.push(dc.selection.list[f].raw);
+            } else {
+              dc.notify('info', dc.selection.list[f].name + ' was not added because it is already a FeatureCollection');
+            }
+          });
+          $(dc.layers).trigger('file:added', ['new_FeatureCollection', fc]);
+        } else {
+          dc.notify('info', 'No layers selected!');
+        }
       }
     },
 

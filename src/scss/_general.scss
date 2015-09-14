@@ -137,35 +137,28 @@ $geo-button-width: 100px;
       }
     }
   }
-  .layer-remove {
+  .layer-action {
     border: none;
     background: #f6f6f6;
     position: absolute;
     top: 6px;
     padding: 5px 6px;
-    right: 9px;
     text-align: center;
     display: none;
-    color: #ff7a72;
-    cursor: pointer;
     border-radius: 50%;
+    cursor: pointer;
+  }
+  .layer-remove {
+    right: 9px;
+    color: #ff7a72;
     &:hover {
       background: $red;
       color: white;
     }
   }
   .layer-duplicate {
-    border: none;
-    background: #f6f6f6;
-    position: absolute;
-    top: 6px;
-    padding: 5px 6px;
     right: 35px;
-    text-align: center;
-    display: none;
     color: $blue;
-    cursor: pointer;
-    border-radius: 50%;
     &:hover {
       background: $blue;
       color: white;

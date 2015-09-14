@@ -34,8 +34,8 @@ var dropchop = (function(dc) {
         $(this).removeClass('layer-new');
       });
     var checkbox = $('<input>').addClass('layer-toggle').prop({'type': 'checkbox', 'checked': true});
-    var remove = $('<button>').addClass('layer-remove').html('<i class="fa fa-times"></i>');
-    var duplicate = $('<button>').addClass('layer-duplicate').html('<i class="fa fa-files-o"></i>');
+    var remove = $('<button>').addClass('layer-action layer-remove').html('<i class="fa fa-times"></i>');
+    var duplicate = $('<button>').addClass('layer-action layer-duplicate').html('<i class="fa fa-files-o"></i>');
 
     duplicate.on('click', function(event) {
       event.preventDefault();
