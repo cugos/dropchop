@@ -26,18 +26,62 @@ L.Dropchop.MapView = L.Class.extend({
         // mapbox token
         L.mapbox.accessToken = 'pk.eyJ1Ijoic3ZtYXR0aGV3cyIsImEiOiJVMUlUR0xrIn0.NweS_AttjswtN5wRuWCSNA';
 
+        //add locate me button
+        var geolocate = document.getElementById('geolocate');
+
         // create a map object on the `map` element id
         this._map = L.mapbox.map('map', null, {
             zoomControl: false,
             worldCopyJump: true
         }).setView([0,0], 3);
 
-        //add locate me control to map
-        L.control.locate({
-          position: 'topleft',
-        }).addTo(this._map);
+        // locate me js shhtuffs
 
 
+var myLayer = L.mapbox.featureLayer().addTo(this._map);
+
+// This uses the HTML5 geolocation API, which is available on
+// most mobile browsers and modern browsers, but not in Internet Explorer
+//
+// See this chart of compatibility for details:
+// http://caniuse.com/#feat=geolocation
+if (!navigator.geolocation) {
+    geolocate.innerHTML = 'Geolocation is not available';
+} else {
+    geolocate.onclick = function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this._map.locate();
+    };
+}
+
+// Once we've got a position, zoom and center the map
+// on it, and add a single marker.
+this._map.on('locationfound', function(e) {
+    this._map.fitBounds(e.bounds);
+
+    myLayer.setGeoJSON({
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [e.latlng.lng, e.latlng.lat]
+        },
+        properties: {
+            'title': 'Here I am!',
+            'marker-color': '#ff8888',
+            'marker-symbol': 'star'
+        }
+    });
+
+    // And hide the geolocation button
+    geolocate.parentNode.removeChild(geolocate);
+});
+
+// If the user chooses not to allow their location
+// to be shared, display an error message.
+this._map.on('locationerror', function() {
+    geolocate.innerHTML = 'Position could not be found';
+});
         // define our baselayers from mapbox defaults
         var baseLayers = {
             "Mapbox Streets": L.mapbox.tileLayer('mapbox.streets'),
@@ -60,8 +104,6 @@ L.Dropchop.MapView = L.Class.extend({
         L.control.zoom({
             position: 'topright'
         }).addTo(this._map);
-
-
 
     }
 

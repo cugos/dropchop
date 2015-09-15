@@ -30,3 +30,23 @@
   position:absolute;
   bottom: 0;
 }
+.ui-button {
+  font-size: 12;
+  background:#FFF;
+    color:#000;
+    display:block;
+    position:absolute;
+    top:70%;right:0%;
+    width:140px;
+    height:25px;
+    margin:0 10px 0 0;
+    padding:3px 3px 3px 3px;
+    z-index:100;
+    text-align:center;
+    border:1px solid rgba(0,0,0,0.4);
+    border-radius:3px;
+    }
+  .ui-button:hover {
+      background:rgba(255,255,255,0.2);
+      color:#000;
+      }
