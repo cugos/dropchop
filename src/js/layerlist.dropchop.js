@@ -11,7 +11,7 @@ var dropchop = (function(dc) {
     dc.$elem.append(dc.layerlist.$elem);
 
     var liHelper = $('<li>').addClass('layer-help')
-      .html('Welcome to <strong>dropchop</strong>! Here you can drag and drop files and they will show up in the layer list below.<br><br>To the left you can upload and save your files.<br><br>To the right you\'ll notice some geospatial operations that become available based on selecting specific layers.' );
+      .html('Welcome to <strong>dropchop</strong>! Here you can drag and drop files and they will show up in the layer list below.<br><br>To the left you can upload and save your files or <a href="/?gist=09129c20ec020b83bf85">add example data</a>.<br><br>To the right you\'ll notice some geospatial operations that become available based on selecting specific layers.' );
     dc.layerlist.$elem.append(liHelper);
 
     var toggleLayers = $('<li>').addClass('layer-toggleAll')
