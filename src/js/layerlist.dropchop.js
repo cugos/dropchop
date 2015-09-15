@@ -33,6 +33,9 @@ var dropchop = (function(dc) {
       .queue(function(next) {
         $(this).removeClass('layer-new');
       });
+
+    
+    var layerType = $('<span>').addClass('layer-type-image sprite sprite-layer-'+layerTypeIcon(layer.raw));
     var checkbox = $('<input>').addClass('layer-toggle').prop({'type': 'checkbox', 'checked': true});
     var remove = $('<button>').addClass('layer-action layer-remove').html('<i class="fa fa-times"></i>');
     var duplicate = $('<button>').addClass('layer-action layer-duplicate').html('<i class="fa fa-files-o"></i>');
@@ -66,6 +69,7 @@ var dropchop = (function(dc) {
 
     layerlistItem.append(layerDiv);
     layerlistItem.append(checkbox);
+    layerlistItem.append(layerType);
     layerlistItem.append(remove);
     layerlistItem.append(duplicate);
     dc.layerlist.$elem.append(layerlistItem);
@@ -76,6 +80,37 @@ var dropchop = (function(dc) {
     $('.layer-help').hide();
     $('.layer-toggleAll').show();
   };
+
+  function layerTypeIcon(lyr) {
+    var icon;
+    if (lyr.type === 'FeatureCollection') {
+      icon = 'featurecollection';
+      return icon;
+    } else {
+      // otherwise switch
+      switch(lyr.geometry.type) {
+        case 'Point': 
+        case 'MultiPoint': 
+          icon = 'point';
+          break;
+        case 'LineString': 
+        case 'MultiLineString': 
+          icon = 'line';
+          break;
+        case 'Polygon': 
+        case 'MultiPolygon': 
+          icon = 'polygon';
+          break;
+        case 'GeometryCollection': 
+          icon = 'geom';
+          break;
+        default:
+          icon = 'default';
+          break; 
+      }
+      return icon;
+    }
+  }
 
   function toggleSelection($item, layer) {
     $item.toggleClass('selected');

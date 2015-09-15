@@ -1,6 +1,6 @@
 var dropchop = (function(dc) {
   dc = dc || {};
-
+  dc.version = '1.0.0';
   dc.init = function(opts) {
     dc.options = opts;
     dc.$elem = $(opts.id);

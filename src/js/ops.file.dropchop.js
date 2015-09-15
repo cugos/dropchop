@@ -191,8 +191,8 @@ var dropchop = (function(dc) {
           var fc = dc.selection.list[0];
           if (fc.raw.type === 'FeatureCollection') {
             $(fc.raw.features).each(function(f) {
-              $(dc.layers).trigger('file:added', [fc.name + count + '_' + fc.raw.features[f].geometry.type, fc.raw.features[f]]);
               count++;
+              $(dc.layers).trigger('file:added', [fc.name + count + '_' + fc.raw.features[f].geometry.type, fc.raw.features[f]]);
             });
           } else {
             var err = new Error('That needs to be a feature collection!');

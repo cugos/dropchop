@@ -3,6 +3,7 @@ body {
   margin: 0;
   background: $grey;
   font-family:"Helvetica Neue", arial, sans-serif;
+  overflow: hidden;
   &.dragging {
     opacity: 0.8;
     .layer-help {
@@ -86,6 +87,7 @@ $geo-button-width: 100px;
   padding: 0;
   width: $width;
   list-style-type: none;
+  overflow-y: scroll;
   .layer-help {
     padding: 10px;
     margin: 10px;
@@ -119,9 +121,10 @@ $geo-button-width: 100px;
   }
   .layer-name {
     display: block;
-    padding: 8px 10px 8px 30px;
+    padding: 8px 10px 8px 51px;
     font-size: 0.85em;
-    color: #999;
+    color: #333;
+    font-weight: 800;
     word-wrap: break-word;
     &.layer-new {
       background: #ffffcc;
@@ -136,6 +139,15 @@ $geo-button-width: 100px;
         background: #444;
       }
     }
+  }
+  .layer-type-image {
+    float: left;
+    position: absolute;
+    top: 9px;
+    left: 30px;
+    width: 14px;
+    height: 15px;
+    opacity: 0.7;
   }
   .layer-action {
     border: none;
