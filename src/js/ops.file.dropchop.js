@@ -106,6 +106,37 @@ var dropchop = (function(dc) {
       }
     },
 
+    'load-overpass': {
+      description: 'Query the Overpass API',
+      icon: '<i class="fa fa-terminal"></i>',
+      parameters: [
+        {
+          name: 'query',
+          description :'Learn more about <a href="http://wiki.openstreetmap.org/wiki/Overpass_API/Language_Guide" target="_blank">the query language</a>.',
+          type: 'text',
+          default: 'amenity=bar'
+        },
+      ],
+      execute: function() {
+        $(dc.form).trigger('form:file', ['load-overpass']);
+      },
+      get: function(event, name, parameters) {
+        var bbox = dc.util.getBBox();
+        dc.util.xhr('http://overpass-api.de/api/interpreter?[out:json];node('+bbox+')['+parameters[0]+'];out;', dc.ops.file['load-overpass'].callback);
+      },
+      callback: function(xhr, xhrEvent) {
+        if (xhr.status === 200) {
+          var data = JSON.parse(xhr.responseText);
+          var geojson = osmtogeojson(data);
+          console.log(data, geojson);
+          $(dc.layers).trigger('file:added', ['overpass_response', geojson]);
+          dc.notify('success', 'Successfully queried the Overpass API');
+        } else {
+          dc.notify('error', xhr.status + ': could not query the Overpass API');
+        }
+      }
+    },
+
     'break1': { type: 'break' },
 
     'save-geojson': {

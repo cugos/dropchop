@@ -70,7 +70,7 @@ var dropchop = (function(dc) {
     var $field = dc.form.inputs[param.type](param);
     $field.appendTo($label);
     if(param.description.length) {
-      $('<p>').addClass('dropchop-form-parameter-description').text(param.description).appendTo($label);
+      $('<p>').addClass('dropchop-form-parameter-description').html(param.description).appendTo($label);
     }
     $input.append($label);
     return $input;
