@@ -129,8 +129,12 @@ var dropchop = (function(dc) {
           var data = JSON.parse(xhr.responseText);
           var geojson = osmtogeojson(data);
           console.log(data, geojson);
-          $(dc.layers).trigger('file:added', ['overpass_response', geojson]);
-          dc.notify('success', 'Successfully queried the Overpass API');
+          if (!data.elements.length) {
+            dc.notify('info', 'No elements found in your query.');
+          } else {
+            $(dc.layers).trigger('file:added', ['overpass_response', geojson]);
+            dc.notify('success', 'Found <strong>' + data.elements.length + ' elements</strong> from the Overpass API');
+          }
         } else {
           dc.notify('error', xhr.status + ': could not query the Overpass API');
         }
