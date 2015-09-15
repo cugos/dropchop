@@ -109,6 +109,7 @@ var dropchop = (function(dc) {
     'load-overpass': {
       description: 'Query the Overpass API',
       icon: '<i class="fa fa-terminal"></i>',
+      _temp: {},
       parameters: [
         {
           name: 'query',
@@ -116,11 +117,21 @@ var dropchop = (function(dc) {
           type: 'text',
           default: 'amenity=bar'
         },
+        {
+          name: 'layer name',
+          description :'Name of the layer added if results are found.',
+          type: 'text',
+          default: 'overpass_layer_name'
+        }
       ],
       execute: function() {
         $(dc.form).trigger('form:file', ['load-overpass']);
       },
       get: function(event, name, parameters) {
+        // set layer name to _temp for later usage
+        dc.ops.file['load-overpass']._temp.layerName = parameters[1]; // this is ugly
+
+        // build the query with bounding box
         var bbox = dc.util.getBBox();
         dc.util.xhr('http://overpass-api.de/api/interpreter?[out:json];node('+bbox+')['+parameters[0]+'];out;', dc.ops.file['load-overpass'].callback);
       },
@@ -128,11 +139,10 @@ var dropchop = (function(dc) {
         if (xhr.status === 200) {
           var data = JSON.parse(xhr.responseText);
           var geojson = osmtogeojson(data);
-          console.log(data, geojson);
           if (!data.elements.length) {
             dc.notify('info', 'No elements found in your query.');
           } else {
-            $(dc.layers).trigger('file:added', ['overpass_response', geojson]);
+            $(dc.layers).trigger('file:added', [dc.ops.file['load-overpass']._temp.layerName, geojson]);
             dc.notify('success', 'Found <strong>' + data.elements.length + ' elements</strong> from the Overpass API');
           }
         } else {
