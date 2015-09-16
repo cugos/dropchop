@@ -54,7 +54,6 @@ var dropchop = (function(dc) {
         },
       ],
       execute: function() {
-        // https://gist.githubusercontent.com/mapsam/eace9bf13d3853bdf273/raw/3cd4b92accd1e04394840ceb93b8d4dd03038611/locations.geojson
         $(dc.form).trigger('form:file', ['load-url']);
       },
       get: function(event, name, parameters) {
@@ -133,12 +132,13 @@ var dropchop = (function(dc) {
 
         // build the query with bounding box
         var bbox = dc.util.getBBox();
-        dc.util.xhr('http://overpass-api.de/api/interpreter?[out:json];node('+bbox+')['+parameters[0]+'];out;', dc.ops.file['load-overpass'].callback);
+        dc.util.xhr('http://overpass-api.de/api/interpreter?[out:json];[timeout:3600];way['+parameters[0]+']('+bbox+');out;', dc.ops.file['load-overpass'].callback);
       },
       callback: function(xhr, xhrEvent) {
         if (xhr.status === 200) {
           var data = JSON.parse(xhr.responseText);
           var geojson = osmtogeojson(data);
+          console.log(data, geojson);
           if (!data.elements.length) {
             dc.notify('info', 'No elements found in your query.');
           } else {
