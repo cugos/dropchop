@@ -95,6 +95,7 @@ $geo-button-width: 100px;
   width: $width;
   list-style-type: none;
   overflow-y: scroll;
+  -webkit-transform: translate3d(0,0,0);
   .layer-help {
     padding: 10px;
     margin: 10px;
@@ -236,10 +237,7 @@ $geo-button-width: 100px;
     margin: 1px 0 0 1px;
     text-align: left;
   }
-  &.operation-inactive {
-    // opacity: 0.5;
-    // text-decoration: line-through;
-  }
+  &.operation-inactive,
   &:disabled {
     opacity: 0.5;
     text-decoration: line-through;

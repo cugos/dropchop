@@ -54,7 +54,6 @@ var dropchop = (function(dc) {
         },
       ],
       execute: function() {
-        // https://gist.githubusercontent.com/mapsam/eace9bf13d3853bdf273/raw/3cd4b92accd1e04394840ceb93b8d4dd03038611/locations.geojson
         $(dc.form).trigger('form:file', ['load-url']);
       },
       get: function(event, name, parameters) {
@@ -102,6 +101,51 @@ var dropchop = (function(dc) {
           // dc.notify('success', 'Succesfully retrieved gist')
         } else {
           dc.notify('error', xhr.status + ': could not retrieve Gist. Please check your URL');
+        }
+      }
+    },
+
+    'load-overpass': {
+      description: 'Query the Overpass API',
+      icon: '<i class="fa fa-terminal"></i>',
+      _temp: {},
+      parameters: [
+        {
+          name: 'query',
+          description :'Learn more about <a href="http://wiki.openstreetmap.org/wiki/Overpass_API/Language_Guide" target="_blank">the query language</a>.',
+          type: 'text',
+          default: 'amenity=bar'
+        },
+        {
+          name: 'layer name',
+          description :'Name of the layer added if results are found.',
+          type: 'text',
+          default: 'overpass_layer_name'
+        }
+      ],
+      execute: function() {
+        $(dc.form).trigger('form:file', ['load-overpass']);
+      },
+      get: function(event, name, parameters) {
+        // set layer name to _temp for later usage
+        dc.ops.file['load-overpass']._temp.layerName = parameters[1]; // this is ugly
+
+        // build the query with bounding box
+        var bbox = dc.util.getBBox();
+        dc.util.xhr('http://overpass-api.de/api/interpreter?[out:json];node['+parameters[0]+']('+bbox+');out;', dc.ops.file['load-overpass'].callback);
+      },
+      callback: function(xhr, xhrEvent) {
+        if (xhr.status === 200) {
+          var data = JSON.parse(xhr.responseText);
+          var geojson = osmtogeojson(data);
+          if (!data.elements.length) {
+            dc.notify('info', 'No elements found in your query.');
+          } else {
+            $(dc.layers).trigger('file:added', [dc.ops.file['load-overpass']._temp.layerName, geojson]);
+            dc.notify('success', 'Found <strong>' + data.elements.length + ' elements</strong> from the Overpass API');
+          }
+        } else {
+          dc.notify('error', xhr.status + ': could not query the Overpass API');
         }
       }
     },

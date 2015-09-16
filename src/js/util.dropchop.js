@@ -27,7 +27,7 @@ var dropchop = (function(dc) {
 
   dc.util.xhr = function(url, callback) {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', encodeURI(url));
+    xhr.open('GET', url);
     xhr.onload = callback.bind(this, xhr);
     xhr.onerror = function( xhr ) {
         console.error(xhr);
@@ -77,6 +77,19 @@ var dropchop = (function(dc) {
 
   dc.util.getFileExtension = function(filename) {
     return filename.substr(filename.lastIndexOf('.')+1);
+  };
+
+  dc.util.getBBox = function() {
+    var bounds = dc.map.m.getBounds(),
+            sw = bounds.getSouthWest(),
+            ne = bounds.getNorthEast();
+    // we should probably check the size here?
+    // node(57.7,11.9,57.8,12.0)
+    return sw.lat+','+sw.lng+','+ne.lat+','+ne.lng;
+  };
+
+  dc.util.uncollect = function(fc) {
+    return fc.features[0];
   };
 
   return dc;
