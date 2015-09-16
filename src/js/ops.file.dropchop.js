@@ -132,13 +132,12 @@ var dropchop = (function(dc) {
 
         // build the query with bounding box
         var bbox = dc.util.getBBox();
-        dc.util.xhr('http://overpass-api.de/api/interpreter?[out:json];[timeout:3600];way['+parameters[0]+']('+bbox+');out;', dc.ops.file['load-overpass'].callback);
+        dc.util.xhr('http://overpass-api.de/api/interpreter?[out:json];node['+parameters[0]+']('+bbox+');out;', dc.ops.file['load-overpass'].callback);
       },
       callback: function(xhr, xhrEvent) {
         if (xhr.status === 200) {
           var data = JSON.parse(xhr.responseText);
           var geojson = osmtogeojson(data);
-          console.log(data, geojson);
           if (!data.elements.length) {
             dc.notify('info', 'No elements found in your query.');
           } else {

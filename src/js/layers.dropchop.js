@@ -54,12 +54,16 @@ var dropchop = (function(dc) {
   };
 
   function _makeLayer(name, json) {
-    var fl = L.mapbox.featureLayer(json);
+    var geojson = json;
+    // if (json.type === 'FeatureCollection' && json.features.length === 1) {
+    //   geojson = dc.util.uncollect(json);
+    // }
 
+    var fl = L.mapbox.featureLayer(geojson);
     var layer = {
       name: dc.util.removeFileExtension(name),
       stamp: L.stamp(fl),
-      raw: json,
+      raw: geojson,
       featurelayer: fl,
       dateAdded: new Date()
     };

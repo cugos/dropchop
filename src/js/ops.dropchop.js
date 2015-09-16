@@ -84,6 +84,7 @@ var dropchop = (function(dc) {
    */
   dc.ops.geoExecute = function(event, operation, parameters) {
     var prep = dc.ops.prepareTurfParams(operation, parameters);
+    console.log(prep);
     var result = null;
     try {
       result = turf[operation].apply(null, prep.options, 5000);
@@ -107,12 +108,9 @@ var dropchop = (function(dc) {
     var nameArray = [];
     // get geometry array from selection
     $(dc.selection.list).each(function(i) {
-      console.log(params);
-      console.log('switch-' + dc.selection.list[i].stamp + ' in array', $.inArray('switch-' + dc.selection.list[i].stamp, params));
       if ($.inArray('switch-' + dc.selection.list[i].stamp, params) === -1) {
         geoms.push(dc.selection.list[i].raw);
       } else {
-        console.log('oh this one should go first', dc.selection.list[i].stamp);
         geoms.unshift(dc.selection.list[i].raw);
       }
       nameArray.push(dc.selection.list[i].name);

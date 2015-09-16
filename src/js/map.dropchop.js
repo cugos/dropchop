@@ -21,6 +21,15 @@ var dropchop = (function(dc) {
       worldCopyJump: true
     }).setView([0,0], 3);
 
+    // sets the location of the zoom buttons to the top right
+    L.control.zoom({
+      position: 'topright'
+    }).addTo(dc.map.m);
+
+    L.mapbox.geocoderControl('mapbox.places', {
+      position: 'topright'
+    }).addTo(dc.map.m);
+
     var baseLayers = {
       "Mapbox Streets": L.mapbox.tileLayer('mapbox.streets'),
       "Mapbox Outdoors": L.mapbox.tileLayer('mapbox.outdoors'),
@@ -34,11 +43,6 @@ var dropchop = (function(dc) {
     L.control.layers(baseLayers, {}, {
       position: 'bottomright',
       collapsed: false
-    }).addTo(dc.map.m);
-
-    // sets the location of the zoom buttons to the top right
-    L.control.zoom({
-      position: 'topright'
     }).addTo(dc.map.m);
 
     dc.map.layergroup = L.mapbox.featureLayer().addTo(dc.map.m);

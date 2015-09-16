@@ -88,6 +88,10 @@ var dropchop = (function(dc) {
     return sw.lat+','+sw.lng+','+ne.lat+','+ne.lng;
   };
 
+  dc.util.uncollect = function(fc) {
+    return fc.features[0];
+  };
+
   return dc;
 
 
