@@ -28,6 +28,7 @@ var dropchop = (function(dc) {
     $(dc.ops).on('operation:file:load-gist', dc.ops.file['load-gist'].get);
     $(dc.ops).on('operation:file:load-url', dc.ops.file['load-url'].get);
     $(dc.ops).on('operation:file:load-overpass', dc.ops.file['load-overpass'].get);
+    $(dc.ops).on('operation:file:rename', dc.ops.file.rename.callback);
 
     // setup ops file
     var leftMenu = $('<div>').addClass('dropchop-menu-left');

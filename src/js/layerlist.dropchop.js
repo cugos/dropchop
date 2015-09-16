@@ -6,7 +6,7 @@ var dropchop = (function(dc) {
   dc.layerlist = {};
   dc.layerlist.elems = {};
 
-  dc.layerlist.create = function(name) {
+  dc.layerlist.init = function(name) {
     dc.layerlist.$elem = $('<ol>').addClass(name);
     dc.$elem.append(dc.layerlist.$elem);
 
@@ -21,6 +21,11 @@ var dropchop = (function(dc) {
 
     $(dc.layerlist).on('layer:added', dc.layerlist.addLayerListItem);
     $(dc.layerlist).on('layer:removed', dc.layerlist.removeLayerListItem);
+    $(dc.layerlist).on('layer:rename', dc.layerlist.rename);
+  };
+
+  dc.layerlist.rename = function(event, stamp, newName) {
+    $('[data-stamp='+stamp+']').find('.layer-name').text(newName);
   };
 
   // triggered in dropchop.js
@@ -42,7 +47,6 @@ var dropchop = (function(dc) {
 
     duplicate.on('click', function(event) {
       event.preventDefault();
-      console.log('make a dupe');
       $(dc.layers).trigger('layer:duplicate', [$(this).parent().attr('data-stamp')]);
       return false;
     });

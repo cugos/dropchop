@@ -156,13 +156,6 @@ var dropchop = (function(dc) {
       minFeatures: 1,
       description: 'Save as GeoJSON',
       icon: '<i class="fa fa-file-code-o"></i>',
-      parameters: [
-        {
-          name: 'filename',
-          description :'Filename prefix to write',
-          default: 'dnc'
-        }
-      ],
       createsLayer: false,
       execute: function() {
         $(dc.selection.list).each(function(i) {
@@ -275,6 +268,30 @@ var dropchop = (function(dc) {
 
     'break3': { type: 'break' },
 
+    rename: {
+      minFeatures: 1,
+      description: 'Rename layer',
+      icon: '<i class="fa fa-pencil"></i>',
+      parameters: [
+        {
+          name: 'Name',
+          type: 'text',
+          description: ''
+        }
+      ],
+      execute: function() {
+        if (dc.selection.list.length === 1) {
+          $(dc.form).trigger('form:file', ['rename']);  
+        } else {
+          dc.notify('info', 'Please select <strong>one layer</strong>.');
+        }
+      },
+      callback: function(event, name, parameters) {
+        console.log(name, parameters);
+        $(dc.layers).trigger('layer:rename', [dc.selection.list[0], parameters[0]]);
+      }
+    },
+
     remove: {
       minFeatures: 1,
       description: 'Remove selected layers',
@@ -284,8 +301,7 @@ var dropchop = (function(dc) {
           $(dc.layers).trigger('layer:removed', [dc.selection.list[i].stamp]);
         });
         dc.selection.clear();
-      },
-      disableForm: true,
+      }
     },
 
     info: {

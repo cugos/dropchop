@@ -15,7 +15,7 @@ var dropchop = (function(dc) {
     dc.selection.init();
 
     // setup layerlist
-    dc.layerlist.create('layerlist');
+    dc.layerlist.init('layerlist');
 
     // setup dropzone
     dc.dropzone($('body'));

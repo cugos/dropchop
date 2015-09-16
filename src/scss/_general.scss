@@ -169,7 +169,7 @@ $geo-button-width: 100px;
     cursor: pointer;
   }
   .layer-remove {
-    right: 9px;
+    right: 4px;
     color: #ff7a72;
     &:hover {
       background: $red;
@@ -177,16 +177,25 @@ $geo-button-width: 100px;
     }
   }
   .layer-duplicate {
-    right: 35px;
+    right: 28px;
     color: $blue;
     &:hover {
       background: $blue;
       color: white;
     }
   }
+  .layer-rename {
+    right: 54px;
+    color: $green;
+    &:hover {
+      background: $green;
+      color: white;
+    }
+  }
   &:hover {
     .layer-remove,
-    .layer-duplicate {
+    .layer-duplicate,
+    .layer-rename {
       display: block;
     }
   }
