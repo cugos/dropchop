@@ -21,9 +21,10 @@ var dropchop = (function(dc) {
       geoContainer.append(geoBtn);
     }
 
-    // when layers are selected or unselected, lets check our geo operations
-    $(dc.ops).on('layer:selected', dc.ops.geoCheck);
-    $(dc.ops).on('layer:unselected', dc.ops.geoCheck);
+    // $(dc.ops).on('layer:selected', dc.ops.geoCheck);
+    // $(dc.ops).on('layer:unselected', dc.ops.geoCheck);
+    $('.operation-geo').removeClass('operation-inactive');
+    $('.operation-geo').prop('disabled', false);
     $(dc.ops).on('operation:geo', dc.ops.geoExecute);
     $(dc.ops).on('operation:file:load-gist', dc.ops.file['load-gist'].get);
     $(dc.ops).on('operation:file:load-url', dc.ops.file['load-url'].get);
@@ -85,10 +86,11 @@ var dropchop = (function(dc) {
    */
   dc.ops.geoExecute = function(event, operation, parameters) {
     var prep = dc.ops.prepareTurfParams(operation, parameters);
-    console.log(prep);
     var result = null;
     try {
-      result = turf[operation].apply(null, prep.options, 5000);
+      // result = turf[operation].apply(null, prep.options);
+      result = dc.ops.geo[operation].execute(prep.options);
+      console.log(result);
     } catch(err) {
       dc.notify('That operation isn\'t possible. Try changing the order of your selection.');
       throw err;

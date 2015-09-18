@@ -32,6 +32,27 @@ var dropchop = (function(dc) {
           default: 'miles'
         }
       ],
+      execute: function(params) {
+        var result = {};
+        var newParams = params;
+
+        // if there is a feature collection, do it recursively
+        if (params[0].type === 'FeatureCollection') {
+          result.type = 'FeatureCollection';
+          result.features = [];
+          var features = params[0].features;
+          var len = features.length;
+          for (var f = 0; f < len; f++) {
+            newParams[0] = features[f];
+            var feature = turf.along.apply(null, newParams);
+            result.features.push(feature);
+          }
+        // otherwise it's a single 
+        } else {
+          result = turf.along.apply(null, params);
+        }
+        return result;
+      }
     },
 
     bezier: {
@@ -60,6 +81,27 @@ var dropchop = (function(dc) {
 
         }
       ],
+      execute: function(params) {
+        var result = {};
+        var newParams = params;
+
+        // if there is a feature collection, do it recursively
+        if (params[0].type === 'FeatureCollection') {
+          result.type = 'FeatureCollection';
+          result.features = [];
+          var features = params[0].features;
+          var len = features.length;
+          for (var f = 0; f < len; f++) {
+            newParams[0] = features[f];
+            var feature = turf.bezier.apply(null, newParams);
+            result.features.push(feature);
+          }
+        // otherwise it's a single 
+        } else {
+          result = turf.bezier.apply(null, params);
+        }
+        return result;
+      }
     },
 
     buffer: {
@@ -87,6 +129,10 @@ var dropchop = (function(dc) {
           default: 'miles'
         }
       ],
+      execute: function(params) {
+        var result = turf.buffer.apply(null, params);
+        return result;
+      }
     },
 
     center: {
@@ -95,10 +141,11 @@ var dropchop = (function(dc) {
       requirements: {
         type: ['FeatureCollection']
       },
-      reqs: [
-        ['FeatureCollection<>']
-      ],
       description: 'Creates a point in the center of the feature.',
+      execute: function(params) {
+        var result = turf.center.apply(null, params);
+        return result;
+      }
     },
 
     centroid: {
@@ -111,6 +158,11 @@ var dropchop = (function(dc) {
         ['Feature<>', 'FeatureCollection<>']
       ],
       description: 'Creates a point in the centroid of the features.',
+      execute: function(params) {
+        console.log(params);
+        var result = turf.centroid.apply(null, params);
+        return result;
+      }
     },
 
     destination: {
@@ -146,6 +198,27 @@ var dropchop = (function(dc) {
           default: 'miles'
         }
       ],
+      execute: function(params) {
+        var result = {};
+        var newParams = params;
+
+        // if there is a feature collection, do it recursively
+        if (params[0].type === 'FeatureCollection') {
+          result.type = 'FeatureCollection';
+          result.features = [];
+          var features = params[0].features;
+          var len = features.length;
+          for (var f = 0; f < len; f++) {
+            newParams[0] = features[f];
+            var feature = turf.destination.apply(null, newParams);
+            result.features.push(feature);
+          }
+        // otherwise it's a single 
+        } else {
+          result = turf.destination.apply(null, params);
+        }
+        return result;
+      }
     },
 
     envelope: {
@@ -158,6 +231,10 @@ var dropchop = (function(dc) {
         ['FeatureCollection<>']
       ],
       description: 'Takes any number of features and returns a rectangular Polygon that encompasses all vertices.',
+      execute: function(params) {
+        var result = turf.envelope.apply(null, params);
+        return result;
+      }
     },
 
     explode: {
@@ -170,6 +247,10 @@ var dropchop = (function(dc) {
         ['Feature<>', 'FeatureCollection<>']
       ],
       description: 'Takes a feature or set of features and returns all positions as points.',
+      execute: function(params) {
+        var result = turf.explode.apply(null, params);
+        return result;
+      }
     },
 
     midpoint: {
@@ -183,6 +264,10 @@ var dropchop = (function(dc) {
         ['Feature<Point>']
       ],
       description: 'Takes two points and returns a point midway between them.',
+      execute: function(params) {
+        var result = turf.midpoint.apply(null, params);
+        return result;
+      }
     },
 
     simplify: {
@@ -209,7 +294,28 @@ var dropchop = (function(dc) {
             description: 'whether or not to spend more time to create a higher-quality simplification with a different algorithm',
             default: false
           }
-      ]
+      ],
+      execute: function(params) {
+        var result = {};
+        var newParams = params;
+
+        // if there is a feature collection, do it recursively
+        if (params[0].type === 'FeatureCollection') {
+          result.type = 'FeatureCollection';
+          result.features = [];
+          var features = params[0].features;
+          var len = features.length;
+          for (var f = 0; f < len; f++) {
+            newParams[0] = features[f];
+            var feature = turf.simplify.apply(null, newParams);
+            result.features.push(feature);
+          }
+        // otherwise it's a single 
+        } else {
+          result = turf.simplify.apply(null, params);
+        }
+        return result;
+      }
     },
 
     tin: {
@@ -223,6 +329,10 @@ var dropchop = (function(dc) {
         ['FeatureCollection<>']
       ],
       description: 'Triangulated irregular network, interpolation method',
+      execute: function(params) {
+        var result = turf.tin.apply(null, params);
+        return result;
+      }
     },
 
     union: {
@@ -236,6 +346,10 @@ var dropchop = (function(dc) {
         ['Feature<Polygon>']
       ],
       description: 'Takes two polygons and returns a combined polygon. If the input polygons are not contiguous, this function returns a MultiPolygon feature.',
+      execute: function(params) {
+        var result = turf.union.apply(null, params);
+        return result;
+      }
     },
 
     within: {
@@ -255,7 +369,11 @@ var dropchop = (function(dc) {
           type: 'switch'
           // default: dc.selection.list[0]
         }
-      ]
+      ],
+      execute: function(params) {
+        var result = turf.within.apply(null, params);
+        return result;
+      }
     }
   };
 
