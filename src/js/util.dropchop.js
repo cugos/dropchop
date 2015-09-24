@@ -92,6 +92,23 @@ var dropchop = (function(dc) {
     return fc.features[0];
   };
 
+  dc.util.executeFC = function(fc, operation, params) {
+
+    var newParams = params;
+    var newFC = {};
+    newFC.type = 'FeatureCollection';
+    newFC.features = [];
+
+    for (var f = 0; f < fc.features.length; f++) {
+      newParams[0] = fc.features[f];
+      var feature = turf[operation].apply(null, newParams);
+      newFC.features.push(feature);
+    }
+
+    return newFC;
+    
+  };
+
   return dc;
 
 

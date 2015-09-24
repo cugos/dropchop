@@ -35,15 +35,7 @@ var dropchop = (function(dc) {
 
         // if there is a feature collection, do it recursively
         if (params[0].type === 'FeatureCollection') {
-          result.type = 'FeatureCollection';
-          result.features = [];
-          var features = params[0].features;
-          var len = features.length;
-          for (var f = 0; f < len; f++) {
-            newParams[0] = features[f];
-            var feature = turf.along.apply(null, newParams);
-            result.features.push(feature);
-          }
+          result = dc.util.executeFC(params[0], 'along', params);
         // otherwise it's a single 
         } else {
           result = turf.along.apply(null, params);
@@ -81,15 +73,7 @@ var dropchop = (function(dc) {
 
         // if there is a feature collection, do it recursively
         if (params[0].type === 'FeatureCollection') {
-          result.type = 'FeatureCollection';
-          result.features = [];
-          var features = params[0].features;
-          var len = features.length;
-          for (var f = 0; f < len; f++) {
-            newParams[0] = features[f];
-            var feature = turf.bezier.apply(null, newParams);
-            result.features.push(feature);
-          }
+          result = dc.util.executeFC(params[0], 'bezier', params);
         // otherwise it's a single 
         } else {
           result = turf.bezier.apply(null, params);
@@ -193,15 +177,7 @@ var dropchop = (function(dc) {
 
         // if there is a feature collection, do it recursively
         if (params[0].type === 'FeatureCollection') {
-          result.type = 'FeatureCollection';
-          result.features = [];
-          var features = params[0].features;
-          var len = features.length;
-          for (var f = 0; f < len; f++) {
-            newParams[0] = features[f];
-            var feature = turf.destination.apply(null, newParams);
-            result.features.push(feature);
-          }
+          result = dc.util.executeFC(params[0], 'destination', params);
         // otherwise it's a single 
         } else {
           result = turf.destination.apply(null, params);
@@ -280,15 +256,7 @@ var dropchop = (function(dc) {
 
         // if there is a feature collection, do it recursively
         if (params[0].type === 'FeatureCollection') {
-          result.type = 'FeatureCollection';
-          result.features = [];
-          var features = params[0].features;
-          var len = features.length;
-          for (var f = 0; f < len; f++) {
-            newParams[0] = features[f];
-            var feature = turf.simplify.apply(null, newParams);
-            result.features.push(feature);
-          }
+          result = dc.util.executeFC(params[0], 'simplify', params);
         // otherwise it's a single 
         } else {
           result = turf.simplify.apply(null, params);
