@@ -1,0 +1,47 @@
+$loader-size: 35px;
+
+body {
+  &.dropchop-loading {
+    #dropchop {
+      opacity: 0.5;
+    }
+  }
+}
+
+.dropchop-loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: $loader-size;
+  height: $loader-size;
+  margin-left: -15px;
+  margin-top: -15px;
+  text-align: center;
+  vertical-align: middle;
+  -webkit-animation: rotating .8s linear infinite;
+  -moz-animation: rotating .8s linear infinite;
+  -ms-animation: rotating .8s linear infinite;
+  -o-animation: rotating .8s linear infinite;
+  animation: rotating .8s linear infinite;
+  padding: 10px;
+  border-radius: 50%;
+  background: white;
+
+  &:before {
+    font-family: 'FontAwesome';
+    content:"\f01e";
+    font-size: $loader-size;
+    color: #000;
+  }
+  &.loader-complete {
+    -webkit-animation: none;
+    -moz-animation: none;
+    -ms-animation: none;
+    -o-animation: none;
+    animation: none;
+    &:before {
+      content:"\f00c";
+      color: $green;
+    }
+  }
+}

@@ -61,6 +61,7 @@ var dropchop = (function(dc) {
         dc.util.xhr(url, dc.ops.file[name].callback);
       },
       callback: function(xhr, xhrEvent) {
+        dropchop.util.loader(false);
         if (xhr.status === 200) {
           var data = JSON.parse(xhr.responseText);
           // get filename based on the end of the url - not sure if this is sustainable
@@ -92,6 +93,7 @@ var dropchop = (function(dc) {
         dc.util.xhr(url, dc.ops.file[name].callback);
       },
       callback: function(xhr, xhrEvent) {
+        dropchop.util.loader(false);
         if (xhr.status === 200) {
           var data = JSON.parse(xhr.responseText);
           for (var f in data.files) {
@@ -135,6 +137,7 @@ var dropchop = (function(dc) {
         dc.util.xhr('http://overpass-api.de/api/interpreter?[out:json];node['+parameters[0]+']('+bbox+');out;', dc.ops.file['load-overpass'].callback);
       },
       callback: function(xhr, xhrEvent) {
+        dropchop.util.loader(false);
         if (xhr.status === 200) {
           var data = JSON.parse(xhr.responseText);
           var geojson = osmtogeojson(data);

@@ -26,12 +26,14 @@ var dropchop = (function(dc) {
   };
 
   dc.util.xhr = function(url, callback) {
+    dropchop.util.loader(true);
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url);
     xhr.onload = callback.bind(this, xhr);
     xhr.onerror = function( xhr ) {
-        console.error(xhr);
-        dc.notify('error', 'Unable to access ' + url, 2500);
+      dropchop.util.loader(false);
+      console.error(xhr);
+      dc.notify('error', 'Unable to access ' + url, 2500);
     };
     xhr.send();
   };
@@ -112,6 +114,20 @@ var dropchop = (function(dc) {
 
     return newFC;
     
+  };
+
+  dc.util.loader = function(yes) {
+    var loader = $('<div>').addClass('dropchop-loader');
+
+    if (yes) {
+      $('body').addClass('dropchop-loading');
+      $('body').append(loader);
+    } else {
+      $('body').removeClass('dropchop-loading');
+      $('.dropchop-loader').addClass('loader-complete').fadeOut(2000, function(){
+        $(this).remove();
+      });
+    }
   };
 
   return dc;
