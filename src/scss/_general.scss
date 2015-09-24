@@ -82,7 +82,7 @@ a.dropchop-btn {
 
 $left-menu-width: 41px;
 $width: 280px;
-$geo-button-width: 100px;
+$geo-button-width: 200px;
 
 .layerlist {
   position: absolute;
@@ -206,7 +206,7 @@ $geo-button-width: 100px;
   top: 0;
   bottom: 0;
   right: 0;
-  left: $width + $left-menu-width;
+  left: $left-menu-width + $width + $geo-button-width;
 }
 
 .notification {
@@ -232,41 +232,62 @@ $geo-button-width: 100px;
 
 .operations-geo {
   position: absolute;
+  top: 0;
   left: $left-menu-width + $width;
+  bottom: 0;
+  background: white;
+  border-left: 1px solid #e5e5e5;
+  overflow-y: scroll;
 }
 .operation {
   border: none;
   -webkit-transform: translate3d(0, 0, 0); // forces chrome acceleration GPU
   &.operation-geo {
-    padding:5px;
+    padding:1em;
     display: block;
-    width: 100px;
+    width: $geo-button-width;
     font-size: 0.9em;
     background: white;
-    margin: 1px 0 0 1px;
     text-align: left;
+    border-bottom: 1px solid #f6f6f6;
+    h4 {
+      text-transform: capitalize;
+    }
+    p {
+      font-size: 0.8em;
+    }
+  }
+  &:hover {
+    background: #f6f6f6;
+    cursor: pointer;
   }
   &.operation-inactive,
   &:disabled {
     opacity: 0.5;
     text-decoration: line-through;
+    &:hover {
+      background: transparent;
+      cursor: default;
+    }
   }
 }
 
 .dropchop-form {
   position: absolute;
-  z-index: 10;
-  top: 1px;
+  z-index: 1000;
+  top: 20px;
   width: 400px;
-  left: $left-menu-width + $width + $geo-button-width + 1px;
-  margin-left: 1px;
+  left: 50%;
+  margin-left: -200px;
   background: white;
   padding: 10px;
+  box-shadow: 0 0 6px 0px rgba(0, 0, 0, 0.6);
+  border-radius: 3px;
   .dropchop-form-title {}
   .dropchop-form-description {
     font-size: 0.9em;
     color: #999;
-    border-bottom: 1px solid #f6f6f6;
+    border-bottom: 1px solid #e5e5e5;
     padding: 0.5em 0;
     margin-bottom: 0.8em;
   }

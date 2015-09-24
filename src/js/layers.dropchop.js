@@ -74,10 +74,19 @@ var dropchop = (function(dc) {
       name: dc.util.removeFileExtension(name),
       stamp: L.stamp(fl),
       raw: geojson,
+      type: getType(geojson),
       featurelayer: fl,
       dateAdded: new Date()
     };
     return layer;
+  }
+
+  function getType(gj) {
+    if (gj.type === 'FeatureCollection') {
+      return 'FeatureCollection';
+    } else {
+      return gj.type + '<' + gj.geometry.type + '>';
+    }
   }
 
   return dc;

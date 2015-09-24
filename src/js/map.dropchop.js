@@ -23,11 +23,11 @@ var dropchop = (function(dc) {
 
     // sets the location of the zoom buttons to the top right
     L.control.zoom({
-      position: 'topright'
+      position: 'topleft'
     }).addTo(dc.map.m);
 
     L.mapbox.geocoderControl('mapbox.places', {
-      position: 'topright'
+      position: 'topleft'
     }).addTo(dc.map.m);
 
     var baseLayers = {

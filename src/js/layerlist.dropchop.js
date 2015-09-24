@@ -40,7 +40,7 @@ var dropchop = (function(dc) {
       });
 
     
-    var layerType = $('<span>').addClass('layer-type-image sprite sprite-layer-'+layerTypeIcon(layer.raw));
+    var layerType = $('<span>').addClass('layer-type-image sprite sprite-layer-'+layerTypeIcon(layer.type));
     var checkbox = $('<input>').addClass('layer-toggle').prop({'type': 'checkbox', 'checked': true});
     var remove = $('<button>').addClass('layer-action layer-remove').html('<i class="fa fa-times"></i>');
     var duplicate = $('<button>').addClass('layer-action layer-duplicate').html('<i class="fa fa-files-o"></i>');
@@ -85,35 +85,32 @@ var dropchop = (function(dc) {
     $('.layer-toggleAll').show();
   };
 
-  function layerTypeIcon(lyr) {
+  function layerTypeIcon(type) {
     var icon;
-    if (lyr.type === 'FeatureCollection') {
-      icon = 'featurecollection';
-      return icon;
-    } else {
-      // otherwise switch
-      switch(lyr.geometry.type) {
-        case 'Point': 
-        case 'MultiPoint': 
-          icon = 'point';
-          break;
-        case 'LineString': 
-        case 'MultiLineString': 
-          icon = 'line';
-          break;
-        case 'Polygon': 
-        case 'MultiPolygon': 
-          icon = 'polygon';
-          break;
-        case 'GeometryCollection': 
-          icon = 'geom';
-          break;
-        default:
-          icon = 'default';
-          break; 
-      }
-      return icon;
+    switch(type) {
+      case 'FeatureCollection':
+        icon = 'featurecollection';
+        break;
+      case 'Feature<Point>': 
+      case 'Feature<MultiPoint>': 
+        icon = 'point';
+        break;
+      case 'Feature<LineString>': 
+      case 'Feature<MultiLineString>': 
+        icon = 'line';
+        break;
+      case 'Feature<Polygon>': 
+      case 'Feature<MultiPolygon>': 
+        icon = 'polygon';
+        break;
+      case 'Feature<GeometryCollection>': 
+        icon = 'geom';
+        break;
+      default:
+        icon = 'default';
+        break; 
     }
+    return icon;
   }
 
   function toggleSelection($item, layer) {
