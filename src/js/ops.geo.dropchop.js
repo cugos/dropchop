@@ -132,10 +132,8 @@ var dropchop = (function(dc) {
         generalFeature: true,
         types: ['Feature', 'FeatureCollection']
       },
-      reqs: ['Feature<>', 'FeatureCollection'],
       description: 'Creates a point in the centroid of the features.',
       execute: function(params) {
-        console.log(params);
         var result = turf.centroid.apply(null, params);
         return result;
       }

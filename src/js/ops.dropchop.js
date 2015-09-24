@@ -53,7 +53,13 @@ var dropchop = (function(dc) {
   function _geoBtnClick(event) {
     event.preventDefault();
     var operation = $(this).attr('data-operation');
-    $(dc.form).trigger('form:geo', [operation]);
+    // if operation requires no parameters, don't render a form
+    if (!dc.ops.geo[operation].parameters) {
+      $(dc.ops).trigger('operation:geo', [operation, dc.selection.list]);
+    // otherwise render the form
+    } else {
+      $(dc.form).trigger('form:geo', [operation]);
+    }
   }
 
   function _fileBtnClick(event) {

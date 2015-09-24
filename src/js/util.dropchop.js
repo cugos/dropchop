@@ -101,7 +101,12 @@ var dropchop = (function(dc) {
 
     for (var f = 0; f < fc.features.length; f++) {
       newParams[0] = fc.features[f];
-      var feature = turf[operation].apply(null, newParams);
+      var feature;
+      try {
+        feature = turf[operation].apply(null, newParams);
+      } catch (err) {
+        dc.notify('error', err);
+      }
       newFC.features.push(feature);
     }
 
