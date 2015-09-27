@@ -45,15 +45,56 @@ var dropchop = (function(dc) {
       collapsed: false
     }).addTo(dc.map.m);
 
-    dc.map.layergroup = L.mapbox.featureLayer().addTo(dc.map.m);
+    dc.map.layergroup = L.mapbox.featureLayer();
+    dc.map.layergroup.addTo(dc.map.m);
+
+    // dc.map.layergroup.eachLayer(function(layer) {
+    //   console.log(layer);
+
+    //   var content = '';
+
+    //   // if (layer.feature.properties) {
+    //   //   for (var prop in layer.feature.properties) {
+    //   //     console.log(prop);
+    //   //     content += prop + ', ';
+    //   //   }
+    //   // }
+
+      
+    // });
 
     $(dc.map).on('layer:added', dc.map.addLayer);
     $(dc.map).on('layer:hide', dc.map.hideLayer);
     $(dc.map).on('layer:show', dc.map.showLayer);
   }
 
+  dc.map.count = 0;
+
   dc.map.addLayer = function(event, layer) {
-    dc.map.layergroup.addLayer(layer.featurelayer);
+    var fl = layer.featurelayer;
+    dc.map.layergroup.addLayer(fl);
+
+    // create popup table for each feature
+    fl.eachLayer(function(layer) {      
+      var content = '<table class="dropchop-table"><tr><th>Property</th><th>Data</th></tr>';
+
+      if (layer.feature.properties) {
+        for (var prop in layer.feature.properties) {
+          content += '<tr><td><strong>' + prop + '</strong></td><td>' + layer.feature.properties[prop] + '</td></tr>';
+        }
+      } else {
+        content += '<p>There are no properties set for this feature.</p>';
+      }
+      content += '</table>';
+      
+      layer.bindPopup(L.popup({
+        maxWidth: 450,
+        maxHeight: 200,
+        autoPanPadding: [45, 45],
+        className: 'dropchop-popup'
+      }, layer).setContent(content));
+    });
+
   };
 
   dc.map.hideLayer = function(event, layer) {
