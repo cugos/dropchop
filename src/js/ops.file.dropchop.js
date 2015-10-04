@@ -161,12 +161,18 @@ var dropchop = (function(dc) {
       icon: '<i class="fa fa-file-code-o"></i>',
       createsLayer: false,
       execute: function() {
+        for(var i = 0; i < dc.selection.list.length; i++) {
+          (function(file) {
+            var content = JSON.stringify(dc.selection.list[file].raw);
+            var title = 'dropchop_' + dc.selection.list[file].name + '.geojson';
+            saveAs(new Blob([content], {
+              type: 'text/plain;charset=utf-8'
+            }), title);
+          })(i);
+        }
         $(dc.selection.list).each(function(i) {
-          var content = JSON.stringify(dc.selection.list[i].raw);
-          var title = 'dropchop_' + dc.selection.list[i].name + '.geojson';
-          saveAs(new Blob([content], {
-            type: 'text/plain;charset=utf-8'
-          }), title);
+          console.log(this);
+          
 
         });
       }
