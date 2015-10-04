@@ -149,10 +149,18 @@ $geo-button-width: 200px;
       margin-right: 6px;
     }
   }
+  * {
+    &::selection {
+      background:transparent;
+    }
+  }
 }
 .layer-element {
   position: relative;
   cursor:pointer;
+
+
+
   .layer-toggle {
     float: left;
     margin-right: 5px;

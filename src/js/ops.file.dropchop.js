@@ -311,7 +311,8 @@ var dropchop = (function(dc) {
       icon: '<i class="fa fa-trash-o"></i>',
       execute: function() {
         $(dc.selection.list).each(function(i) {
-          $(dc).trigger('layer:removed', [dc.selection.list[i].stamp]);
+          console.log(this.stamp);
+          $(dc).trigger('layer:remove', [this.stamp]);
         });
         dc.selection.clear();
       }

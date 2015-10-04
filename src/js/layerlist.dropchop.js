@@ -9,6 +9,11 @@ var dropchop = (function(dc) {
   dc.layerlist.init = function(name) {
     dc.layerlist.$elem = $('<ol>').addClass(name);
     dc.$elem.append(dc.layerlist.$elem);
+    dc.layerlist.$elem.on('click', function(event) {
+      if ($(event.target).hasClass(name)) {
+        dc.selection.clear();
+      }
+    });
 
     var liHelper = $('<li>').addClass('layer-help')
       .html('Welcome to <strong>dropchop</strong>! Here you can drag and drop files and they will show up in the layer list below.<br><br>To the left you can upload and save your files or <a href="/?gist=09129c20ec020b83bf85">add example data</a> or the <a href="/?gist=d066b572e8a8ad2b6d16">US States</a>.<br><br>To the right you\'ll notice some geospatial operations that become available based on selecting specific layers.' );
@@ -61,14 +66,56 @@ var dropchop = (function(dc) {
     checkbox.on('change', function(event) {
       if (this.checked) {
         // trigger layer:show
-        $(dc.map).trigger('layer:show', [layer]);
+        $(dc).trigger('layer:show', [layer]);
       } else {
-        $(dc.map).trigger('layer:hide', [layer]);
+        $(dc).trigger('layer:hide', [layer]);
       }
     });
 
     layerDiv.on('click', function(event) {
-      toggleSelection($(this), layer);
+
+      // check for keys being held for special selection
+      console.log(event);
+
+      if (event.shiftKey) {
+        // select all layeres in between lowest selection and target
+        // note: don't unselect layers already selected, just add to selection
+        var toSelect = [];
+        var to = $(this);
+        var from = dc.layerlist._lastSelected;
+        var toCount, fromCount;
+
+        $('.layer-element').each(function(e) {
+          var check = $(this).attr('data-stamp');
+          var toStamp = to.parent().attr('data-stamp');
+          var fromStamp = from.parent().attr('data-stamp');
+          if (check === toStamp) toCount = e;
+          if (check === fromStamp) fromCount = e;
+        });
+
+        console.log(toCount, fromCount);
+        if (toCount > fromCount) {
+          // loop up
+          $('.layer-element').each(function(l) {
+            if (l >= fromCount && l <= toCount ) {
+              dc.layerlist.selectLayer($(this).find('.layer-name'), dc.layers.list[$(this).attr('data-stamp')]);
+            }
+          });
+        } else {
+          $('.layer-element').each(function(l) {
+            if (l < fromCount && l >= toCount ) {
+              dc.layerlist.selectLayer($(this).find('.layer-name'), dc.layers.list[$(this).attr('data-stamp')]);
+            }
+          });
+        }
+      } else if (event.metaKey) {
+        // add/remove selected layer to current selection
+        dc.layerlist.selectToggle($(this), layer);
+      } else {
+        // clear selection and select target
+        dc.layerlist.clearSelection($(this), layer);
+        dc.layerlist.selectToggle($(this), layer);
+      }
     });
 
     layerlistItem.append(layerDiv);
@@ -83,6 +130,26 @@ var dropchop = (function(dc) {
     // hide helper text
     $('.layer-help').hide();
     $('.layer-toggleAll').show();
+  };
+
+  dc.layerlist.selectLayer = function($item, lyr) {
+    if (!$item.hasClass('selected')) {
+      $item.addClass('selected');
+      $(dc).trigger('layer:selected', [lyr]);
+    }
+  };
+  dc.layerlist.selectToggle = function($item, lyr) {
+    if ($item.hasClass('selected')) {
+      $item.removeClass('selected');
+      $(dc).trigger('layer:unselected', [lyr]);
+    } else {
+      $item.addClass('selected');
+      $(dc).trigger('layer:selected', [lyr]);
+    }
+    dc.layerlist._lastSelected = $item;
+  };
+  dc.layerlist.clearSelection = function($item, lyr) {
+    dc.selection.clear();
   };
 
   function layerTypeIcon(type) {
@@ -111,20 +178,6 @@ var dropchop = (function(dc) {
         break; 
     }
     return icon;
-  }
-
-  function toggleSelection($item, layer) {
-    $item.toggleClass('selected');
-    if($item.hasClass('selected')) {
-      // remove from selection
-      // trigger layer:selected
-      $(dc).trigger('layer:selected', [layer]);
-    } else {
-      // add to selection
-      // trigger layer:unselected
-      $(dc).trigger('layer:unselected', [layer]);
-    }
-    dc.form.remove();
   }
 
   dc.layerlist.toggleAll = function(event) {
