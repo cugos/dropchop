@@ -105,7 +105,6 @@ var dropchop = (function(dc) {
       return $i;
     },
     switch: function(p) {
-      console.log('switching');
       var $i = $('<div>');
       $(dc.selection.list).each(function(i) {
         var $lbl = $('<label>')
@@ -118,7 +117,32 @@ var dropchop = (function(dc) {
         $lbl.append(dc.selection.list[i].name);
         $lbl.appendTo($i);
       });
-      console.log($i);
+      return $i;
+    },
+    recursive: function(p) {
+      var $i = $('<div>');
+
+      var $lbl1 = $('<label>')
+        .addClass('sub-label');
+      var $opt1 = $('<input>')
+        .attr('type', 'radio')
+        .val('true')
+        .attr('name', p.name);
+      $opt1.appendTo($lbl1);
+      $lbl1.append('Individual features');
+
+      var $lbl2 = $('<label>')
+        .addClass('sub-label');
+      var $opt2 = $('<input>')
+        .attr('type', 'radio')
+        .val('false')
+        .attr('name', p.name);
+      $opt2.appendTo($lbl2);
+      $lbl2.append('Entire collection');
+
+      $lbl1.appendTo($i);
+      $lbl2.appendTo($i);
+
       return $i;
     }
   };

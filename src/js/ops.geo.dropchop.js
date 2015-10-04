@@ -119,8 +119,21 @@ var dropchop = (function(dc) {
         types: ['Feature', 'FeatureCollection']
       },
       description: 'Creates a point in the center of the feature.',
+      parameters: [
+        {
+          name: 'recursive',
+          description: 'Run the operation on each feature in the collection or the entire collection.',
+          type: 'recursive'
+        }
+      ],
       execute: function(params) {
-        var result = turf.center.apply(null, params);
+        var result = {};
+        // if running the operation recursively "true"
+        if (params[1] === "true") {
+          result = dc.util.executeFC(params[0], 'center', params);
+        } else {
+          result = turf.center.apply(null, params);
+        }
         return result;
       }
     },
@@ -133,8 +146,21 @@ var dropchop = (function(dc) {
         types: ['Feature', 'FeatureCollection']
       },
       description: 'Creates a point in the centroid of the features.',
+      parameters: [
+        {
+          name: 'recursive',
+          description: 'Run the operation on each feature in the collection or the entire collection.',
+          type: 'recursive'
+        }
+      ],
       execute: function(params) {
-        var result = turf.centroid.apply(null, params);
+        var result = {};
+        // if running the operation recursively "true"
+        if (params[1] === "true") {
+          result = dc.util.executeFC(params[0], 'centroid', params);
+        } else {
+          result = turf.centroid.apply(null, params);
+        }
         return result;
       }
     },

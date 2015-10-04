@@ -65,9 +65,9 @@ var dropchop = (function(dc) {
 
   function _makeLayer(name, json) {
     var geojson = json;
-    // if (json.type === 'FeatureCollection' && json.features.length === 1) {
-    //   geojson = dc.util.uncollect(json);
-    // }
+    if (json.type === 'FeatureCollection' && json.features.length === 1) {
+      geojson = dc.util.uncollect(json);
+    }
 
     var fl = L.mapbox.featureLayer(geojson);
     var layer = {

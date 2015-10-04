@@ -40,10 +40,26 @@ var dropchop = (function(dc) {
 
   dc.util.readFile = function(file) {
     var reader = new FileReader();
-    reader.readAsText(file, 'UTF-8');
-    reader.onload = function() {
-      $(dc.layers).trigger('file:added', [file.name, JSON.parse(reader.result)]);
-    };
+    // if a zipfile, assume shapefile for now
+    if (file.name.indexOf('.zip') > -1 || file.name.indexOf('.shp') > -1) {
+      console.log(file);
+      reader.readAsArrayBuffer(file);
+      reader.onloadend = function(event) {
+        console.log(reader);
+        shp(reader.result).then(forwardToGeoJsonIo);
+      };
+    } else { 
+      reader.readAsText(file, 'UTF-8');
+      reader.onload = function() {
+        $(dc.layers).trigger('file:added', [file.name, JSON.parse(reader.result)]);
+      };
+    }
+
+    function forwardToGeoJsonIo(data) {
+      console.log(data);
+      var url = "http://geojson.io/#data=data:application/json," + encodeURIComponent(JSON.stringify(data));
+      window.location = url;
+    }
   };
 
   dc.util.jsonFromUrl = function() {
@@ -106,6 +122,7 @@ var dropchop = (function(dc) {
       var feature;
       try {
         feature = turf[operation].apply(null, newParams);
+        feature.properties = fc.features[f].properties || {};
       } catch (err) {
         dc.notify('error', err);
       }

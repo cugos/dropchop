@@ -2,7 +2,16 @@ var dropchop = (function(dc) {
   dc = dc || {};
   dc.version = '1.0.0';
   dc.init = function(opts) {
+    if(!opts) {
+      var err = new Error('No options provided in dropchop.init()');
+      throw err;
+    }
     dc.options = opts;
+
+    if(!$(opts.id).length) {
+      var err = new Error('Element with options.id does not exist.');
+      throw err;
+    }
     dc.$elem = $(opts.id);
 
     // setup layers

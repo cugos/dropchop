@@ -269,6 +269,15 @@ var dropchop = (function(dc) {
       }
     },
 
+    // 'view-attributes': {
+    //   minFeatures: 1,
+    //   description: 'Show attribute table',
+    //   icon: '<i class="fa fa-th-list"></i>',
+    //   execute: function() {
+    //     dc.attr.render(dc.selection.list[0]);
+    //   }
+    // },
+
     'break3': { type: 'break' },
 
     rename: {

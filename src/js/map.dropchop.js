@@ -48,21 +48,6 @@ var dropchop = (function(dc) {
     dc.map.layergroup = L.mapbox.featureLayer();
     dc.map.layergroup.addTo(dc.map.m);
 
-    // dc.map.layergroup.eachLayer(function(layer) {
-    //   console.log(layer);
-
-    //   var content = '';
-
-    //   // if (layer.feature.properties) {
-    //   //   for (var prop in layer.feature.properties) {
-    //   //     console.log(prop);
-    //   //     content += prop + ', ';
-    //   //   }
-    //   // }
-
-      
-    // });
-
     $(dc.map).on('layer:added', dc.map.addLayer);
     $(dc.map).on('layer:hide', dc.map.hideLayer);
     $(dc.map).on('layer:show', dc.map.showLayer);
@@ -86,7 +71,7 @@ var dropchop = (function(dc) {
         content += '<p>There are no properties set for this feature.</p>';
       }
       content += '</table>';
-      
+
       layer.bindPopup(L.popup({
         maxWidth: 450,
         maxHeight: 200,

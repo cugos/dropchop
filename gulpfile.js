@@ -35,7 +35,7 @@ var vendorJS = [
   './node_modules/jquery/dist/jquery.js',
   './node_modules/browser-filesaver/FileSaver.js',
   './node_modules/shp-write/shpwrite.js',
-  './node_modules/shpjs/dist/shp.js',
+  './src/lib/shp-2-geojson.js',
   './node_modules/osmtogeojson/osmtogeojson.js',
   './node_modules/turf/turf.js',
   './node_modules/mapbox.js/dist/mapbox.js' // requires to be built
@@ -99,10 +99,15 @@ gulp.task('connect', function() {
   });
 });
 
+var testFiles = [
+  './dist/static/js/vendor.js',
+  './dist/static/js/dropchop.js',
+  './test/spec/**/*.spec.js'
+];
 gulp.task('test', function() {
   return gulp.src(testFiles)
     .pipe(karma({
-      configFile: 'test/config.js',
+      configFile: 'test/karma-config.js',
       action: 'run'
     }))
     .on('error', function(err) {
