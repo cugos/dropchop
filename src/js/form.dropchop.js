@@ -5,8 +5,8 @@ var dropchop = (function(dc) {
   dc = dc || {};
   dc.form = dc.form || {};
   dc.form.init = function() {
-    $(dc.form).on('form:geo', dc.form.geo);
-    $(dc.form).on('form:file', dc.form.file);
+    $(dc).on('form:geo', dc.form.geo);
+    $(dc).on('form:file', dc.form.file);
   };
 
   dc.form.geo = function(event, operation) {
@@ -49,7 +49,7 @@ var dropchop = (function(dc) {
       $(data).each(function(i) {
         parameters.push(data[i].value);
       });
-      $(dc.ops).trigger('operation:' + trigger, [name, parameters]);
+      $(dc).trigger('operation:' + trigger, [name, parameters]);
       dc.form.remove();
       return false;
     });

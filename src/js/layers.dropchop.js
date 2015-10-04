@@ -7,10 +7,10 @@ var dropchop = (function(dc) {
   dc.layers.list = {};
 
   dc.layers.prepare = function() {
-    $(dc.layers).on('file:added', dc.layers.add);
-    $(dc.layers).on('layer:removed', dc.layers.remove);
-    $(dc.layers).on('layer:duplicate', dc.layers.duplicate);
-    $(dc.layers).on('layer:rename', dc.layers.rename);
+    $(dc).on('file:added', dc.layers.add);
+    $(dc).on('layer:remove', dc.layers.remove);
+    $(dc).on('layer:duplicate', dc.layers.duplicate);
+    $(dc).on('layer:rename', dc.layers.rename);
   };
 
 /**
@@ -26,8 +26,7 @@ var dropchop = (function(dc) {
     dc.notify('success', '<strong>'+l.name+'</strong> has been added!', 3500);
 
     // trigger layer:added
-    $(dc.layerlist).trigger('layer:added', [l]);
-    $(dc.map).trigger('layer:added', [l]);
+    $(dc).trigger('layer:added', [l]);
   };
 
 /**
@@ -37,8 +36,7 @@ var dropchop = (function(dc) {
   dc.layers.remove = function(event, stamp) {
     // trigger layer:removed
     try {
-      $(dc.map).trigger('layer:removed', [stamp]);
-      $(dc.layerlist).trigger('layer:removed', [stamp]);
+      $(dc).trigger('layer:removed', [stamp]);
       dc.notify('info', '<strong>' + dc.layers.list[stamp].name + '</strong> has been removed.');
       delete dc.layers.list[stamp];
     } catch (err) {
@@ -60,7 +58,7 @@ var dropchop = (function(dc) {
     dc.layers.list[layer.stamp].name = newName;
 
     // rename in layerlist
-    $(dc.layerlist).trigger('layer:rename', [layer.stamp, newName]);
+    $(dc).trigger('layer:rename', [layer.stamp, newName]);
   };
 
   function _makeLayer(name, json) {

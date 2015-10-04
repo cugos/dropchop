@@ -54,7 +54,7 @@ var dropchop = (function(dc) {
         },
       ],
       execute: function() {
-        $(dc.form).trigger('form:file', ['load-url']);
+        $(dc).trigger('form:file', ['load-url']);
       },
       get: function(event, name, parameters) {
         var url = parameters[0];
@@ -66,7 +66,7 @@ var dropchop = (function(dc) {
           var data = JSON.parse(xhr.responseText);
           // get filename based on the end of the url - not sure if this is sustainable
           var name = xhr.responseURL.substring(xhr.responseURL.lastIndexOf('/')+1);
-          $(dc.layers).trigger('file:added', [name, data]);
+          $(dc).trigger('file:added', [name, data]);
         } else {
           dc.notify('error', xhr.status + ': could not retrieve Gist. Please check your URL');
         }
@@ -85,7 +85,7 @@ var dropchop = (function(dc) {
         },
       ],
       execute: function() {
-        $(dc.form).trigger('form:file', ['load-gist']);
+        $(dc).trigger('form:file', ['load-gist']);
       },
       get: function(event, name, parameters) {
         var gist = parameters[0].split('/')[parameters[0].split('/').length-1];
@@ -98,7 +98,7 @@ var dropchop = (function(dc) {
           var data = JSON.parse(xhr.responseText);
           for (var f in data.files) {
             var name = data.files[f].filename;
-            $(dc.layers).trigger('file:added', [name, JSON.parse(data.files[f].content)]);
+            $(dc).trigger('file:added', [name, JSON.parse(data.files[f].content)]);
           }
           // dc.notify('success', 'Succesfully retrieved gist')
         } else {
@@ -126,7 +126,7 @@ var dropchop = (function(dc) {
         }
       ],
       execute: function() {
-        $(dc.form).trigger('form:file', ['load-overpass']);
+        $(dc).trigger('form:file', ['load-overpass']);
       },
       get: function(event, name, parameters) {
         // set layer name to _temp for later usage
@@ -144,7 +144,7 @@ var dropchop = (function(dc) {
           if (!data.elements.length) {
             dc.notify('info', 'No elements found in your query.');
           } else {
-            $(dc.layers).trigger('file:added', [dc.ops.file['load-overpass']._temp.layerName, geojson]);
+            $(dc).trigger('file:added', [dc.ops.file['load-overpass']._temp.layerName, geojson]);
             dc.notify('success', 'Found <strong>' + data.elements.length + ' elements</strong> from the Overpass API');
           }
         } else {
@@ -170,11 +170,6 @@ var dropchop = (function(dc) {
             }), title);
           })(i);
         }
-        $(dc.selection.list).each(function(i) {
-          console.log(this);
-          
-
-        });
       }
     },
 
@@ -238,7 +233,7 @@ var dropchop = (function(dc) {
           if (fc.raw.type === 'FeatureCollection') {
             $(fc.raw.features).each(function(f) {
               count++;
-              $(dc.layers).trigger('file:added', [fc.name + count + '_' + fc.raw.features[f].geometry.type, fc.raw.features[f]]);
+              $(dc).trigger('file:added', [fc.name + count + '_' + fc.raw.features[f].geometry.type, fc.raw.features[f]]);
             });
           } else {
             var err = new Error('That needs to be a feature collection!');
@@ -268,7 +263,7 @@ var dropchop = (function(dc) {
               dc.notify('info', dc.selection.list[f].name + ' was not added because it is already a FeatureCollection');
             }
           });
-          $(dc.layers).trigger('file:added', ['new_FeatureCollection', fc]);
+          $(dc).trigger('file:added', ['new_FeatureCollection', fc]);
         } else {
           dc.notify('info', 'No layers selected!');
         }
@@ -299,14 +294,14 @@ var dropchop = (function(dc) {
       ],
       execute: function() {
         if (dc.selection.list.length === 1) {
-          $(dc.form).trigger('form:file', ['rename']);  
+          $(dc).trigger('form:file', ['rename']);  
         } else {
           dc.notify('info', 'Please select <strong>one layer</strong>.');
         }
       },
       callback: function(event, name, parameters) {
         console.log(name, parameters);
-        $(dc.layers).trigger('layer:rename', [dc.selection.list[0], parameters[0]]);
+        $(dc).trigger('layer:rename', [dc.selection.list[0], parameters[0]]);
       }
     },
 
@@ -316,7 +311,7 @@ var dropchop = (function(dc) {
       icon: '<i class="fa fa-trash-o"></i>',
       execute: function() {
         $(dc.selection.list).each(function(i) {
-          $(dc.layers).trigger('layer:removed', [dc.selection.list[i].stamp]);
+          $(dc).trigger('layer:removed', [dc.selection.list[i].stamp]);
         });
         dc.selection.clear();
       }

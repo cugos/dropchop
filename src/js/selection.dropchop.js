@@ -8,9 +8,9 @@ var dropchop = (function(dc) {
   dc.selection.list = [];
 
   dc.selection.init = function() {
-    $(dc.selection).on('layer:selected', dc.selection.add);
-    $(dc.selection).on('layer:unselected', dc.selection.remove);
-    $(dc.selection).on('layer:removed', _layerRemoved);
+    $(dc).on('layer:selected', dc.selection.add);
+    $(dc).on('layer:unselected', dc.selection.remove);
+    $(dc).on('layer:removed', _layerRemoved);
   };
 
   dc.selection.add = function(event, layer) {

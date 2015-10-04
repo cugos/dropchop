@@ -21,15 +21,15 @@ var dropchop = (function(dc) {
       geoContainer.append(geoBtn);
     }
 
-    $(dc.ops).on('layer:selected', dc.ops.geoCheck);
-    $(dc.ops).on('layer:unselected', dc.ops.geoCheck);
+    $(dc).on('layer:selected', dc.ops.geoCheck);
+    $(dc).on('layer:unselected', dc.ops.geoCheck);
     // $('.operation-geo').removeClass('operation-inactive');
     // $('.operation-geo').prop('disabled', false);
-    $(dc.ops).on('operation:geo', dc.ops.geoExecute);
-    $(dc.ops).on('operation:file:load-gist', dc.ops.file['load-gist'].get);
-    $(dc.ops).on('operation:file:load-url', dc.ops.file['load-url'].get);
-    $(dc.ops).on('operation:file:load-overpass', dc.ops.file['load-overpass'].get);
-    $(dc.ops).on('operation:file:rename', dc.ops.file.rename.callback);
+    $(dc).on('operation:geo', dc.ops.geoExecute);
+    $(dc).on('operation:file:load-gist', dc.ops.file['load-gist'].get);
+    $(dc).on('operation:file:load-url', dc.ops.file['load-url'].get);
+    $(dc).on('operation:file:load-overpass', dc.ops.file['load-overpass'].get);
+    $(dc).on('operation:file:rename', dc.ops.file.rename.callback);
 
     // setup ops file
     var leftMenu = $('<div>').addClass('dropchop-menu-left');
@@ -55,10 +55,10 @@ var dropchop = (function(dc) {
     var operation = $(this).attr('data-operation');
     // if operation requires no parameters, don't render a form
     if (!dc.ops.geo[operation].parameters) {
-      $(dc.ops).trigger('operation:geo', [operation, dc.selection.list]);
+      $(dc).trigger('operation:geo', [operation, dc.selection.list]);
     // otherwise render the form
     } else {
-      $(dc.form).trigger('form:geo', [operation]);
+      $(dc).trigger('form:geo', [operation]);
     }
   }
 
@@ -90,7 +90,7 @@ var dropchop = (function(dc) {
       throw err;
     }
 
-    $(dc.layers).trigger('file:added', [prep.name, result]);
+    $(dc).trigger('file:added', [prep.name, result]);
   };
 
   /**

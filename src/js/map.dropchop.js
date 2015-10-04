@@ -9,7 +9,7 @@ var dropchop = (function(dc) {
     dc.map.$elem = $('<div>').prop('id', 'dropchop-map').addClass('map');
     dc.$elem.append(dc.map.$elem);
 
-    $(dc.map).on('layer:removed', dc.map.removeLayer);
+    $(dc).on('layer:removed', dc.map.removeLayer);
 
     _makeMap();
   };
@@ -30,27 +30,27 @@ var dropchop = (function(dc) {
       position: 'topleft'
     }).addTo(dc.map.m);
 
-    var baseLayers = {
-      "Mapbox Streets": L.mapbox.tileLayer('mapbox.streets'),
-      "Mapbox Outdoors": L.mapbox.tileLayer('mapbox.outdoors'),
-      "Mapbox Light": L.mapbox.tileLayer('mapbox.light'),
-      "Mapbox Dark": L.mapbox.tileLayer('mapbox.dark'),
-      "Mapbox Satellite": L.mapbox.tileLayer('mapbox.satellite')
-    };
+    // var baseLayers = {
+    //   "Mapbox Streets": L.mapbox.tileLayer('mapbox.streets'),
+    //   "Mapbox Outdoors": L.mapbox.tileLayer('mapbox.outdoors'),
+    //   "Mapbox Light": L.mapbox.tileLayer('mapbox.light'),
+    //   "Mapbox Dark": L.mapbox.tileLayer('mapbox.dark'),
+    //   "Mapbox Satellite": L.mapbox.tileLayer('mapbox.satellite')
+    // };
 
-    baseLayers['Mapbox Streets'].addTo(dc.map.m);
-    // sets location of base layer control to the bottom right
-    L.control.layers(baseLayers, {}, {
-      position: 'bottomright',
-      collapsed: false
-    }).addTo(dc.map.m);
+    // baseLayers['Mapbox Streets'].addTo(dc.map.m);
+    // // sets location of base layer control to the bottom right
+    // L.control.layers(baseLayers, {}, {
+    //   position: 'bottomright',
+    //   collapsed: false
+    // }).addTo(dc.map.m);
 
     dc.map.layergroup = L.mapbox.featureLayer();
     dc.map.layergroup.addTo(dc.map.m);
 
-    $(dc.map).on('layer:added', dc.map.addLayer);
-    $(dc.map).on('layer:hide', dc.map.hideLayer);
-    $(dc.map).on('layer:show', dc.map.showLayer);
+    $(dc).on('layer:added', dc.map.addLayer);
+    $(dc).on('layer:hide', dc.map.hideLayer);
+    $(dc).on('layer:show', dc.map.showLayer);
   }
 
   dc.map.count = 0;

@@ -19,9 +19,9 @@ var dropchop = (function(dc) {
     toggleLayers.on('change', dc.layerlist.toggleAll);
     dc.layerlist.$elem.append(toggleLayers);
 
-    $(dc.layerlist).on('layer:added', dc.layerlist.addLayerListItem);
-    $(dc.layerlist).on('layer:removed', dc.layerlist.removeLayerListItem);
-    $(dc.layerlist).on('layer:rename', dc.layerlist.rename);
+    $(dc).on('layer:added', dc.layerlist.addLayerListItem);
+    $(dc).on('layer:removed', dc.layerlist.removeLayerListItem);
+    $(dc).on('layer:rename', dc.layerlist.rename);
   };
 
   dc.layerlist.rename = function(event, stamp, newName) {
@@ -47,13 +47,13 @@ var dropchop = (function(dc) {
 
     duplicate.on('click', function(event) {
       event.preventDefault();
-      $(dc.layers).trigger('layer:duplicate', [$(this).parent().attr('data-stamp')]);
+      $(dc).trigger('layer:duplicate', [$(this).parent().attr('data-stamp')]);
       return false;
     });
     
     remove.on('click', function(event) {
       event.preventDefault();
-      $(dc.layers).trigger('layer:removed', [$(this).parent().attr('data-stamp')]);
+      $(dc).trigger('layer:remove', [$(this).parent().attr('data-stamp')]);
       dc.selection.clear();
       return false;
     });
@@ -118,13 +118,11 @@ var dropchop = (function(dc) {
     if($item.hasClass('selected')) {
       // remove from selection
       // trigger layer:selected
-      $(dc.selection).trigger('layer:selected', [layer]);
-      $(dc.ops).trigger('layer:selected', [layer]);
+      $(dc).trigger('layer:selected', [layer]);
     } else {
       // add to selection
       // trigger layer:unselected
-      $(dc.selection).trigger('layer:unselected', [layer]);
-      $(dc.ops).trigger('layer:unselected', [layer]);
+      $(dc).trigger('layer:unselected', [layer]);
     }
     dc.form.remove();
   }
