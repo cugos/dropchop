@@ -13,6 +13,7 @@ var dropchop = (function(dc) {
 
   dc.util.removeWhiteSpace = function(string) {
     string = string.replace(/^\s+|\s+$/g, '');
+    console.log(string);
     return string;
   };
 

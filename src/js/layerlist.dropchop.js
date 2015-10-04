@@ -26,7 +26,7 @@ var dropchop = (function(dc) {
 
     $(dc).on('layer:added', dc.layerlist.addLayerListItem);
     $(dc).on('layer:removed', dc.layerlist.removeLayerListItem);
-    $(dc).on('layer:rename', dc.layerlist.rename);
+    $(dc).on('layer:renamed', dc.layerlist.rename);
   };
 
   dc.layerlist.rename = function(event, stamp, newName) {
@@ -75,10 +75,8 @@ var dropchop = (function(dc) {
     layerDiv.on('click', function(event) {
 
       // check for keys being held for special selection
-      console.log(event);
-
       if (event.shiftKey) {
-        // select all layeres in between lowest selection and target
+        // select all layeres in between previous target and target
         // note: don't unselect layers already selected, just add to selection
         var toSelect = [];
         var to = $(this);

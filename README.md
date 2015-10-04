@@ -29,3 +29,49 @@ If you're interested in any of the above, please help out! Submit ideas as [issu
 Things are moving very quickly with the project right now. We are still continuing to build out and refactor the architecture of the application. If you want to read more about our decision-making process take a look at some of our meeting notes. [04/11/2015](https://github.com/cugos/dropchop/wiki/Meeting-Notes---04-11-2015), [05/10/2015](https://github.com/cugos/dropchop/wiki/Meeting-Notes-05-10-2015). 
 
 *Once you drop the chop don't stop.*
+
+## Triggers
+
+Triggers are the engine of Dropchops codebase. We are using jQuery's `trigger()` as our publication/subscription service throughout the code, which allows us to "publish" actions across `dropchop` that can be picked up by any "subscriber" throughout the code. For example, we use this one quite a bit:
+
+```javascript
+$(dc).trigger('file:added', [layer]);
+```
+
+The above publishes the `file:added` action which other pieces of the code are listening for. We can pick up this trigger in `layers.dropchop.js` by writing:
+
+```javascript
+$(dc).on('file:added', addFileToLayers);
+
+addFileToLayers = function(event, layer) {
+    // do something with layer
+}
+```
+
+The `addFileToLayers()` function will run with the `event` parameter first, every time, and then any options that are passed in the original array from the trigger. In the above case, an array of one element `layer` is passed as receiving information.
+
+Below is a list of triggers that exist within `dropchop` that can be picked up anywhere when fired.
+
+Operations
+
+* `operation:geo:TURF-OPERATION` 
+* `operation:file:FILE-OPERATION`
+
+Layers
+
+* `file:added`
+* `layer:duplicate`
+* `layer:remove`
+* `layer:removed`
+* `layer:show`
+* `layer:hide`
+* `layer:selected`
+* `layer:unselected`
+* `layer:added`
+* `layer:rename`
+* `layer:renamed`
+
+Forms
+
+* `form:geo`
+* `form:file`

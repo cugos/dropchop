@@ -1,4 +1,4 @@
-{id: '#dropchop'}describe('Dropchop!', function() {
+describe('Dropchop!', function() {
 
   var ops = {id: '#dropchop'};
   var opsBadElement = {id: '#doesnotexist'};
@@ -28,13 +28,6 @@
 
     it('Throws error when dropchop element is not found', function() {
       expect(function() { dropchop.init(opsBadElement) }).to.throw(Error);
-    });
-
-    it('Layer added is successful', function() {
-      dropchop.init(ops);
-      var testGeoJSON = {"type":"Feature","geometry":{"type":"Point","coordinates":[125.6,10.1]},"properties":{"name":"Dinagat Islands"}};
-      $(dropchop.layers).trigger('file:added', ['new file', testGeoJSON]);
-      expect(Object.keys(dropchop.layers.list).length).to.be.above(0);
     });
   });
 

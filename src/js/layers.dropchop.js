@@ -20,7 +20,7 @@ var dropchop = (function(dc) {
  * @param {string} file blob to be converted with JSON.parse()
  */
   dc.layers.add = function(event, name, blob) {
-    var l = _makeLayer(name, blob);
+    var l = dc.layers.makeLayer(name, blob);
     dc.layers.list[l.stamp] = l;
 
     dc.notify('success', '<strong>'+l.name+'</strong> has been added!', 3500);
@@ -48,7 +48,6 @@ var dropchop = (function(dc) {
 
   dc.layers.duplicate = function(event, stamp) {
     var lyr = dc.layers.list[stamp];
-    
     // need to create new layer so we can get a uniqe L.stamp()
     dc.layers.add({}, 'copy_'+lyr.name, lyr.raw);
   };
@@ -58,10 +57,10 @@ var dropchop = (function(dc) {
     dc.layers.list[layer.stamp].name = newName;
 
     // rename in layerlist
-    $(dc).trigger('layer:rename', [layer.stamp, newName]);
+    $(dc).trigger('layer:renamed', [layer.stamp, newName]);
   };
 
-  function _makeLayer(name, json) {
+  dc.layers.makeLayer = function(name, json) {
     var geojson = json;
     if (json.type === 'FeatureCollection' && json.features.length === 1) {
       geojson = dc.util.uncollect(json);
@@ -77,7 +76,7 @@ var dropchop = (function(dc) {
       dateAdded: new Date()
     };
     return layer;
-  }
+  };
 
   function getType(gj) {
     if (gj.type === 'FeatureCollection') {
