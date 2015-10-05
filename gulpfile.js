@@ -118,4 +118,5 @@ gulp.task('test', function() {
 gulp.task('vendor', ['js_vendor', 'css_vendor', 'mapbox_assets', 'fa-fonts']);
 gulp.task('js', ['lint', 'js_dropchop']);
 gulp.task('build', ['js', 'html', 'sass', 'assets']);
+gulp.task('build_prod', ['vendor', 'build']);
 gulp.task('default', ['build', 'connect', 'watch']);

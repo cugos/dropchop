@@ -1,7 +1,9 @@
 language: node_js
 node_js:
-- "0.10"
+- '0.12'
 before_install:
   - gem install sass
 before_script:
-  - grunt build:prod
+  - npm install
+  - gulp build_prod
+script: gulp test
