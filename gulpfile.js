@@ -16,7 +16,7 @@ gulp.task('sass', function(){
 });
 
 var vendorCSS = [
-  './node_modules/mapbox.js/dist/mapbox.css',
+  './lib/mapbox.js/mapbox.css',
   './node_modules/font-awesome/css/font-awesome.css'
 ];
 
@@ -38,7 +38,7 @@ var vendorJS = [
   './src/lib/shp-2-geojson.js',
   './node_modules/osmtogeojson/osmtogeojson.js',
   './node_modules/turf/turf.js',
-  './node_modules/mapbox.js/dist/mapbox.js' // requires to be built
+  './lib/mapbox.js/mapbox.js'
 ];
 
 gulp.task('lint', function() {

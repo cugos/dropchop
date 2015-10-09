@@ -158,67 +158,7 @@ var dropchop = (function(dc) {
       btn.removeClass('operation-inactive');
       btn.prop('disabled', false);
     }
-
-    // loop through selection
-
-      // check selection count vs min/max
-        // 
-
-    // if (dc.selection.list.length) {
-    //   $(dc.selection.list).each(function(l) {
-    //     var lyr = dc.selection.list[l];
-    //     var checkType = lyr.raw.type;
-    //     var checkGeomType = lyr.raw.type === 'FeatureCollection' ? null : lyr.raw.geometry.type;
-    //     for (var x in dc.ops.geo) {
-    //       var reqs = dc.ops.geo[x].requirements;
-    //       var btn = $('[data-operation='+ x +']');
-    //       if (reqs &&
-    //           dc.selection.list.length >= dc.ops.geo[x].minFeatures && 
-    //           dc.selection.list.length <= dc.ops.geo[x].maxFeatures) { // if requirements exist and selection matches the minimum number of features
-
-    //         // if just type check
-    //         if (!reqs.geometry) {
-    //           if ($.inArray(checkType, reqs.type) > -1) {
-    //             btn.removeClass('operation-inactive');
-    //             btn.prop('disabled', false);
-    //           } else {
-    //             btn.addClass('operation-inactive');
-    //             btn.prop('disabled', true);
-    //           }
-
-    //         // if just geom check
-    //         } else if (!reqs.type) {
-    //           if ($.inArray(checkGeomType, reqs.geometry) > -1) {
-    //             btn.removeClass('operation-inactive');
-    //             btn.prop('disabled', false);
-    //           } else {
-    //             btn.addClass('operation-inactive');
-    //             btn.prop('disabled', true);
-    //           }
-
-    //         // if both check
-    //         } else if (reqs.type && reqs.geometry) {
-    //           // console.log('this is where we get for bezier');
-    //           // console.log(checkType, reqs.type, $.inArray(checkType, reqs.type));
-    //           // console.log(checkGeomType, reqs.geometry, $.inArray(checkGeomType, reqs.geometry));
-    //           if ($.inArray(checkType, reqs.type) > -1 && $.inArray(checkGeomType, reqs.geometry) > -1) {
-    //             btn.removeClass('operation-inactive');
-    //             btn.prop('disabled', false);
-    //           } else {
-    //             btn.addClass('operation-inactive');
-    //             btn.prop('disabled', true);
-    //           }
-    //         }
-    //       } else {
-    //         btn.addClass('operation-inactive');
-    //         btn.prop('disabled', true);
-    //       }
-    //     }
-    //   });
-    // } else {
-    //   $('.operation-geo').addClass('operation-inactive');
-    //   $('.operation-geo').prop('disabled', true);
-    // }
+    
   };
 
   return dc;
