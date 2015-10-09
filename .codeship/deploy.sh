@@ -6,5 +6,5 @@ git config --global user.email "codeship@cugos.org"
 git config --global user.name "Codeship CI"
 git remote set-url origin https://${GH_TOKEN}@github.com/cugos/dropchop.git
 echo "Running gh-pages..."
-grunt deploy
+gulp deploy
 echo "Successfully deployed to gh-pages"
