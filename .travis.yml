@@ -5,5 +5,5 @@ before_install:
   - gem install sass
 before_script:
   - npm install
-  - gulp build_prod
+  - gulp build:prod
 script: gulp test
