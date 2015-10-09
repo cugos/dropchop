@@ -1,5 +1,5 @@
 {
-  "name": "Dropchop",
+  "name": "dropchop",
   "version": "0.0.1",
   "description": "GIS in the browser.",
   "homepage": "https://github.com/cugos/dropchop",
@@ -34,7 +34,6 @@
     "gulp-copy": "0.0.2",
     "gulp-gh-pages": "^0.5.2",
     "gulp-jshint": "^1.11.2",
-    "gulp-karma": "0.0.4",
     "gulp-sass": "^2.0.4",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-uglify": "^0.6.2",

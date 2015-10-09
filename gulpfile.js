@@ -1,6 +1,5 @@
 var gulp = require('gulp');
 var sourcemap = require('gulp-sourcemaps');
-var karma = require('gulp-karma');
 var uglify = require('gulp-uglify');
 var copy = require('gulp-copy');
 var concat = require('gulp-concat');
@@ -8,6 +7,7 @@ var connect = require('gulp-connect');
 var sass = require('gulp-sass');
 var jshint = require('gulp-jshint');
 var ghPages = require('gulp-gh-pages');
+var Server = require('karma').Server;
 
 
 gulp.task('sass', function(){
@@ -89,7 +89,7 @@ gulp.task('fa-fonts', function() {
 
 gulp.task('cname', function() {
   return gulp.src('./src/CNAME')
-    .pipe(gulp.dest('./dist/CNAME'));
+    .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('ghpages', function() {
@@ -110,20 +110,11 @@ gulp.task('connect', function() {
   });
 });
 
-var testFiles = [
-  './dist/static/js/vendor.js',
-  './dist/static/js/dropchop.js',
-  './test/spec/**/*.spec.js'
-];
-gulp.task('test', function() {
-  return gulp.src(testFiles)
-    .pipe(karma({
-      configFile: 'test/karma-config.js',
-      action: 'run'
-    }))
-    .on('error', function(err) {
-      throw err;
-    });
+gulp.task('test', function (done) {
+  new Server({
+    configFile: __dirname + '/test/karma.conf.js',
+    singleRun: true
+  }, done).start();
 });
 
 gulp.task('vendor', ['js_vendor', 'css_vendor', 'mapbox_assets', 'fa-fonts']);

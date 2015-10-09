@@ -3,6 +3,11 @@
 module.exports = function(config) {
   config.set({
     basePath: '.',
+    files: [
+      'spec/*.spec.js',
+      '../dist/static/js/vendor.js',
+      '../dist/static/js/dropchop.js'
+    ],
     frameworks: [
       'mocha',
       'chai',
