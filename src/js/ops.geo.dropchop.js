@@ -215,7 +215,7 @@ var dropchop = (function(dc) {
       maxFeatures: 1,
       requirements: {
         generalFeature: false,
-        types: ['FeatureCollection']
+        types: ['FeatureCollection'] // TODO: make this take features and run across full selection
       },
       description: 'Takes any number of features and returns a rectangular Polygon that encompasses all vertices.',
       execute: function(params) {
