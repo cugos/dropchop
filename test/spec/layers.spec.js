@@ -20,10 +20,7 @@ describe('layers.dropchop.js', function() {
   it('dc.layers.add()', function() {
     dc.layers.add({}, 'test layer name', gj);
     
-    var stamp;
-    for (var l in dc.layers.list) {
-      stamp = l;
-    }
+    var stamp = getFirstLayerStamp();
 
     expect(Object.keys(dc.layers.list).length).to.equal(1);
     expect(dc.layers.list[stamp].type).to.equal('Feature<Point>');
@@ -32,10 +29,7 @@ describe('layers.dropchop.js', function() {
   it('dc.layers.remove()', function() {
     dc.layers.list = {}; // clear layers
     dc.layers.add({}, 'test layer name', gj);
-    var stamp;
-    for (var l in dc.layers.list) {
-      stamp = l;
-    }
+    var stamp = getFirstLayerStamp();
     dc.layers.remove({}, stamp);
     expect(Object.keys(dc.layers.list).length).to.equal(0);
   });
@@ -43,10 +37,7 @@ describe('layers.dropchop.js', function() {
   it('dc.layers.duplicate()', function() {
     dc.layers.list = {}; // clear layers
     dc.layers.add({}, 'test_duplicate', gj);
-    var stamp;
-    for (var l in dc.layers.list) {
-      stamp = l;
-    }
+    var stamp = getFirstLayerStamp();
     dc.layers.duplicate({}, stamp);
     expect(Object.keys(dc.layers.list).length).to.equal(2);
     var stamps = [];
@@ -59,10 +50,7 @@ describe('layers.dropchop.js', function() {
   it('dc.layers.rename()', function() {
     dc.layers.list = {}; // clear layers
     dc.layers.add({}, 'test_rename', gj);
-    var stamp;
-    for (var l in dc.layers.list) {
-      stamp = l;
-    }
+    var stamp = getFirstLayerStamp();
     dc.layers.rename({}, dc.layers.list[stamp], 'a new name');
     expect(dc.layers.list[stamp].name).to.equal('a new name');
   });
