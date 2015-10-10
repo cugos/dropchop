@@ -40,6 +40,8 @@ var dropchop = (function(dc) {
       dc.util.executeUrlParams();
     }
 
+    dc.util.welcome();
+
   };
 
   dc.boom = function() {

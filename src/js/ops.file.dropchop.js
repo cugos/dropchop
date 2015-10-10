@@ -7,7 +7,7 @@ var dropchop = (function(dc) {
 
   dc.ops.file = {
     upload: {
-      description: 'Upload from your computer (.shp, .geojson)',
+      description: 'Upload from your computer (.geojson)',
       icon: '<i class="fa fa-upload"></i>',
       execute: function() {
         // inspired from geojson.io
