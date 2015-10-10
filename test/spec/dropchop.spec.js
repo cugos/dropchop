@@ -32,7 +32,7 @@ describe('Dropchop!', function() {
   });
 
   describe('notify.dropchop.js', function() {
-    it('Notifications fire, and disappear', function() {
+    it('dc.notify() - appear & disappear', function() {
       dc.init(ops);
       dc.notify('success', 'some text', 200);
       
@@ -44,6 +44,16 @@ describe('Dropchop!', function() {
       setTimeout(function() {
         expect($('.notification').length).to.equal(0);
       }, 300);
+    });
+  });
+
+  describe('dropzone.dropchop.js', function() {
+    it('dc.dropzone event listeners', function() {
+      $('body').trigger('dragover');
+      expect($('body').hasClass('dragging')).to.eq(true);
+
+      $('body').trigger('dragleave');
+      expect($('body').hasClass('dragging')).to.eq(false);
     });
   });
 
