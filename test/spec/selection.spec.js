@@ -9,6 +9,7 @@ describe('selection.dropchop.js', function() {
     document.body.appendChild(dropchopElem);
     dc = dropchop;
     dc.init(ops);
+    dc.layers.list = {};
   });
 
   afterEach(function() {
@@ -19,7 +20,6 @@ describe('selection.dropchop.js', function() {
     
   it('dc.selection.add()', function() {
     // create a layer first
-    dc.layers.list = {};
     dc.layers.add({}, 'test layer name', gj);
     var s = getFirstLayerStamp();
 
@@ -31,7 +31,7 @@ describe('selection.dropchop.js', function() {
   });
 
   it('dc.selection.remove()', function() {
-    // since we aren't resetting dc, selection already has a layer in it
+    dc.layers.add({}, 'test layer name', gj);
     var s = getFirstLayerStamp();
     dc.selection.remove({}, dc.layers.list[s]);
     expect(dc.selection.list.length).to.equal(0);

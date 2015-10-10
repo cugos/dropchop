@@ -9,6 +9,7 @@ describe('layers.dropchop.js', function() {
     document.body.appendChild(dropchopElem);
     dc = dropchop;
     dc.init(ops);
+    dc.layers.list = {};
   });
 
   afterEach(function() {
@@ -27,7 +28,6 @@ describe('layers.dropchop.js', function() {
   });
 
   it('dc.layers.remove()', function() {
-    dc.layers.list = {}; // clear layers
     dc.layers.add({}, 'test layer name', gj);
     var stamp = getFirstLayerStamp();
     dc.layers.remove({}, stamp);
@@ -35,7 +35,6 @@ describe('layers.dropchop.js', function() {
   });
 
   it('dc.layers.duplicate()', function() {
-    dc.layers.list = {}; // clear layers
     dc.layers.add({}, 'test_duplicate', gj);
     var stamp = getFirstLayerStamp();
     dc.layers.duplicate({}, stamp);
@@ -48,7 +47,6 @@ describe('layers.dropchop.js', function() {
   });
 
   it('dc.layers.rename()', function() {
-    dc.layers.list = {}; // clear layers
     dc.layers.add({}, 'test_rename', gj);
     var stamp = getFirstLayerStamp();
     dc.layers.rename({}, dc.layers.list[stamp], 'a new name');
