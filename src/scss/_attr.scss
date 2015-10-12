@@ -1,0 +1,79 @@
+.dropchop-attr-table {
+  position: absolute;
+  max-height: 50%;
+  bottom: 0;
+  right: 0;
+  left: $left-menu-width + $width + $geo-button-width + 1px;
+  z-index: 1000;
+  overflow: scroll;
+
+  table {
+    font-size: 0.8em;
+    width: 100%;
+    background: white;
+    border-collapse: collapse;
+    tr {
+      &:hover {
+        background: #f6f6f6;
+      }
+      &.attr-row-selected {
+        background: #333;
+        td {
+          color: #f6f6f6;
+        }
+      }
+    }
+    th {
+      &:first-child {
+        max-width: 30px;
+      }
+      min-width: 100px;
+      text-align: left;
+      font-family: "Inconsolata", monospace;
+    }
+    th,td {
+      border: 1px solid #e5e5e5;
+      padding: 5px;
+    }
+    .attr-count-th {
+      width: 30px;
+    }
+    .attr-count {
+      font-color: #999;
+      font-weight: 900;
+      font-family: "Inconsolata", monospace;
+    }
+  }
+}
+
+.attr-action-container {
+  position: fixed;
+  top: 50%;
+  margin-top: -25px;
+  right: 0;
+}
+
+.attr-action {
+  display: inline-block;
+  background: transparent;
+  border-width: 1px;
+  border-style: solid;
+  padding: 5px;
+  height: 25px;
+  cursor: pointer;
+  opacity: 0.8;
+  &:hover {
+    opacity: 1;
+  }
+  &.attr-action-close {
+    border: white;
+    color: #333;
+    background: white;
+    font-weight: 900;
+  }
+  &.attr-action-remove {
+    color: white;
+    border-color: $red;
+    background-color: $red;
+  }
+}

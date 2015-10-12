@@ -1,2 +1,2 @@
-grunt build:prod
-grunt test
+gulp build:prod
+gulp test

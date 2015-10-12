@@ -1,0 +1,20 @@
+.sprite {
+  background-size: 100%;
+  background-image: url(/assets/dc-sprite.png);
+  background-repeat: no-repeat;
+}
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5), 
+only screen and (min--moz-device-pixel-ratio: 1.5), 
+only screen and (min-resolution: 240dpi) {
+.sprite {
+    background-image: url(/assets/dc-sprite@2x.png);
+  }
+}
+
+$spritepx: -14px;
+
+.sprite-layer-line { background-position: 0px 0px; }
+.sprite-layer-polygon { background-position: 0px $spritepx; }
+.sprite-layer-point { background-position: 0px ($spritepx * 2); }
+.sprite-layer-featurecollection { background-position: 0px ($spritepx * 3); }
+.sprite-layer-geom { background-position: 0px ($spritepx * 4); }
