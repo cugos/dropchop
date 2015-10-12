@@ -51,6 +51,50 @@ var dropchop = (function(dc) {
     $(dc).on('layer:added', dc.map.addLayer);
     $(dc).on('layer:hide', dc.map.hideLayer);
     $(dc).on('layer:show', dc.map.showLayer);
+
+    // my location as layer
+    var geolocate = document.getElementById('geolocate');
+
+    if (!navigator.geolocation) {
+      geolocate.innerHTML = 'Geolocation is not available';
+    } else {
+      geolocate.onclick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this._map.locate();
+      }.bind(this);
+    }
+
+    // Once we've got a position, zoom and center the map
+    // on it, and add a single marker.
+    this._map.on('locationfound', function(e) {
+      this._map.fitBounds(e.bounds);
+
+
+      myLayer.setGeoJSON({
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [e.latlng.lng, e.latlng.lat]
+        },
+        properties: {
+          'title': 'There You Are',
+          'marker-color': '#207178',
+          'marker-symbol': 'heart'
+        }
+      });
+
+      // And hide the geolocation button
+      //geolocate.parentNode.removeChild(geolocate);
+    }.bind(this));
+
+    // If the user chooses not to allow their location
+    // to be shared, display an error message.
+    this._map.on('locationerror', function() {
+      geolocate.innerHTML = 'Position could not be found';
+    });
+
+    
   }
 
   dc.map.count = 0;
