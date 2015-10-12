@@ -30,20 +30,20 @@ var dropchop = (function(dc) {
       position: 'topleft'
     }).addTo(dc.map.m);
 
-    // var baseLayers = {
-    //   "Mapbox Streets": L.mapbox.tileLayer('mapbox.streets'),
-    //   "Mapbox Outdoors": L.mapbox.tileLayer('mapbox.outdoors'),
-    //   "Mapbox Light": L.mapbox.tileLayer('mapbox.light'),
-    //   "Mapbox Dark": L.mapbox.tileLayer('mapbox.dark'),
-    //   "Mapbox Satellite": L.mapbox.tileLayer('mapbox.satellite')
-    // };
+    var baseLayers = {
+      "Mapbox Streets": L.mapbox.tileLayer('mapbox.streets'),
+      "Mapbox Outdoors": L.mapbox.tileLayer('mapbox.outdoors'),
+      "Mapbox Light": L.mapbox.tileLayer('mapbox.light'),
+      "Mapbox Dark": L.mapbox.tileLayer('mapbox.dark'),
+      "Mapbox Satellite": L.mapbox.tileLayer('mapbox.satellite')
+    };
 
-    // baseLayers['Mapbox Streets'].addTo(dc.map.m);
-    // // sets location of base layer control to the bottom right
-    // L.control.layers(baseLayers, {}, {
-    //   position: 'bottomright',
-    //   collapsed: false
-    // }).addTo(dc.map.m);
+    baseLayers['Mapbox Streets'].addTo(dc.map.m);
+    // sets location of base layer control to the bottom right
+    L.control.layers(baseLayers, {}, {
+      position: 'bottomright',
+      collapsed: false
+    }).addTo(dc.map.m);
 
     dc.map.layergroup = L.mapbox.featureLayer();
     dc.map.layergroup.addTo(dc.map.m);
