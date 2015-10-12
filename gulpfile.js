@@ -28,7 +28,7 @@ gulp.task('css_vendor', function() {
 });
 
 gulp.task('mapbox_assets', function() {
-  return gulp.src('./node_modules/mapbox.js/dist/images/**.*')
+  return gulp.src('./lib/mapbox.js/images/**.*')
     .pipe(gulp.dest('./dist/static/css/images'));
 });
 
