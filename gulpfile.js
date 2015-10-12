@@ -121,5 +121,5 @@ gulp.task('vendor', ['js_vendor', 'css_vendor', 'mapbox_assets', 'fa-fonts']);
 gulp.task('js', ['lint', 'js_dropchop']);
 gulp.task('build', ['js', 'html', 'sass', 'assets']);
 gulp.task('build:prod', ['vendor', 'build']);
-gulp.task('deploy', ['build:prod', 'cname', 'gh-pages']);
+gulp.task('deploy', ['build:prod', 'cname', 'ghpages']);
 gulp.task('default', ['build', 'connect', 'watch']);
