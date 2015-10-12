@@ -93,7 +93,7 @@ gulp.task('cname', function() {
 });
 
 gulp.task('ghpages', function() {
-  return gulp.src('./dist/**/*')
+  return gulp.src(['./dist/**/*.*', './dist/CNAME'])
     .pipe(ghPages());
 });
 
