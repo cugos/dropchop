@@ -8,6 +8,7 @@ var sass = require('gulp-sass');
 var jshint = require('gulp-jshint');
 var ghPages = require('gulp-gh-pages');
 var Server = require('karma').Server;
+var file = require('gulp-file');
 
 
 gulp.task('sass', function(){
@@ -87,16 +88,6 @@ gulp.task('fa-fonts', function() {
     .pipe(gulp.dest('./dist/static/fonts'));
 });
 
-gulp.task('cname', function() {
-  return gulp.src('./src/CNAME')
-    .pipe(gulp.dest('./dist'));
-});
-
-gulp.task('ghpages', function() {
-  return gulp.src(['./dist/**/*.*', './dist/CNAME'])
-    .pipe(ghPages());
-});
-
 gulp.task('watch', function() {
   gulp.watch('./src/js/**/*.js', ['js']);
   gulp.watch('./src/scss/**/*.scss', ['sass']);
@@ -117,9 +108,14 @@ gulp.task('test', function (done) {
   }, done).start();
 });
 
+gulp.task('deploy', ['build:prod'], function() {
+  return gulp.src('./dist/**/*.*')
+    .pipe(file('CNAME', 'dropchop.io'))
+    .pipe(ghPages());
+});
+
 gulp.task('vendor', ['js_vendor', 'css_vendor', 'mapbox_assets', 'fa-fonts']);
 gulp.task('js', ['lint', 'js_dropchop']);
 gulp.task('build', ['js', 'html', 'sass', 'assets']);
 gulp.task('build:prod', ['vendor', 'build']);
-gulp.task('deploy', ['build:prod', 'cname', 'ghpages']);
 gulp.task('default', ['build', 'connect', 'watch']);
