@@ -153,6 +153,18 @@ var dropchop = (function(dc) {
       }
     },
 
+    location: {
+      description: 'Add your location as a layer',
+      icon: '<i class="fa fa-crosshairs"></i>',
+      execute: function() {
+        if (!navigator.geolocation) {
+          dc.notify('error', 'Geolocation is not available on this browser.', 4000);
+        } else {
+          dc.map.m.locate();
+        }
+      }
+    },
+
     'break1': { type: 'break' },
 
     'save-geojson': {
