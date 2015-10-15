@@ -40,7 +40,8 @@ var vendorJS = [
   './src/lib/shp-2-geojson.js',
   './node_modules/osmtogeojson/osmtogeojson.js',
   './node_modules/turf/turf.js',
-  './lib/mapbox.js/mapbox.js'
+  './lib/mapbox.js/mapbox.js',
+  './node_modules/esri2geo/esri2geo.js'
 ];
 
 gulp.task('lint', function() {

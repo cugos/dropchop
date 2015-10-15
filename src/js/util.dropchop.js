@@ -1,11 +1,11 @@
 var dropchop = (function(dc) {
-  
+
   'use strict';
 
   dc = dc || {};
-  
+
   dc.util = {};
-  
+
   dc.util.removeFileExtension = function(string) {
     string = string.replace(/\.[^/.]+$/, "");
     return string;
@@ -49,7 +49,7 @@ var dropchop = (function(dc) {
         console.log(reader);
         shp(reader.result).then(forwardToGeoJsonIo);
       };
-    } else { 
+    } else {
       reader.readAsText(file, 'UTF-8');
       reader.onload = function() {
         $(dc).trigger('file:added', [file.name, JSON.parse(reader.result)]);
@@ -107,6 +107,14 @@ var dropchop = (function(dc) {
     return sw.lat+','+sw.lng+','+ne.lat+','+ne.lng;
   };
 
+  dc.util.getEsriBBox = function() {
+      // grrrr...
+      var bounds = dc.map.m.getBounds(),
+          sw = bounds.getSouthWest(),
+          ne = bounds.getNorthEast();
+      return sw.lng+','+sw.lat+','+ne.lng+','+ne.lat;
+  };
+
   dc.util.uncollect = function(fc) {
     return fc.features[0];
   };
@@ -131,7 +139,7 @@ var dropchop = (function(dc) {
     }
 
     return newFC;
-    
+
   };
 
   dc.util.loader = function(yes) {

@@ -1,5 +1,5 @@
 var dropchop = (function(dc) {
-  
+
   'use strict';
 
   dc = dc || {};
@@ -22,13 +22,13 @@ var dropchop = (function(dc) {
             var files = this.files;
             $(files).each(function(i) {
               // var ext = dc.util.getFileExtension(files[i].name);
-              
+
               // // if it is a shapefile or zip file
               // if (ext === 'shp' || ext === 'zip') {
               //   // upload a shapefile and add the layer
               //   dc.util.readShpFile
               //   shp("files/pandr").then(function(geojson){
-              //     //do something with your geojson 
+              //     //do something with your geojson
               //   });
               // } else {
                 dc.util.readFile(files[i]);
@@ -105,6 +105,52 @@ var dropchop = (function(dc) {
           dc.notify('error', xhr.status + ': could not retrieve Gist. Please check your URL');
         }
       }
+    },
+
+    'load-arcgis': {
+      description: 'Query an ArcGIS Server Feature Service',
+      icon: '<i class="fa fa-globe"></i>',
+        _temp: {},
+      parameters: [
+        {
+          name: 'feature service',
+            description: 'Enter URL to ArcGIS Feature Service (ex. http://sampleserver6.arcgisonline.com/arcgis/rest/services/Hurricanes/MapServer/0)',
+            type: 'text',
+            default: 'http://sampleserver6.arcgisonline.com/arcgis/rest/services/Hurricanes/MapServer/0'
+        },
+          {
+              name: 'where',
+              description: 'A where clause for the query filter. Any legal SQL where clause operating on the fields in the layer is allowed.',
+              type: 'text',
+              default: '1=1'
+          }
+      ],
+        execute: function() {
+            $(dc).trigger('form:file', ['load-arcgis']);
+        },
+        get: function(event, name, parameters) {
+            dc.ops.file['load-arcgis']._temp.layerName = 'arcgis_layer';
+            // build the query with bounding box
+            var bbox = dc.util.getEsriBBox();
+            console.log(parameters[0] + '/query?f=json&inSR=4326&outSR=4326&geometry=' + bbox + '&where=' + parameters[1]);
+            dc.util.xhr(parameters[0] + '/query?f=json&inSR=4326&outSR=4326&geometry=' + bbox + '&where=' + parameters[1], dc.ops.file['load-arcgis'].callback);
+        },
+        callback: function(xhr, xhrEvent) {
+            dropchop.util.loader(false);
+            if (xhr.status === 200) {
+                var data = JSON.parse(xhr.responseText);
+                var geojson = toGeoJSON(data);
+                console.log(geojson);
+                if (data.features.length<1) {
+                    dc.notify('info', 'No features found in your query.');
+                } else {
+                    $(dc).trigger('file:added', [dc.ops.file['load-arcgis']._temp.layerName, geojson]);
+                    dc.notify('success', 'Found <strong>' + data.features.length + ' features</strong> from the ArcGIS Service');
+                }
+            } else {
+                dc.notify('error', xhr.status + ': could not query the ArcGIS Service');
+            }
+        }
     },
 
     'load-overpass': {
@@ -219,7 +265,7 @@ var dropchop = (function(dc) {
       execute: function() {
         if(!dc.selection.list.length) {
           // extent of entire layer list if nothing selected
-          dc.map.m.fitBounds(dc.map.layergroup.getBounds());  
+          dc.map.m.fitBounds(dc.map.layergroup.getBounds());
         } else {
           // otherwise build the bounds based on selected layers
           var bounds;
@@ -230,7 +276,7 @@ var dropchop = (function(dc) {
           });
           dc.map.m.fitBounds(bounds);
         }
-        
+
       }
     },
 
@@ -306,7 +352,7 @@ var dropchop = (function(dc) {
       ],
       execute: function() {
         if (dc.selection.list.length === 1) {
-          $(dc).trigger('form:file', ['rename']);  
+          $(dc).trigger('form:file', ['rename']);
         } else {
           dc.notify('info', 'Please select <strong>one layer</strong>.');
         }
