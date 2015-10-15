@@ -140,41 +140,17 @@ var dropchop = (function(dc) {
         dropchop.util.loader(false);
         if (xhr.status === 200) {
           var data = JSON.parse(xhr.responseText);
-          var geojson = osmtogeojson(data);
+          var geojson = osmtogeojson(data, {
+            flatProperties: true
+          });
           if (!data.elements.length) {
             dc.notify('info', 'No elements found in your query.');
           } else {
-            var gj = tagsToAttributes(geojson);
-            $(dc).trigger('file:added', [dc.ops.file['load-overpass']._temp.layerName, gj]);
+            $(dc).trigger('file:added', [dc.ops.file['load-overpass']._temp.layerName, geojson]);
             dc.notify('success', 'Found <strong>' + data.elements.length + ' elements</strong> from the Overpass API');
           }
         } else {
           dc.notify('error', xhr.status + ': could not query the Overpass API');
-        }
-
-        // turns overpass response tags and meta properties into their own top-level properties
-        function tagsToAttributes(geojson) {
-          var g = geojson;
-          
-          // loop through each feature
-          for (var f = 0; f < g.features.length; f++) {
-
-            // loop through properties.tags object to create new top-level tag_ properties
-            if (Object.keys(g.features[f].properties.tags).length) {
-              for (var tag in g.features[f].properties.tags) {
-                g.features[f].properties['tag_'+tag] = g.features[f].properties.tags[tag];
-              }  
-            }
-
-            // loop through properties.meta object to create new top-level meta_ properties
-            if (Object.keys(g.features[f].properties.meta).length) {
-              for (var m in g.features[f].properties.meta) {
-                g.features[f].properties['meta_'+m] = g.features[f].properties.meta[m];
-              }  
-            }
-          }
-
-          return g;
         }
       }
     },
