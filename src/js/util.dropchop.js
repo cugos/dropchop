@@ -43,11 +43,13 @@ var dropchop = (function(dc) {
     var reader = new FileReader();
     // if a zipfile, assume shapefile for now
     if (file.name.indexOf('.zip') > -1 || file.name.indexOf('.shp') > -1) {
-      console.log(file);
       reader.readAsArrayBuffer(file);
       reader.onloadend = function(event) {
-        console.log(reader);
-        shp(reader.result).then(forwardToGeoJsonIo);
+        console.log(file);
+        var shape = new shp(file).then(function(data) {
+          console.log(data);
+        });
+        console.log(shape);
       };
     } else { 
       reader.readAsText(file, 'UTF-8');
@@ -56,11 +58,6 @@ var dropchop = (function(dc) {
       };
     }
 
-    function forwardToGeoJsonIo(data) {
-      console.log(data);
-      var url = "http://geojson.io/#data=data:application/json," + encodeURIComponent(JSON.stringify(data));
-      window.location = url;
-    }
   };
 
   dc.util.jsonFromUrl = function() {
@@ -152,7 +149,8 @@ var dropchop = (function(dc) {
     var welcome = '\nWelcome to Dropchop!\n';
         welcome += 'Once you drop, the chop don\'t stop.\n\n';
         welcome += 'This project is brought to you by the great people of CUGOS, the Cascadian chapter of OSGeo. If you are ever in Seattle, hit us up\nhello@cugos.org\n\n';
-        welcome += 'You can learn more about this project at dropchop.io/about.'
+        welcome += 'You can learn more about this project at dropchop.io/about.';
+        welcome = '';
     console.log(welcome);
   };
 
