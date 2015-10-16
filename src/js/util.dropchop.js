@@ -44,10 +44,10 @@ var dropchop = (function(dc) {
     // if a zipfile, assume shapefile for now
     if (file.name.indexOf('.zip') > -1 || file.name.indexOf('.shp') > -1) {
       reader.readAsArrayBuffer(file);
+      dc.util.loader(true);
       reader.onloadend = function(event) {
-        console.log('Loading shapefile...');
         shp(reader.result).then(function(geojson) {
-          console.log('...and done loading shapefile');
+          dc.util.loader(false);
           $(dc).trigger('file:added', [geojson.fileName, geojson]);
         });
       };
