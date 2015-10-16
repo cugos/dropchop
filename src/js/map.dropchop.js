@@ -1,5 +1,5 @@
 var dropchop = (function(dc) {
-  
+
   'use strict';
 
   dc = dc || {};
@@ -118,7 +118,7 @@ var dropchop = (function(dc) {
     dc.map.layergroup.addLayer(fl);
 
     // create popup table for each feature
-    fl.eachLayer(function(layer) {      
+    fl.eachLayer(function(layer) {
       var content = '<table class="dropchop-table"><tr><th>Property</th><th>Data</th></tr>';
 
       if (layer.feature.properties) {
@@ -147,7 +147,7 @@ var dropchop = (function(dc) {
   dc.map.showLayer = function(event, layer) {
     dc.map.layergroup.addLayer(layer.featurelayer);
   };
-  
+
   dc.map.removeLayer = function(event, stamp) {
     dc.map.layergroup.removeLayer(dc.layers.list[stamp].featurelayer);
   };

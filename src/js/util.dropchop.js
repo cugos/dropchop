@@ -1,11 +1,11 @@
 var dropchop = (function(dc) {
-  
+
   'use strict';
 
   dc = dc || {};
-  
+
   dc.util = {};
-  
+
   dc.util.removeFileExtension = function(string) {
     string = string.replace(/\.[^/.]+$/, "");
     return string;
@@ -43,13 +43,15 @@ var dropchop = (function(dc) {
     var reader = new FileReader();
     // if a zipfile, assume shapefile for now
     if (file.name.indexOf('.zip') > -1 || file.name.indexOf('.shp') > -1) {
-      console.log(file);
       reader.readAsArrayBuffer(file);
+      dc.util.loader(true);
       reader.onloadend = function(event) {
-        console.log(reader);
-        shp(reader.result).then(forwardToGeoJsonIo);
+        shp(reader.result).then(function(geojson) {
+          dc.util.loader(false);
+          $(dc).trigger('file:added', [geojson.fileName, geojson]);
+        });
       };
-    } else { 
+    } else {
       reader.readAsText(file, 'UTF-8');
       reader.onload = function() {
         $(dc).trigger('file:added', [file.name, JSON.parse(reader.result)]);
@@ -131,7 +133,7 @@ var dropchop = (function(dc) {
     }
 
     return newFC;
-    
+
   };
 
   dc.util.loader = function(yes) {
