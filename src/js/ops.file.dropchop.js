@@ -138,7 +138,7 @@ var dropchop = (function(dc) {
                 dc.ops.file['load-arcgis']._temp.layerName = parameters[0];
                 // build the query with bounding box
                 var bbox = dc.util.getEsriBBox();
-                dc.util.xhr(parameters[1] + '/query?f=json&inSR=4326&outSR=4326&geometry=' + bbox + '&where=' + parameters[2], dc.ops.file['load-arcgis'].callback);
+                dc.util.xhr(parameters[1] + '/query?f=json&inSR=4326&outSR=4326&geometry=' + bbox + '&where=' + parameters[2] + '&outfields=*', dc.ops.file['load-arcgis'].callback);
             },
             callback: function(xhr, xhrEvent) {
                 dropchop.util.loader(false);
