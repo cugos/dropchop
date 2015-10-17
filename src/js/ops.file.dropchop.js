@@ -113,12 +113,6 @@ var dropchop = (function(dc) {
             _temp: {},
             parameters: [
                 {
-                    name: 'layer name',
-                    description: 'Assign a name to the layer',
-                    type: 'text',
-                    default: 'arcgis_layer'
-                },
-                {
                     name: 'feature service',
                     description: 'Enter URL to ArcGIS Feature Service (ex. http://sampleserver6.arcgisonline.com/arcgis/rest/services/Hurricanes/MapServer/0)',
                     type: 'text',
@@ -129,6 +123,12 @@ var dropchop = (function(dc) {
                     description: 'A where clause for the query filter. Any legal SQL where clause operating on the fields in the layer is allowed.',
                     type: 'text',
                     default: '1=1'
+                },
+                {
+                    name: 'limit to map',
+                    description: 'only load features within current map view',
+                    type: 'checkbox'
+
                 }
             ],
             execute: function() {
@@ -136,9 +136,11 @@ var dropchop = (function(dc) {
             },
             get: function(event, name, parameters) {
                 dc.ops.file['load-arcgis']._temp.layerName = parameters[0];
-                // build the query with bounding box
-                var bbox = dc.util.getEsriBBox();
-                dc.util.xhr(parameters[1] + '/query?f=json&inSR=4326&outSR=4326&geometry=' + bbox + '&where=' + parameters[2] + '&outfields=*', dc.ops.file['load-arcgis'].callback);
+                var bbox = '-180,-90,180,90';
+                if (parameters[2]) {
+                    bbox = dc.util.getEsriBBox();
+                }
+                dc.util.xhr(parameters[0] + '/query?f=json&inSR=4326&outSR=4326&geometry=' + bbox + '&where=' + parameters[1] + '&outfields=*', dc.ops.file['load-arcgis'].callback);
             },
             callback: function(xhr, xhrEvent) {
                 dropchop.util.loader(false);
