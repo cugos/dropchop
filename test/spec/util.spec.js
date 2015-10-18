@@ -23,7 +23,7 @@ describe('util.dropchop.js', function() {
     {"type":"Feature","geometry":{"type":"Point","coordinates":[125.6,10.1]},"properties":{"name":"Dinagat Islands"}},
     {"type":"Feature","geometry":{"type":"Point","coordinates":[130,15]},"properties":{"name":"Some other islands"}}
   ]};
-    
+
   it('dc.util.removeFileExtension()', function() {
     var noExtension = dc.util.removeFileExtension('filename.geojson');
     expect(noExtension).to.equal('filename');
@@ -80,17 +80,17 @@ describe('util.dropchop.js', function() {
   });
 
   it('dc.util.jsonFromUrl()', function() {
-    var url = '/?url=http://google.com&gist=1234&gist=456&url=http%3A%2F%2Fdropchop.io';
+    var url = '/?url=http://google.com&gist=1234&gist=456&url=http%3A%2F%2Fdropchop.io&url=https://mug.com?cat=booker&fish=truman';
     window.history.pushState(null, null, url);
     expect(dc.util.jsonFromUrl()).to.eql(
         {
-            url: ['http://google.com', 'http://dropchop.io'],
+            url: ['http://google.com', 'http://dropchop.io', 'https://mug.com?cat=booker&fish=truman'],
             gist: ['1234', '456']
         }
     );
   });
 
 
-  
+
 
 });
