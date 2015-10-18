@@ -66,15 +66,26 @@ var dropchop = (function(dc) {
   };
 
   dc.util.jsonFromUrl = function() {
-    var query = location.search.substr(1);
-    var result = {};
-    query.split("&").forEach(function(part) {
-      var item = part.split("=");
-      if (!result[item[0]]) {
-        result[item[0]] = [];
+    var query = location.search.substr(1)
+      .split(/(&?gist=|&?url=)/g)
+      .filter(function(d) {
+        return d.length > 0;
+      });
+
+    var result = {}
+
+    query.forEach(function(part, i) {
+      if (i === 0 || i % 2 === 0) {
+        var key = part.replace(/&|=/g, '');
+
+        if (!result[key]) {
+          result[key] = []
+        }
+
+        result[key].push(decodeURIComponent(query[i + 1]));
       }
-      result[item[0]].push(decodeURIComponent(item[1]));
     });
+
     return result;
   };
 
