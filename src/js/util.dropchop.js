@@ -1,11 +1,11 @@
 var dropchop = (function(dc) {
-  
+
   'use strict';
 
   dc = dc || {};
-  
+
   dc.util = {};
-  
+
   dc.util.removeFileExtension = function(string) {
     string = string.replace(/\.[^/.]+$/, "");
     return string;
@@ -43,13 +43,15 @@ var dropchop = (function(dc) {
     var reader = new FileReader();
     // if a zipfile, assume shapefile for now
     if (file.name.indexOf('.zip') > -1 || file.name.indexOf('.shp') > -1) {
-      console.log(file);
       reader.readAsArrayBuffer(file);
+      dc.util.loader(true);
       reader.onloadend = function(event) {
-        console.log(reader);
-        shp(reader.result).then(forwardToGeoJsonIo);
+        shp(reader.result).then(function(geojson) {
+          dc.util.loader(false);
+          $(dc).trigger('file:added', [geojson.fileName, geojson]);
+        });
       };
-    } else { 
+    } else {
       reader.readAsText(file, 'UTF-8');
       reader.onload = function() {
         $(dc).trigger('file:added', [file.name, JSON.parse(reader.result)]);
@@ -64,15 +66,26 @@ var dropchop = (function(dc) {
   };
 
   dc.util.jsonFromUrl = function() {
-    var query = location.search.substr(1);
-    var result = {};
-    query.split("&").forEach(function(part) {
-      var item = part.split("=");
-      if (!result[item[0]]) {
-        result[item[0]] = [];
+    var query = location.search.substr(1)
+      .split(/(&?gist=|&?url=)/g)
+      .filter(function(d) {
+        return d.length > 0;
+      });
+
+    var result = {}
+
+    query.forEach(function(part, i) {
+      if (i === 0 || i % 2 === 0) {
+        var key = part.replace(/&|=/g, '');
+
+        if (!result[key]) {
+          result[key] = []
+        }
+
+        result[key].push(decodeURIComponent(query[i + 1]));
       }
-      result[item[0]].push(decodeURIComponent(item[1]));
     });
+
     return result;
   };
 
@@ -131,7 +144,7 @@ var dropchop = (function(dc) {
     }
 
     return newFC;
-    
+
   };
 
   dc.util.loader = function(yes) {
