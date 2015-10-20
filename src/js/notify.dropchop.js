@@ -8,11 +8,32 @@ var dropchop = (function(dc) {
       .addClass(type)
       .html(text);
 
-    $(dc.$elem).append(note);
+    // `time` can equal 'close' in order to create a close button
+    if (time === 'close') {
 
-    setTimeout(function() {
-      note.remove();
-    }, time || 3000);
+      var $close = $('<button>').addClass('notification-close')
+        .prop('type', 'button')
+        .html('<i class="fa fa-times"></i>');
+
+      $close.on('click', function(event) {
+        $(this).parent().remove();
+      });
+
+      $(note).append($close);
+      $(dc.$elem).append(note);
+
+    } else {
+
+      $(dc.$elem).append(note);
+
+      setTimeout(function() {
+        note.remove();
+      }, time || 3000);
+
+    }
+
+    
+
   };
 
   return dc;
