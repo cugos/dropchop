@@ -140,7 +140,9 @@ var dropchop = (function(dc) {
         dropchop.util.loader(false);
         if (xhr.status === 200) {
           var data = JSON.parse(xhr.responseText);
-          var geojson = osmtogeojson(data);
+          var geojson = osmtogeojson(data, {
+            flatProperties: true
+          });
           if (!data.elements.length) {
             dc.notify('info', 'No elements found in your query.');
           } else {
@@ -173,14 +175,12 @@ var dropchop = (function(dc) {
       icon: '<i class="fa fa-file-code-o"></i>',
       createsLayer: false,
       execute: function() {
-        for(var i = 0; i < dc.selection.list.length; i++) {
-          (function(file) {
-            var content = JSON.stringify(dc.selection.list[file].raw);
-            var title = 'dropchop_' + dc.selection.list[file].name + '.geojson';
-            saveAs(new Blob([content], {
-              type: 'text/plain;charset=utf-8'
-            }), title);
-          })(i);
+        for (var i = 0; i < dc.selection.list.length; i++) {
+          var content = JSON.stringify(dc.selection.list[i].raw);
+          var title = 'dropchop_' + dc.selection.list[i].name + '.geojson';
+          saveAs(new Blob([content], {
+            type: 'text/plain;charset=utf-8'
+          }), title);
         }
       }
     },

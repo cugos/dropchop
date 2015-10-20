@@ -1,6 +1,6 @@
 {
   "name": "dropchop",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "GIS in the browser.",
   "homepage": "https://github.com/cugos/dropchop",
   "bugs": "https://github.com/cugos/dropchop",
@@ -12,8 +12,7 @@
   "main": "src/dropchop.js",
   "scripts": {
     "start": "gulp",
-    "test": "gulp test",
-    "postinstall": "gulp build:prod"
+    "test": "gulp test"
   },
   "dependencies": {
     "browser-filesaver": "^1.1.0",

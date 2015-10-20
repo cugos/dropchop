@@ -23,8 +23,6 @@ var dropchop = (function(dc) {
 
     $(dc).on('layer:selected', dc.ops.geoCheck);
     $(dc).on('layer:unselected', dc.ops.geoCheck);
-    // $('.operation-geo').removeClass('operation-inactive');
-    // $('.operation-geo').prop('disabled', false);
     $(dc).on('operation:geo', dc.ops.geoExecute);
     $(dc).on('operation:file:load-gist', dc.ops.file['load-gist'].get);
     $(dc).on('operation:file:load-url', dc.ops.file['load-url'].get);
@@ -50,6 +48,11 @@ var dropchop = (function(dc) {
     dc.$elem.append(leftMenu);
   };
 
+  /* jshint ignore:start */
+
+  /* ignoring these functions in jshint because we are getting
+  an unecessary strict violation warning, but our usage of `this`
+  is proper here. */
   function _geoBtnClick(event) {
     event.preventDefault();
     var operation = $(this).attr('data-operation');
@@ -62,6 +65,7 @@ var dropchop = (function(dc) {
     }
   }
 
+
   function _fileBtnClick(event) {
     event.preventDefault();
 
@@ -73,6 +77,7 @@ var dropchop = (function(dc) {
       throw err;
     }
   }
+  /* jshint ignore:end */
 
   /**
    * Execute a turf function based on button operation click.
