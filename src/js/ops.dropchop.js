@@ -48,6 +48,11 @@ var dropchop = (function(dc) {
     dc.$elem.append(leftMenu);
   };
 
+  /* jshint ignore:start */
+
+  /* ignoring these functions in jshint because we are getting
+  an unecessary strict violation warning, but our usage of `this`
+  is proper here. */
   function _geoBtnClick(event) {
     event.preventDefault();
     var operation = $(this).attr('data-operation');
@@ -60,6 +65,7 @@ var dropchop = (function(dc) {
     }
   }
 
+
   function _fileBtnClick(event) {
     event.preventDefault();
 
@@ -71,6 +77,7 @@ var dropchop = (function(dc) {
       throw err;
     }
   }
+  /* jshint ignore:end */
 
   /**
    * Execute a turf function based on button operation click.
