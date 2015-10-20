@@ -23,8 +23,6 @@ var dropchop = (function(dc) {
 
     $(dc).on('layer:selected', dc.ops.geoCheck);
     $(dc).on('layer:unselected', dc.ops.geoCheck);
-    // $('.operation-geo').removeClass('operation-inactive');
-    // $('.operation-geo').prop('disabled', false);
     $(dc).on('operation:geo', dc.ops.geoExecute);
     $(dc).on('operation:file:load-gist', dc.ops.file['load-gist'].get);
     $(dc).on('operation:file:load-url', dc.ops.file['load-url'].get);
