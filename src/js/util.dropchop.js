@@ -161,14 +161,6 @@ var dropchop = (function(dc) {
     }
   };
 
-  dc.util.welcome = function() {
-    // var welcome = '\nWelcome to Dropchop!\n';
-    //     welcome += 'Once you drop, the chop don\'t stop.\n\n';
-    //     welcome += 'This project is brought to you by the great people of CUGOS, the Cascadian chapter of OSGeo. If you are ever in Seattle, hit us up\nhello@cugos.org\n\n';
-    //     welcome += 'You can learn more about this project at dropchop.io/about.';
-    // console.log(welcome);
-  };
-
   dc.util.error = function(err) {
     var error = new Error(err);
     throw error;
