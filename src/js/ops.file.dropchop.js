@@ -312,7 +312,6 @@ var dropchop = (function(dc) {
         }
       },
       callback: function(event, name, parameters) {
-        console.log(name, parameters);
         $(dc).trigger('layer:rename', [dc.selection.list[0], parameters[0]]);
       }
     },
@@ -323,7 +322,6 @@ var dropchop = (function(dc) {
       icon: '<i class="fa fa-trash-o"></i>',
       execute: function() {
         $(dc.selection.list).each(function(i) {
-          console.log(this.stamp);
           $(dc).trigger('layer:remove', [this.stamp]);
         });
         dc.selection.clear();

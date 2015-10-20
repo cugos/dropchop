@@ -91,7 +91,6 @@ var dropchop = (function(dc) {
           if (check === fromStamp) fromCount = e;
         });
 
-        console.log(toCount, fromCount);
         if (toCount > fromCount) {
           // loop up
           $('.layer-element').each(function(l) {
