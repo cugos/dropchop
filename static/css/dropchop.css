@@ -286,22 +286,6 @@ a.dropchop-btn {
   right: 0;
   left: 521px; }
 
-.notification {
-  float: right;
-  position: relative;
-  z-index: 10;
-  clear: both;
-  padding: 7px;
-  font-size: 0.85em;
-  margin: 5px 5px 0 0;
-  color: white; }
-  .notification.success {
-    background: #69dd76; }
-  .notification.error {
-    background: #ff8983; }
-  .notification.info {
-    background: #269aff; }
-
 .operations-geo {
   position: absolute;
   top: 0;
@@ -507,3 +491,29 @@ body.dropchop-loading #dropchop {
     color: white;
     border-color: #ff8983;
     background-color: #ff8983; }
+
+.notification {
+  float: right;
+  position: relative;
+  z-index: 10;
+  clear: both;
+  padding: 12px 15px;
+  font-size: 0.85em;
+  margin: 5px 5px 0 0;
+  color: white; }
+  .notification.success {
+    background: #69dd76; }
+  .notification.error {
+    background: #ff8983; }
+  .notification.info {
+    background: #269aff; }
+  .notification .notification-close {
+    background: transparent;
+    border: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: white; }
+    .notification .notification-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+      cursor: pointer; }
