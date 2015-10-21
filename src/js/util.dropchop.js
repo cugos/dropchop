@@ -42,7 +42,7 @@ var dropchop = (function(dc) {
   dc.util.readFile = function(file) {
     var reader = new FileReader();
     // if a zipfile, assume shapefile for now
-    if (file.name.indexOf('.zip') > -1 || file.name.indexOf('.shp') > -1) {
+    if (file.name.indexOf('.zip') > -1) {
       reader.readAsArrayBuffer(file);
       dc.util.loader(true);
       reader.onloadend = function(event) {

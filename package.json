@@ -23,6 +23,7 @@
     "shp-write": "^0.2.4",
     "shpjs": "^3.2.1",
     "tablesort": "^3.1.0",
+    "topojson": "^1.6.19",
     "turf": "^2.0.2"
   },
   "devDependencies": {

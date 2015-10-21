@@ -38,6 +38,7 @@ var vendorJS = [
   './node_modules/browser-filesaver/FileSaver.js',
   './node_modules/shp-write/shpwrite.js',
   './node_modules/shpjs/dist/shp.min.js',
+  './node_modules/topojson/topojson.min.js',
   './src/lib/shp-2-geojson.js',
   './node_modules/osmtogeojson/osmtogeojson.js',
   './node_modules/turf/turf.js',
