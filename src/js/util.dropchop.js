@@ -94,10 +94,10 @@ var dropchop = (function(dc) {
 
     Object.keys(dc.layers.list).forEach(function(layer) {
         /*
-        If a layer has a type and URL (a gist or external GeoJSON link),
-        and we haven't recored this type-url combo already, add it to the
-        unique list. The last check is needed to account for gists with
-        multiple layers.
+        ** If a layer has a type and URL (a gist or external GeoJSON link),
+        ** and we haven't recored this type-url combo already, add it to the
+        ** unique list. The last check is needed to account for gists with
+        ** multiple layers.
         */
         if (dc.layers.list[layer].type && dc.layers.list[layer].url && layers.indexOf(dc.layers.list[layer].type + '=' + dc.layers.list[layer].url) < 0) {
             layers.push(dc.layers.list[layer].type + '=' + dc.layers.list[layer].url);
