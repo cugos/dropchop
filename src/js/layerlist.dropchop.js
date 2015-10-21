@@ -1,5 +1,5 @@
 var dropchop = (function(dc) {
-  
+
   'use strict';
 
   dc = dc || {};
@@ -44,7 +44,7 @@ var dropchop = (function(dc) {
         $(this).removeClass('layer-new');
       });
 
-    
+
     var layerType = $('<span>').addClass('layer-type-image sprite sprite-layer-'+layerTypeIcon(layer.type));
     var checkbox = $('<input>').addClass('layer-toggle').prop({'type': 'checkbox', 'checked': true});
     var remove = $('<button>').addClass('layer-action layer-remove').html('<i class="fa fa-times"></i>');
@@ -55,14 +55,15 @@ var dropchop = (function(dc) {
       $(dc).trigger('layer:duplicate', [$(this).parent().attr('data-stamp')]);
       return false;
     });
-    
+
     remove.on('click', function(event) {
       event.preventDefault();
       $(dc).trigger('layer:remove', [$(this).parent().attr('data-stamp')]);
+      dc.util.updateSearch();
       dc.selection.clear();
       return false;
     });
-    
+
     checkbox.on('change', function(event) {
       if (this.checked) {
         // trigger layer:show
@@ -156,24 +157,24 @@ var dropchop = (function(dc) {
       case 'FeatureCollection':
         icon = 'featurecollection';
         break;
-      case 'Feature<Point>': 
-      case 'Feature<MultiPoint>': 
+      case 'Feature<Point>':
+      case 'Feature<MultiPoint>':
         icon = 'point';
         break;
-      case 'Feature<LineString>': 
-      case 'Feature<MultiLineString>': 
+      case 'Feature<LineString>':
+      case 'Feature<MultiLineString>':
         icon = 'line';
         break;
-      case 'Feature<Polygon>': 
-      case 'Feature<MultiPolygon>': 
+      case 'Feature<Polygon>':
+      case 'Feature<MultiPolygon>':
         icon = 'polygon';
         break;
-      case 'Feature<GeometryCollection>': 
+      case 'Feature<GeometryCollection>':
         icon = 'geom';
         break;
       default:
         icon = 'default';
-        break; 
+        break;
     }
     return icon;
   }

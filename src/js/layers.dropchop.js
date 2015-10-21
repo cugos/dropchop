@@ -1,5 +1,5 @@
 var dropchop = (function(dc) {
-  
+
   'use strict';
 
   dc = dc || {};
@@ -19,14 +19,25 @@ var dropchop = (function(dc) {
  * @param {object} file object
  * @param {string} file blob to be converted with JSON.parse()
  */
-  dc.layers.add = function(event, name, blob) {
+  dc.layers.add = function(event, name, blob, type, url) {
     var l = dc.layers.makeLayer(name, blob);
     dc.layers.list[l.stamp] = l;
+
+    if (type && url) {
+      dc.layers.list[l.stamp].type = type;
+      dc.layers.list[l.stamp].url = url;
+    }
 
     dc.notify('success', '<strong>'+l.name+'</strong> has been added!', 3500);
 
     // trigger layer:added
     $(dc).trigger('layer:added', [l]);
+
+    // Update URL, if applicable
+    if (type && url) {
+      dc.util.updateSearch();
+    }
+
   };
 
 /**
@@ -43,7 +54,7 @@ var dropchop = (function(dc) {
       dc.notify('error', 'There was a problem removing the layer.');
       throw err;
     }
-    
+
   };
 
   dc.layers.duplicate = function(event, stamp) {

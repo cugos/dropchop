@@ -89,6 +89,31 @@ var dropchop = (function(dc) {
     return result;
   };
 
+  dc.util.updateSearch = function() {
+    var layers = [];
+
+    Object.keys(dc.layers.list).forEach(function(layer) {
+        /*
+        If a layer has a type and URL (a gist or external GeoJSON link),
+        and we haven't recored this type-url combo already, add it to the
+        unique list. The last check is needed to account for gists with
+        multiple layers.
+        */
+        if (dc.layers.list[layer].type && dc.layers.list[layer].url && layers.indexOf(dc.layers.list[layer].type + '=' + dc.layers.list[layer].url) < 0) {
+            layers.push(dc.layers.list[layer].type + '=' + dc.layers.list[layer].url);
+        }
+    });
+
+    var search = layers.length ?  ('?' + layers.join('&')) : '/';
+    console.log('update', search)
+    // Only update the URI if anything has changed
+    if (search !== window.location.search) {
+      console.log('push', search)
+      window.history.pushState(null, null, search);
+    }
+
+  };
+
   dc.util.executeUrlParams = function() {
     var data = dc.util.jsonFromUrl();
 
