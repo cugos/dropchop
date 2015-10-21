@@ -45,6 +45,16 @@ describe('Dropchop!', function() {
         expect($('.notification').length).to.equal(0);
       }, 300);
     });
+
+    it('notification closes when close button is clicked', function() {
+      dc.init(ops);
+      dc.notify('error', 'some error', 'close');
+
+      expect($('.notification-close').length).to.equal(1);
+
+      $('.notification-close').trigger('click');
+      expect($('.notification-close').length).to.equal(0);
+    });
   });
 
   describe('dropzone.dropchop.js', function() {

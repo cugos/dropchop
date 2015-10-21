@@ -1,0 +1,32 @@
+.notification {
+  float: right;
+  position: relative;
+  z-index: 10;
+  clear: both;
+  padding: 12px 15px;
+  font-size: 0.85em;
+  margin: 5px 5px 0 0;
+  color: white;
+  &.success {
+    background: $green;
+  }
+  &.error {
+    background: $red;
+  }
+  &.info {
+    background: $blue;
+  }
+
+  .notification-close {
+    background: transparent;
+    border: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: white;
+    &:hover {
+      background: rgba(255,255,255, 0.2);
+      cursor: pointer;
+    }
+  }
+}
