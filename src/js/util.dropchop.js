@@ -105,10 +105,9 @@ var dropchop = (function(dc) {
     });
 
     var search = layers.length ?  ('?' + layers.join('&')) : '/';
-    console.log('update', search)
+
     // Only update the URI if anything has changed
     if (search !== window.location.search) {
-      console.log('push', search)
       window.history.pushState(null, null, search);
     }
 
