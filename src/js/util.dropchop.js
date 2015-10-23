@@ -99,8 +99,8 @@ var dropchop = (function(dc) {
         ** unique list. The last check is needed to account for gists with
         ** multiple layers.
         */
-        if (dc.layers.list[layer].type && dc.layers.list[layer].url && layers.indexOf(dc.layers.list[layer].type + '=' + dc.layers.list[layer].url) < 0) {
-            layers.push(dc.layers.list[layer].type + '=' + dc.layers.list[layer].url);
+        if (dc.layers.list[layer].ltype && dc.layers.list[layer].url && layers.indexOf(dc.layers.list[layer].ltype + '=' + dc.layers.list[layer].url) < 0) {
+            layers.push(dc.layers.list[layer].ltype + '=' + dc.layers.list[layer].url);
         }
     });
 

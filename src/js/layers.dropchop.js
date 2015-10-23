@@ -19,12 +19,12 @@ var dropchop = (function(dc) {
  * @param {object} file object
  * @param {string} file blob to be converted with JSON.parse()
  */
-  dc.layers.add = function(event, name, blob, type, url) {
+  dc.layers.add = function(event, name, blob, ltype, url) {
     var l = dc.layers.makeLayer(name, blob);
     dc.layers.list[l.stamp] = l;
 
-    if (type && url) {
-      dc.layers.list[l.stamp].type = type;
+    if (ltype && url) {
+      dc.layers.list[l.stamp].ltype = ltype;
       dc.layers.list[l.stamp].url = url;
     }
 
@@ -34,7 +34,7 @@ var dropchop = (function(dc) {
     $(dc).trigger('layer:added', [l]);
 
     // Update URL, if applicable
-    if (type && url) {
+    if (ltype && url) {
       dc.util.updateSearch();
     }
 
