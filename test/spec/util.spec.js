@@ -9,6 +9,7 @@ describe('util.dropchop.js', function() {
     document.body.appendChild(dropchopElem);
     dc = dropchop;
     dc.init(ops);
+    dc.layers.list = {};
   });
 
   afterEach(function() {
@@ -77,20 +78,33 @@ describe('util.dropchop.js', function() {
     expect($('body').hasClass('dropchop-loading')).to.equal(true);
     dc.util.loader(false);
     expect($('body').hasClass('dropchop-loading')).to.equal(false);
-  });
+  }); 
 
-  it('dc.util.jsonFromUrl()', function() {
+  it('dc.util.jsonFromUrl()', function(done) {
     var url = '/?url=http://google.com&gist=1234&gist=456&url=http%3A%2F%2Fdropchop.io&url=https://mug.com?cat=booker&fish=truman';
     window.history.pushState(null, null, url);
     expect(dc.util.jsonFromUrl()).to.eql(
-        {
-            url: ['http://google.com', 'http://dropchop.io', 'https://mug.com?cat=booker&fish=truman'],
-            gist: ['1234', '456']
-        }
+      {
+        url: ['http://google.com', 'http://dropchop.io', 'https://mug.com?cat=booker&fish=truman'],
+        gist: ['1234', '456']
+      }
     );
+    done();
   });
 
+  it('dc.util.updateSearch()', function() {
+    var url = '/?gist=333';
+    window.history.pushState(null, null, url);
 
+    expect(window.location.search).to.equal('?gist=333');
+    
+    // adding a new layer should update, and remove the previous since
+    // it doesn't actually exist as a layer
+    dc.layers.add({}, 'new gist', gj, 'gist', '444');
+    expect(window.location.search).to.equal('?gist=444');
 
+    dc.layers.add({}, 'from a url', gj, 'url', 'http://google.com');
+    expect(window.location.search).to.equal('?gist=444&url=http://google.com');
+  });
 
 });

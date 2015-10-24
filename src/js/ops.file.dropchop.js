@@ -1,5 +1,5 @@
 var dropchop = (function(dc) {
-  
+
   'use strict';
 
   dc = dc || {};
@@ -54,7 +54,8 @@ var dropchop = (function(dc) {
           var data = JSON.parse(xhr.responseText);
           // get filename based on the end of the url - not sure if this is sustainable
           var name = xhr.responseURL.substring(xhr.responseURL.lastIndexOf('/')+1);
-          $(dc).trigger('file:added', [name, data]);
+          $(dc).trigger('file:added', [name, data, 'url', xhr.responseURL]);
+
         } else {
           dc.notify('error', xhr.status + ': could not retrieve Gist. Please check your URL');
         }
@@ -86,8 +87,9 @@ var dropchop = (function(dc) {
           var data = JSON.parse(xhr.responseText);
           for (var f in data.files) {
             var name = data.files[f].filename;
-            $(dc).trigger('file:added', [name, JSON.parse(data.files[f].content)]);
+            $(dc).trigger('file:added', [name, JSON.parse(data.files[f].content), 'gist', xhr.responseURL.split('/')[xhr.responseURL.split('/').length - 1]]);
           }
+
           // dc.notify('success', 'Succesfully retrieved gist')
         } else {
           dc.notify('error', xhr.status + ': could not retrieve Gist. Please check your URL');
@@ -203,7 +205,7 @@ var dropchop = (function(dc) {
       execute: function() {
         if(!dc.selection.list.length) {
           // extent of entire layer list if nothing selected
-          dc.map.m.fitBounds(dc.map.layergroup.getBounds());  
+          dc.map.m.fitBounds(dc.map.layergroup.getBounds());
         } else {
           // otherwise build the bounds based on selected layers
           var bounds;
@@ -214,7 +216,7 @@ var dropchop = (function(dc) {
           });
           dc.map.m.fitBounds(bounds);
         }
-        
+
       }
     },
 
@@ -288,7 +290,7 @@ var dropchop = (function(dc) {
       ],
       execute: function() {
         if (dc.selection.list.length === 1) {
-          $(dc).trigger('form:file', ['rename']);  
+          $(dc).trigger('form:file', ['rename']);
         } else {
           dc.notify('info', 'Please select <strong>one layer</strong>.');
         }
