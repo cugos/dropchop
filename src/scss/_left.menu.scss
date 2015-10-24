@@ -66,6 +66,10 @@
         background: darken($fuscia, 10);
       }
     }
+    &.menu-import {
+      background: $green;
+      color: white;
+    }
 
     &.menu-collapse {
       .menu-collapse-inner {

@@ -29,9 +29,9 @@ var dropchop = (function(dc) {
     $(dc).on('operation:file:load-overpass', dc.ops.file['load-overpass'].get);
     $(dc).on('operation:file:rename', dc.ops.file.rename.callback);
 
-    var leftMenuSetup = [
+    dc.ops.setup = [
       {
-        name: 'Import',
+        name: 'import',
         icon: '<i class="fa fa-plus"></i>',
         actions: [
           'upload',
@@ -65,10 +65,11 @@ var dropchop = (function(dc) {
 
     // setup ops file
     var leftMenu = $('<div>').addClass('dropchop-menu-left');
+    var setup = dc.ops.setup;
 
-    for (var i = 0; i < leftMenuSetup.length; i++) {
-      var action = leftMenuSetup[i];
-      if (typeof leftMenuSetup[i] !== 'object') {
+    for (var i = 0; i < setup.length; i++) {
+      var action = setup[i];
+      if (typeof setup[i] !== 'object') {
         if(dc.ops.file[action].type === 'break') {
           var $breakSpace = $('<div>').addClass('menu-action-break');
           leftMenu.append($breakSpace);
@@ -80,16 +81,16 @@ var dropchop = (function(dc) {
         // build a collapseable menu "button"
         var collapseBtn = $('<div>')
           .addClass('menu-action menu-collapse')
-          .attr('data-operation', action)
-          .html(leftMenuSetup[i].icon);
+          .html(setup[i].icon);
+        if (setup[i].name === 'import') collapseBtn.addClass('menu-import');
 
         var collapseInner = $('<div>')
           .addClass('menu-collapse-inner');
 
         // loop through each action and build a button for it, just like above,
         // but append it to the menu-collapse-inner element
-        for (var a = 0; a < leftMenuSetup[i].actions.length; a++) {
-          var actn = leftMenuSetup[i].actions[a];
+        for (var a = 0; a < setup[i].actions.length; a++) {
+          var actn = dc.ops.setup[i].actions[a];
           collapseInner.append(buildMenuButton(actn));
         }
         collapseBtn.append(collapseInner);

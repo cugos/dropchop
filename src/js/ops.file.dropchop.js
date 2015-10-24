@@ -6,12 +6,6 @@ var dropchop = (function(dc) {
   dc.ops = dc.ops || {};
 
   dc.ops.file = {
-    // imports: {
-    //   type: 'collapse',
-    //   icon: '<i class="fa fa-plus"></i>',
-    //   description: 'Import data',
-    //   actions: [],
-    // },
     upload: {
       description: 'Upload from your computer (.geojson)',
       icon: '<i class="fa fa-upload"></i>',
@@ -161,8 +155,6 @@ var dropchop = (function(dc) {
       }
     },
 
-    'break1': { type: 'break' },
-
     'save-geojson': {
       minFeatures: 1,
       description: 'Save as GeoJSON',
@@ -203,8 +195,6 @@ var dropchop = (function(dc) {
       },
       createsLayer: false
     },
-
-    'break2': { type: 'break' },
 
     extent: {
       minFeatures: 1,
@@ -284,8 +274,6 @@ var dropchop = (function(dc) {
     //     dc.attr.render(dc.selection.list[0]);
     //   }
     // },
-
-    'break3': { type: 'break' },
 
     rename: {
       minFeatures: 1,
