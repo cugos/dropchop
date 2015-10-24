@@ -46,10 +46,18 @@ var dropchop = (function(dc) {
       reader.readAsArrayBuffer(file);
       dc.util.loader(true);
       reader.onloadend = function(event) {
-        shp(reader.result).then(function(geojson) {
-          dc.util.loader(false);
-          $(dc).trigger('file:added', [geojson.fileName, geojson]);
-        });
+        shp(reader.result)
+          .catch(function(error) {
+            console.log("Problematic projection - ", error);
+          })
+          .then(function(geojson) {
+            dc.util.loader(false);
+            if (!geojson) {
+              return dc.notify('error', 'Invalid projection or shapefile.', 2500);
+            }
+
+            $(dc).trigger('file:added', [geojson.fileName, geojson]);
+          });
       };
     } else {
       reader.readAsText(file, 'UTF-8');
