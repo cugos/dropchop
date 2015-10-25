@@ -23,8 +23,6 @@ var dropchop = (function(dc) {
 
     $(dc).on('layer:selected', dc.ops.geoCheck);
     $(dc).on('layer:unselected', dc.ops.geoCheck);
-    // $('.operation-geo').removeClass('operation-inactive');
-    // $('.operation-geo').prop('disabled', false);
     $(dc).on('operation:geo', dc.ops.geoExecute);
     $(dc).on('operation:file:load-gist', dc.ops.file['load-gist'].get);
     $(dc).on('operation:file:load-url', dc.ops.file['load-url'].get);
@@ -32,25 +30,94 @@ var dropchop = (function(dc) {
     $(dc).on('operation:file:load-arcgis', dc.ops.file['load-arcgis'].get);
     $(dc).on('operation:file:rename', dc.ops.file.rename.callback);
 
+    dc.ops.setup = [
+      {
+        name: 'import',
+        icon: '<i class="fa fa-plus"></i>',
+        actions: [
+          'upload',
+          'load-url',
+          'load-gist',
+          'load-overpass',
+          'location'
+        ]
+      },
+      {
+        name: 'Save',
+        icon: '<i class="fa fa-floppy-o"></i>',
+        actions: [
+          'save-geojson',
+          'save-shapefile'
+        ]
+      },
+      {
+        name: 'Geo Actions',
+        icon: '<i class="fa fa-wrench"></i>',
+        actions: [
+          'extent',
+          'expand',
+          'combine',
+          'rename',
+          'remove',
+        ]
+      },      
+      'info'
+    ];
+
     // setup ops file
     var leftMenu = $('<div>').addClass('dropchop-menu-left');
-    for (var fileOp in dc.ops.file) {
-      if(dc.ops.file[fileOp].type === 'break') {
+    var setup = dc.ops.setup;
+
+    for (var i = 0; i < setup.length; i++) {
+      var action = setup[i];
+      if (typeof setup[i] !== 'object') {
+        if(dc.ops.file[action].type === 'break') {
         var $breakSpace = $('<div>').addClass('menu-action-break');
         leftMenu.append($breakSpace);
       } else {
-        var fileBtn = $('<button>').addClass('menu-action')
-          .html(dc.ops.file[fileOp].icon || 'A')
-          .attr('data-operation', fileOp)
-          .attr('data-tooltip', dc.ops.file[fileOp].description);
-          if (dc.ops.file[fileOp].type === 'info') fileBtn.addClass('dropchop-info');
-        fileBtn.on('click', _fileBtnClick);
-        leftMenu.append(fileBtn);
+          leftMenu.append(buildMenuButton(action));
+        }
+
+      } else {
+        // build a collapseable menu "button"
+        var collapseBtn = $('<div>')
+          .addClass('menu-action menu-collapse')
+          .html(setup[i].icon);
+        if (setup[i].name === 'import') collapseBtn.addClass('menu-import');
+
+        var collapseInner = $('<div>')
+          .addClass('menu-collapse-inner');
+
+        // loop through each action and build a button for it, just like above,
+        // but append it to the menu-collapse-inner element
+        for (var a = 0; a < setup[i].actions.length; a++) {
+          var actn = dc.ops.setup[i].actions[a];
+          collapseInner.append(buildMenuButton(actn));
+        }
+        collapseBtn.append(collapseInner);
+
+        // append the entire collapseBtn to the leftMenu
+        leftMenu.append(collapseBtn);
       }
     }
     dc.$elem.append(leftMenu);
+
+    function buildMenuButton(action) {
+      var button = $('<button>').addClass('menu-action')
+        .html(dc.ops.file[action].icon || '!')
+        .attr('data-operation', action)
+        .attr('data-tooltip', dc.ops.file[action].description);
+        if (dc.ops.file[action].type === 'info') button.addClass('dropchop-info');
+      button.on('click', _fileBtnClick);
+      return button;
+    }
   };
 
+  /* jshint ignore:start */
+
+  /* ignoring these functions in jshint because we are getting
+  an unecessary strict violation warning, but our usage of `this`
+  is proper here. */
   function _geoBtnClick(event) {
     event.preventDefault();
     var operation = $(this).attr('data-operation');
@@ -63,6 +130,7 @@ var dropchop = (function(dc) {
     }
   }
 
+
   function _fileBtnClick(event) {
     event.preventDefault();
 
@@ -74,6 +142,7 @@ var dropchop = (function(dc) {
       throw err;
     }
   }
+  /* jshint ignore:end */
 
   /**
    * Execute a turf function based on button operation click.

@@ -334,7 +334,6 @@ var dropchop = (function(dc) {
         }
       ],
       execute: function(params) {
-        console.log(params);
         var result = turf.within.apply(null, params);
         return result;
       }

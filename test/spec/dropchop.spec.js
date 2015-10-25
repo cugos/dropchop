@@ -45,6 +45,16 @@ describe('Dropchop!', function() {
         expect($('.notification').length).to.equal(0);
       }, 300);
     });
+
+    it('notification closes when close button is clicked', function() {
+      dc.init(ops);
+      dc.notify('error', 'some error', 'close');
+
+      expect($('.notification-close').length).to.equal(1);
+
+      $('.notification-close').trigger('click');
+      expect($('.notification-close').length).to.equal(0);
+    });
   });
 
   describe('dropzone.dropchop.js', function() {
@@ -54,6 +64,18 @@ describe('Dropchop!', function() {
 
       $('body').trigger('dragleave');
       expect($('body').hasClass('dragging')).to.eq(false);
+    });
+  });
+
+  describe('left menu', function() {
+    it('order is accurate', function() {
+      dc.init(ops);
+      if (typeof dc.ops.setup[0] === 'object') {
+        expect($('.menu-action:first-child').hasClass('menu-collapse')).to.equal(true);
+      } else {
+        var op = $('.menu-action:first-child').attr('data-operation');
+        expect(op).to.equal(dc.ops.setup[0]);
+      }
     });
   });
 

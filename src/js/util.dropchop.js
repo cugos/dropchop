@@ -60,8 +60,16 @@ var dropchop = (function(dc) {
       reader.readAsArrayBuffer(file);
       dc.util.loader(true);
       reader.onloadend = function(event) {
-        shp(reader.result).then(function(geojson) {
+        shp(reader.result)
+          .catch(function(error) {
+            console.log("Problematic projection - ", error);
+          })
+          .then(function(geojson) {
           dc.util.loader(false);
+            if (!geojson) {
+              return dc.notify('error', 'Invalid projection or shapefile.', 2500);
+            }
+
           $(dc).trigger('file:added', [geojson.fileName, geojson]);
         });
       };
@@ -80,26 +88,51 @@ var dropchop = (function(dc) {
   };
 
   dc.util.jsonFromUrl = function() {
-    var query = location.search.substr(1);
+    var query = location.search.substr(1)
+      .split(/(&?gist=|&?url=)/g)
+      .filter(function(d) {
+        return d.length > 0;
+      });
+
     var result = {};
 
+    query.forEach(function(part, i) {
+      if (i === 0 || i % 2 === 0) {
+        var key = part.replace(/&|=/g, '');
 
+        if (!result[key]) {
+          result[key] = [];
+        }
 
-
-
-
-
-
-
-
-    query.split("&").forEach(function(part) {
-      var item = part.split("=");
-      if (!result[item[0]]) {
-        result[item[0]] = [];
+        result[key].push(decodeURIComponent(query[i + 1]));
       }
-      result[item[0]].push(decodeURIComponent(item[1]));
     });
+
     return result;
+  };
+
+  dc.util.updateSearch = function() {
+    var layers = [];
+
+    Object.keys(dc.layers.list).forEach(function(layer) {
+        /*
+        ** If a layer has a type and URL (a gist or external GeoJSON link),
+        ** and we haven't recored this type-url combo already, add it to the
+        ** unique list. The last check is needed to account for gists with
+        ** multiple layers.
+        */
+        if (dc.layers.list[layer].ltype && dc.layers.list[layer].url && layers.indexOf(dc.layers.list[layer].ltype + '=' + dc.layers.list[layer].url) < 0) {
+            layers.push(dc.layers.list[layer].ltype + '=' + dc.layers.list[layer].url);
+        }
+    });
+
+    var search = layers.length ?  ('?' + layers.join('&')) : '/';
+
+    // Only update the URI if anything has changed
+    if (search !== window.location.search) {
+      window.history.pushState(null, null, search);
+    }
+
   };
 
   dc.util.executeUrlParams = function() {
@@ -187,14 +220,6 @@ var dropchop = (function(dc) {
 
   dc.util.corsSupport = function() {
       return 'XMLHttprequest' in window && 'withCredentials' in new window.XMLHttpRequest();
-  };
-
-  dc.util.welcome = function() {
-    var welcome = '\nWelcome to Dropchop!\n';
-        welcome += 'Once you drop, the chop don\'t stop.\n\n';
-        welcome += 'This project is brought to you by the great people of CUGOS, the Cascadian chapter of OSGeo. If you are ever in Seattle, hit us up\nhello@cugos.org\n\n';
-        welcome += 'You can learn more about this project at dropchop.io/about.'
-    console.log(welcome);
   };
 
   return dc;

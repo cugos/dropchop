@@ -1,16 +1,14 @@
 var dropchop = (function(dc) {
   dc = dc || {};
-  dc.version = '0.1';
+  dc.version = '0.1.1';
   dc.init = function(opts) {
     if(!opts) {
-      var err = new Error('No options provided in dropchop.init()');
-      throw err;
+      dc.util.error('No options provided in dropchop.init()');
     }
     dc.options = opts;
 
     if(!$(opts.id).length) {
-      var err = new Error('Element with options.id does not exist.');
-      throw err;
+      dc.util.error('Element with options.id does not exist.');
     }
     dc.$elem = $(opts.id);
 
@@ -39,8 +37,6 @@ var dropchop = (function(dc) {
     if(location.search.length) {
       dc.util.executeUrlParams();
     }
-
-    dc.util.welcome();
 
   };
 
