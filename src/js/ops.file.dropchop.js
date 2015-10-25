@@ -1,5 +1,5 @@
 var dropchop = (function(dc) {
-  
+
   'use strict';
 
   dc = dc || {};
@@ -21,19 +21,7 @@ var dropchop = (function(dc) {
           .on('change', function() {
             var files = this.files;
             $(files).each(function(i) {
-              // var ext = dc.util.getFileExtension(files[i].name);
-              
-              // // if it is a shapefile or zip file
-              // if (ext === 'shp' || ext === 'zip') {
-              //   // upload a shapefile and add the layer
-              //   dc.util.readShpFile
-              //   shp("files/pandr").then(function(geojson){
-              //     //do something with your geojson 
-              //   });
-              // } else {
-                dc.util.readFile(files[i]);
-              // }
-
+              dc.util.readFile(files[i]);
             });
             $blindInput.remove();
           });
@@ -66,7 +54,8 @@ var dropchop = (function(dc) {
           var data = JSON.parse(xhr.responseText);
           // get filename based on the end of the url - not sure if this is sustainable
           var name = xhr.responseURL.substring(xhr.responseURL.lastIndexOf('/')+1);
-          $(dc).trigger('file:added', [name, data]);
+          $(dc).trigger('file:added', [name, data, 'url', xhr.responseURL]);
+
         } else {
           dc.notify('error', xhr.status + ': could not retrieve Gist. Please check your URL');
         }
@@ -98,8 +87,9 @@ var dropchop = (function(dc) {
           var data = JSON.parse(xhr.responseText);
           for (var f in data.files) {
             var name = data.files[f].filename;
-            $(dc).trigger('file:added', [name, JSON.parse(data.files[f].content)]);
+            $(dc).trigger('file:added', [name, JSON.parse(data.files[f].content), 'gist', xhr.responseURL.split('/')[xhr.responseURL.split('/').length - 1]]);
           }
+
           // dc.notify('success', 'Succesfully retrieved gist')
         } else {
           dc.notify('error', xhr.status + ': could not retrieve Gist. Please check your URL');
@@ -167,8 +157,6 @@ var dropchop = (function(dc) {
       }
     },
 
-    'break1': { type: 'break' },
-
     'save-geojson': {
       minFeatures: 1,
       description: 'Save as GeoJSON',
@@ -210,8 +198,6 @@ var dropchop = (function(dc) {
       createsLayer: false
     },
 
-    'break2': { type: 'break' },
-
     extent: {
       minFeatures: 1,
       description: 'View extent of layers',
@@ -219,7 +205,7 @@ var dropchop = (function(dc) {
       execute: function() {
         if(!dc.selection.list.length) {
           // extent of entire layer list if nothing selected
-          dc.map.m.fitBounds(dc.map.layergroup.getBounds());  
+          dc.map.m.fitBounds(dc.map.layergroup.getBounds());
         } else {
           // otherwise build the bounds based on selected layers
           var bounds;
@@ -230,7 +216,7 @@ var dropchop = (function(dc) {
           });
           dc.map.m.fitBounds(bounds);
         }
-        
+
       }
     },
 
@@ -291,8 +277,6 @@ var dropchop = (function(dc) {
     //   }
     // },
 
-    'break3': { type: 'break' },
-
     rename: {
       minFeatures: 1,
       description: 'Rename layer',
@@ -306,13 +290,12 @@ var dropchop = (function(dc) {
       ],
       execute: function() {
         if (dc.selection.list.length === 1) {
-          $(dc).trigger('form:file', ['rename']);  
+          $(dc).trigger('form:file', ['rename']);
         } else {
           dc.notify('info', 'Please select <strong>one layer</strong>.');
         }
       },
       callback: function(event, name, parameters) {
-        console.log(name, parameters);
         $(dc).trigger('layer:rename', [dc.selection.list[0], parameters[0]]);
       }
     },
@@ -323,7 +306,6 @@ var dropchop = (function(dc) {
       icon: '<i class="fa fa-trash-o"></i>',
       execute: function() {
         $(dc.selection.list).each(function(i) {
-          console.log(this.stamp);
           $(dc).trigger('layer:remove', [this.stamp]);
         });
         dc.selection.clear();

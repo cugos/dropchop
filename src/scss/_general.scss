@@ -250,27 +250,6 @@ $geo-button-width: 200px;
   left: $left-menu-width + $width + $geo-button-width;
 }
 
-.notification {
-  float: right;
-  position: relative;
-  z-index: 10;
-  clear: both;
-  padding: 7px;
-  font-size: 0.85em;
-  margin: 5px 5px 0 0;
-  color: white;
-  &.success {
-    background: $green;
-  }
-  &.error {
-    background: $red;
-  }
-  &.info {
-    background: $blue;
-  }
-}
-
-
 .operations-geo {
   position: absolute;
   top: 0;
