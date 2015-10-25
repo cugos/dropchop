@@ -1,5 +1,5 @@
 var dropchop = (function(dc) {
-  
+
   'use strict';
 
   dc = dc || {};
@@ -103,6 +103,21 @@ var dropchop = (function(dc) {
         .attr('name', p.name)
         .attr('value', p.default);
       return $i;
+    },
+    radio: function(p) {
+        var $i = $('<div>').attr('class', 'radioGroup');
+        $(p.options).each(function(i) {
+            var $lbl = $('<label>')
+                    .addClass('sub-label');
+            var $opt = $('<input>')
+                    .attr('type', 'radio')
+                    .val(p.options[i])
+                    .attr('name', p.name);
+            $opt.appendTo($lbl);
+            $lbl.append(p.options[i]);
+            $lbl.appendTo($i);
+        });
+        return $i;
     },
     switch: function(p) {
       var $i = $('<div>');

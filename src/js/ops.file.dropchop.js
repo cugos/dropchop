@@ -125,6 +125,13 @@ var dropchop = (function(dc) {
                     default: '1=1'
                 },
                 {
+                    name: 'request type',
+                    description: 'select JSONP if you receive cross-origin resource sharing errors',
+                    type: 'radio',
+                    default: 'CORS',
+                    options: ['CORS', 'JSONP']
+                },
+                {
                     name: 'limit to map',
                     description: 'only load features within current map view',
                     type: 'checkbox'
@@ -137,25 +144,39 @@ var dropchop = (function(dc) {
             get: function(event, name, parameters) {
                 dc.ops.file['load-arcgis']._temp.layerName = parameters[0];
                 var bbox = '-180,-90,180,90';
-                if (parameters[2]) {
+                if (parameters[3]) {
                     bbox = dc.util.getEsriBBox();
                 }
-                dc.util.xhr(parameters[0] + '/query?f=json&inSR=4326&outSR=4326&geometry=' + bbox + '&where=' + parameters[1] + '&outfields=*', dc.ops.file['load-arcgis'].callback);
+                var url = parameters[0]+'/query/';
+                var urlParams = {
+                    f: 'json',
+                    inSR: 4326,
+                    outSR: 4326,
+                    geometry: bbox,
+                    where: parameters[1],
+                    outfields: '*'
+                };
+                var cors = true;
+                if(parameters[2] === 'JSONP') {
+                    cors = false;
+                }
+                dc.util.get(url, urlParams, cors)
+                    .done(function(data) {
+                        dc.ops.file['load-arcgis'].callback(data);
+                    })
+                    .fail(function(jqXhr, textStatus, err) {
+                        dropchop.util.loader(false);
+                        dc.notify('Error', textStatus, err);
+                });
             },
-            callback: function(xhr, xhrEvent) {
+            callback: function(data) {
                 dropchop.util.loader(false);
-                if (xhr.status === 200) {
-                    var data = JSON.parse(xhr.responseText);
-                    var geojson = toGeoJSON(data);
-                    console.log(geojson);
-                    if (data.features.length<1) {
-                        dc.notify('info', 'No features found in your query.');
-                    } else {
-                        $(dc).trigger('file:added', [dc.ops.file['load-arcgis']._temp.layerName, geojson]);
-                        dc.notify('success', 'Found <strong>' + data.features.length + ' features</strong> from the ArcGIS Service');
-                    }
+                var geojson = toGeoJSON(data);
+                if (data.features.length<1) {
+                    dc.notify('info', 'No features found in your query.');
                 } else {
-                    dc.notify('error', xhr.status + ': could not query the ArcGIS Service');
+                    $(dc).trigger('file:added', [dc.ops.file['load-arcgis']._temp.layerName, geojson]);
+                    dc.notify('success', 'Found <strong>' + data.features.length + ' features</strong> from the ArcGIS Service');
                 }
             }
         },

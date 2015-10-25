@@ -39,6 +39,20 @@ var dropchop = (function(dc) {
     xhr.send();
   };
 
+  dc.util.get = function(url, data, cors) {
+      var params = {
+          data: data,
+          dataType: 'json'
+      };
+      if(!dc.util.corsSupport || cors === false) {
+          console.log('No CORS support, using JSONP');
+          params.dataType = 'jsonp';
+      }
+      dropchop.util.loader(true);
+      var xhr = $.ajax(url, params);
+      return xhr;
+  };
+
   dc.util.readFile = function(file) {
     var reader = new FileReader();
     // if a zipfile, assume shapefile for now
@@ -68,6 +82,16 @@ var dropchop = (function(dc) {
   dc.util.jsonFromUrl = function() {
     var query = location.search.substr(1);
     var result = {};
+
+
+
+
+
+
+
+
+
+
     query.split("&").forEach(function(part) {
       var item = part.split("=");
       if (!result[item[0]]) {
@@ -110,7 +134,6 @@ var dropchop = (function(dc) {
   };
 
   dc.util.getEsriBBox = function() {
-      // grrrr...
       var bounds = dc.map.m.getBounds(),
           sw = bounds.getSouthWest(),
           ne = bounds.getNorthEast();
@@ -156,6 +179,10 @@ var dropchop = (function(dc) {
         $(this).remove();
       });
     }
+  };
+
+  dc.util.corsSupport = function() {
+      return 'XMLHttprequest' in window && 'withCredentials' in new window.XMLHttpRequest();
   };
 
   dc.util.welcome = function() {
