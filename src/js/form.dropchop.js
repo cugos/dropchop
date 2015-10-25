@@ -107,14 +107,18 @@ var dropchop = (function(dc) {
     radio: function(p) {
         var $i = $('<div>').attr('class', 'radioGroup');
         $(p.options).each(function(i) {
+            var opt = p.options[i];
             var $lbl = $('<label>')
                     .addClass('sub-label');
             var $opt = $('<input>')
                     .attr('type', 'radio')
-                    .val(p.options[i])
+                    .val(opt)
                     .attr('name', p.name);
+            if (opt === p.default) {
+                $opt.prop('checked', true);
+            }
             $opt.appendTo($lbl);
-            $lbl.append(p.options[i]);
+            $lbl.append(opt);
             $lbl.appendTo($i);
         });
         return $i;
