@@ -67,4 +67,16 @@ describe('Dropchop!', function() {
     });
   });
 
+  describe('left menu', function() {
+    it('order is accurate', function() {
+      dc.init(ops);
+      if (typeof dc.ops.setup[0] === 'object') {
+        expect($('.menu-action:first-child').hasClass('menu-collapse')).to.equal(true);
+      } else {
+        var op = $('.menu-action:first-child').attr('data-operation');
+        expect(op).to.equal(dc.ops.setup[0]);
+      }
+    });
+  });
+
 });
