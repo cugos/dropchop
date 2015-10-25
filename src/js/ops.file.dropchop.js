@@ -171,7 +171,7 @@ var dropchop = (function(dc) {
             },
             callback: function(data) {
                 dropchop.util.loader(false);
-                var geojson = toGeoJSON(data);
+                var geojson = dc.util.esri2geo(data);
                 if (data.features.length<1) {
                     dc.notify('info', 'No features found in your query.');
                 } else {

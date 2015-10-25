@@ -144,6 +144,10 @@ var dropchop = (function(dc) {
     return fc.features[0];
   };
 
+  dc.util.esri2geo = function(arcjson) {
+    return toGeoJSON(arcjson);
+  };
+
   dc.util.executeFC = function(fc, operation, params) {
 
     var newParams = params;
