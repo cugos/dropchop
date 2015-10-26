@@ -181,6 +181,7 @@ $geo-button-width: 200px;
         // font-weight: 500;
         border-bottom: 1px solid #ddd;
         text-transform: lowercase;
+        cursor: pointer;
 
         &:last-child {
           border-bottom: none;
@@ -191,6 +192,15 @@ $geo-button-width: 200px;
         }
         i {
           margin-right: .4em;
+        }
+
+        &.operation-inactive {
+          color: #aaa;
+          text-decoration: line-through;
+          cursor: default;
+          &:hover {
+            background-color: inherit;
+          }
         }
       }
     }

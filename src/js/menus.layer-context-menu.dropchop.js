@@ -21,7 +21,7 @@ var dropchop = (function(dc) {
     dc.menus.layerContextMenu.removeLayerContextMenus();
 
     // Select right-clicked layer.
-    var layerName = $(e.target)
+    var layerName = $(e.target);
     var layer = layerName.parent();
     var lyrData = dc.layers.list[layer.attr('data-stamp')];
 
@@ -39,19 +39,26 @@ var dropchop = (function(dc) {
     // populate context-menu
     var menuItems = dc.menus.layerContextMenu._getMenuOperations();
     for (var menuItem in menuItems) {
+
       var fileBtn = $('<li>').addClass('menu-action')
         .html(menuItems[menuItem].icon + menuItems[menuItem].description)
         .attr('data-operation', menuItem)
         .attr('data-tooltip', menuItems[menuItem].description);
-        // .text(menuItems[menuItem].description);
-        if (menuItems[menuItem].type === 'info') fileBtn.addClass('dropchop-info');
+
+      // disable invalid operations
+      if (
+        (menuItems[menuItem].minFeatures > dropchop.selection.list.length) ||
+        (menuItems[menuItem].maxFeatures < dropchop.selection.list.length)
+      ) {
+        fileBtn.addClass('operation-inactive');
+      }
       fileBtn.on('click', _handleBtnClick);
       menuList.append(fileBtn);
     }
     layer.parent().append(menu);
 
     e.preventDefault();
-  }
+  };
 
   // Remove any open context-menus from DOM
   dc.menus.layerContextMenu.removeLayerContextMenus = function() {
