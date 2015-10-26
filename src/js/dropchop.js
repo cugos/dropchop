@@ -27,8 +27,9 @@ var dropchop = (function(dc) {
     // setup dropzone
     dc.dropzone($('body'));
 
-    // setup operations
-    dc.ops.init();
+    // setup menus
+    dc.menus.geo.init();
+    dc.menus.left.init();
 
     // setup forms
     dc.form.init();

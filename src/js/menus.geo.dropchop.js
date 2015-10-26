@@ -1,14 +1,20 @@
 var dropchop = (function(dc) {
-  
+
   'use strict';
 
   dc = dc || {};
-  dc.ops = dc.ops || {};
+  dc.menus = dc.menus || {};
+  dc.menus.geo = dc.menus.geo || {};
 
-  dc.ops.init = function() {
+  dc.menus.geo.init = function() {
     // build ops.geo container
     var geoContainer = $('<div>').addClass('operations-geo');
     dc.$elem.append(geoContainer);
+
+    // wire up signal handlers
+    $(dc).on('layer:selected', dc.menus.geo.geoCheck);
+    $(dc).on('layer:unselected', dc.menus.geo.geoCheck);
+    $(dc).on('operation:geo', dc.menus.geo.geoExecute);
 
     // create geo buttons & forms
     for (var geoOp in dc.ops.geo) {
@@ -16,36 +22,10 @@ var dropchop = (function(dc) {
         .html('<h4>' + geoOp + '</h4><p>' + dc.ops.geo[geoOp].description + '</p>')
         .prop('disabled', true)
         .attr('data-operation', geoOp);
-      geoBtn.on('click', _geoBtnClick);
+      geoBtn.on('click', _handleBtnClick);
 
       geoContainer.append(geoBtn);
     }
-
-    $(dc).on('layer:selected', dc.ops.geoCheck);
-    $(dc).on('layer:unselected', dc.ops.geoCheck);
-    $(dc).on('operation:geo', dc.ops.geoExecute);
-    $(dc).on('operation:file:load-gist', dc.ops.file['load-gist'].get);
-    $(dc).on('operation:file:load-url', dc.ops.file['load-url'].get);
-    $(dc).on('operation:file:load-overpass', dc.ops.file['load-overpass'].get);
-    $(dc).on('operation:file:rename', dc.ops.file.rename.callback);
-
-    // setup ops file
-    var leftMenu = $('<div>').addClass('dropchop-menu-left');
-    for (var fileOp in dc.ops.file) {
-      if(dc.ops.file[fileOp].type === 'break') {
-        var $breakSpace = $('<div>').addClass('menu-action-break');
-        leftMenu.append($breakSpace);
-      } else {
-        var fileBtn = $('<button>').addClass('menu-action')
-          .html(dc.ops.file[fileOp].icon || 'A')
-          .attr('data-operation', fileOp)
-          .attr('data-tooltip', dc.ops.file[fileOp].description);
-          if (dc.ops.file[fileOp].type === 'info') fileBtn.addClass('dropchop-info');
-        fileBtn.on('click', _fileBtnClick);
-        leftMenu.append(fileBtn);
-      }
-    }
-    dc.$elem.append(leftMenu);
   };
 
   /* jshint ignore:start */
@@ -53,7 +33,7 @@ var dropchop = (function(dc) {
   /* ignoring these functions in jshint because we are getting
   an unecessary strict violation warning, but our usage of `this`
   is proper here. */
-  function _geoBtnClick(event) {
+  function _handleBtnClick(event) {
     event.preventDefault();
     var operation = $(this).attr('data-operation');
     // if operation requires no parameters, don't render a form
@@ -64,19 +44,6 @@ var dropchop = (function(dc) {
       $(dc).trigger('form:geo', [operation]);
     }
   }
-
-
-  function _fileBtnClick(event) {
-    event.preventDefault();
-
-    var operation = $(this).attr('data-operation');
-    try {
-      dc.ops.file[operation].execute();
-    } catch (err) {
-      dc.notify('error', 'This operation doesn\'t exist!');
-      throw err;
-    }
-  }
   /* jshint ignore:end */
 
   /**
@@ -85,8 +52,8 @@ var dropchop = (function(dc) {
    * @param {string} operation to be executed via turf
    * @param {array} series of parameters to be applied to turf operation
    */
-  dc.ops.geoExecute = function(event, operation, parameters) {
-    var prep = dc.ops.prepareTurfParams(operation, parameters);
+  dc.menus.geo.geoExecute = function(event, operation, parameters) {
+    var prep = dc.menus.geo.prepareTurfParams(operation, parameters);
     var result = null;
     try {
       result = dc.ops.geo[operation].execute(prep.options);
@@ -102,7 +69,7 @@ var dropchop = (function(dc) {
    * Prepare parameters for executing within a turf function using .apply() - returns an array
    * @param {array} options from the user passed from the original event trigger
    */
-  dc.ops.prepareTurfParams = function(operation, params) {
+  dc.menus.geo.prepareTurfParams = function(operation, params) {
     var data = {};
     data.options = [];
 
@@ -123,11 +90,11 @@ var dropchop = (function(dc) {
 
     // create name array
     data.name = dc.util.concat(nameArray, '_', operation);
-    
+
     return data;
   };
 
-  dc.ops.geoCheck = function(event, layer) {
+  dc.menus.geo.geoCheck = function(event, layer) {
 
     // check selection count vs operation min/max
     for (var o in dc.ops.geo) {
@@ -163,7 +130,7 @@ var dropchop = (function(dc) {
       btn.removeClass('operation-inactive');
       btn.prop('disabled', false);
     }
-    
+
   };
 
   return dc;
