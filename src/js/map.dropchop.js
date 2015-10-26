@@ -35,12 +35,12 @@ var dropchop = (function(dc) {
       "Mapbox Outdoors": L.mapbox.tileLayer('mapbox.outdoors'),
       "Mapbox Light": L.mapbox.tileLayer('mapbox.light'),
       "Mapbox Dark": L.mapbox.tileLayer('mapbox.dark'),
-      "Mapbox Satellite": L.mapbox.tileLayer('mapbox.satellite')
+      "Mapbox Satellite": L.mapbox.tileLayer('mapbox.satellite'),
     };
 
     baseLayers['Mapbox Streets'].addTo(dc.map.m);
     // sets location of base layer control to the bottom right
-    L.control.layers(baseLayers, {}, {
+    dc.map.baseLayers = L.control.layers(baseLayers, {}, {
       position: 'bottomright',
       collapsed: false
     }).addTo(dc.map.m);
