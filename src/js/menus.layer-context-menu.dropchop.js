@@ -11,11 +11,6 @@ var dropchop = (function(dc) {
     var geoContainer = $('<div>').addClass('operations-geo');
     dc.$elem.append(geoContainer);
 
-    // wire up signal handlers
-    // $(dc).on('layer:selected', dc.menus.layerContextMenu.geoCheck);
-    // $(dc).on('layer:unselected', dc.menus.layerContextMenu.geoCheck);
-    // $(dc).on('operation:geo', dc.menus.layerContextMenu.geoExecute);
-
     // Bind the context-menu handler on any item added to layerlist
     $(dc).on('layerlist:added', function(e, layer){
       $(layer).bind("contextmenu", function(e) {
@@ -47,7 +42,7 @@ var dropchop = (function(dc) {
 
         e.preventDefault();
       });
-    })
+    });
 
     // Remove open menus
     $('html').bind('click', function (e) {
@@ -63,27 +58,20 @@ var dropchop = (function(dc) {
   dc.menus.layerContextMenu._getMenuOperations = function() {
     return {
       /* jshint ignore:start */
-
-      // TODO: DUPLICATE IN CONTEXT-MENU
       'extent': dc.ops.file['extent'],
-
-      // TODO: MOVE TO CONTEXT-MENU
       'expand': dc.ops.file['expand'],
-
-      // TODO: When layer-context-menu supports multiple layers, mv to
-      // context menu
       'combine': dc.ops.file['combine'],
-
-      // TODO: MOVE TO CONTEXT-MENU
       'rename': dc.ops.file['rename'],
       'remove': dc.ops.file['remove'],
-
       /* jshint ignore:end */
-    }
+    };
   };
 
+  /* jshint ignore:start */
+  /* ignoring these functions in jshint because we are getting
+  an unecessary strict violation warning, but our usage of `this`
+  is proper here. */
   function _handleBtnClick(event) {
-    console.log(event);
     event.preventDefault();
     var operation = $(this).attr('data-operation');
     console.log(operation);
@@ -94,6 +82,7 @@ var dropchop = (function(dc) {
       throw err;
     }
   };
+  /* jshint ignore:end */
 
   return dc;
 

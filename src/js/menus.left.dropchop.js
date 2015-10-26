@@ -7,17 +7,13 @@ var dropchop = (function(dc) {
   dc.menus.left = dc.menus.left || {};
 
   dc.menus.left.init = function() {
-    // build ops.geo container
-    var geoContainer = $('<div>').addClass('operations-geo');
-    dc.$elem.append(geoContainer);
-
     // wire up signal handlers
     $(dc).on('operation:file:load-gist', dc.ops.file['load-gist'].get);
     $(dc).on('operation:file:load-url', dc.ops.file['load-url'].get);
     $(dc).on('operation:file:load-overpass', dc.ops.file['load-overpass'].get);
     $(dc).on('operation:file:rename', dc.ops.file.rename.callback);
 
-    dc.ops.setup = [
+    dc.menus.left.setup = [
       {
         name: 'import',
         icon: '<i class="fa fa-plus"></i>',
@@ -53,7 +49,7 @@ var dropchop = (function(dc) {
 
     // setup ops file
     var leftMenu = $('<div>').addClass('dropchop-menu-left');
-    var setup = dc.ops.setup;
+    var setup = dc.menus.left.setup;
 
     for (var i = 0; i < setup.length; i++) {
       var action = setup[i];
@@ -78,7 +74,7 @@ var dropchop = (function(dc) {
         // loop through each action and build a button for it, just like above,
         // but append it to the menu-collapse-inner element
         for (var a = 0; a < setup[i].actions.length; a++) {
-          var actn = dc.ops.setup[i].actions[a];
+          var actn = setup[i].actions[a];
           collapseInner.append(buildMenuButton(actn));
         }
         collapseBtn.append(collapseInner);
