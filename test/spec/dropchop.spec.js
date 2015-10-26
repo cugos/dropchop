@@ -16,7 +16,7 @@ describe('Dropchop!', function() {
   });
 
   describe('dropchop.js', function() {
-    
+
     it('Throws error without options set', function() {
       expect(function() { dc.init(); }).to.throw(Error);
     });
@@ -35,7 +35,7 @@ describe('Dropchop!', function() {
     it('dc.notify() - appear & disappear', function() {
       dc.init(ops);
       dc.notify('success', 'some text', 200);
-      
+
       // there should be one notification on the DOM
       expect($('.notification').length).to.equal(1);
 
@@ -70,7 +70,7 @@ describe('Dropchop!', function() {
   describe('left menu', function() {
     it('order is accurate', function() {
       dc.init(ops);
-      if (typeof dc.ops.setup[0] === 'object') {
+      if (typeof dc.menus.left.setup[0] === 'object') {
         expect($('.menu-action:first-child').hasClass('menu-collapse')).to.equal(true);
       } else {
         var op = $('.menu-action:first-child').attr('data-operation');
