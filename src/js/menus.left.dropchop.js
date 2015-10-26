@@ -17,56 +17,86 @@ var dropchop = (function(dc) {
     $(dc).on('operation:file:load-overpass', dc.ops.file['load-overpass'].get);
     $(dc).on('operation:file:rename', dc.ops.file.rename.callback);
 
+    dc.ops.setup = [
+      {
+        name: 'import',
+        icon: '<i class="fa fa-plus"></i>',
+        actions: [
+          'upload',
+          'load-url',
+          'load-gist',
+          'load-overpass',
+          'location'
+        ]
+      },
+      {
+        name: 'Save',
+        icon: '<i class="fa fa-floppy-o"></i>',
+        actions: [
+          'save-geojson',
+          'save-shapefile'
+        ]
+      },
+      {
+        name: 'Geo Actions',
+        icon: '<i class="fa fa-wrench"></i>',
+        actions: [
+          'extent',
+          'expand',
+          'combine',
+          'rename',
+          'remove',
+        ]
+      },
+      'info'
+    ];
+
     // setup ops file
     var leftMenu = $('<div>').addClass('dropchop-menu-left');
-    var menuItems = dc.menus.left._getMenuOperations();
-    for (var opName in menuItems) {
-      var fileOp = menuItems[opName];
-      if (fileOp.type === 'break') {
-        var $breakSpace = $('<div>').addClass('menu-action-break');
-        leftMenu.append($breakSpace);
+    var setup = dc.ops.setup;
+
+    for (var i = 0; i < setup.length; i++) {
+      var action = setup[i];
+      if (typeof setup[i] !== 'object') {
+        if(dc.ops.file[action].type === 'break') {
+          var $breakSpace = $('<div>').addClass('menu-action-break');
+          leftMenu.append($breakSpace);
+        } else {
+          leftMenu.append(buildMenuButton(action));
+        }
+
       } else {
-        var fileBtn = $('<button>').addClass('menu-action')
-          .html(fileOp.icon || 'A')
-          .attr('data-operation', opName)
-          .attr('data-tooltip', fileOp.description);
-          if (fileOp.type === 'info') fileBtn.addClass('dropchop-info');
-        fileBtn.on('click', _handleBtnClick);
-        leftMenu.append(fileBtn);
+        // build a collapseable menu "button"
+        var collapseBtn = $('<div>')
+          .addClass('menu-action menu-collapse')
+          .html(setup[i].icon);
+        if (setup[i].name === 'import') collapseBtn.addClass('menu-import');
+
+        var collapseInner = $('<div>')
+          .addClass('menu-collapse-inner');
+
+        // loop through each action and build a button for it, just like above,
+        // but append it to the menu-collapse-inner element
+        for (var a = 0; a < setup[i].actions.length; a++) {
+          var actn = dc.ops.setup[i].actions[a];
+          collapseInner.append(buildMenuButton(actn));
+        }
+        collapseBtn.append(collapseInner);
+
+        // append the entire collapseBtn to the leftMenu
+        leftMenu.append(collapseBtn);
       }
     }
     dc.$elem.append(leftMenu);
-  };
 
-  dc.menus.left._getMenuOperations = function() {
-    return {
-      /* jshint ignore:start */
-      'upload': dc.ops.file['upload'],
-      'load-url': dc.ops.file['load-url'],
-      'load-gist': dc.ops.file['load-gist'],
-      'load-overpass': dc.ops.file['load-overpass'],
-      'location': dc.ops.file['location'],
-      'break1': {type: 'break'},
-      'save-geojson': dc.ops.file['save-geojson'],
-      'save-shapefile': dc.ops.file['save-shapefile'],
-      'break2': {type: 'break'},
-
-      // TODO: DUPLICATE IN CONTEXT-MENU
-      'extent': dc.ops.file['extent'],
-
-      // TODO: MOVE TO CONTEXT-MENU
-      'expand': dc.ops.file['expand'],
-
-      // TODO: When layer-context-menu supports multiple layers, mv to
-      // context menu
-      'combine': dc.ops.file['combine'],
-      'break3': {type: 'break'},
-
-      // TODO: MOVE TO CONTEXT-MENU
-      'rename': dc.ops.file['rename'],
-      'remove': dc.ops.file['remove'],
-      'info': dc.ops.file['info'],
-      /* jshint ignore:end */
+    function buildMenuButton(action) {
+      var button = $('<button>').addClass('menu-action')
+        .html(dc.ops.file[action].icon || '!')
+        .attr('data-operation', action)
+        .attr('data-tooltip', dc.ops.file[action].description);
+        if (dc.ops.file[action].type === 'info') button.addClass('dropchop-info');
+      button.on('click', _handleBtnClick);
+      return button;
     }
   };
 

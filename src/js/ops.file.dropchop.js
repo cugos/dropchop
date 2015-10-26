@@ -21,19 +21,7 @@ var dropchop = (function(dc) {
           .on('change', function() {
             var files = this.files;
             $(files).each(function(i) {
-              // var ext = dc.util.getFileExtension(files[i].name);
-
-              // // if it is a shapefile or zip file
-              // if (ext === 'shp' || ext === 'zip') {
-              //   // upload a shapefile and add the layer
-              //   dc.util.readShpFile
-              //   shp("files/pandr").then(function(geojson){
-              //     //do something with your geojson
-              //   });
-              // } else {
-                dc.util.readFile(files[i]);
-              // }
-
+              dc.util.readFile(files[i]);
             });
             $blindInput.remove();
           });
