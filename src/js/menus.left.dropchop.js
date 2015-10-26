@@ -33,17 +33,6 @@ var dropchop = (function(dc) {
           'save-shapefile'
         ]
       },
-      {
-        name: 'Geo Actions',
-        icon: '<i class="fa fa-wrench"></i>',
-        actions: [
-          'extent',
-          'expand',
-          'combine',
-          'rename',
-          'remove',
-        ]
-      },
       'info'
     ];
 
