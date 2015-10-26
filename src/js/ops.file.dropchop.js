@@ -6,6 +6,10 @@ var dropchop = (function(dc) {
   dc.ops = dc.ops || {};
 
   dc.ops.file = {
+
+    //
+    // Import Data
+    ///
     upload: {
       description: 'Upload from your computer (.geojson)',
       icon: '<i class="fa fa-upload"></i>',
@@ -157,6 +161,10 @@ var dropchop = (function(dc) {
       }
     },
 
+
+    //
+    // Export Data
+    //
     'save-geojson': {
       minFeatures: 1,
       description: 'Save as GeoJSON',
@@ -198,6 +206,10 @@ var dropchop = (function(dc) {
       createsLayer: false
     },
 
+
+    //
+    // Layer Options
+    //
     extent: {
       minFeatures: 1,
       description: 'View extent of layers',
@@ -279,6 +291,7 @@ var dropchop = (function(dc) {
 
     rename: {
       minFeatures: 1,
+      maxFeatures: 1,
       description: 'Rename layer',
       icon: '<i class="fa fa-pencil"></i>',
       parameters: [
@@ -312,6 +325,10 @@ var dropchop = (function(dc) {
       }
     },
 
+
+    //
+    // Extra Views
+    //
     info: {
       type: 'info',
       description: 'Learn more about dropchop',
