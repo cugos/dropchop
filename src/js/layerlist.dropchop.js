@@ -76,7 +76,6 @@ var dropchop = (function(dc) {
     });
 
     layerDiv.on('click', function(event) {
-
       // check for keys being held for special selection
       if (event.shiftKey) {
         // select all layeres in between previous target and target
@@ -116,6 +115,10 @@ var dropchop = (function(dc) {
         dc.layerlist.clearSelection($(this), layer);
         dc.layerlist.selectToggle($(this), layer);
       }
+    });
+
+    layerDiv.on('contextmenu', function(event) {
+      dc.menus.layerContextMenu.createLayerContextMenu(event);
     });
 
     layerlistItem.append(layerDiv);

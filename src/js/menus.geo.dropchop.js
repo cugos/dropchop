@@ -28,8 +28,8 @@ var dropchop = (function(dc) {
     }
   };
 
-  /* jshint ignore:start */
 
+  /* jshint ignore:start */
   /* ignoring these functions in jshint because we are getting
   an unecessary strict violation warning, but our usage of `this`
   is proper here. */
@@ -95,7 +95,6 @@ var dropchop = (function(dc) {
   };
 
   dc.menus.geo.geoCheck = function(event, layer) {
-
     // check selection count vs operation min/max
     for (var o in dc.ops.geo) {
       var op = dc.ops.geo[o];
