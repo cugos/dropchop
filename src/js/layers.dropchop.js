@@ -22,7 +22,7 @@ var dropchop = (function(dc) {
 
   dc.layers.add = function(event, name, blob, ltype, url) {
     if (blob.type === "Topology") {
-      blob = topojson.feature(blob, blob.objects[Object.keys(blob.objects)[0]]);
+      blob = topojson.client.feature(blob, blob.objects[Object.keys(blob.objects)[0]]);
     }
 
     var l = dc.layers.makeLayer(name, blob);
