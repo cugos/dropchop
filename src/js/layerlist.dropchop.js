@@ -9,6 +9,8 @@ var dropchop = (function(dc) {
   dc.layerlist.init = function(name) {
     dc.layerlist.$elem = $('<ol>').addClass(name);
     dc.$elem.append(dc.layerlist.$elem);
+
+    // Clicking on layerlist but not layer (ie below layers) clears selection
     dc.layerlist.$elem.on('click', function(event) {
       if ($(event.target).hasClass(name)) {
         dc.selection.clear();
@@ -128,6 +130,9 @@ var dropchop = (function(dc) {
     // hide helper text
     $('.layer-help').hide();
     $('.layer-toggleAll').show();
+
+    // send out layerlist:added signal
+    $(dc).trigger('layerlist:added', layerDiv);
   };
 
   dc.layerlist.selectLayer = function($item, lyr) {

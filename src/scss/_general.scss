@@ -4,6 +4,12 @@ body {
   background: $grey;
   font-family:"Helvetica Neue", arial, sans-serif;
   overflow: hidden;
+
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+
   &.dragging {
     opacity: 0.8;
     .layer-help {
@@ -11,6 +17,7 @@ body {
     }
   }
 }
+
 
 @-webkit-keyframes rotating {
   from {
@@ -69,7 +76,7 @@ a {
 input,
 label,
 .dropchop-btn {
-  font-family: "Inconsolata", monospace; 
+  font-family: "Inconsolata", monospace;
 }
 
 .dropchop-btn,
@@ -129,6 +136,9 @@ $geo-button-width: 200px;
   list-style-type: none;
   overflow-y: scroll;
   -webkit-transform: translate3d(0,0,0);
+  z-index: 1;
+  overflow: visible;
+
   .layer-help {
     padding: 10px;
     margin: 10px;
@@ -152,6 +162,42 @@ $geo-button-width: 200px;
   * {
     &::selection {
       background:transparent;
+    }
+  }
+  .context-menu {
+    min-width: 250px;
+    position: fixed;
+    z-index: 2;
+
+    background: #fdfdfd;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+
+    color: #333;
+
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        display: block;
+        padding: 8px 10px;
+        font-size: 0.85em;
+        // font-weight: 500;
+        border-bottom: 1px solid #ddd;
+        text-transform: lowercase;
+
+        &:last-child {
+          border-bottom: none;
+        }
+        &:hover {
+          background-color: lighten(#333, 10%);
+          color: #f6f6f6;
+        }
+        i {
+          margin-right: .4em;
+        }
+      }
     }
   }
 }

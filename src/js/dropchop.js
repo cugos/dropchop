@@ -30,6 +30,7 @@ var dropchop = (function(dc) {
     // setup menus
     dc.menus.geo.init();
     dc.menus.left.init();
+    dc.menus.layerContextMenu.init();
 
     // setup forms
     dc.form.init();
