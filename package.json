@@ -23,12 +23,9 @@
     "shp-write": "^0.2.4",
     "shpjs": "^3.2.1",
     "tablesort": "^3.1.0",
-    "topojson": "^1.6.19",
-    "turf": "^2.0.2",
-    "typedarray": "0.0.6"
+    "turf": "^2.0.2"
   },
   "devDependencies": {
-    "browserify": "^11.2.0",
     "chai": "^3.2.0",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
@@ -48,8 +45,6 @@
     "karma-sinon": "^1.0.4",
     "mocha": "^2.3.0",
     "phantomjs": "^1.9.18",
-    "sinon": "^1.16.1",
-    "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "sinon": "^1.16.1"
   }
 }
