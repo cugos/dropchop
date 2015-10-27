@@ -38,6 +38,7 @@ var dropchop = (function(dc) {
           'upload',
           'load-url',
           'load-gist',
+          'load-arcgis',
           'load-overpass',
           'location'
         ]
@@ -60,7 +61,7 @@ var dropchop = (function(dc) {
           'rename',
           'remove',
         ]
-      },      
+      },
       'info'
     ];
 
