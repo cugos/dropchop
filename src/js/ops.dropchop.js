@@ -39,7 +39,8 @@ var dropchop = (function(dc) {
           'load-url',
           'load-gist',
           'load-overpass',
-          'location'
+          'location',
+          'load-custom-base'
         ]
       },
       {
@@ -60,7 +61,7 @@ var dropchop = (function(dc) {
           'rename',
           'remove',
         ]
-      },      
+      },
       'info'
     ];
 

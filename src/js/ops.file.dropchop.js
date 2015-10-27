@@ -196,8 +196,6 @@ var dropchop = (function(dc) {
       }
     },
 
-    'break1': { type: 'break' },
-
     'save-geojson': {
       minFeatures: 1,
       description: 'Save as GeoJSON',
