@@ -19,7 +19,12 @@ var dropchop = (function(dc) {
  * @param {object} file object
  * @param {string} file blob to be converted with JSON.parse()
  */
+
   dc.layers.add = function(event, name, blob, ltype, url) {
+    if (blob.type === "Topology") {
+      blob = topojson.client.feature(blob, blob.objects[Object.keys(blob.objects)[0]]);
+    }
+
     var l = dc.layers.makeLayer(name, blob);
     dc.layers.list[l.stamp] = l;
 
