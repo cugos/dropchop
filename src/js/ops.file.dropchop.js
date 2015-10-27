@@ -173,6 +173,29 @@ var dropchop = (function(dc) {
       }
     },
 
+    'save-topojson': {
+      minFeatures: 1,
+      description: 'Save as TopoJSON',
+      icon: '<i class="fa fa-object-ungroup"></i>',
+      createsLayer: false,
+      execute: function() {
+        for (var i = 0; i < dc.selection.list.length; i++) {
+          var content = JSON.stringify(
+            topojson.topology({
+              collection: dc.selection.list[i].featurelayer.toGeoJSON()
+            }, {
+              'property-transform': function(feature) {
+                return feature.properties;
+            }})
+          );
+          var title = 'dropchop_' + dc.selection.list[i].name + '.topojson';
+          saveAs(new Blob([content], {
+            type: 'text/plain;charset=utf-8'
+          }), title);
+        }
+      }
+    },
+
     'save-shapefile': {
       minFeatures: 1,
       description: 'Save as Shapefile',
