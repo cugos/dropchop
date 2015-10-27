@@ -182,7 +182,7 @@ var dropchop = (function(dc) {
         for (var i = 0; i < dc.selection.list.length; i++) {
           var content = JSON.stringify(
             topojson.topology({
-              collection: dc.selection.list[i].featurelayer.toGeoJSON()
+              collection: dc.selection.list[i].raw
             }, {
               'property-transform': function(feature) {
                 return feature.properties;
