@@ -1,5 +1,5 @@
 var dropchop = (function(dc) {
-  
+
   'use strict';
 
   dc = dc || {};
@@ -46,6 +46,7 @@ var dropchop = (function(dc) {
         icon: '<i class="fa fa-floppy-o"></i>',
         actions: [
           'save-geojson',
+          'save-topojson',
           'save-shapefile'
         ]
       },
@@ -59,7 +60,7 @@ var dropchop = (function(dc) {
           'rename',
           'remove',
         ]
-      },      
+      },
       'info'
     ];
 
@@ -187,7 +188,7 @@ var dropchop = (function(dc) {
 
     // create name array
     data.name = dc.util.concat(nameArray, '_', operation);
-    
+
     return data;
   };
 
@@ -227,7 +228,7 @@ var dropchop = (function(dc) {
       btn.removeClass('operation-inactive');
       btn.prop('disabled', false);
     }
-    
+
   };
 
   return dc;
