@@ -26,6 +26,7 @@ var dropchop = (function(dc) {
     $(dc).on('operation:geo', dc.ops.geoExecute);
     $(dc).on('operation:file:load-gist', dc.ops.file['load-gist'].get);
     $(dc).on('operation:file:load-url', dc.ops.file['load-url'].get);
+    $(dc).on('operation:file:load-custom-base', dc.ops.file['load-custom-base'].get);
     $(dc).on('operation:file:load-overpass', dc.ops.file['load-overpass'].get);
     $(dc).on('operation:file:rename', dc.ops.file.rename.callback);
 
@@ -38,7 +39,8 @@ var dropchop = (function(dc) {
           'load-url',
           'load-gist',
           'load-overpass',
-          'location'
+          'location',
+          'load-custom-base'
         ]
       },
       {
