@@ -19,6 +19,7 @@
     "font-awesome": "^4.4.0",
     "geoglyphs": "0.0.10",
     "jquery": "^2.1.4",
+    "js-polyfills": "^0.1.12",
     "osmtogeojson": "^2.2.5",
     "shp-write": "^0.2.4",
     "shpjs": "^3.2.1",
