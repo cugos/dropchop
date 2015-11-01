@@ -9,7 +9,9 @@ var jshint = require('gulp-jshint');
 var ghPages = require('gulp-gh-pages');
 var Server = require('karma').Server;
 var file = require('gulp-file');
-
+var browserify = require('browserify');
+var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
 
 gulp.task('sass', function(){
   return gulp.src('./src/scss/dropchop.scss')
@@ -41,8 +43,11 @@ var vendorJS = [
   './src/lib/shp-2-geojson.js',
   './node_modules/osmtogeojson/osmtogeojson.js',
   './node_modules/turf/turf.js',
-  './lib/mapbox.js/mapbox.js',
-  './node_modules/esri2geo/esri2geo.js'
+  './node_modules/esri2geo/esri2geo.js',
+  './dist/static/js/topojson_package.js',
+  './lib/mapbox.js/mapbox.js'
+
+
 ];
 
 gulp.task('lint', function() {
@@ -60,7 +65,16 @@ gulp.task('js_dropchop', function() {
     .pipe(gulp.dest('./dist/static/js'));
 });
 
-gulp.task('js_vendor', function() {
+gulp.task('topojson', function() {
+  return browserify(['./lib/topojson_setup.js'])
+    .bundle()
+    .pipe(source('topojson_package.js'))
+    .pipe(buffer())
+    .pipe(uglify())
+    .pipe(gulp.dest('./dist/static/js/'));
+});
+
+gulp.task('js_vendor', ['topojson'], function() {
   return gulp.src(vendorJS)
     .pipe(sourcemap.init())
     .pipe(concat('vendor.js'))
