@@ -25,6 +25,8 @@ describe('util.dropchop.js', function() {
     {"type":"Feature","geometry":{"type":"Point","coordinates":[130,15]},"properties":{"name":"Some other islands"}}
   ]};
 
+    var bounds = {"_southWest": { "lat": 46.0, "lng": -123.0}, "_northEast": {"lat": 48.0, "lng": -121.0}};
+
   it('dc.util.removeFileExtension()', function() {
     var noExtension = dc.util.removeFileExtension('filename.geojson');
     expect(noExtension).to.equal('filename');
@@ -59,6 +61,11 @@ describe('util.dropchop.js', function() {
     // TOOD: not sure how to test the bounding box of the map in PhantomJS
   });
 
+  it('dc.util.getEsriBBox()', function() {
+    var bounds = dc.map.m.getBounds();
+    expect(dc.util.getEsriBBox()).to.equal('-33.75,0,33.75,0');
+  });
+
   it('dc.util.uncollect()', function() {
     expect(dc.util.uncollect(fcToUncollect)).to.eql(gj);
   });
@@ -78,7 +85,7 @@ describe('util.dropchop.js', function() {
     expect($('body').hasClass('dropchop-loading')).to.equal(true);
     dc.util.loader(false);
     expect($('body').hasClass('dropchop-loading')).to.equal(false);
-  }); 
+  });
 
   it('dc.util.jsonFromUrl()', function(done) {
     var url = '/?url=http://google.com&gist=1234&gist=456&url=http%3A%2F%2Fdropchop.io&url=https://mug.com?cat=booker&fish=truman';
@@ -97,7 +104,7 @@ describe('util.dropchop.js', function() {
     window.history.pushState(null, null, url);
 
     expect(window.location.search).to.equal('?gist=333');
-    
+
     // adding a new layer should update, and remove the previous since
     // it doesn't actually exist as a layer
     dc.layers.add({}, 'new gist', gj, 'gist', '444');
