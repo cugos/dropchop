@@ -20,8 +20,8 @@ var dropchop = (function(dc) {
   dc.form.create = function(name, info, trigger) {
     dc.form.remove();
     var $html = $('<form>').addClass('dropchop-form dropchop-form-'+trigger)
-      .attr('id', 'dropchop-form')
-      .attr('data', name);
+          .attr('id', 'dropchop-form')
+          .attr('data', name);
     var $title = $('<h2>').addClass('dropchop-form-title').text(name).appendTo($html);
     var $desc = $('<p>').addClass('dropchop-form-description').text(info.description).appendTo($html);
 
@@ -79,66 +79,66 @@ var dropchop = (function(dc) {
   dc.form.inputs = {
     number: function(p) {
       var $i = $('<input>').attr('type', 'number')
-        .attr('name', p.name)
-        .attr('value', p.default);
+            .attr('name', p.name)
+            .attr('value', p.default);
       return $i;
     },
     select: function(p) {
       var $i = $('<select>').attr('name', p.name);
       $(p.options).each(function(i) {
         var $opt = $('<option>').text(p.options[i])
-          .attr('value', p.options[i]);
+              .attr('value', p.options[i]);
         $opt.appendTo($i);
       });
       return $i;
     },
     text: function(p) {
       var $i = $('<input>').attr('type', 'text')
-        .attr('name', p.name)
-        .attr('value', p.default);
+            .attr('name', p.name)
+            .attr('value', p.default);
       return $i;
     },
     checkbox: function(p) {
       var $i = $('<input>').attr('type', 'checkbox')
-        .attr('name', p.name)
-        .attr('value', p.default);
+            .attr('name', p.name)
+            .attr('value', p.default);
       return $i;
     },
     radio: function(p) {
-        var $i = $('<div>').attr('class', 'radioGroup');
-        var groupName = p.name.replace(/\s/g, '');
-        $(p.options).each(function(i) {
-            var opt = p.options[i];
-            var optId = opt.replace(/\s/g, '');
-            var $lbl = $('<label>')
-                    .addClass('sub-label')
-                    .attr('for', optId);
+      var $i = $('<div>').attr('class', 'radioGroup');
+      var groupName = p.name.replace(/\s/g, '');
+      $(p.options).each(function(i) {
+        var opt = p.options[i];
+        var optId = opt.replace(/\s/g, '');
+        var $lbl = $('<label>')
+              .addClass('sub-label')
+              .attr('for', optId);
 
-            var $opt = $('<input>')
-                    .attr('type', 'radio')
-                    .attr('id', optId)
-                    .attr('name', groupName)
-                    .addClass('radio')
-                    .val(opt);
-            if (opt === p.default) {
-                console.log(opt, 'is default');
-                $opt.prop('defaultChecked', true);
-            }
-            $lbl.append(opt);
-            $lbl.appendTo($i);
-            $opt.appendTo($i);
-        });
-        return $i;
+        var $opt = $('<input>')
+              .attr('type', 'radio')
+              .attr('id', optId)
+              .attr('name', groupName)
+              .addClass('radio')
+              .val(opt);
+        if (opt === p.default) {
+          console.log(opt, 'is default');
+          $opt.prop('defaultChecked', true);
+        }
+        $lbl.append(opt);
+        $lbl.appendTo($i);
+        $opt.appendTo($i);
+      });
+      return $i;
     },
     switch: function(p) {
       var $i = $('<div>');
       $(dc.selection.list).each(function(i) {
         var $lbl = $('<label>')
-          .addClass('sub-label');
+              .addClass('sub-label');
         var $opt = $('<input>')
-          .attr('type', 'radio')
-          .val('switch-' + dc.selection.list[i].stamp)
-          .attr('name', p.name);
+              .attr('type', 'radio')
+              .val('switch-' + dc.selection.list[i].stamp)
+              .attr('name', p.name);
         $opt.appendTo($lbl);
         $lbl.append(dc.selection.list[i].name);
         $lbl.appendTo($i);
@@ -149,20 +149,20 @@ var dropchop = (function(dc) {
       var $i = $('<div>');
 
       var $lbl1 = $('<label>')
-        .addClass('sub-label');
+            .addClass('sub-label');
       var $opt1 = $('<input>')
-        .attr('type', 'radio')
-        .val('true')
-        .attr('name', p.name);
+            .attr('type', 'radio')
+            .val('true')
+            .attr('name', p.name);
       $opt1.appendTo($lbl1);
       $lbl1.append('Individual features');
 
       var $lbl2 = $('<label>')
-        .addClass('sub-label');
+            .addClass('sub-label');
       var $opt2 = $('<input>')
-        .attr('type', 'radio')
-        .val('false')
-        .attr('name', p.name);
+            .attr('type', 'radio')
+            .val('false')
+            .attr('name', p.name);
       $opt2.appendTo($lbl2);
       $lbl2.append('Entire collection');
 

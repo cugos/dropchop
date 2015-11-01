@@ -69,11 +69,11 @@ describe('form.dropchop.js', function() {
 
     it('dc.form.inputs.radio()', function() {
       var radioParam = {
-         name: 'favorite fruit',
-         type: 'radio',
-         description: '',
-         options: ['Avocado', 'Kiwi'],
-         default: 'Avocado'
+        name: 'favorite fruit',
+        type: 'radio',
+        description: '',
+        options: ['Avocado', 'Kiwi'],
+        default: 'Avocado'
       };
 
       var $param = dc.form.inputs.radio(radioParam);
