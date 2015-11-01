@@ -106,20 +106,27 @@ var dropchop = (function(dc) {
     },
     radio: function(p) {
         var $i = $('<div>').attr('class', 'radioGroup');
+        var groupName = p.name.replace(/\s/g, '');
         $(p.options).each(function(i) {
             var opt = p.options[i];
+            var optId = opt.replace(/\s/g, '');
             var $lbl = $('<label>')
-                    .addClass('sub-label');
+                    .addClass('sub-label')
+                    .attr('for', optId);
+
             var $opt = $('<input>')
                     .attr('type', 'radio')
-                    .val(opt)
-                    .attr('name', p.name);
+                    .attr('id', optId)
+                    .attr('name', groupName)
+                    .addClass('radio')
+                    .val(opt);
             if (opt === p.default) {
-                $opt.prop('checked', true);
+                console.log(opt, 'is default');
+                $opt.prop('defaultChecked', true);
             }
-            $opt.appendTo($lbl);
             $lbl.append(opt);
             $lbl.appendTo($i);
+            $opt.appendTo($i);
         });
         return $i;
     },

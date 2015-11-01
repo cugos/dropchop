@@ -100,7 +100,7 @@ var dropchop = (function(dc) {
         'load-arcgis': {
             description: 'Query an ArcGIS Server Feature Service',
             icon: '<i class="fa fa-globe"></i>',
-            _temp: {},
+            _temp: {'layerName': 'arcjson'},
             parameters: [
                 {
                     name: 'feature service',
@@ -131,6 +131,13 @@ var dropchop = (function(dc) {
             execute: function() {
                 $(dc).trigger('form:file', ['load-arcgis']);
             },
+            checkJsonp: function(parameters) {
+                if (parameters[2] === 'JSONP') {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
             get: function(event, name, parameters) {
                 dc.ops.file['load-arcgis']._temp.layerName = parameters[0];
                 var bbox = '-180,-90,180,90';
@@ -146,10 +153,7 @@ var dropchop = (function(dc) {
                     where: parameters[1],
                     outfields: '*'
                 };
-                var cors = true;
-                if(parameters[2] === 'JSONP') {
-                    cors = false;
-                }
+                var cors = dc.ops.file['load-arcgis'].checkJsonp(parameters);
                 dc.util.get(url, urlParams, cors)
                     .done(function(data) {
                         dc.ops.file['load-arcgis'].callback(data);

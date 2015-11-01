@@ -24,6 +24,7 @@ describe('util.dropchop.js', function() {
     {"type":"Feature","geometry":{"type":"Point","coordinates":[125.6,10.1]},"properties":{"name":"Dinagat Islands"}},
     {"type":"Feature","geometry":{"type":"Point","coordinates":[130,15]},"properties":{"name":"Some other islands"}}
   ]};
+    var arcjson = {"features": [{"attributes": { "name": "Dinagat Islands"}, "geometry": {"x": 125.6, "y": 10.1}}, {"attributes": {"name": "Some other islands"}, "geometry": {"x": 130, "y": 15}}]};
 
     var bounds = {"_southWest": { "lat": 46.0, "lng": -123.0}, "_northEast": {"lat": 48.0, "lng": -121.0}};
 
@@ -68,6 +69,11 @@ describe('util.dropchop.js', function() {
 
   it('dc.util.uncollect()', function() {
     expect(dc.util.uncollect(fcToUncollect)).to.eql(gj);
+  });
+
+  it('dc.util.esri2geo', function() {
+    var data = dc.util.esri2geo(arcjson);
+    expect(data).to.eql(fc);
   });
 
   it('dc.util.executeFC()', function() {
