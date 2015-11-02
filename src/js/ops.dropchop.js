@@ -144,7 +144,30 @@ var dropchop = (function(dc) {
       throw err;
     }
   }
+
   /* jshint ignore:end */
+
+  // Sort turf operations by availablility and alphabetically
+  function _sortGeo() {
+
+    // Get all of the turf buttons and sort them alphabetically
+    var alpha = $('.operation-geo').sort(function(a, b) {
+      return ($(b).data('operation') < $(a).data('operation')) ? 1 : -1;
+    });
+
+    // Grab all the active buttons and reappend them
+    alpha.filter(function(i, d) {
+      if (!($(d).prop('disabled'))) { return d }
+    }).appendTo('.operations-geo');
+
+    // Grab all the inactive buttons and reappend them
+    alpha.filter(function(i, d) {
+      if ($(d).prop('disabled')) { return d }
+    }).appendTo('.operations-geo');
+
+    // Scroll to the top to keep things nice
+    $('.operations-geo').scrollTop(0);
+  }
 
   /**
    * Execute a turf function based on button operation click.
@@ -231,6 +254,8 @@ var dropchop = (function(dc) {
       btn.prop('disabled', false);
     }
 
+    // Sort the list
+    _sortGeo();
   };
 
   return dc;
