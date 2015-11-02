@@ -17,29 +17,43 @@ var dropchop = (function(dc) {
     });
   };
 
-  dc.menus.layerContextMenu.createLayerContextMenu = function(e) {
+  // Generate layer context menu dom element (bound to right-click on layerlist)
+  dc.menus.layerContextMenu.createLayerContextMenu = function($layerNameDiv, xPos, yPos) {
+    if (!($layerNameDiv instanceof jQuery)) {
+      $layerNameDiv = $($layerNameDiv);
+    }
+
+    // Close any already-open contextmenus
     dc.menus.layerContextMenu.removeLayerContextMenus();
 
     // Select right-clicked layer.
-    var layerName = $(e.target);
-    var layer = layerName.parent();
+    var layer = $layerNameDiv.parent();
     var lyrData = dc.layers.list[layer.attr('data-stamp')];
 
     // Select layer if unselected
     if (!Boolean(dropchop.selection.list.indexOf(lyrData) + 1)) {
-      layerName.trigger('click');
+      $layerNameDiv.trigger('click');
     }
 
     // create left-click context-menu
     var menu = $('<div>').addClass('context-menu');
-    menu.css({top: e.pageY, left: e.offsetX});
+    menu.css({top: yPos, left: xPos});
     var menuList = $('<ul>');
     menu.append(menuList);
 
     // populate context-menu
-    var menuItems = dc.menus.layerContextMenu._getMenuOperations();
-    for (var menuItem in menuItems) {
+    var menuItems = {
+      /* jshint ignore:start */
+      'extent': dc.ops.file['extent'],
+      'expand': dc.ops.file['expand'],
+      'combine': dc.ops.file['combine'],
+      'rename': dc.ops.file['rename'],
+      'remove': dc.ops.file['remove'],
+      'duplicate': dc.ops.file['duplicate'],
+      /* jshint ignore:end */
+    };
 
+    for (var menuItem in menuItems) {
       var fileBtn = $('<li>').addClass('menu-action')
         .html(menuItems[menuItem].icon + menuItems[menuItem].description)
         .attr('data-operation', menuItem)
@@ -56,25 +70,11 @@ var dropchop = (function(dc) {
       menuList.append(fileBtn);
     }
     layer.parent().append(menu);
-
-    e.preventDefault();
   };
 
   // Remove any open context-menus from DOM
   dc.menus.layerContextMenu.removeLayerContextMenus = function() {
     $('.context-menu').remove();
-  };
-
-  dc.menus.layerContextMenu._getMenuOperations = function() {
-    return {
-      /* jshint ignore:start */
-      'extent': dc.ops.file['extent'],
-      'expand': dc.ops.file['expand'],
-      'combine': dc.ops.file['combine'],
-      'rename': dc.ops.file['rename'],
-      'remove': dc.ops.file['remove'],
-      /* jshint ignore:end */
-    };
   };
 
   /* jshint ignore:start */

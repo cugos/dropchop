@@ -46,25 +46,9 @@ var dropchop = (function(dc) {
         $(this).removeClass('layer-new');
       });
 
-
     var layerType = $('<span>').addClass('layer-type-image sprite sprite-layer-'+layerTypeIcon(layer.type));
     var checkbox = $('<input>').addClass('layer-toggle').prop({'type': 'checkbox', 'checked': true});
-    var remove = $('<button>').addClass('layer-action layer-remove').html('<i class="fa fa-times"></i>');
-    var duplicate = $('<button>').addClass('layer-action layer-duplicate').html('<i class="fa fa-files-o"></i>');
-
-    duplicate.on('click', function(event) {
-      event.preventDefault();
-      $(dc).trigger('layer:duplicate', [$(this).parent().attr('data-stamp')]);
-      return false;
-    });
-
-    remove.on('click', function(event) {
-      event.preventDefault();
-      $(dc).trigger('layer:remove', [$(this).parent().attr('data-stamp')]);
-      dc.util.updateSearch();
-      dc.selection.clear();
-      return false;
-    });
+    var dropdown = $('<button title="More Options">').addClass('layer-action layer-dropdown').html('<i class="fa fa-ellipsis-h"></i>');
 
     checkbox.on('change', function(event) {
       if (this.checked) {
@@ -84,6 +68,8 @@ var dropchop = (function(dc) {
         var to = $(this);
         var from = dc.layerlist._lastSelected;
         var toCount, fromCount;
+
+        if (!from) return;
 
         $('.layer-element').each(function(e) {
           var check = $(this).attr('data-stamp');
@@ -118,14 +104,26 @@ var dropchop = (function(dc) {
     });
 
     layerDiv.on('contextmenu', function(event) {
-      dc.menus.layerContextMenu.createLayerContextMenu(event);
+      dc.menus.layerContextMenu.createLayerContextMenu(
+        this, event.offsetX, event.pageY
+      );
+      event.preventDefault();
+    });
+
+    dropdown.on('click', function(event) {
+      dc.menus.layerContextMenu.createLayerContextMenu(
+        // I have no idea why we need to subtract 40px but that's what
+        // it takes to make it position correctly...
+        $(this).siblings('.layer-name'), event.pageX - 40, event.pageY
+      );
+      event.preventDefault();
+      return false; // disable further click handlers
     });
 
     layerlistItem.append(layerDiv);
     layerlistItem.append(checkbox);
     layerlistItem.append(layerType);
-    layerlistItem.append(remove);
-    layerlistItem.append(duplicate);
+    layerlistItem.append(dropdown);
     dc.layerlist.$elem.append(layerlistItem);
 
     dc.layerlist.elems[layer.stamp] = layerlistItem;

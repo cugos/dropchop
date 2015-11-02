@@ -260,34 +260,16 @@ $geo-button-width: 200px;
     border-radius: 50%;
     cursor: pointer;
   }
-  .layer-remove {
+  .layer-dropdown {
     right: 4px;
-    color: #ff7a72;
-    &:hover {
-      background: $red;
-      color: white;
-    }
-  }
-  .layer-duplicate {
-    right: 28px;
     color: $blue;
     &:hover {
       background: $blue;
       color: white;
     }
   }
-  .layer-rename {
-    right: 54px;
-    color: $green;
-    &:hover {
-      background: $green;
-      color: white;
-    }
-  }
   &:hover {
-    .layer-remove,
-    .layer-duplicate,
-    .layer-rename {
+    .layer-dropdown {
       display: block;
     }
   }

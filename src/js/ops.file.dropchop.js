@@ -289,6 +289,18 @@ var dropchop = (function(dc) {
     //   }
     // },
 
+    duplicate: {
+      minFeatures: 1,
+      description: 'Duplicate selected layers',
+      icon: '<i class="fa fa-files-o"></i>',
+      execute: function() {
+        $(dc.selection.list).each(function(i) {
+          $(dc).trigger('layer:duplicate', [this.stamp]);
+        });
+        dc.selection.clear();
+      }
+    },
+
     rename: {
       minFeatures: 1,
       maxFeatures: 1,
@@ -322,6 +334,7 @@ var dropchop = (function(dc) {
           $(dc).trigger('layer:remove', [this.stamp]);
         });
         dc.selection.clear();
+        dc.util.updateSearch();
       }
     },
 
