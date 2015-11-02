@@ -121,7 +121,6 @@ var dropchop = (function(dc) {
               .addClass('radio')
               .val(opt);
         if (opt === p.default) {
-          console.log(opt, 'is default');
           $opt.prop('defaultChecked', true);
         }
         $lbl.append(opt);
