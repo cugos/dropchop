@@ -203,14 +203,22 @@ $geo-button-width: 200px;
           }
         }
       }
+
+      h4 {
+        text-transform: lowercase;
+        padding: 2px 5px;
+        font-size: 0.8em;
+        font-weight: 900;
+        color: #999;
+        background-color: #f6f6f6;
+        border-bottom: 1px solid #efefef;
+      }
     }
   }
 }
 .layer-element {
   position: relative;
   cursor:pointer;
-
-
 
   .layer-toggle {
     float: left;

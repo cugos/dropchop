@@ -44,25 +44,32 @@ var dropchop = (function(dc) {
     // populate context-menu
     var menuItems = {
       /* jshint ignore:start */
+      'title1': 'Layer',
+      'rename': dc.ops.file['rename'],
+      'duplicate': dc.ops.file['duplicate'],
+      'remove': dc.ops.file['remove'],
+      'title2': 'Geo',
       'extent': dc.ops.file['extent'],
       'expand': dc.ops.file['expand'],
       'combine': dc.ops.file['combine'],
-      'rename': dc.ops.file['rename'],
-      'remove': dc.ops.file['remove'],
-      'duplicate': dc.ops.file['duplicate'],
       /* jshint ignore:end */
     };
 
     for (var menuItem in menuItems) {
+      var item = menuItems[menuItem];
+      if (typeof item === 'string' || item instanceof String) {
+        menuList.append($('<h4>' + item + '</h4>'));
+        continue;
+      }
       var fileBtn = $('<li>').addClass('menu-action')
-        .html(menuItems[menuItem].icon + menuItems[menuItem].description)
+        .html(item.icon + item.description)
         .attr('data-operation', menuItem)
-        .attr('data-tooltip', menuItems[menuItem].description);
+        .attr('data-tooltip', item.description);
 
       // disable invalid operations
       if (
-        (menuItems[menuItem].minFeatures > dropchop.selection.list.length) ||
-        (menuItems[menuItem].maxFeatures < dropchop.selection.list.length)
+        (item.minFeatures > dropchop.selection.list.length) ||
+        (item.maxFeatures < dropchop.selection.list.length)
       ) {
         fileBtn.addClass('operation-inactive');
       }
