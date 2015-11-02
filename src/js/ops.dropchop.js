@@ -74,9 +74,9 @@ var dropchop = (function(dc) {
       var action = setup[i];
       if (typeof setup[i] !== 'object') {
         if(dc.ops.file[action].type === 'break') {
-        var $breakSpace = $('<div>').addClass('menu-action-break');
-        leftMenu.append($breakSpace);
-      } else {
+          var $breakSpace = $('<div>').addClass('menu-action-break');
+          leftMenu.append($breakSpace);
+        } else {
           leftMenu.append(buildMenuButton(action));
         }
 
