@@ -386,7 +386,8 @@ a.dropchop-btn {
       font-weight: 300;
       margin: 3px;
       color: #777;
-      font-family: "Helvetica Neue", arial, sans-serif; }
+      font-family: "Helvetica Neue", arial, sans-serif;
+      float: left; }
   .dropchop-form-parameter input,
   .dropchop-form-parameter select {
     display: block;
@@ -394,12 +395,13 @@ a.dropchop-btn {
     padding: 0.5em;
     font-size: 0.9em; }
   .dropchop-form-parameter input[type="radio"] {
-    display: inline-block;
-    width: auto; }
+    width: auto;
+    float: left; }
   .dropchop-form-parameter .dropchop-form-parameter-description {
     font-size: 0.8em;
     text-transform: none;
-    font-weight: 100; }
+    font-weight: 100;
+    clear: both; }
 
 body.dropchop-loading #dropchop {
   opacity: 0.5; }
