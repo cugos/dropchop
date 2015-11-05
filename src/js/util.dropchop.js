@@ -39,6 +39,20 @@ var dropchop = (function(dc) {
     xhr.send();
   };
 
+  dc.util.get = function(url, data, cors) {
+    var params = {
+      data: data,
+      dataType: 'json'
+    };
+    if(!dc.util.corsSupport || cors === false) {
+      console.log('No CORS support, using JSONP');
+      params.dataType = 'jsonp';
+    }
+    dropchop.util.loader(true);
+    var xhr = $.ajax(url, params);
+    return xhr;
+  };
+
   dc.util.readFile = function(file) {
     var reader = new FileReader();
     // if a zipfile, assume shapefile for now
@@ -75,10 +89,10 @@ var dropchop = (function(dc) {
 
   dc.util.jsonFromUrl = function() {
     var query = location.search.substr(1)
-      .split(/(&?gist=|&?url=)/g)
-      .filter(function(d) {
-        return d.length > 0;
-      });
+          .split(/(&?gist=|&?url=)/g)
+          .filter(function(d) {
+            return d.length > 0;
+          });
 
     var result = {};
 
@@ -101,15 +115,15 @@ var dropchop = (function(dc) {
     var layers = [];
 
     Object.keys(dc.layers.list).forEach(function(layer) {
-        /*
-        ** If a layer has a type and URL (a gist or external GeoJSON link),
-        ** and we haven't recored this type-url combo already, add it to the
-        ** unique list. The last check is needed to account for gists with
-        ** multiple layers.
-        */
-        if (dc.layers.list[layer].ltype && dc.layers.list[layer].url && layers.indexOf(dc.layers.list[layer].ltype + '=' + dc.layers.list[layer].url) < 0) {
-            layers.push(dc.layers.list[layer].ltype + '=' + dc.layers.list[layer].url);
-        }
+      /*
+       ** If a layer has a type and URL (a gist or external GeoJSON link),
+       ** and we haven't recored this type-url combo already, add it to the
+       ** unique list. The last check is needed to account for gists with
+       ** multiple layers.
+       */
+      if (dc.layers.list[layer].ltype && dc.layers.list[layer].url && layers.indexOf(dc.layers.list[layer].ltype + '=' + dc.layers.list[layer].url) < 0) {
+        layers.push(dc.layers.list[layer].ltype + '=' + dc.layers.list[layer].url);
+      }
     });
 
     var search = layers.length ?  ('?' + layers.join('&')) : '/';
@@ -145,15 +159,26 @@ var dropchop = (function(dc) {
 
   dc.util.getBBox = function() {
     var bounds = dc.map.m.getBounds(),
-            sw = bounds.getSouthWest(),
-            ne = bounds.getNorthEast();
+        sw = bounds.getSouthWest(),
+        ne = bounds.getNorthEast();
     // we should probably check the size here?
     // node(57.7,11.9,57.8,12.0)
     return sw.lat+','+sw.lng+','+ne.lat+','+ne.lng;
   };
 
+  dc.util.getEsriBBox = function() {
+    var bounds = dc.map.m.getBounds(),
+        sw = bounds.getSouthWest(),
+        ne = bounds.getNorthEast();
+    return sw.lng+','+sw.lat+','+ne.lng+','+ne.lat;
+  };
+
   dc.util.uncollect = function(fc) {
     return fc.features[0];
+  };
+
+  dc.util.esri2geo = function(arcjson) {
+    return toGeoJSON(arcjson);
   };
 
   dc.util.executeFC = function(fc, operation, params) {
@@ -193,9 +218,8 @@ var dropchop = (function(dc) {
     }
   };
 
-  dc.util.error = function(err) {
-    var error = new Error(err);
-    throw error;
+  dc.util.corsSupport = function() {
+    return 'XMLHttprequest' in window && 'withCredentials' in new window.XMLHttpRequest();
   };
 
   return dc;
