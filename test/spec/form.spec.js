@@ -16,7 +16,7 @@ describe('form.dropchop.js', function() {
   });
 
   var gj = {"type":"Feature","geometry":{"type":"Point","coordinates":[125.6,10.1]},"properties":{"name":"Dinagat Islands"}};
-    
+
   it('dc.form.create()', function() {
     // test with buffer operation
     dc.form.create('buffer', dc.ops.geo.buffer, 'geo');
@@ -67,6 +67,21 @@ describe('form.dropchop.js', function() {
       expect($param.find('option').length).to.equal(5);
     });
 
+    it('dc.form.inputs.radio()', function() {
+      var radioParam = {
+        name: 'favorite fruit',
+        type: 'radio',
+        description: '',
+        options: ['Avocado', 'Kiwi'],
+        default: 'Avocado'
+      };
+
+      var $param = dc.form.inputs.radio(radioParam);
+      expect($param.children(":input")).to.have.length(2);
+      expect($param.children(':input[name="favoritefruit"]:checked').val()).to.equal('Avocado');
+
+    });
+
     it('dc.form.inputs.checkbox()', function() {
       // use simplify checkbox parameter
       var checkboxParam = {
@@ -86,7 +101,7 @@ describe('form.dropchop.js', function() {
     var gj2 = {"type":"Feature","geometry":{"type":"Point","coordinates":[131,15]},"properties":{"name":"Some other islands"}};
 
     it('dc.form.inputs.switch()', function() {
-      
+
 
       // var switchParam = {
       //   name: 'Points to clip',
@@ -115,6 +130,6 @@ describe('form.dropchop.js', function() {
 
   });
 
-  
+
 
 });
