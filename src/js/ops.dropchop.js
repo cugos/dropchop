@@ -155,12 +155,12 @@ var dropchop = (function(dc) {
 
     // Grab all the active buttons and reappend them
     alpha.filter(function(i, d) {
-      if (!($(d).prop('disabled'))) { return d }
+      if (!($(d).prop('disabled'))) { return d; }
     }).appendTo('.operations-geo');
 
     // Grab all the inactive buttons and reappend them
     alpha.filter(function(i, d) {
-      if ($(d).prop('disabled')) { return d }
+      if ($(d).prop('disabled')) { return d; }
     }).appendTo('.operations-geo');
 
     // Scroll to the top to keep things nice
