@@ -16,18 +16,19 @@ describe('Dropchop!', function() {
   });
 
   describe('dropchop.js', function() {
-    
+
     it('Throws error without options set', function() {
       expect(function() { dc.init(); }).to.throw(Error);
     });
 
     it('Options are set', function() {
       dc.init(ops);
+      this.timeout(5000); // I need more than 2000ms on my laptop
       expect(dc.options).to.equal(ops);
     });
 
     it('Throws error when dc element is not found', function() {
-      expect(function() { dc.init(opsBadElement) }).to.throw(Error);
+      expect(function() { dc.init(opsBadElement); }).to.throw(Error);
     });
   });
 
@@ -35,7 +36,7 @@ describe('Dropchop!', function() {
     it('dc.notify() - appear & disappear', function() {
       dc.init(ops);
       dc.notify('success', 'some text', 200);
-      
+
       // there should be one notification on the DOM
       expect($('.notification').length).to.equal(1);
 
