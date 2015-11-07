@@ -102,7 +102,7 @@ a.dropchop-btn {
     background: transparent;
     color: red;
     &:hover {
-      background: #f6f6f6;
+      background: $light-grey;
     }
   }
 }
@@ -143,7 +143,7 @@ $geo-button-width: 200px;
     border: 1px dashed #c0c0c0;
   }
   .layer-toggleAll {
-    background: #f6f6f6;
+    background: $light-grey;
     padding: 7px 10px;
     font-size: 0.8em;
     font-weight: 900;
@@ -164,7 +164,7 @@ $geo-button-width: 200px;
     position: fixed;
     z-index: 2;
 
-    background: #fdfdfd;
+    background: darken($white, .8%);
     border: 1px solid #bbb;
     border-radius: 2px;
 
@@ -180,7 +180,6 @@ $geo-button-width: 200px;
         border-bottom: 1px solid #ccc;
         text-transform: lowercase;
         cursor: pointer;
-        overflow: hidden;
 
         .description {
           padding: 8px 10px;
@@ -202,13 +201,13 @@ $geo-button-width: 200px;
         &.title {
           text-transform: lowercase;
           padding: 2px 5px;
-          color: #999;
-          background-color: #f6f6f6;
+          color: #666;
+          background-color: $light-grey;
           border-bottom: 1px solid #dedede;
           &:hover {
             cursor: default;
             color: #999;
-            background-color: #f6f6f6;
+            background-color: $light-grey;
           }
         }
 
@@ -217,7 +216,7 @@ $geo-button-width: 200px;
         }
         &:hover {
           background-color: lighten(#333, 10%);
-          color: #f6f6f6;
+          color: $light-grey;
           .icon {
             color: #fff;
             background-color: lighten(#333, 10%);
@@ -265,11 +264,11 @@ $geo-button-width: 200px;
       background: #ffffcc;
     }
     &:hover {
-      background: #f6f6f6;
+      background: $light-grey;
     }
     &.selected {
       background: #333;
-      color: #f6f6f6;
+      color: $light-grey;
       &:hover {
         background: #444;
       }
@@ -286,7 +285,7 @@ $geo-button-width: 200px;
   }
   .layer-action {
     border: none;
-    background: #f6f6f6;
+    background: $light-grey;
     position: absolute;
     top: 6px;
     padding: 5px 6px;
@@ -338,7 +337,7 @@ $geo-button-width: 200px;
     font-size: 0.9em;
     background: white;
     text-align: left;
-    border-bottom: 1px solid #f6f6f6;
+    border-bottom: 1px solid $light-grey;
     h4 {
       text-transform: capitalize;
     }
@@ -347,7 +346,7 @@ $geo-button-width: 200px;
     }
   }
   &:hover {
-    background: #f6f6f6;
+    background: $light-grey;
     cursor: pointer;
   }
   &.operation-inactive,
