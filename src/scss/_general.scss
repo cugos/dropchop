@@ -13,6 +13,10 @@ body {
   }
 }
 
+.hidden {
+  visibility: hidden;
+}
+
 
 @-webkit-keyframes rotating {
   from {
@@ -167,6 +171,7 @@ $geo-button-width: 200px;
     background: darken($white, .8%);
     border: 1px solid #bbb;
     border-radius: 2px;
+    box-shadow: 0 0 4px -1px rgba(0, 0, 0, 0.4);
 
     color: #333;
 
