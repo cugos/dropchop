@@ -33,7 +33,7 @@ var dropchop = (function(dc) {
 
     // create left-click context-menu
     var menu = $('<div>').addClass('context-menu');
-    menu.css({top: yPos, left: xPos});
+    
     var menuList = $('<ul>');
     menu.append(menuList);
 
@@ -72,7 +72,50 @@ var dropchop = (function(dc) {
       fileBtn.on('click', _handleBtnClick);
       menuList.append(fileBtn);
     }
+
+
+    // make sure to set visibility:hidden
+    menu.addClass('hidden');
+
+    // append to DOM
     layer.parent().append(menu);
+
+    // calculate the height, set position
+    var position = _calculateMenuLocation();
+    menu.css(position);
+
+    // remove visibility:hidden
+    menu.removeClass('hidden');
+
+    function _calculateMenuLocation() {
+      // buffer from the edge of the window (in pixels)
+      var buffer = 10;
+
+      // first get the window height
+      var windowHeight = $(window).height();
+
+      // then get the menu height
+      var menuHeight = menu.height();
+
+      // check to make sure from the top of window to the bottom of menu
+      // is larger than the window height
+          // from yPos + menuHeight > windowHeight
+      if ( yPos + menuHeight < windowHeight ) {
+        // return normally
+        return {top: yPos, left: xPos};
+      } else {
+        var difference = (yPos + menuHeight) - windowHeight;
+        return {top: (yPos - difference - buffer), left: xPos};
+      }
+
+      // if it is, return and go forth
+
+      // if it isn't, figure out by how much, and return
+      // y position with safe context space and N buffer from the window
+
+
+    }
+
   };
 
   // Remove any open context-menus from DOM
