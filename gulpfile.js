@@ -46,6 +46,8 @@ var vendorJS = [
   './node_modules/esri2geo/esri2geo.js',
   './dist/static/js/topojson_package.js',
   './lib/mapbox.js/mapbox.js'
+
+
 ];
 
 gulp.task('lint', function() {

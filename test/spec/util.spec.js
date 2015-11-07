@@ -71,7 +71,7 @@ describe('util.dropchop.js', function() {
     expect(dc.util.uncollect(fcToUncollect)).to.eql(gj);
   });
 
-  it('dc.util.esri2geo', function() {
+  it('dc.util.esri2geo()', function() {
     var data = dc.util.esri2geo(arcjson);
     expect(data).to.eql(fc);
   });

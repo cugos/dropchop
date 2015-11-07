@@ -23,11 +23,12 @@ describe('Dropchop!', function() {
 
     it('Options are set', function() {
       dc.init(ops);
+      this.timeout(5000); // I need more than 2000ms on my laptop
       expect(dc.options).to.equal(ops);
     });
 
     it('Throws error when dc element is not found', function() {
-      expect(function() { dc.init(opsBadElement) }).to.throw(Error);
+      expect(function() { dc.init(opsBadElement); }).to.throw(Error);
     });
   });
 
