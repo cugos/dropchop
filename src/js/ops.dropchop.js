@@ -28,6 +28,7 @@ var dropchop = (function(dc) {
     $(dc).on('operation:file:load-url', dc.ops.file['load-url'].get);
     $(dc).on('operation:file:load-custom-base', dc.ops.file['load-custom-base'].get);
     $(dc).on('operation:file:load-overpass', dc.ops.file['load-overpass'].get);
+    $(dc).on('operation:file:load-arcgis', dc.ops.file['load-arcgis'].get);
     $(dc).on('operation:file:rename', dc.ops.file.rename.callback);
 
     dc.ops.setup = [
@@ -38,6 +39,7 @@ var dropchop = (function(dc) {
           'upload',
           'load-url',
           'load-gist',
+          'load-arcgis',
           'load-overpass',
           'location',
           'load-custom-base'
@@ -144,7 +146,30 @@ var dropchop = (function(dc) {
       throw err;
     }
   }
+
   /* jshint ignore:end */
+
+  // Sort turf operations by availablility and alphabetically
+  function _sortGeo() {
+
+    // Get all of the turf buttons and sort them alphabetically
+    var alpha = $('.operation-geo').sort(function(a, b) {
+      return ($(b).data('operation') < $(a).data('operation')) ? 1 : -1;
+    });
+
+    // Grab all the active buttons and reappend them
+    alpha.filter(function(i, d) {
+      if (!($(d).prop('disabled'))) { return d; }
+    }).appendTo('.operations-geo');
+
+    // Grab all the inactive buttons and reappend them
+    alpha.filter(function(i, d) {
+      if ($(d).prop('disabled')) { return d; }
+    }).appendTo('.operations-geo');
+
+    // Scroll to the top to keep things nice
+    $('.operations-geo').scrollTop(0);
+  }
 
   /**
    * Execute a turf function based on button operation click.
@@ -231,6 +256,8 @@ var dropchop = (function(dc) {
       btn.prop('disabled', false);
     }
 
+    // Sort the list
+    _sortGeo();
   };
 
   return dc;
