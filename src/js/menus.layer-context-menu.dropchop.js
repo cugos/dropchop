@@ -99,20 +99,15 @@ var dropchop = (function(dc) {
 
       // check to make sure from the top of window to the bottom of menu
       // is larger than the window height
-          // from yPos + menuHeight > windowHeight
       if ( yPos + menuHeight < windowHeight ) {
         // return normally
         return {top: yPos, left: xPos};
       } else {
+        // if it isn't, figure out by how much, and return
+        // y position with safe context space and buffer from the window
         var difference = (yPos + menuHeight) - windowHeight;
         return {top: (yPos - difference - buffer), left: xPos};
       }
-
-      // if it is, return and go forth
-
-      // if it isn't, figure out by how much, and return
-      // y position with safe context space and N buffer from the window
-
 
     }
 
