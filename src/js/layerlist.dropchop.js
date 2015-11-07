@@ -120,6 +120,10 @@ var dropchop = (function(dc) {
       return false; // disable further click handlers
     });
 
+    layerDiv.on('dblclick', function(event) {
+      dc.ops.file.extent.execute();
+    });
+
     layerlistItem.append(layerDiv);
     layerlistItem.append(checkbox);
     layerlistItem.append(layerType);

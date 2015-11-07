@@ -7,10 +7,6 @@ var dropchop = (function(dc) {
   dc.menus.layerContextMenu = dc.menus.layerContextMenu || {};
 
   dc.menus.layerContextMenu.init = function() {
-    // build ops.geo container
-    var geoContainer = $('<div>').addClass('operations-geo');
-    dc.$elem.append(geoContainer);
-
     // Remove open menus
     $('html').bind('click', function (e) {
       dc.menus.layerContextMenu.removeLayerContextMenus();
