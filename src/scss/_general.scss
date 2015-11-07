@@ -165,7 +165,7 @@ $geo-button-width: 200px;
     z-index: 2;
 
     background: #fdfdfd;
-    border: 1px solid #ddd;
+    border: 1px solid #bbb;
     border-radius: 2px;
 
     color: #333;
@@ -178,10 +178,22 @@ $geo-button-width: 200px;
         display: block;
         padding: 8px 10px;
         font-size: 0.85em;
-        // font-weight: 500;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid #ccc;
         text-transform: lowercase;
         cursor: pointer;
+
+        &.title {
+          text-transform: lowercase;
+          padding: 2px 5px;
+          color: #999;
+          background-color: #f6f6f6;
+          border-bottom: 1px solid #dedede;
+          &:hover {
+            cursor: default;
+            color: #999;
+            background-color: #f6f6f6;
+          }
+        }
 
         &:last-child {
           border-bottom: none;
@@ -204,15 +216,6 @@ $geo-button-width: 200px;
         }
       }
 
-      h4 {
-        text-transform: lowercase;
-        padding: 2px 5px;
-        font-size: 0.8em;
-        font-weight: 900;
-        color: #999;
-        background-color: #f6f6f6;
-        border-bottom: 1px solid #efefef;
-      }
     }
   }
 }

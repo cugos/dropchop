@@ -54,7 +54,7 @@ var dropchop = (function(dc) {
     for (var menuItem in menuItems) {
       var item = menuItems[menuItem];
       if (typeof item === 'string' || item instanceof String) {
-        menuList.append($('<h4>' + item + '</h4>'));
+        menuList.append($('<li class="title"><h4>' + item + '</h4></li>'));
         continue;
       }
       var fileBtn = $('<li>').addClass('menu-action')
