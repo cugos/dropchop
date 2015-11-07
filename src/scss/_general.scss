@@ -176,11 +176,28 @@ $geo-button-width: 200px;
 
       li {
         display: block;
-        padding: 8px 10px;
         font-size: 0.85em;
         border-bottom: 1px solid #ccc;
         text-transform: lowercase;
         cursor: pointer;
+        overflow: hidden;
+
+        .description {
+          padding: 8px 10px;
+          display: table-cell;
+          vertical-align: middle;
+        }
+
+        .icon {
+          background-color: #f1f1f1;
+          color: #777;
+          text-align: center;
+          width: 30px;
+          padding: 6px 0;
+          border-right: 1px solid #ddd;
+          display: table-cell;
+          vertical-align: middle;
+        }
 
         &.title {
           text-transform: lowercase;
@@ -201,9 +218,11 @@ $geo-button-width: 200px;
         &:hover {
           background-color: lighten(#333, 10%);
           color: #f6f6f6;
-        }
-        i {
-          margin-right: .4em;
+          .icon {
+            color: #fff;
+            background-color: lighten(#333, 10%);
+            border-right: 1px solid darken(#ddd, 30%);
+          }
         }
 
         &.operation-inactive {
@@ -212,6 +231,11 @@ $geo-button-width: 200px;
           cursor: default;
           &:hover {
             background-color: inherit;
+          }
+          .icon {
+            color: #ddd;
+            background-color: #f1f1f1;
+            border-right: 1px solid #ddd;
           }
         }
       }

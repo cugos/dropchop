@@ -58,7 +58,7 @@ var dropchop = (function(dc) {
         continue;
       }
       var fileBtn = $('<li>').addClass('menu-action')
-        .html(item.icon + item.description)
+        .html('<div class="icon">' + item.icon + '</div><div class="description">' + item.description + '</div>')
         .attr('data-operation', menuItem)
         .attr('data-tooltip', item.description);
 
