@@ -4,6 +4,7 @@ module.exports = function(config) {
   config.set({
     basePath: '.',
     files: [
+      '../node_modules/js-polyfills/typedarray.js',
       'helpers.js',
       'spec/*.spec.js',
       '../dist/static/js/vendor.js',
