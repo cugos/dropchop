@@ -206,7 +206,7 @@ $geo-button-width: 200px;
           border-bottom: 1px solid #dedede;
           &:hover {
             cursor: default;
-            color: #999;
+            color: #666;
             background-color: $light-grey;
           }
         }
@@ -215,15 +215,16 @@ $geo-button-width: 200px;
           border-bottom: none;
         }
         &:hover {
-          background-color: lighten(#333, 10%);
+          background-color: #333;
           color: $light-grey;
           .icon {
             color: #fff;
-            background-color: lighten(#333, 10%);
+            background-color: $fuscia;
             border-right: 1px solid darken(#ddd, 30%);
           }
         }
 
+        // Disabled Options
         &.operation-inactive {
           color: #aaa;
           text-decoration: line-through;
