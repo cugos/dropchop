@@ -7,6 +7,11 @@
   font-size: 0.85em;
   margin: 5px 5px 0 0;
   color: white;
+  a {
+    color: white;
+    text-decoration: underline;
+  }
+
   &.success {
     background: $green;
   }
@@ -15,6 +20,13 @@
   }
   &.info {
     background: $blue;
+  }
+  &.saved {
+    background: #e1f8e3;
+    color: #333;
+    a {
+      color: #333;
+    }
   }
 
   .notification-close {

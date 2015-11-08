@@ -209,7 +209,7 @@ var dropchop = (function(dc) {
         dc.util.xhr('http://overpass-api.de/api/interpreter?[out:json];node['+parameters[0]+']('+bbox+');out;', dc.ops.file['load-overpass'].callback);
       },
       callback: function(xhr, xhrEvent) {
-        dropchop.util.loader(false);
+        dc.util.loader(false);
         if (xhr.status === 200) {
           var data = JSON.parse(xhr.responseText);
           var geojson = osmtogeojson(data, {
@@ -243,6 +243,45 @@ var dropchop = (function(dc) {
     //
     // Export Data
     //
+    'save-gist': {
+      minFeatures: 1,
+      description: 'Save project',
+      icon: '<i class="fa fa-file-o"></i>',
+      createsLayer: false,
+      execute: function() {
+
+        var gist = {
+          "description": "dropchop project",
+          "public": true,
+          "files": {}
+        };
+
+        // get each layer and add to gist POST object
+        for (var lyr in dc.layers.list) {
+          var layer = dc.layers.list[lyr],
+              string = JSON.stringify(layer.raw),
+              fileName = dc.util.removeWhiteSpace(layer.name + '.geojson');
+          gist.files[fileName] = {};
+          gist.files[fileName].content = string;
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: 'https://api.github.com/gists',
+          data: JSON.stringify(gist),
+          dataType: 'json',
+          success: dc.ops.file['save-gist'].callback,
+          error: function(err) {
+            dc.notify('error', 'There was an error saving your project.');
+          }
+        });
+      },
+      callback: function(data) {
+        dc.notify('saved', 'Project saved as a Github Gist successfully!<br>You can <a target="_blank" href="'+data.html_url+'">view <strong>'+data.id+'</strong> here</a>.', 'close');
+        window.history.pushState(null, null, '?gist='+data.id);
+      }
+    },
+
     'save-geojson': {
       minFeatures: 1,
       description: 'Save as GeoJSON',

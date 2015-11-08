@@ -29,6 +29,7 @@ var dropchop = (function(dc) {
         name: 'Save',
         icon: '<i class="fa fa-floppy-o"></i>',
         actions: [
+          'save-gist',
           'save-geojson',
           'save-shapefile'
         ]
