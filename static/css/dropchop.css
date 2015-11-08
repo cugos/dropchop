@@ -120,6 +120,9 @@ body {
     body.dragging .layer-help {
       border: 1px solid #333; }
 
+.hidden {
+  visibility: hidden; }
+
 @-webkit-keyframes rotating {
   from {
     -ms-transform: rotate(0deg);
@@ -218,7 +221,9 @@ a.dropchop-btn {
   width: 280px;
   list-style-type: none;
   overflow-y: scroll;
-  -webkit-transform: translate3d(0, 0, 0); }
+  -webkit-transform: translate3d(0, 0, 0);
+  z-index: 1;
+  overflow: visible; }
   .layerlist .layer-help {
     padding: 10px;
     margin: 10px;
@@ -238,6 +243,66 @@ a.dropchop-btn {
       margin-right: 6px; }
   .layerlist *::selection {
     background: transparent; }
+  .layerlist .context-menu {
+    min-width: 250px;
+    position: fixed;
+    z-index: 2;
+    background: #fdfdfd;
+    border: 1px solid #bbb;
+    border-radius: 2px;
+    box-shadow: 0 0 4px -1px rgba(0, 0, 0, 0.4);
+    color: #333; }
+    .layerlist .context-menu ul {
+      list-style: none;
+      padding: 0; }
+      .layerlist .context-menu ul li {
+        display: block;
+        font-size: 0.85em;
+        border-bottom: 1px solid #ccc;
+        text-transform: lowercase;
+        cursor: pointer; }
+        .layerlist .context-menu ul li .description {
+          padding: 8px 10px;
+          display: table-cell;
+          vertical-align: middle; }
+        .layerlist .context-menu ul li .icon {
+          background-color: #f1f1f1;
+          color: #777;
+          text-align: center;
+          width: 30px;
+          padding: 6px 0;
+          border-right: 1px solid #ddd;
+          display: table-cell;
+          vertical-align: middle; }
+        .layerlist .context-menu ul li.title {
+          text-transform: lowercase;
+          padding: 2px 5px;
+          color: #666;
+          background-color: #f6f6f6;
+          border-bottom: 1px solid #dedede; }
+          .layerlist .context-menu ul li.title:hover {
+            cursor: default;
+            color: #666;
+            background-color: #f6f6f6; }
+        .layerlist .context-menu ul li:last-child {
+          border-bottom: none; }
+        .layerlist .context-menu ul li:hover {
+          background-color: #333;
+          color: #f6f6f6; }
+          .layerlist .context-menu ul li:hover .icon {
+            color: #fff;
+            background-color: #f55ad2;
+            border-right: 1px solid #919191; }
+        .layerlist .context-menu ul li.operation-inactive {
+          color: #aaa;
+          text-decoration: line-through;
+          cursor: default; }
+          .layerlist .context-menu ul li.operation-inactive:hover {
+            background-color: inherit; }
+          .layerlist .context-menu ul li.operation-inactive .icon {
+            color: #ddd;
+            background-color: #f1f1f1;
+            border-right: 1px solid #ddd; }
 
 .layer-element {
   position: relative;
@@ -282,27 +347,13 @@ a.dropchop-btn {
     display: none;
     border-radius: 50%;
     cursor: pointer; }
-  .layer-element .layer-remove {
+  .layer-element .layer-dropdown {
     right: 4px;
-    color: #ff7a72; }
-    .layer-element .layer-remove:hover {
-      background: #ff8983;
-      color: white; }
-  .layer-element .layer-duplicate {
-    right: 28px;
     color: #269aff; }
-    .layer-element .layer-duplicate:hover {
+    .layer-element .layer-dropdown:hover {
       background: #269aff;
       color: white; }
-  .layer-element .layer-rename {
-    right: 54px;
-    color: #69dd76; }
-    .layer-element .layer-rename:hover {
-      background: #69dd76;
-      color: white; }
-  .layer-element:hover .layer-remove,
-  .layer-element:hover .layer-duplicate,
-  .layer-element:hover .layer-rename {
+  .layer-element:hover .layer-dropdown {
     display: block; }
 
 .map {
