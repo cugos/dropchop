@@ -35,6 +35,9 @@ var dropchop = (function(dc) {
     // setup forms
     dc.form.init();
 
+    // setup keyboard shortcuts
+    dc.shortcuts.init();
+
     // get URL information if it exists
     if(location.search.length) {
       dc.util.executeUrlParams();

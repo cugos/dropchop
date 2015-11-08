@@ -1,9 +1,9 @@
 var dropchop = (function(dc) {
-  
+
   'use strict';
 
   dc = dc || {};
-  
+
   dc.selection = {};
   dc.selection.list = [];
 
@@ -32,6 +32,10 @@ var dropchop = (function(dc) {
     $('.operation-geo').addClass('operation-inactive');
     $('.operation-geo').prop('disabled', true);
     dc.selection.list = [];
+  };
+
+  dc.selection.isSelected = function(lyrData) {
+    return Boolean(dropchop.selection.list.indexOf(lyrData) + 1);
   };
 
   function _layerRemoved(event, stamp) {
