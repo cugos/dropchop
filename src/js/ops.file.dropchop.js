@@ -6,6 +6,10 @@ var dropchop = (function(dc) {
   dc.ops = dc.ops || {};
 
   dc.ops.file = {
+
+    //
+    // Import Data
+    ///
     upload: {
       description: 'Upload from your computer (.geojson)',
       icon: '<i class="fa fa-upload"></i>',
@@ -235,6 +239,10 @@ var dropchop = (function(dc) {
       }
     },
 
+
+    //
+    // Export Data
+    //
     'save-geojson': {
       minFeatures: 1,
       description: 'Save as GeoJSON',
@@ -299,6 +307,10 @@ var dropchop = (function(dc) {
       createsLayer: false
     },
 
+
+    //
+    // Layer Options
+    //
     extent: {
       minFeatures: 1,
       description: 'View extent of layers',
@@ -378,8 +390,21 @@ var dropchop = (function(dc) {
     //   }
     // },
 
+    duplicate: {
+      minFeatures: 1,
+      description: 'Duplicate selected layers',
+      icon: '<i class="fa fa-files-o"></i>',
+      execute: function() {
+        $(dc.selection.list).each(function(i) {
+          $(dc).trigger('layer:duplicate', [this.stamp]);
+        });
+        dc.selection.clear();
+      }
+    },
+
     rename: {
       minFeatures: 1,
+      maxFeatures: 1,
       description: 'Rename layer',
       icon: '<i class="fa fa-pencil"></i>',
       parameters: [
@@ -410,9 +435,14 @@ var dropchop = (function(dc) {
           $(dc).trigger('layer:remove', [this.stamp]);
         });
         dc.selection.clear();
+        dc.util.updateSearch();
       }
     },
 
+
+    //
+    // Extra Views
+    //
     info: {
       type: 'info',
       description: 'Learn more about dropchop',

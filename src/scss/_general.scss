@@ -4,6 +4,7 @@ body {
   background: $grey;
   font-family:"Helvetica Neue", arial, sans-serif;
   overflow: hidden;
+
   &.dragging {
     opacity: 0.8;
     .layer-help {
@@ -11,6 +12,11 @@ body {
     }
   }
 }
+
+.hidden {
+  visibility: hidden;
+}
+
 
 @-webkit-keyframes rotating {
   from {
@@ -100,7 +106,7 @@ a.dropchop-btn {
     background: transparent;
     color: red;
     &:hover {
-      background: #f6f6f6;
+      background: $light-grey;
     }
   }
 }
@@ -129,6 +135,9 @@ $geo-button-width: 200px;
   list-style-type: none;
   overflow-y: scroll;
   -webkit-transform: translate3d(0,0,0);
+  z-index: 1;
+  overflow: visible;
+
   .layer-help {
     padding: 10px;
     margin: 10px;
@@ -138,7 +147,7 @@ $geo-button-width: 200px;
     border: 1px dashed #c0c0c0;
   }
   .layer-toggleAll {
-    background: #f6f6f6;
+    background: $light-grey;
     padding: 7px 10px;
     font-size: 0.8em;
     font-weight: 900;
@@ -154,12 +163,94 @@ $geo-button-width: 200px;
       background:transparent;
     }
   }
+  .context-menu {
+    min-width: 250px;
+    position: fixed;
+    z-index: 2;
+
+    background: darken($white, .8%);
+    border: 1px solid #bbb;
+    border-radius: 2px;
+    box-shadow: 0 0 4px -1px rgba(0, 0, 0, 0.4);
+
+    color: #333;
+
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        display: block;
+        font-size: 0.85em;
+        border-bottom: 1px solid #ccc;
+        text-transform: lowercase;
+        cursor: pointer;
+
+        .description {
+          padding: 8px 10px;
+          display: table-cell;
+          vertical-align: middle;
+        }
+
+        .icon {
+          background-color: #f1f1f1;
+          color: #777;
+          text-align: center;
+          width: 30px;
+          padding: 6px 0;
+          border-right: 1px solid #ddd;
+          display: table-cell;
+          vertical-align: middle;
+        }
+
+        &.title {
+          text-transform: lowercase;
+          padding: 2px 5px;
+          color: #666;
+          background-color: $light-grey;
+          border-bottom: 1px solid #dedede;
+          &:hover {
+            cursor: default;
+            color: #666;
+            background-color: $light-grey;
+          }
+        }
+
+        &:last-child {
+          border-bottom: none;
+        }
+        &:hover {
+          background-color: #333;
+          color: $light-grey;
+          .icon {
+            color: #fff;
+            background-color: $fuscia;
+            border-right: 1px solid darken(#ddd, 30%);
+          }
+        }
+
+        // Disabled Options
+        &.operation-inactive {
+          color: #aaa;
+          text-decoration: line-through;
+          cursor: default;
+          &:hover {
+            background-color: inherit;
+          }
+          .icon {
+            color: #ddd;
+            background-color: #f1f1f1;
+            border-right: 1px solid #ddd;
+          }
+        }
+      }
+
+    }
+  }
 }
 .layer-element {
   position: relative;
   cursor:pointer;
-
-
 
   .layer-toggle {
     float: left;
@@ -179,11 +270,11 @@ $geo-button-width: 200px;
       background: #ffffcc;
     }
     &:hover {
-      background: #f6f6f6;
+      background: $light-grey;
     }
     &.selected {
       background: #333;
-      color: #f6f6f6;
+      color: $light-grey;
       &:hover {
         background: #444;
       }
@@ -200,7 +291,7 @@ $geo-button-width: 200px;
   }
   .layer-action {
     border: none;
-    background: #f6f6f6;
+    background: $light-grey;
     position: absolute;
     top: 6px;
     padding: 5px 6px;
@@ -209,34 +300,16 @@ $geo-button-width: 200px;
     border-radius: 50%;
     cursor: pointer;
   }
-  .layer-remove {
+  .layer-dropdown {
     right: 4px;
-    color: #ff7a72;
-    &:hover {
-      background: $red;
-      color: white;
-    }
-  }
-  .layer-duplicate {
-    right: 28px;
     color: $blue;
     &:hover {
       background: $blue;
       color: white;
     }
   }
-  .layer-rename {
-    right: 54px;
-    color: $green;
-    &:hover {
-      background: $green;
-      color: white;
-    }
-  }
   &:hover {
-    .layer-remove,
-    .layer-duplicate,
-    .layer-rename {
+    .layer-dropdown {
       display: block;
     }
   }
@@ -270,7 +343,7 @@ $geo-button-width: 200px;
     font-size: 0.9em;
     background: white;
     text-align: left;
-    border-bottom: 1px solid #f6f6f6;
+    border-bottom: 1px solid $light-grey;
     h4 {
       text-transform: capitalize;
     }
@@ -279,7 +352,7 @@ $geo-button-width: 200px;
     }
   }
   &:hover {
-    background: #f6f6f6;
+    background: $light-grey;
     cursor: pointer;
   }
   &.operation-inactive,

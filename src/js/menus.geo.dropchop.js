@@ -3,12 +3,18 @@ var dropchop = (function(dc) {
   'use strict';
 
   dc = dc || {};
-  dc.ops = dc.ops || {};
+  dc.menus = dc.menus || {};
+  dc.menus.geo = dc.menus.geo || {};
 
-  dc.ops.init = function() {
+  dc.menus.geo.init = function() {
     // build ops.geo container
     var geoContainer = $('<div>').addClass('operations-geo');
     dc.$elem.append(geoContainer);
+
+    // wire up signal handlers
+    $(dc).on('layer:selected', dc.menus.geo.geoCheck);
+    $(dc).on('layer:unselected', dc.menus.geo.geoCheck);
+    $(dc).on('operation:geo', dc.menus.geo.geoExecute);
 
     // create geo buttons & forms
     for (var geoOp in dc.ops.geo) {
@@ -16,111 +22,18 @@ var dropchop = (function(dc) {
         .html('<h4>' + geoOp + '</h4><p>' + dc.ops.geo[geoOp].description + '</p>')
         .prop('disabled', true)
         .attr('data-operation', geoOp);
-      geoBtn.on('click', _geoBtnClick);
+      geoBtn.on('click', _handleBtnClick);
 
       geoContainer.append(geoBtn);
     }
-
-    $(dc).on('layer:selected', dc.ops.geoCheck);
-    $(dc).on('layer:unselected', dc.ops.geoCheck);
-    $(dc).on('operation:geo', dc.ops.geoExecute);
-    $(dc).on('operation:file:load-gist', dc.ops.file['load-gist'].get);
-    $(dc).on('operation:file:load-url', dc.ops.file['load-url'].get);
-    $(dc).on('operation:file:load-overpass', dc.ops.file['load-overpass'].get);
-    $(dc).on('operation:file:load-arcgis', dc.ops.file['load-arcgis'].get);
-    $(dc).on('operation:file:rename', dc.ops.file.rename.callback);
-
-    dc.ops.setup = [
-      {
-        name: 'import',
-        icon: '<i class="fa fa-plus"></i>',
-        actions: [
-          'upload',
-          'load-url',
-          'load-gist',
-          'load-arcgis',
-          'load-overpass',
-          'location'
-        ]
-      },
-      {
-        name: 'Save',
-        icon: '<i class="fa fa-floppy-o"></i>',
-        actions: [
-          'save-geojson',
-          'save-topojson',
-          'save-shapefile'
-        ]
-      },
-      {
-        name: 'Geo Actions',
-        icon: '<i class="fa fa-wrench"></i>',
-        actions: [
-          'extent',
-          'expand',
-          'combine',
-          'rename',
-          'remove',
-        ]
-      },
-      'info'
-    ];
-
-    // setup ops file
-    var leftMenu = $('<div>').addClass('dropchop-menu-left');
-    var setup = dc.ops.setup;
-
-    for (var i = 0; i < setup.length; i++) {
-      var action = setup[i];
-      if (typeof setup[i] !== 'object') {
-        if(dc.ops.file[action].type === 'break') {
-          var $breakSpace = $('<div>').addClass('menu-action-break');
-          leftMenu.append($breakSpace);
-        } else {
-          leftMenu.append(buildMenuButton(action));
-        }
-
-      } else {
-        // build a collapseable menu "button"
-        var collapseBtn = $('<div>')
-          .addClass('menu-action menu-collapse')
-          .html(setup[i].icon);
-        if (setup[i].name === 'import') collapseBtn.addClass('menu-import');
-
-        var collapseInner = $('<div>')
-          .addClass('menu-collapse-inner');
-
-        // loop through each action and build a button for it, just like above,
-        // but append it to the menu-collapse-inner element
-        for (var a = 0; a < setup[i].actions.length; a++) {
-          var actn = dc.ops.setup[i].actions[a];
-          collapseInner.append(buildMenuButton(actn));
-        }
-        collapseBtn.append(collapseInner);
-
-        // append the entire collapseBtn to the leftMenu
-        leftMenu.append(collapseBtn);
-      }
-    }
-    dc.$elem.append(leftMenu);
-
-    function buildMenuButton(action) {
-      var button = $('<button>').addClass('menu-action')
-        .html(dc.ops.file[action].icon || '!')
-        .attr('data-operation', action)
-        .attr('data-tooltip', dc.ops.file[action].description);
-        if (dc.ops.file[action].type === 'info') button.addClass('dropchop-info');
-      button.on('click', _fileBtnClick);
-      return button;
-    }
   };
 
-  /* jshint ignore:start */
 
+  /* jshint ignore:start */
   /* ignoring these functions in jshint because we are getting
   an unecessary strict violation warning, but our usage of `this`
   is proper here. */
-  function _geoBtnClick(event) {
+  function _handleBtnClick(event) {
     event.preventDefault();
     var operation = $(this).attr('data-operation');
     // if operation requires no parameters, don't render a form
@@ -131,18 +44,28 @@ var dropchop = (function(dc) {
       $(dc).trigger('form:geo', [operation]);
     }
   }
+  /* jshint ignore:end */
 
+  // Sort turf operations by availablility and alphabetically
+  function _sortGeo() {
 
-  function _fileBtnClick(event) {
-    event.preventDefault();
+    // Get all of the turf buttons and sort them alphabetically
+    var alpha = $('.operation-geo').sort(function(a, b) {
+      return ($(b).data('operation') < $(a).data('operation')) ? 1 : -1;
+    });
 
-    var operation = $(this).attr('data-operation');
-    try {
-      dc.ops.file[operation].execute();
-    } catch (err) {
-      dc.notify('error', 'This operation doesn\'t exist!');
-      throw err;
-    }
+    // Grab all the active buttons and reappend them
+    alpha.filter(function(i, d) {
+      if (!($(d).prop('disabled'))) { return d }
+    }).appendTo('.operations-geo');
+
+    // Grab all the inactive buttons and reappend them
+    alpha.filter(function(i, d) {
+      if ($(d).prop('disabled')) { return d }
+    }).appendTo('.operations-geo');
+
+    // Scroll to the top to keep things nice
+    $('.operations-geo').scrollTop(0);
   }
 
   /* jshint ignore:end */
@@ -175,8 +98,8 @@ var dropchop = (function(dc) {
    * @param {string} operation to be executed via turf
    * @param {array} series of parameters to be applied to turf operation
    */
-  dc.ops.geoExecute = function(event, operation, parameters) {
-    var prep = dc.ops.prepareTurfParams(operation, parameters);
+  dc.menus.geo.geoExecute = function(event, operation, parameters) {
+    var prep = dc.menus.geo.prepareTurfParams(operation, parameters);
     var result = null;
     try {
       result = dc.ops.geo[operation].execute(prep.options);
@@ -192,7 +115,7 @@ var dropchop = (function(dc) {
    * Prepare parameters for executing within a turf function using .apply() - returns an array
    * @param {array} options from the user passed from the original event trigger
    */
-  dc.ops.prepareTurfParams = function(operation, params) {
+  dc.menus.geo.prepareTurfParams = function(operation, params) {
     var data = {};
     data.options = [];
 
@@ -217,8 +140,7 @@ var dropchop = (function(dc) {
     return data;
   };
 
-  dc.ops.geoCheck = function(event, layer) {
-
+  dc.menus.geo.geoCheck = function(event, layer) {
     // check selection count vs operation min/max
     for (var o in dc.ops.geo) {
       var op = dc.ops.geo[o];
