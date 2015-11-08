@@ -238,38 +238,29 @@ var dropchop = (function(dc) {
     'load-custom-base': {
       description: 'Add custom base map',
       icon: '<i class="fa fa-map-o"></i>',
-      _temp: '',
+      _temp: {},
       parameters: [
         {
-          name: 'Map ID',
-          description :'Map ID',
+          name: 'Tileset URL',
+          description :'If the tileset requires a token, please include it in the URL',
           type: 'text',
-          default: 'hamhands.npbf8c5p',
+          default: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
         },
         {
           name: 'Custom Base Layer Name',
           description :'Name of the custom baselayer added.',
           type: 'text',
-          default: 'METAL MAP!!!'
+          default: 'OSM'
         }
       ],
       execute: function() {
         $(dc).trigger('form:file', ['load-custom-base']);
       },
       get: function(event, name, parameters) {
-        dc.ops.file['load-custom-base']._temp = parameters[0];
-        dc.ops.file['load-custom-base']._temp_1 = parameters[1];
-        var url = 'https://api.mapbox.com/v4/' + dc.ops.file['load-custom-base']._temp + '.html?access_token=' + dc.map.token;
-        dc.util.xhr(url, dc.ops.file[name].callback);
-      },
-      callback: function(xhr, xhrEvent) {
-        dropchop.util.loader(false);
-        if (xhr.status === 200) {
-          var newLayer = dc.map.baseLayers.addBaseLayer(L.mapbox.tileLayer(dc.ops.file['load-custom-base']._temp),
-            dc.ops.file['load-custom-base']._temp_1);
-          L.mapbox.tileLayer(newLayer).addTo(dc.map.m);
-        } else {
-          dc.notify('error', xhr.status + ': could not retrieve base map. Please check your Map ID');
+        try {
+          $(dc).trigger('map:custom-base-layer', [parameters[0], parameters[1]]);
+        } catch (error) {
+          dc.notify('error', 'Could not retrieve base map. Please check your map URL');
         }
       }
     },

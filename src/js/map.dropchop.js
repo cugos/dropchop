@@ -51,10 +51,9 @@ var dropchop = (function(dc) {
     $(dc).on('layer:added', dc.map.addLayer);
     $(dc).on('layer:hide', dc.map.hideLayer);
     $(dc).on('layer:show', dc.map.showLayer);
+    $(dc).on('map:custom-base-layer', dc.map.newBaseLayer);
 
-    // // my location as layer
-    // var geolocate = document.getElementById('geolocate');
-
+    // my location as layer
     $(dc.map.m).on('locationfound', function(e) {
       var data = e.originalEvent;
       dc.map.m.fitBounds(data.bounds);
@@ -78,36 +77,6 @@ var dropchop = (function(dc) {
     $(dc.map.m).on('locationerror', function() {
       dc.notify('error', 'There was a problem finding your location.', 3000);
     });
-
-    // // Once we've got a position, zoom and center the map
-    // // on it, and add a single marker.
-    // this._map.on('locationfound', function(e) {
-    //   this._map.fitBounds(e.bounds);
-
-
-    //   myLayer.setGeoJSON({
-    //     type: 'Feature',
-    //     geometry: {
-    //       type: 'Point',
-    //       coordinates: [e.latlng.lng, e.latlng.lat]
-    //     },
-    //     properties: {
-    //       'title': 'There You Are',
-    //       'marker-color': '#207178',
-    //       'marker-symbol': 'heart'
-    //     }
-    //   });
-
-    //   // And hide the geolocation button
-    //   //geolocate.parentNode.removeChild(geolocate);
-    // }.bind(this));
-
-    // // If the user chooses not to allow their location
-    // // to be shared, display an error message.
-    // this._map.on('locationerror', function() {
-    //   geolocate.innerHTML = 'Position could not be found';
-    // });
-
 
   }
 
@@ -150,6 +119,12 @@ var dropchop = (function(dc) {
 
   dc.map.removeLayer = function(event, stamp) {
     dc.map.layergroup.removeLayer(dc.layers.list[stamp].featurelayer);
+  };
+
+  dc.map.newBaseLayer = function(event, url, name) {
+    L.mapbox.tileLayer(url).addTo(dc.map.m);
+    // var newLayer = dc.map.baseLayers.addBaseLayer();
+    // L.mapbox.tileLayer(newLayer).addTo(dc.map.m);
   };
 
   return dc;
