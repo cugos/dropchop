@@ -32,6 +32,7 @@ var dropchop = (function(dc) {
         icon: '<i class="fa fa-floppy-o"></i>',
         actions: [
           'save-geojson',
+          'save-topojson',
           'save-shapefile'
         ]
       },

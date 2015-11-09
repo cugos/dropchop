@@ -36,18 +36,20 @@ gulp.task('mapbox_assets', function() {
 });
 
 var vendorJS = [
+  // General Utils
   './node_modules/jquery/dist/jquery.js',
   './node_modules/browser-filesaver/FileSaver.js',
+  './node_modules/mousetrap/mousetrap.js',
+
+  // Geo Tools
+  './dist/static/js/topojson_package.js',
+  './lib/mapbox.js/mapbox.js',
+  './node_modules/esri2geo/esri2geo.js',
+  './node_modules/osmtogeojson/osmtogeojson.js',
   './node_modules/shp-write/shpwrite.js',
   './node_modules/shpjs/dist/shp.min.js',
-  './src/lib/shp-2-geojson.js',
-  './node_modules/osmtogeojson/osmtogeojson.js',
   './node_modules/turf/turf.js',
-  './node_modules/esri2geo/esri2geo.js',
-  './dist/static/js/topojson_package.js',
-  './lib/mapbox.js/mapbox.js'
-
-
+  './src/lib/shp-2-geojson.js'
 ];
 
 gulp.task('lint', function() {

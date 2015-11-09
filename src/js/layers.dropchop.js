@@ -23,7 +23,7 @@ var dropchop = (function(dc) {
     if (blob.type === "Topology") {
       blob = topojson.client.feature(blob, blob.objects[Object.keys(blob.objects)[0]]);
     }
-    
+
     var l = dc.layers.makeLayer(name, blob);
     dc.layers.list[l.stamp] = l;
 
@@ -58,7 +58,6 @@ var dropchop = (function(dc) {
       dc.notify('error', 'There was a problem removing the layer.');
       throw err;
     }
-
   };
 
   dc.layers.duplicate = function(event, stamp) {
