@@ -15,27 +15,33 @@ Dropchop is a browser-based GIS powered by [Mapbox.js](http://mapbox.com/mapbox.
 
 ### Adding Data
 
-#### Upload
+##### Upload
 
-#### URL
+You can upload your own files via *click-and-drag* or *selecting files on your computer* using the system dialogue. File types allowed are `.json` (assuming valid TopoJSON or GeoJSON), `.geojson`, `.topojson`, Shapefiles in `.zip` format.
 
-#### Open Street Map
+##### Open Street Map
 
-#### Gist
+Dropchop allows you to import [OpenStreetMap](http://www.openstreetmap.org/) data via the [Overpass API](http://wiki.openstreetmap.org/wiki/Overpass_API) query language. Selecting this option queries the OSM planet database and will add successful responses as layers to your project. *Note: this feature is still a prototype, and doesn't work fully as expected. See [issue 189](https://github.com/cugos/dropchop/issues/189) for a reference.*
 
-#### ArcGIS Server Feature Service
+##### Gist
 
-#### User Location
+To turn data from a [Gist](http://gist.github.com/) into dropchop layers, you can upload via the tool option or include the Gist `ID` in the URL like this `http://dropchop.io/?gist=09129c20ec020b83bf85`. Gist is a great way to store you data and save it for later.
+
+##### URL
+
+External URL's that are valid geometry can be uploaded in a similar fashion to Gists. Use the tool option in dropchop or include in your URL parameters like `https://gist.githubusercontent.com/mapsam/32610a73cb84ba693bac/raw/b849594c6fff0ab054c341bb5da1c4c95e87fb5a/map.geojson`
+
+##### ArcGIS Server Feature Service
+
+##### User Location
 
 ### Exporting Data
 
-#### GeoJSON
+##### GeoJSON
 
-#### TopoJSON
+##### TopoJSON
 
-#### Shapefile
-
-
+##### Shapefile
 
 ### Keyboard Shortcuts
 
