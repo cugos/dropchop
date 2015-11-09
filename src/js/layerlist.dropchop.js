@@ -159,6 +159,49 @@ var dropchop = (function(dc) {
   dc.layerlist.clearSelection = function($item, lyr) {
     dc.selection.clear();
   };
+  dc.layerlist.selectAll = function() {
+    $('.layer-element').each(function(l) {
+      dc.layerlist.selectLayer($(this).find('.layer-name'), dc.layers.list[$(this).attr('data-stamp')]);
+    });
+  };
+  dc.layerlist.checkAll = function(mustBeSelected) {
+    for (var i in dc.layers.list) {
+      var layer = dc.layers.list[i];
+      if (mustBeSelected && !dropchop.selection.isSelected(layer)) {
+        continue;
+      }
+      elemToggle(dc.layers.list[i].stamp, true);
+    }
+  };
+  dc.layerlist.uncheckAll = function(mustBeSelected) {
+    for (var i in dc.layers.list) {
+      var layer = dc.layers.list[i];
+      if (mustBeSelected && !dropchop.selection.isSelected(layer)) {
+        continue;
+      }
+      elemToggle(layer.stamp, false);
+    }
+  };
+  dc.layerlist.toggleAll = function(event) {
+    if ($(this).find('input').prop('checked')) {
+      dc.layerlist.uncheckAll();
+    } else {
+      dc.layerlist.checkAll();
+    }
+  };
+  dc.layerlist.removeLayerListItem = function(event, stamp) {
+    $('[data-stamp='+stamp+']').fadeOut(300, function() {
+      $(this).remove();
+      delete dc.layerlist.elems[stamp];
+
+      // show helper text if no layers exist
+      // this has to check inside since there is a 300 ms delay with the fade
+      if ($('.layer-element').length === 0) {
+        $('.layer-help').show();
+        $('.layer-toggleAll').hide();
+      }
+    });
+  };
 
   function layerTypeIcon(type) {
     var icon;
@@ -188,40 +231,12 @@ var dropchop = (function(dc) {
     return icon;
   }
 
-  dc.layerlist.toggleAll = function(event) {
-    // turn them on
-    if ($(this).find('input').prop('checked')) {
-      for (var i in dc.layers.list) {
-        elemToggle(dc.layers.list[i].stamp, true);
-      }
-    // turn them off
-    } else {
-      for (var o in dc.layers.list) {
-        elemToggle(dc.layers.list[o].stamp, false);
-      }
-    }
-
-    function elemToggle(stamp, bool) {
-      $('.layer-element[data-stamp='+stamp+']')
-        .find('.layer-toggle')
-        .prop('checked', bool)
-        .trigger('change'); // sets off a chain reaction
-    }
-  };
-
-  dc.layerlist.removeLayerListItem = function(event, stamp) {
-    $('[data-stamp='+stamp+']').fadeOut(300, function() {
-      $(this).remove();
-      delete dc.layerlist.elems[stamp];
-
-      // show helper text if no layers exist
-      // this has to check inside since there is a 300 ms delay with the fade
-      if ($('.layer-element').length === 0) {
-        $('.layer-help').show();
-        $('.layer-toggleAll').hide();
-      }
-    });
-  };
+  function elemToggle(stamp, bool) {
+    $('.layer-element[data-stamp='+stamp+']')
+      .find('.layer-toggle')
+      .prop('checked', bool)
+      .trigger('change'); // sets off a chain reaction
+  }
 
   return dc;
 

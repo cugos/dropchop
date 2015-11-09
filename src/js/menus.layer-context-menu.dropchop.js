@@ -27,13 +27,13 @@ var dropchop = (function(dc) {
     var lyrData = dc.layers.list[layer.attr('data-stamp')];
 
     // Select layer if unselected
-    if (!Boolean(dropchop.selection.list.indexOf(lyrData) + 1)) {
+    if (!(dropchop.selection.isSelected(lyrData))) {
       $layerNameDiv.trigger('click');
     }
 
     // create left-click context-menu
     var menu = $('<div>').addClass('context-menu');
-    
+
     var menuList = $('<ul>');
     menu.append(menuList);
 
