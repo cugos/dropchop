@@ -19,7 +19,7 @@ Dropchop is a browser-based GIS powered by [Mapbox.js](http://mapbox.com/mapbox.
 
 #### URL
 
-#### Open Street Map
+#### OpenStreetMap
 
 #### Gist
 
