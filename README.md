@@ -25,7 +25,8 @@ Dropchop is a browser-based GIS powered by [Mapbox.js](http://mapbox.com/mapbox.
 
 #### ArcGIS Server Feature Service
 
-#### User Location
+#### User Location  
+  ![user location](assets/dc-readme-location.gif)  
 
 ### Exporting Data
 
