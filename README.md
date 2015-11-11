@@ -13,20 +13,38 @@ Dropchop is a browser-based GIS powered by [Mapbox.js](http://mapbox.com/mapbox.
 
 ## User's Manual
 
-### Adding Data
+### Adding Data  
+Dropchop provides several ways to add multiple types of data. Outlined below are examples of data-types you can add.  
+#### GeoJSON  
+This function allows you to add a GeoJSON file from your computer to Dropchop. Select the green :heavy_plus_sign: button and choose `upload from your computer`.  
 
-#### Upload
+  ![GeoJSON](assets/dc-readme-add-geojson.gif) 
+  
+#### URL  
+This function allows you to import a GeoJSON file from a url to Dropchop. Select the green :heavy_plus_sign: button and choose `import from a url`. 
 
-#### URL
+  ![url](assets/dc-readme-add-url.gif) 
 
-#### OpenStreetMap
+#### Gist  
+This function allows you to import a GitHub Gist to Dropchop. Select the green :heavy_plus_sign: button and choose `import files from gist`. 
 
-#### Gist
+  ![gist](assets/dc-readme-add-gist.gif) 
+  
+#### OpenStreetMap  
+This function allows you to use the Overpass API to query OpenStreetMap. More infomation on the Overpass API can be found [on the wiki](http://wiki.openstreetmap.org/wiki/Overpass_API/Language_Guide). Select the green :heavy_plus_sign: button and choose `query the overpass api`. 
 
-#### ArcGIS Server Feature Service
+  ![osm](assets/dc-readme-add-overpass.gif) 
+  
+#### ArcGIS Server Feature Service  
+This function allows you to query and import an ArcGIS Feature Service. Select the green :heavy_plus_sign: button and choose `query an arcgis feature service`. 
 
+  ![arcgis](assets/dc-readme-add-arcgis.gif) 
+  
 #### User Location  
-  ![user location](assets/dc-readme-location.gif)  
+This function allows you to add your location to Dropchop. You will need to select `yes` to allow Dropchop to use your location if prompted.  
+
+  ![user location](assets/dc-readme-add-location.gif)  
+  
 
 ### Exporting Data
 
