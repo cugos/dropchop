@@ -25,6 +25,25 @@ Dropchop is a browser-based GIS powered by [Mapbox.js](http://mapbox.com/mapbox.
 
 #### ArcGIS Server Feature Service
 
+Data from ArcGIS Server or ArcGIS Online [Feature Layers](http://resources.arcgis.com/en/help/arcgis-rest-api/#/Layer_Table/02r3000000zr000000/) can be added directly to Dropchop via the Query an ArcGIS Feature Service button. 
+
+*** GIF goes here ***
+
+##### Parameters
+1. Feature Service - is the URL for an ArcGIS Server or ArcGIS Online Feature Layer REST endpoint. Only layers of type `Feature Layer` are supported.
+2. Where - is a legal SQL query `where` clause used to filter the feature service. To retrieve all features, use `1=1`. 
+3. Request Type - can be Cross-Origin Resource Sharing (CORS) or JSONP. CORS requires both the client and server to support Cross-Origin Requests. If you receive Cross Origin Request Blocked errors, try switching to JSONP. [Click here to learn more about CORS](http://enable-cors.org/).
+4. Limit To Map - will query for features only within the current map view extent.
+
+##### Limitations
+* Query results to Feature Service REST endpoints may be limited by the server. The default limit is 1,000 features.
+* Although uncommon is it possible that some Feature Service endpoints are not queryable. This is set by the server administrator.
+
+##### How to Find Feature Services
+Many organizations and local, state and federal governments use ArcGIS Server software to host web maps. Use the Network tab of your browser's developer tools to discover URLs of web map layers. Often you can browse the entire directory of an ArcGIS Server host at the `arcgis/rest/services` root URL. [See example](http://sampleserver6.arcgisonline.com/arcgis/rest/services). 
+
+You might also explore the [sources](https://github.com/openaddresses/openaddresses/tree/master/sources) of the [OpenAddresses](http://openaddresses.io/) project. Many of the address sources point to ArcGIS Server feature services. [See example](https://github.com/openaddresses/openaddresses/blob/master/sources/us/wa/san_juan.json#L12).
+
 #### User Location
 
 ### Exporting Data
