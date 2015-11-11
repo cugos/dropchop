@@ -13,48 +13,75 @@ Dropchop is a browser-based GIS powered by [Mapbox.js](http://mapbox.com/mapbox.
 
 ## User's Manual
 
-### Adding Data  
-Dropchop provides several ways to add multiple types of data. Outlined below are examples of data-types you can add.  
-#### GeoJSON  
-This function allows you to add a GeoJSON file from your computer to Dropchop. Select the green :heavy_plus_sign: button and choose `upload from your computer`.  
+* [Adding Data](#adding-data)
+    * [Upload](#upload)
+    * [URL](#url)
+    * [Gist](#gist)
+    * [Open Street Map](#open-street-map)
+    * [ArcGIS Server Feature Service](#arcgis-server-feature-service)
+    * [User Location](#user-location)
+* [Exporting Data](#exporting-data)
+    * [GeoJSON](#geojson)
+    * [TopoJSON](#topojson)
+    * [Shapefile](#shapefile)
+* [Keyboard Shortcuts](#keyboard-shortcuts)
 
-  ![GeoJSON](assets/dc-readme-add-geojson.gif) 
-  
-#### URL  
-This function allows you to import a GeoJSON file from a url to Dropchop. Select the green :heavy_plus_sign: button and choose `import from a url`. 
+### Adding Data
 
-  ![url](assets/dc-readme-add-url.gif) 
+Dropchop provides several ways to add data. Outlined below are examples of these methods.
 
-#### Gist  
-This function allows you to import a GitHub Gist to Dropchop. Select the green :heavy_plus_sign: button and choose `import files from gist`. 
+##### Upload
 
-  ![gist](assets/dc-readme-add-gist.gif) 
-  
-#### OpenStreetMap  
-This function allows you to use the Overpass API to query OpenStreetMap. More infomation on the Overpass API can be found [on the wiki](http://wiki.openstreetmap.org/wiki/Overpass_API/Language_Guide). Select the green :heavy_plus_sign: button and choose `query the overpass api`. 
+You can upload your own files via *click-and-drag* or *selecting files on your computer* using the system dialogue. File types allowed are `.json` (assuming valid TopoJSON or GeoJSON), `.geojson`, `.topojson`, Shapefiles in `.zip` format.
 
-  ![osm](assets/dc-readme-add-overpass.gif) 
-  
-#### ArcGIS Server Feature Service  
-This function allows you to query and import an ArcGIS Feature Service. Select the green :heavy_plus_sign: button and choose `query an arcgis feature service`. 
+Select the green :heavy_plus_sign: button and choose `upload from your computer`.
 
-  ![arcgis](assets/dc-readme-add-arcgis.gif) 
-  
-#### User Location  
+![GeoJSON](assets/dc-readme-add-geojson.gif)
+
+##### URL
+External URL's that are valid geometry can be uploaded in a similar fashion to Gists. Use the tool option in dropchop or include in your URL parameters (_e.g._ `http://dropchop.io/?url=http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson`).
+
+Select the green :heavy_plus_sign: button and choose `import from a url`.
+
+  ![url](assets/dc-readme-add-url.gif)
+
+##### Gist
+
+To turn data from a [Gist](http://gist.github.com/) into dropchop layers, you can upload via the tool option or include the Gist `ID` in the URL (_e.g._ `http://dropchop.io/?gist=09129c20ec020b83bf85`). Gist is a great way to store you data and save it for later.
+
+Select the green :heavy_plus_sign: button and choose `import files from gist`.
+
+![gist](assets/dc-readme-add-gist.gif)
+
+##### Open Street Map
+
+Dropchop allows you to import [OpenStreetMap](http://www.openstreetmap.org/) data via the [Overpass API](http://wiki.openstreetmap.org/wiki/Overpass_API) query language. Selecting this option queries the OSM planet database and will add successful responses as layers to your project. More infomation on the Overpass API can be found [on the wiki](http://wiki.openstreetmap.org/wiki/Overpass_API/Language_Guide). *Note: this feature is still a prototype, and doesn't work fully as expected. See [issue 189](https://github.com/cugos/dropchop/issues/189) for a reference.*  
+
+Select the green :heavy_plus_sign: button and choose `query the overpass api`.
+
+![osm](assets/dc-readme-add-overpass.gif)
+
+##### ArcGIS Server Feature Service  
+This function allows you to query and import an ArcGIS Feature Service.
+
+Select the green :heavy_plus_sign: button and choose `query an arcgis feature service`.
+
+  ![arcgis](assets/dc-readme-add-arcgis.gif)
+
+##### User Location  
 This function allows you to add your location to Dropchop. You will need to select `yes` to allow Dropchop to use your location if prompted.  
 
+Select the green :heavy_plus_sign: button and choose `add your location as a layer`.
+
   ![user location](assets/dc-readme-add-location.gif)  
-  
 
 ### Exporting Data
 
-#### GeoJSON
+##### GeoJSON
 
-#### TopoJSON
+##### TopoJSON
 
-#### Shapefile
-
-
+##### Shapefile
 
 ### Keyboard Shortcuts
 
