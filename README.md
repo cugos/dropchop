@@ -82,6 +82,8 @@ Select the green :heavy_plus_sign: button and choose `query an arcgis feature se
 ##### How to Find Feature Services
 Many organizations and local, state and federal governments use ArcGIS Server software to host web maps. Use the Network tab of your browser's developer tools to discover URLs of web map layers. Often you can browse the entire directory of an ArcGIS Server host at the `arcgis/rest/services` root URL. [See example](http://sampleserver6.arcgisonline.com/arcgis/rest/services).
 
+You may also find over 30,000 Open Data datasets is [opendata.arcgis.com](http://opendata.arcgis.com).
+
 You might also explore the [sources](https://github.com/openaddresses/openaddresses/tree/master/sources) of the [OpenAddresses](http://openaddresses.io/) project. Many of the address sources point to ArcGIS Server feature services. [See example](https://github.com/openaddresses/openaddresses/blob/master/sources/us/wa/san_juan.json#L12).
 
 #### User Location
