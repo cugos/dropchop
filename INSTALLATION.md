@@ -1,6 +1,6 @@
 # Installation
 
-These install instructions have only been tested on Mac, updates and comments for Windows are in the works. Please let us know if you have any issues installing on other platforms [here](https://github.com/cugos/dropchop/issues/94).
+These install instructions have only been tested on Mac, updates and comments for Windows are in the works. If you have plroblems installing, please let us know [here](https://github.com/cugos/dropchop/issues/94).
 
 1. **Python** - following steps require [Python](https://python.org/). Current Macintosh systems include Python, Windows users may need to install it. Windows testing was with Python 2.7.5, 32-bit.
 1. **Node & `npm`** - install [Node](https://nodejs.org/) from their website package. This includes `npm` (Node Package Manager).
