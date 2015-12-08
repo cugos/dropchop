@@ -93,7 +93,7 @@ var dropchop = (function(dc) {
             }
           });
         }
-      } else if (event.metaKey) {
+      } else if (event.metaKey || event.ctrlKey) {
         // add/remove selected layer to current selection
         dc.layerlist.selectToggle($(this), layer);
       } else {
