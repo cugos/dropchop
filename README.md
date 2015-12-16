@@ -119,8 +119,6 @@ Keystroke | Action
 
 All of this work is made possible by [CUGOS](http://cugos.org), an open-source geo community based in Seattle.
 
-
-
 ## Contribute!
 
 Information on contributing to Dropchop (including project installation instructions) can be found in the [CONTRIBUTING.md file](CONTRIBUTING.md). Dropchop is now officially in `0.1`, which means progress is stable and contributions are welcomed with open arms. For starters, take a look at how we are using ["triggers"](CONTRIBUTING.md#triggers) to execute commands across the code base.
@@ -129,6 +127,9 @@ If you're interested in any of the above, please help out! Submit ideas as [issu
 
 Things are moving very quickly with the project right now. We are still continuing to build out and refactor the architecture of the application. If you want to read more about our decision-making process take a look at some of our meeting notes. [04/11/2015](https://github.com/cugos/dropchop/wiki/Meeting-Notes---04-11-2015), [05/10/2015](https://github.com/cugos/dropchop/wiki/Meeting-Notes-05-10-2015).
 
+## License
+
+[MIT](LICENSE.md)
 
 ---
 
