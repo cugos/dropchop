@@ -1,5 +1,12 @@
 # dropchop
-[![Build Status](https://travis-ci.org/cugos/dropchop.svg?branch=master)](https://travis-ci.org/cugos/dropchop) [![Codeship Status for cugos/dropchop](https://codeship.com/projects/5371c9b0-02a9-0133-3603-2eafb47e949a/status?branch=master)](https://codeship.com/projects/88973)
+
+[![Build Status][travis-image]][travis-url]
+[![Codeship Status][codeship-image]][codeship-url]
+
+[travis-image]: https://img.shields.io/travis/cugos/dropchop/master.svg?style=flat-square&label=travis
+[travis-url]: https://travis-ci.org/cugos/dropchop
+[codeship-image]: https://img.shields.io/codeship/5371c9b0-02a9-0133-3603-2eafb47e949a/master.svg?style=flat-square&label=codeship
+[codeship-url]: https://codeship.com/projects/88973
 
 **You drop. We chop.**
 
