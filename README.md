@@ -1,4 +1,13 @@
-# dropchop
+<h1 align="center">
+  <br>
+  <img width="400" src="https://rawgit.com/cugos/dropchop/master/assets/drop-n-chop-logo.png" alt="dropchop">
+  <br>
+  <a href="http://dropchop.io">dropchop</a>
+  <br>
+  <br>
+</h1>
+
+> **You drop. We chop.**
 
 [![Build Status][travis-image]][travis-url]
 [![Codeship Status][codeship-image]][codeship-url]
@@ -7,8 +16,6 @@
 [travis-url]: https://travis-ci.org/cugos/dropchop
 [codeship-image]: https://img.shields.io/codeship/5371c9b0-02a9-0133-3603-2eafb47e949a/master.svg?style=flat-square&label=codeship
 [codeship-url]: https://codeship.com/projects/88973
-
-**You drop. We chop.**
 
 Dropchop is a browser-based GIS powered by [Mapbox.js](http://mapbox.com/mapbox.js) and [Turf.js](http://turfjs.org). The need for small-scale GIS operations comes up quite frequently in our work, especially for those without much time. Dropchop aims to empower your spatial data by removing complexity. This project is currently a proof-of-concept and explores [three hypotheses](https://github.com/cugos/dropchop/wiki/Dropchop-Inspiration):
 
@@ -137,9 +144,3 @@ Things are moving very quickly with the project right now. We are still continui
 ## License
 
 [MIT](LICENSE.md)
-
----
-
-*Once you drop the chop don't stop.*
-
-![](assets/drop-n-chop-logo.png)
