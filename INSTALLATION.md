@@ -1,8 +1,9 @@
 # Installation
 
-These install instructions have only been tested on Mac. Please let us know if you have any issues installing on other platforms [here](https://github.com/cugos/dropchop/issues/94).
+These install instructions have only been tested on Mac, updates and comments for Windows are in the works. If you have problems installing dropchop, please let us know [here](https://github.com/cugos/dropchop/issues/94).
 
-1. **Node & `npm`** - please start by installing [Node](https://nodejs.org/) from their website package. This includes `npm` (Node Package Manager)
+1. **Python** - following steps require [Python](https://python.org/). Current Macintosh systems include Python, Windows users may need to install it. Windows testing was with Python 2.7.5, 32-bit.
+1. **Node & `npm`** - install [Node](https://nodejs.org/) from their website package. This includes `npm` (Node Package Manager).
 1. **Git** - install [Git](http://git-scm.com/), our version control language that allows us to record a history of every change made to the code base.
 1. [**Fork** the project](https://help.github.com/articles/fork-a-repo/) on github into your own repository
 1. **Clone project** - open terminal and navigation (`cd`) to where you want the project to exist in your computer. Then grab the URL to clone your forked version of the project and run `git clone https://github.com/YOUR-USERNAME/dropchop.git`. Once that has successfully been created, you can `cd dropchop` to the directory.
