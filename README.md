@@ -1,7 +1,21 @@
-# dropchop
-[![Build Status](https://travis-ci.org/cugos/dropchop.svg?branch=master)](https://travis-ci.org/cugos/dropchop) [![Codeship Status for cugos/dropchop](https://codeship.com/projects/5371c9b0-02a9-0133-3603-2eafb47e949a/status?branch=master)](https://codeship.com/projects/88973)
+<h1 align="center">
+  <br>
+  <img width="400" src="https://rawgit.com/cugos/dropchop/master/assets/drop-n-chop-logo.png" alt="dropchop">
+  <br>
+  <a href="http://dropchop.io">dropchop</a>
+  <br>
+  <br>
+</h1>
 
-**You drop. We chop.**
+> **You drop. We chop.**
+
+[![Build Status][travis-image]][travis-url]
+[![Codeship Status][codeship-image]][codeship-url]
+
+[travis-image]: https://img.shields.io/travis/cugos/dropchop/master.svg?style=flat-square&label=travis
+[travis-url]: https://travis-ci.org/cugos/dropchop
+[codeship-image]: https://img.shields.io/codeship/5371c9b0-02a9-0133-3603-2eafb47e949a/master.svg?style=flat-square&label=codeship
+[codeship-url]: https://codeship.com/projects/88973
 
 Dropchop is a browser-based GIS powered by [Mapbox.js](http://mapbox.com/mapbox.js) and [Turf.js](http://turfjs.org). The need for small-scale GIS operations comes up quite frequently in our work, especially for those without much time. Dropchop aims to empower your spatial data by removing complexity. This project is currently a proof-of-concept and explores [three hypotheses](https://github.com/cugos/dropchop/wiki/Dropchop-Inspiration):
 
@@ -119,8 +133,6 @@ Keystroke | Action
 
 All of this work is made possible by [CUGOS](http://cugos.org), an open-source geo community based in Seattle.
 
-
-
 ## Contribute!
 
 Information on contributing to Dropchop (including project installation instructions) can be found in the [CONTRIBUTING.md file](CONTRIBUTING.md). Dropchop is now officially in `0.1`, which means progress is stable and contributions are welcomed with open arms. For starters, take a look at how we are using ["triggers"](CONTRIBUTING.md#triggers) to execute commands across the code base.
@@ -129,9 +141,6 @@ If you're interested in any of the above, please help out! Submit ideas as [issu
 
 Things are moving very quickly with the project right now. We are still continuing to build out and refactor the architecture of the application. If you want to read more about our decision-making process take a look at some of our meeting notes. [04/11/2015](https://github.com/cugos/dropchop/wiki/Meeting-Notes---04-11-2015), [05/10/2015](https://github.com/cugos/dropchop/wiki/Meeting-Notes-05-10-2015).
 
+## License
 
----
-
-*Once you drop the chop don't stop.*
-
-![](assets/drop-n-chop-logo.png)
+[MIT](LICENSE.md)
