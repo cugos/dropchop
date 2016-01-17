@@ -23,6 +23,7 @@
     "js-polyfills": "^0.1.12",
     "mousetrap": "^1.5.3",
     "osmtogeojson": "^2.2.5",
+    "overpass-wizard": "0.0.4",
     "shp-write": "^0.2.4",
     "shpjs": "^3.2.1",
     "tablesort": "^3.1.0",
