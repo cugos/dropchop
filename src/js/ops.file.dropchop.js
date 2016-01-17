@@ -186,7 +186,7 @@ var dropchop = (function(dc) {
       parameters: [
         {
           name: 'query',
-          description :'Learn more about <a href="http://wiki.openstreetmap.org/wiki/Overpass_API/Language_Guide" target="_blank">the query language</a>.',
+          description :'Enter a search query in the overpass-turbo wizard syntax. Learn more about <a href="http://wiki.openstreetmap.org/wiki/Overpass_turbo/Wizard" target="_blank">the supported features</a>.',
           type: 'text',
           default: 'amenity=bar'
         },
@@ -206,7 +206,14 @@ var dropchop = (function(dc) {
 
         // build the query with bounding box
         var bbox = dc.util.getBBox();
-        dc.util.xhr('http://overpass-api.de/api/interpreter?[out:json];node['+parameters[0]+']('+bbox+');out;', dc.ops.file['load-overpass'].callback);
+        var overpassQuery = overpassWizard(parameters[0]);
+        if (overpassQuery === false)
+          return dc.notify('error', 'Can\'t create overpass query for this search input.');
+        overpassWizardExpand(overpassQuery, bbox, function(err, expandedOverpassQuery) {
+          if (err)
+            return dc.notify('error', 'Error while expanding overpass query: ' + err);
+          dc.util.xhr('http://overpass-api.de/api/interpreter?data='+encodeURIComponent(expandedOverpassQuery), dc.ops.file['load-overpass'].callback);
+        });
       },
       callback: function(xhr, xhrEvent) {
         dropchop.util.loader(false);

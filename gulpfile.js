@@ -49,7 +49,9 @@ var vendorJS = [
   './node_modules/shp-write/shpwrite.js',
   './node_modules/shpjs/dist/shp.min.js',
   './node_modules/turf/turf.js',
-  './src/lib/shp-2-geojson.js'
+  './src/lib/shp-2-geojson.js',
+  './dist/static/js/overpass-wizard.js',
+  './dist/static/js/overpass-wizard-expand.js'
 ];
 
 gulp.task('lint', function() {
@@ -76,7 +78,22 @@ gulp.task('topojson', function() {
     .pipe(gulp.dest('./dist/static/js/'));
 });
 
-gulp.task('js_vendor', ['topojson'], function() {
+gulp.task('overpass-wizard', function() {
+  browserify(['./node_modules/overpass-wizard/index.js'], {standalone: "overpass-wizard"})
+    .bundle()
+    .pipe(source('overpass-wizard.js'))
+    .pipe(buffer())
+    .pipe(uglify())
+    .pipe(gulp.dest('./dist/static/js/'));
+  browserify(['./node_modules/overpass-wizard/expand.js'], {standalone: "overpass-wizard-expand"})
+    .bundle()
+    .pipe(source('overpass-wizard-expand.js'))
+    .pipe(buffer())
+    .pipe(uglify())
+    .pipe(gulp.dest('./dist/static/js/'));
+});
+
+gulp.task('js_vendor', ['topojson', 'overpass-wizard'], function() {
   return gulp.src(vendorJS)
     .pipe(sourcemap.init())
     .pipe(concat('vendor.js'))
