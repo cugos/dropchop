@@ -6,6 +6,13 @@ var dropchop = (function(dc) {
 
   dc.util = {};
 
+  dc.util.lastId = 0;
+
+  dc.util.stamp = function(obj) {
+    obj._dc_id = obj._dc_id || ++dc.util.lastId;
+    return obj._dc_id;
+  };
+
   dc.util.removeFileExtension = function(string) {
     string = string.replace(/\.[^/.]+$/, "");
     return string;

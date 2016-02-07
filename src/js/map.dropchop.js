@@ -60,31 +60,38 @@ var dropchop = (function(dc) {
   dc.map.count = 0;
 
   dc.map.addLayer = function(event, layer) {
-    var sourceId = uuid.v4();
 
-    dc.map.m.addSource(sourceId, {
+    dc.map.m.addSource(layer.stamp, {
       "type": "geojson",
       "data": layer.data
     });
 
     dc.map.m.addLayer({
-      "id": layer.name,
+      "id": layer.stamp,
+      "name": layer.name,
       "interactive": true,
       "type": "circle",
-      "source": sourceId
+      "source": layer.stamp
     });
   };
 
   dc.map.hideLayer = function(event, layer) {
-    dc.map.m.removeLayer(layer.name);
+    dc.map.m.removeLayer(layer.stamp);
   };
 
   dc.map.showLayer = function(event, layer) {
-    dc.map.m.addLayer(layer.name);
+    dc.map.m.addLayer({
+      "id": layer.stamp,
+      "name": layer.name,
+      "interactive": true,
+      "type": "circle",
+      "source": layer.stamp
+    });
   };
 
   dc.map.removeLayer = function(event, layer) {
-    dc.map.m.removeLayer(layer.name);
+    dc.map.m.removeLayer(layer.stamp);
+    dc.map.m.removeSource(layer.stamp);
   };
 
   return dc;

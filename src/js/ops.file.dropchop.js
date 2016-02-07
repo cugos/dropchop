@@ -439,7 +439,7 @@ var dropchop = (function(dc) {
       icon: '<i class="fa fa-trash-o"></i>',
       execute: function() {
         $(dc.selection.list).each(function(i) {
-          $(dc).trigger('layer:remove', [this.stamp]);
+          $(dc).trigger('layer:remove', [this]);
         });
         dc.selection.clear();
         dc.util.updateSearch();

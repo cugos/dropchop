@@ -46,14 +46,14 @@ var dropchop = (function(dc) {
 
   /**
    * Remove a layer, which triggers layer:removed for the rest of the app
-   * @param {string} layer stamp
+   * @param {string} layer
    */
-  dc.layers.remove = function(event, stamp) {
+  dc.layers.remove = function(event, layer) {
     // trigger layer:removed
     try {
-      $(dc).trigger('layer:removed', [stamp]);
-      dc.notify('info', '<strong>' + dc.layers.list[stamp].name + '</strong> has been removed.');
-      delete dc.layers.list[stamp];
+      $(dc).trigger('layer:removed', [layer]);
+      dc.notify('info', '<strong>' + dc.layers.list[layer.stamp].name + '</strong> has been removed.');
+      delete dc.layers.list[layer.stamp];
     } catch (err) {
       dc.notify('error', 'There was a problem removing the layer.');
       throw err;
@@ -62,7 +62,7 @@ var dropchop = (function(dc) {
 
   dc.layers.duplicate = function(event, stamp) {
     var lyr = dc.layers.list[stamp];
-    // need to create new layer so we can get a uniqe L.stamp()
+    // need to create new layer so we can get a uniqe layer()
     dc.layers.add({}, 'copy_'+lyr.name, lyr.raw);
   };
 
@@ -82,6 +82,8 @@ var dropchop = (function(dc) {
       "data": geojson,
       "dateAdded": new Date()
     };
+
+    layer.stamp = dc.util.stamp(layer);
 
     return layer;
   };

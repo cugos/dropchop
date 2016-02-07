@@ -20,7 +20,7 @@ var dropchop = (function(dc) {
   dc.selection.remove = function(event, layer) {
     var index = null;
     $(dc.selection.list).each(function(i) {
-      if (dc.selection.list[i].stamp === layer.stamp) {
+      if (dc.selection.list[i].stamp === layer) {
         index = i;
       }
     });

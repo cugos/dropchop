@@ -189,10 +189,10 @@ var dropchop = (function(dc) {
       dc.layerlist.checkAll();
     }
   };
-  dc.layerlist.removeLayerListItem = function(event, stamp) {
-    $('[data-stamp='+stamp+']').fadeOut(300, function() {
+  dc.layerlist.removeLayerListItem = function(event, layer) {
+    $('[data-stamp='+layer.stamp+']').fadeOut(300, function() {
       $(this).remove();
-      delete dc.layerlist.elems[stamp];
+      delete dc.layerlist.elems[layer];
 
       // show helper text if no layers exist
       // this has to check inside since there is a 300 ms delay with the fade
