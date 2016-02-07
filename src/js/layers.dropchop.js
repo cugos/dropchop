@@ -13,12 +13,12 @@ var dropchop = (function(dc) {
     $(dc).on('layer:rename', dc.layers.rename);
   };
 
-/**
- * Add a layer to the layers list and trigger layer:added for subscribers to pick up.
- * @param {object} event
- * @param {object} file object
- * @param {string} file blob to be converted with JSON.parse()
- */
+  /**
+   * Add a layer to the layers list and trigger layer:added for subscribers to pick up.
+   * @param {object} event
+   * @param {object} file object
+   * @param {string} file blob to be converted with JSON.parse()
+   */
   dc.layers.add = function(event, name, blob, ltype, url) {
     if (blob.type === "Topology") {
       blob = topojson.client.feature(blob, blob.objects[Object.keys(blob.objects)[0]]);
@@ -44,10 +44,10 @@ var dropchop = (function(dc) {
 
   };
 
-/**
- * Remove a layer, which triggers layer:removed for the rest of the app
- * @param {string} layer stamp
- */
+  /**
+   * Remove a layer, which triggers layer:removed for the rest of the app
+   * @param {string} layer stamp
+   */
   dc.layers.remove = function(event, stamp) {
     // trigger layer:removed
     try {
@@ -76,29 +76,15 @@ var dropchop = (function(dc) {
 
   dc.layers.makeLayer = function(name, json) {
     var geojson = json;
-    // if (json.type === 'FeatureCollection' && json.features.length === 1) {
-    //   geojson = dc.util.uncollect(json);
-    // }
 
-    var fl = L.mapbox.featureLayer(geojson);
     var layer = {
-      name: dc.util.removeFileExtension(name),
-      stamp: L.stamp(fl),
-      raw: geojson,
-      type: getType(geojson),
-      featurelayer: fl,
-      dateAdded: new Date()
+      "name": name,
+      "data": geojson,
+      "dateAdded": new Date()
     };
+
     return layer;
   };
-
-  function getType(gj) {
-    if (gj.type === 'FeatureCollection') {
-      return 'FeatureCollection';
-    } else {
-      return gj.type + '<' + gj.geometry.type + '>';
-    }
-  }
 
   return dc;
 

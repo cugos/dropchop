@@ -14,6 +14,10 @@
     <meta name="msapplication-TileColor" content="#FFFFFF" />
     <meta name="msapplication-TileImage" content="/assets/favicon/mstile-144x144.png" />
 
+    <!-- TODO Browserify these -->
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.13.1/mapbox-gl.css' rel='stylesheet' />
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v0.1.0/mapbox-gl-geocoder.css' type='text/css' />
+
     <link href="/static/css/vendor.css" rel="stylesheet">
     <link href="/static/css/dropchop.css" rel="stylesheet">
 
@@ -23,7 +27,12 @@
 
   <body>
 
-  <div id="dropchop"></div>
+      <div id="dropchop"></div>
+
+      <!-- TODO Browserify these -->
+      <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.13.1/mapbox-gl.js'></script>
+      <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v0.1.0/mapbox-gl-geocoder.js'></script>
+
 
   <script type="text/javascript" src="/static/js/dropchop.js"></script>
   <script type="text/javascript">

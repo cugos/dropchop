@@ -218,11 +218,25 @@ var dropchop = (function(dc) {
     }
   };
 
-  dc.util.corsSupport = function() {
-    return 'XMLHttprequest' in window && 'withCredentials' in new window.XMLHttpRequest();
+  dc.util.getPopupContent = function(properties) {
+    var content = '<table class="dropchop-table"><tr><th>Property</th><th>Data</th></tr>';
+    if (properties) {
+      for (var prop in properties) {
+        content += '<tr><td><strong>' + prop + '</strong></td><td>' + properties[prop] + '</td></tr>';
+      };
+    } else {
+      content += '<p>There are no properties set for this feature.</p>';
+    }
+    content += '</table>';
+
+    return content;
   };
 
-  return dc;
+    dc.util.corsSupport = function() {
+      return 'XMLHttprequest' in window && 'withCredentials' in new window.XMLHttpRequest();
+    };
+
+    return dc;
 
 
-})(dropchop || {});
+  })(dropchop || {});
