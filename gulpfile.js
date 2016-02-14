@@ -45,6 +45,7 @@ var vendorJS = [
   // Geo Tools
   './dist/static/js/topojson_package.js',
   './lib/mapbox.js/mapbox.js',
+  './dist/static/js/mapbox-gl.js',
   './node_modules/esri2geo/esri2geo.js',
   './node_modules/osmtogeojson/osmtogeojson.js',
   './node_modules/shp-write/shpwrite.js',
@@ -71,7 +72,7 @@ gulp.task('js_dropchop', function() {
 });
 
 gulp.task('topojson', function() {
-  return browserify(['./lib/topojson_setup.js'])
+  return browserify(['./node_modules/topojson/server.js'])
     .bundle()
     .pipe(source('topojson_package.js'))
     .pipe(buffer())
@@ -94,7 +95,16 @@ gulp.task('overpass-wizard', function() {
     .pipe(gulp.dest('./dist/static/js/'));
 });
 
-gulp.task('js_vendor', ['topojson', 'overpass-wizard'], function() {
+gulp.task('mapbox-gl', function() {
+  browserify(['./node_modules/mapbox-gl/js/mapbox-gl.js'], {standalone: "mapboxgl"})
+    .bundle()
+    .pipe(source('mapbox-gl.js'))
+    .pipe(buffer())
+    .pipe(uglify())
+    .pipe(gulp.dest('./dist/static/js/'));
+});
+
+gulp.task('js_vendor', ['topojson', 'overpass-wizard', 'mapbox-gl'], function() {
   return gulp.src(vendorJS)
     .pipe(sourcemap.init())
     .pipe(concat('vendor.js'))

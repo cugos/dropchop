@@ -26,9 +26,10 @@ var dropchop = (function(dc) {
       zoom: 3
     });
 
-    // sets the location of the geocoder, zoom and compass to the top left
-    dc.map.m.addControl(new mapboxgl.Geocoder({ position: 'top-left'}));
+    // sets the location of the zoom and compass to the top left
     dc.map.m.addControl(new mapboxgl.Navigation({position: 'top-left'}));
+
+    //TODO: Mapbox-GL-Geocoder was having dependency issues with browserify
 
     //TODO:  Basemap switcher
 
