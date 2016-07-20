@@ -22,7 +22,7 @@ var dropchop = (function(dc) {
     dc.layerlist.$elem.append(liHelper);
 
     var toggleLayers = $('<li>').addClass('layer-toggleAll')
-      .html('<label><input type="checkbox" checked>Toggle all layers</label>');
+      .html('<label><input id="allCheckboxes" type="checkbox" checked>Toggle all layers</label>');
     toggleLayers.on('change', dc.layerlist.toggleAll);
     dc.layerlist.$elem.append(toggleLayers);
 
@@ -183,10 +183,10 @@ var dropchop = (function(dc) {
     }
   };
   dc.layerlist.toggleAll = function(event) {
-    if ($(this).find('input').prop('checked')) {
-      dc.layerlist.uncheckAll();
-    } else {
+    if (document.getElementById('allCheckboxes').checked) {
       dc.layerlist.checkAll();
+    } else {
+      dc.layerlist.uncheckAll();
     }
   };
   dc.layerlist.removeLayerListItem = function(event, stamp) {
