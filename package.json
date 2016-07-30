@@ -1,6 +1,6 @@
 {
   "name": "dropchop",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "GIS in the browser.",
   "homepage": "https://github.com/cugos/dropchop",
   "bugs": "https://github.com/cugos/dropchop",
@@ -27,11 +27,12 @@
     "shp-write": "^0.2.4",
     "shpjs": "^3.2.1",
     "tablesort": "^3.1.0",
-    "topojson": "^1.6.19",
+    "topojson": "^1.6.26",
     "turf": "^2.0.2"
   },
   "devDependencies": {
-    "browserify": "^11.2.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.0",
     "chai": "^3.2.0",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",

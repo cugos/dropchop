@@ -7,6 +7,7 @@ module.exports = function(config) {
       '../node_modules/js-polyfills/typedarray.js',
       'helpers.js',
       'spec/*.spec.js',
+      'https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js',
       '../dist/static/js/vendor.js',
       '../dist/static/js/dropchop.js'
     ],

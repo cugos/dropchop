@@ -20,7 +20,6 @@ gulp.task('sass', function(){
 });
 
 var vendorCSS = [
-  './lib/mapbox.js/mapbox.css',
   './node_modules/font-awesome/css/font-awesome.css'
 ];
 
@@ -36,20 +35,15 @@ gulp.task('mapbox_assets', function() {
 });
 
 var vendorJS = [
-  // General Utils
   './node_modules/jquery/dist/jquery.js',
   './node_modules/browser-filesaver/FileSaver.js',
   './node_modules/mousetrap/mousetrap.js',
-
-  // Geo Tools
-  './dist/static/js/topojson_package.js',
-  './lib/mapbox.js/mapbox.js',
   './node_modules/esri2geo/esri2geo.js',
   './node_modules/osmtogeojson/osmtogeojson.js',
   './node_modules/shp-write/shpwrite.js',
   './node_modules/shpjs/dist/shp.min.js',
   './node_modules/turf/turf.js',
-  './src/lib/shp-2-geojson.js',
+  './dist/static/js/topojson_package.js',
   './dist/static/js/overpass-wizard.js',
   './dist/static/js/overpass-wizard-expand.js'
 ];
