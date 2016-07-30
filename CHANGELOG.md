@@ -1,3 +1,9 @@
+### 0.1.2
+
+* BUG: Toggle all layers checkbox was working opposite to expectations. Fixed in https://github.com/cugos/dropchop/pull/256
+* update path to topojson client library https://github.com/cugos/dropchop/pull/256
+* Remove `mapbox.js` bundle in this repo and link straight to CDN in `index.html` as well as Karma configuration file
+
 ### 0.1.1
 
 * FEATURE: Upload shapefiles! (via [@jczaplew](https://github.com/jczaplew))
