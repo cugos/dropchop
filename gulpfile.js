@@ -43,7 +43,7 @@ var vendorJS = [
   './node_modules/shp-write/shpwrite.js',
   './node_modules/shpjs/dist/shp.min.js',
   './node_modules/turf/turf.js',
-  './lib/topojson-bundle-legacy.js',
+  './dist/static/js/topojson_package.js',
   './dist/static/js/overpass-wizard.js',
   './dist/static/js/overpass-wizard-expand.js'
 ];
