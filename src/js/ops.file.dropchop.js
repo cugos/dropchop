@@ -247,7 +247,7 @@ var dropchop = (function(dc) {
     },
 
     'load-custom-base': {
-      description: 'Add custom base map',
+      description: 'Add custom Mapbox basemap',
       icon: '<i class="fa fa-map-o"></i>',
       _temp: '',
       parameters: [
@@ -255,13 +255,13 @@ var dropchop = (function(dc) {
           name: 'Map ID',
           description :'Map ID',
           type: 'text',
-          default: 'hamhands.npbf8c5p',
+          default: 'username.id',
         },
         {
           name: 'Custom Base Layer Name',
           description :'Name of the custom baselayer added.',
           type: 'text',
-          default: 'METAL MAP!!!'
+          default: 'Basemap name'
         }
       ],
       execute: function() {

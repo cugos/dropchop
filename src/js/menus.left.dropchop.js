@@ -12,6 +12,7 @@ var dropchop = (function(dc) {
     $(dc).on('operation:file:load-url', dc.ops.file['load-url'].get);
     $(dc).on('operation:file:load-overpass', dc.ops.file['load-overpass'].get);
     $(dc).on('operation:file:load-arcgis', dc.ops.file['load-arcgis'].get);
+    $(dc).on('operation:file:load-custom-base', dc.ops.file['load-custom-base'].get);
     $(dc).on('operation:file:rename', dc.ops.file.rename.callback);
 
     dc.menus.left.setup = [
@@ -24,6 +25,7 @@ var dropchop = (function(dc) {
           'load-gist',
           'load-overpass',
           'load-arcgis',
+          'load-custom-base',
           'location'
         ]
       },
