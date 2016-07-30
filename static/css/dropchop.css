@@ -23,8 +23,7 @@
       background: #f55ad2;
       color: white;
       cursor: pointer; }
-      .dropchop-menu-left .menu-action:hover:after,
-      .dropchop-menu-left .menu-action:hover:before {
+      .dropchop-menu-left .menu-action:hover:after, .dropchop-menu-left .menu-action:hover:before {
         z-index: 12;
         position: absolute;
         left: 10px; }
@@ -72,8 +71,7 @@
           border: none; }
     .dropchop-menu-left .menu-action.menu-collapse:hover {
       background: #c0c0c0; }
-      .dropchop-menu-left .menu-action.menu-collapse:hover:before,
-      .dropchop-menu-left .menu-action.menu-collapse:hover:after {
+      .dropchop-menu-left .menu-action.menu-collapse:hover:before, .dropchop-menu-left .menu-action.menu-collapse:hover:after {
         content: "";
         background: transparent;
         border: none;
@@ -166,7 +164,7 @@ p {
   padding: 0; }
 
 a {
-  color: #269aff;
+  color: #279aff;
   text-decoration: none; }
   a:hover {
     text-decoration: underline; }
@@ -192,7 +190,7 @@ a.dropchop-btn {
       background: #40d451; }
   .dropchop-btn.dropchop-btn-blue,
   a.dropchop-btn.dropchop-btn-blue {
-    background: #269aff;
+    background: #279aff;
     color: white; }
     .dropchop-btn.dropchop-btn-blue:hover,
     a.dropchop-btn.dropchop-btn-blue:hover {
@@ -349,9 +347,9 @@ a.dropchop-btn {
     cursor: pointer; }
   .layer-element .layer-dropdown {
     right: 4px;
-    color: #269aff; }
+    color: #279aff; }
     .layer-element .layer-dropdown:hover {
-      background: #269aff;
+      background: #279aff;
       color: white; }
   .layer-element:hover .layer-dropdown {
     display: block; }
@@ -391,12 +389,10 @@ a.dropchop-btn {
   .operation:hover {
     background: #f6f6f6;
     cursor: pointer; }
-  .operation.operation-inactive,
-  .operation:disabled {
+  .operation.operation-inactive, .operation:disabled {
     opacity: 0.5;
     text-decoration: line-through; }
-    .operation.operation-inactive:hover,
-    .operation:disabled:hover {
+    .operation.operation-inactive:hover, .operation:disabled:hover {
       background: transparent;
       cursor: default; }
 
@@ -467,11 +463,11 @@ body.dropchop-loading #dropchop {
   margin-top: -15px;
   text-align: center;
   vertical-align: middle;
-  -webkit-animation: rotating 0.8s linear infinite;
-  -moz-animation: rotating 0.8s linear infinite;
-  -ms-animation: rotating 0.8s linear infinite;
-  -o-animation: rotating 0.8s linear infinite;
-  animation: rotating 0.8s linear infinite;
+  -webkit-animation: rotating .8s linear infinite;
+  -moz-animation: rotating .8s linear infinite;
+  -ms-animation: rotating .8s linear infinite;
+  -o-animation: rotating .8s linear infinite;
+  animation: rotating .8s linear infinite;
   padding: 10px;
   border-radius: 50%;
   background: white; }
@@ -585,7 +581,7 @@ body.dropchop-loading #dropchop {
   .notification.error {
     background: #ff8983; }
   .notification.info {
-    background: #269aff; }
+    background: #279aff; }
   .notification .notification-close {
     background: transparent;
     border: none;
