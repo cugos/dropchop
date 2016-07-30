@@ -1,3 +1,7 @@
+### 0.2.0
+
+* FEATURE: custom Mapbox basemap https://github.com/cugos/dropchop/pull/259
+
 ### 0.1.2
 
 * BUG: Toggle all layers checkbox was working opposite to expectations. Fixed in https://github.com/cugos/dropchop/pull/256
