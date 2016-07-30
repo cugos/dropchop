@@ -246,6 +246,44 @@ var dropchop = (function(dc) {
       }
     },
 
+    'load-custom-base': {
+      description: 'Add custom Mapbox basemap',
+      icon: '<i class="fa fa-map-o"></i>',
+      _temp: '',
+      parameters: [
+        {
+          name: 'Map ID',
+          description :'Map ID',
+          type: 'text',
+          default: 'username.id',
+        },
+        {
+          name: 'Custom Base Layer Name',
+          description :'Name of the custom baselayer added.',
+          type: 'text',
+          default: 'Basemap name'
+        }
+      ],
+      execute: function() {
+        $(dc).trigger('form:file', ['load-custom-base']);
+      },
+      get: function(event, name, parameters) {
+        dc.ops.file['load-custom-base']._temp = parameters[0];
+        dc.ops.file['load-custom-base']._temp_1 = parameters[1];
+        var url = 'https://api.mapbox.com/v4/' + dc.ops.file['load-custom-base']._temp + '.html?access_token=' + dc.map.token;
+        dc.util.xhr(url, dc.ops.file[name].callback);
+      },
+      callback: function(xhr, xhrEvent) {
+        dropchop.util.loader(false);
+        if (xhr.status === 200) {
+          var newLayer = dc.map.baseLayers.addBaseLayer(L.mapbox.tileLayer(dc.ops.file['load-custom-base']._temp),
+            dc.ops.file['load-custom-base']._temp_1);
+          L.mapbox.tileLayer(newLayer).addTo(dc.map.m);
+        } else {
+          dc.notify('error', xhr.status + ': could not retrieve base map. Please check your Map ID');
+        }
+      }
+    },
 
     //
     // Export Data
