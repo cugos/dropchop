@@ -1,3 +1,8 @@
+### 0.2.1
+
+* Create `window.onbeforeunload` to prevent from navigating away from the page. This isn't a "smart" unload function, in that it does not look for "changes" or "saves".
+* Upated README
+
 ### 0.2.0
 
 * FEATURE: custom Mapbox basemap https://github.com/cugos/dropchop/pull/259
