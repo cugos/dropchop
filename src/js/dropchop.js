@@ -1,6 +1,6 @@
 var dropchop = (function(dc) {
   dc = dc || {};
-  dc.version = '0.2.0';
+  dc.version = '0.2.1';
   dc.init = function(opts) {
     if(!opts) {
       dc.util.error('No options provided in dropchop.init()');
