@@ -89,7 +89,7 @@ Turf functions are their own geoprocesses within this application. Since each sp
 Too add a new operation, find its relevant page in the Turf documentation. Here is [`buffer`](http://turfjs.org/static/docs/module-turf_buffer.html) for example.
 
 #### 2. Add operation info and parameters
-We need to open [`/src/js/operations/Geo.js`](https://github.com/cugos/drop-n-chop/blob/master/src/js/operations/Geo.js) and add a new object that describes the particular operation you want. Below is an example of `buffer`:
+We need to open [`/src/js/operations/Geo.js`](https://github.com/cugos/drop-n-chop/blob/master/src/js/ops.geo.dropchop.js) and add a new object that describes the particular operation you want. Below is an example of `buffer`:
 
 ```javascript
 buffer: {
