@@ -1,3 +1,8 @@
+### 0.2.2
+
+* Upgrade to turf.js v3.0 (specifically 3.0.14)
+* Update `CONTRIBUTING.md` to reflect new `src/js` structure
+
 ### 0.2.1
 
 * Create `window.onbeforeunload` to prevent from navigating away from the page. This isn't a "smart" unload function, in that it does not look for "changes" or "saves".
