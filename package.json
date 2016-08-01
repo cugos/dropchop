@@ -28,7 +28,7 @@
     "shpjs": "^3.2.1",
     "tablesort": "^3.1.0",
     "topojson": "^1.6.26",
-    "turf": "^2.0.2"
+    "turf": "^3.0.14"
   },
   "devDependencies": {
     "babelify": "^7.3.0",

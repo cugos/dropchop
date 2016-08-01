@@ -79,7 +79,7 @@ describe('util.dropchop.js', function() {
   it('dc.util.executeFC()', function() {
     // testing destination operation
     var expectedOutput = {"type":"FeatureCollection","features": [
-      {"type":"Feature","geometry":{"type":"Point","coordinates":[126.61573747959451, 10.098445590759695]},"properties":{"name":"Dinagat Islands"}},
+      {"type":"Feature","geometry":{"type":"Point","coordinates":[126.61573747959454, 10.098445590759694]},"properties":{"name":"Dinagat Islands"}},
       {"type":"Feature","geometry":{"type":"Point","coordinates":[131.03526863385326, 14.997661774321049]},"properties":{"name":"Some other islands"}}
     ]};
     var newFC = dc.util.executeFC(fc, 'destination', [fc, 1, 90, 'degrees']);
