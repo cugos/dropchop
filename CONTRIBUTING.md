@@ -81,41 +81,47 @@ Below is a list of triggers that exist within `dropchop` that can be picked up a
 
 ### Adding a Turf function
 
-**These instructions assume you are adding a Turf operation that returns NEW GEOMETRY** If you plan to add a Turf operation that returns something other than geometry, such as [`count`](http://turfjs.org/static/docs/module-turf_count.html), please look at [this issue thread](https://github.com/cugos/drop-n-chop/issues/80) first.
+**These instructions assume you are adding a Turf operation that returns NEW GEOMETRY** If you plan to add a Turf operation that returns something other than geometry, such as [`distance`](http://turfjs.org/docs/#distance), please look at [this issue thread](https://github.com/cugos/dropchop/issues/80) first.
 
 Turf functions are their own geoprocesses within this application. Since each spatial operation requires different data types, parameters, and options, each Turf option must be specified individually.
 
 #### 1. Find the operation in Turf docs
-Too add a new operation, find its relevant page in the Turf documentation. Here is [`buffer`](http://turfjs.org/static/docs/module-turf_buffer.html) for example.
+Too add a new operation, find its relevant page in the Turf documentation. Here is [`buffer`](http://turfjs.org/docs/#buffer) for example.
 
 #### 2. Add operation info and parameters
-We need to open [`/src/js/operations/Geo.js`](https://github.com/cugos/drop-n-chop/blob/master/src/js/ops.geo.dropchop.js) and add a new object that describes the particular operation you want. Below is an example of `buffer`:
+Open [`src/js/ops.geo.dropchop.js`](src/js/ops.geo.dropchop.js) and add a new configuration object that describes the particular operation you want. Below is an example of such an object for `buffer`:
 
 ```javascript
 buffer: {
     maxFeatures: 1,
+    minFeatures: 1,
+    requirements: {
+        generalFeature: true,
+        types: ['Feature', 'FeatureCollection']
+    },
     description: 'Calculates a buffer for input features for a given radius. Units supported are miles, kilometers, and degrees.',
-    parameters: [
-        {
-            name: 'distance',
-            description: 'Distance to draw the buffer.',
-            type: 'number',
-            default: 10
-        },
-        {
-            name: 'unit',
-            type: 'select',
-            description: '',
-            options: ['miles', 'feet', 'kilometers', 'meters', 'degrees'],
-            default: 'miles'
-        }
-    ]
-},
+    parameters: [{
+        name: 'distance',
+        description: 'Distance to draw the buffer.',
+        type: 'number',
+        default: 10
+    }, {
+        name: 'unit',
+        type: 'select',
+        description: '',
+        options: ['miles', 'feet', 'kilometers', 'meters', 'degrees'],
+        default: 'miles'
+    }],
+    execute: function(params) {
+        var result = turf.buffer.apply(null, params);
+        return result;
+    }
+}
 ```
 
 Notice that there are two parameters, `distance` and `unit`. Each of these is optional according to Turf's documentation. Distance can be any number, but Unit can only be a particular set of options. Make sure if you want the user to only choose certain options to use `type: 'select'` and list your `options` accordingly. `createsLayer` represents whether the operation returns a layer that should be placed on the map.
 
-A greater list of possibly operation configurations can be seen below:
+A template list of possible operation configurations can be seen below:
 
 ```javascript
 operationName: {
@@ -134,13 +140,21 @@ operationName: {
 }
 ```
 
-#### 3. Add the new operation to appropriate menu
-To add the task to the menu, open [`/src/js/controller/AppController.js`](https://github.com/cugos/drop-n-chop/blob/master/src/js/controller/AppController.js). On [this line](https://github.com/cugos/drop-n-chop/blob/master/src/js/controller/AppController.js#L24) you will see an array of different items. Add your new item here. **Be sure it is named exactly the same as the turf operation!**
+#### 3. Add the module to the build process.
+Insert the new function into [`package.json`](package.json#L33) and [`lib/turf_setup.js`](lib/turf_setup.js#L4).
 
-#### 4. Save & run `grunt`
-You should now be able to rebuild the application and test out your new operation. Make sure you have some test data to work with. You can find some in the [`test` folder](https://github.com/cugos/drop-n-chop/tree/master/test). If these files aren't working, making quick features at [geojson.io](http://geojson.io/) typically works well.
+#### 4. Save & build
+You should now be able to rebuild the application and test out your new operation. Per [the installation process](INSTALLATION.md), build the app packages:
 
-If things aren't working, make sure to check out your console for javascript errors. If you are unable to solve the issue feel free to [submit a ticket](https://github.com/cugos/drop-n-chop/issues) on the repository issues! Please include the error that you are receiving, the operation you are trying to add, and the data that you were testing with.
+```
+npm install
+gulp build:prod
+gulp
+```
+
+Then try it out by visiting [http://localhost:8888/?gist=b1467dd8c405f6ef38e0857555670e00](http://localhost:8888/?gist=b1467dd8c405f6ef38e0857555670e00) in your browser. This automatically loads Libya's boundary polygon to test the new function; use [geojson.io](http://geojson.io) to create other test data as needed.
+
+If things aren't working, make sure to check out your console for javascript errors. If you are unable to solve the issue feel free to [submit a ticket](https://github.com/cugos/dropchop/issues) on the repository issues! Please include the error that you are receiving, the operation you are trying to add, and the data that you were testing with.
 
 #### 5. Test!
 In order to make sure our operations are running as expected you should write some tests. MORE TO COME HERE!
