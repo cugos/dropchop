@@ -86,7 +86,7 @@ Below is a list of triggers that exist within `dropchop` that can be picked up a
 Turf functions are their own geoprocesses within this application. Since each spatial operation requires different data types, parameters, and options, each Turf option must be specified individually.
 
 #### 1. Find the operation in Turf docs
-Too add a new operation, find its relevant page in the Turf documentation. Here is [`buffer`](http://turfjs.org/docs/#buffer) for example.
+To add a new operation, find its relevant page in the Turf documentation. Here is [`buffer`](http://turfjs.org/docs/#buffer), for example.
 
 #### 2. Add operation info and parameters
 Open [`src/js/ops.geo.dropchop.js`](src/js/ops.geo.dropchop.js) and add a new configuration object that describes the particular operation you want. Below is an example of such an object for `buffer`:
