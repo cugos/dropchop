@@ -42,19 +42,7 @@ var vendorJS = [
   './node_modules/osmtogeojson/osmtogeojson.js',
   './node_modules/shp-write/shpwrite.js',
   './node_modules/shpjs/dist/shp.min.js',
-  './node_modules/turf-along/index.js',
-  './node_modules/turf-bezier/index.js',
-  './node_modules/turf-buffer/index.js',
-  './node_modules/turf-center/index.js',
-  './node_modules/turf-centroid/index.js',
-  './node_modules/turf-destination/index.js',
-  './node_modules/turf-envelope/index.js',
-  './node_modules/turf-explode/index.js',
-  './node_modules/turf-midpoint/index.js',
-  './node_modules/turf-simplify/index.js',
-  './node_modules/turf-tin/index.js',
-  './node_modules/turf-union/index.js',
-  './node_modules/turf-within/index.js',
+  './dist/static/js/turf_package.js',
   './dist/static/js/topojson_package.js',
   './dist/static/js/overpass-wizard.js',
   './dist/static/js/overpass-wizard-expand.js'
@@ -84,6 +72,15 @@ gulp.task('topojson', function() {
     .pipe(gulp.dest('./dist/static/js/'));
 });
 
+gulp.task('turf', function() {
+  return browserify(['./lib/turf_setup.js'])
+    .bundle()
+    .pipe(source('turf_package.js'))
+    .pipe(buffer())
+    .pipe(uglify())
+    .pipe(gulp.dest('./dist/static/js/'));
+});
+
 gulp.task('overpass-wizard', function() {
   browserify(['./node_modules/overpass-wizard/index.js'], {standalone: "overpass-wizard"})
     .bundle()
@@ -99,7 +96,7 @@ gulp.task('overpass-wizard', function() {
     .pipe(gulp.dest('./dist/static/js/'));
 });
 
-gulp.task('js_vendor', ['topojson', 'overpass-wizard'], function() {
+gulp.task('js_vendor', ['topojson', 'turf', 'overpass-wizard'], function() {
   return gulp.src(vendorJS)
     .pipe(sourcemap.init())
     .pipe(concat('vendor.js'))
