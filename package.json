@@ -37,6 +37,7 @@
     "turf-envelope": "^3.0.12",
     "turf-explode": "^3.0.12",
     "turf-midpoint": "^3.0.12",
+    "turf-sample": "^3.0.12",
     "turf-simplify": "^3.0.12",
     "turf-tin": "^3.0.12",
     "turf-union": "^3.0.12",
