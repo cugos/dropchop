@@ -1,4 +1,4 @@
-### 0.3.0
+### 0.2.3
 
 * Replace `turf.js` with a gulp-built `turf_package.js`, consisting of just configured functions to lighten the load.
 * Update `CONTRIBUTING.md` to reflect new function-adding workflow
