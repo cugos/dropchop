@@ -251,6 +251,28 @@ var dropchop = (function(dc) {
         return result;
       }
     },
+    
+    sample: {
+      maxFeatures: 1,
+      minFeatures: 1,
+      requirements: {
+        generalFeature: true,
+        types: ['FeatureCollection']
+      },
+      description: 'Takes a FeatureCollection and returns a FeatureCollection with given number of features at random.',
+      parameters: [
+        {
+          name: 'num',
+          description: 'Number of features to select.',
+          type: 'number',
+          default: 1
+        }
+      ],
+      execute: function(params) {
+        var result = turf.sample.apply(null, params);
+        return result;
+      }
+    },
 
     simplify: {
       minFeatures: 1,
