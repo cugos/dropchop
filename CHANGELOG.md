@@ -1,3 +1,7 @@
+### 0.2.4
+
+* Add `turf-sample` function/module
+
 ### 0.2.3
 
 * Replace `turf.js` with a gulp-built `turf_package.js`, consisting of just configured functions to lighten the load.
