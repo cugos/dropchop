@@ -1,0 +1,63 @@
+.dropchop-form {
+  position: absolute;
+  z-index: 1000;
+  top: 20px;
+  width: 400px;
+  left: 50%;
+  margin-left: -200px;
+  background: white;
+  padding: 10px;
+  box-shadow: 0 0 6px 0px rgba(0, 0, 0, 0.6);
+  border-radius: 3px;
+  .dropchop-form-title {}
+  .dropchop-form-description {
+    font-size: 0.9em;
+    color: #999;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 0.5em 0;
+    margin-bottom: 0.8em;
+  }
+  .dropchop-form-submit,
+  .dropchop-form-cancel {
+    float:right;
+    margin-left: 10px;
+  }
+}
+
+.dropchop-form-parameter {
+  margin-bottom: 1em;
+  .dropchop-form-parameter-label {
+    display: block;
+    color: #555;
+    font-size: 1.1em;
+    text-transform: uppercase;
+    font-weight: 900;
+    .sub-label {
+      display: block;
+      text-transform: none;
+      font-size: 0.9em;
+      font-weight: 300;
+      margin: 3px;
+      color: #777;
+      font-family: "Helvetica Neue", arial, sans-serif;
+      float: left;
+    }
+  }
+  input,
+  select {
+    display: block;
+    width: 100%;
+    padding: 0.5em;
+    font-size: 0.9em;
+  }
+  input[type="radio"] {
+    width: auto;
+    float: left;
+  }
+  .dropchop-form-parameter-description {
+    font-size: 0.8em;
+    text-transform: none;
+    font-weight: 100;
+    clear: both;
+  }
+}
