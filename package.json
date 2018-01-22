@@ -1,6 +1,6 @@
 {
   "name": "dropchop",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "GIS in the browser.",
   "homepage": "https://github.com/cugos/dropchop",
   "bugs": "https://github.com/cugos/dropchop",
@@ -19,7 +19,7 @@
     "esri2geo": "^0.1.3",
     "font-awesome": "^4.4.0",
     "geoglyphs": "0.0.10",
-    "jquery": "^2.1.4",
+    "jquery": "^3.0.0",
     "js-polyfills": "^0.1.12",
     "mousetrap": "^1.5.3",
     "osmtogeojson": "^2.2.5",
