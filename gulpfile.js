@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var sourcemap = require('gulp-sourcemaps');
 var uglify = require('gulp-uglify');
+var minify = require('gulp-minify');
 var copy = require('gulp-copy');
 var concat = require('gulp-concat');
 var connect = require('gulp-connect');
@@ -100,7 +101,7 @@ gulp.task('js_vendor', ['topojson', 'turf', 'overpass-wizard'], function() {
   return gulp.src(vendorJS)
     .pipe(sourcemap.init())
     .pipe(concat('vendor.js'))
-    .pipe(uglify())
+    .pipe(minify())
     .pipe(sourcemap.write())
     .pipe(gulp.dest('./dist/static/js'));
 });
