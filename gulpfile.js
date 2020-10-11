@@ -17,7 +17,7 @@ var buffer = require('vinyl-buffer');
 gulp.task('sass', function(){
   return gulp.src('./src/scss/dropchop.scss')
     .pipe(sass().on('error', sass.logError))
-    .pipe(gulp.dest('./dist/static/css'));
+    .pipe(gulp.dest('./docs/static/css'));
 });
 
 var vendorCSS = [
@@ -27,12 +27,12 @@ var vendorCSS = [
 gulp.task('css_vendor', function() {
   return gulp.src(vendorCSS)
     .pipe(concat('vendor.css'))
-    .pipe(gulp.dest('./dist/static/css'));
+    .pipe(gulp.dest('./docs/static/css'));
 });
 
 gulp.task('mapbox_assets', function() {
   return gulp.src('./lib/mapbox.js/images/**.*')
-    .pipe(gulp.dest('./dist/static/css/images'));
+    .pipe(gulp.dest('./docs/static/css/images'));
 });
 
 var vendorJS = [
@@ -43,10 +43,10 @@ var vendorJS = [
   './node_modules/osmtogeojson/osmtogeojson.js',
   './node_modules/shp-write/shpwrite.js',
   './node_modules/shpjs/dist/shp.min.js',
-  './dist/static/js/turf_package.js',
-  './dist/static/js/topojson_package.js',
-  './dist/static/js/overpass-wizard.js',
-  './dist/static/js/overpass-wizard-expand.js'
+  './docs/static/js/turf_package.js',
+  './docs/static/js/topojson_package.js',
+  './docs/static/js/overpass-wizard.js',
+  './docs/static/js/overpass-wizard-expand.js'
 ];
 
 gulp.task('lint', function() {
@@ -55,13 +55,13 @@ gulp.task('lint', function() {
     .pipe(jshint.reporter('default'));
 });
 
-gulp.task('js_dropchop', function() {
+gulp.task('js', function() {
   return gulp.src('./src/js/**/*.js')
     .pipe(sourcemap.init())
     .pipe(concat('dropchop.js'))
     .pipe(uglify())
     .pipe(sourcemap.write())
-    .pipe(gulp.dest('./dist/static/js'));
+    .pipe(gulp.dest('./docs/static/js'));
 });
 
 gulp.task('topojson', function() {
@@ -70,7 +70,7 @@ gulp.task('topojson', function() {
     .pipe(source('topojson_package.js'))
     .pipe(buffer())
     .pipe(uglify())
-    .pipe(gulp.dest('./dist/static/js/'));
+    .pipe(gulp.dest('./docs/static/js/'));
 });
 
 gulp.task('turf', function() {
@@ -79,7 +79,7 @@ gulp.task('turf', function() {
     .pipe(source('turf_package.js'))
     .pipe(buffer())
     .pipe(uglify())
-    .pipe(gulp.dest('./dist/static/js/'));
+    .pipe(gulp.dest('./docs/static/js/'));
 });
 
 gulp.task('overpass-wizard', function() {
@@ -88,43 +88,37 @@ gulp.task('overpass-wizard', function() {
     .pipe(source('overpass-wizard.js'))
     .pipe(buffer())
     .pipe(uglify())
-    .pipe(gulp.dest('./dist/static/js/'));
+    .pipe(gulp.dest('./docs/static/js/'));
   browserify(['./node_modules/overpass-wizard/expand.js'], {standalone: "overpass-wizard-expand"})
     .bundle()
     .pipe(source('overpass-wizard-expand.js'))
     .pipe(buffer())
     .pipe(uglify())
-    .pipe(gulp.dest('./dist/static/js/'));
+    .pipe(gulp.dest('./docs/static/js/'));
 });
 
-gulp.task('js_vendor', ['topojson', 'turf', 'overpass-wizard'], function() {
+gulp.task('vendor', ['topojson', 'turf', 'overpass-wizard'], function() {
   return gulp.src(vendorJS)
     .pipe(sourcemap.init())
     .pipe(concat('vendor.js'))
     .pipe(minify())
     .pipe(sourcemap.write())
-    .pipe(gulp.dest('./dist/static/js'));
+    .pipe(gulp.dest('./docs/static/js'));
 });
-
-var testFiles = [
-  'dist/static/vendor.js',
-  'dist/static/dropchop.js',
-  'test/**/*.spec.js'
-];
 
 gulp.task('html', function() {
   return gulp.src('./src/html/**.html')
-    .pipe(gulp.dest('./dist'));
+    .pipe(gulp.dest('./docs'));
 });
 
 gulp.task('assets', function() {
   return gulp.src('./src/assets/**/*.*')
-    .pipe(gulp.dest('./dist/assets'));
+    .pipe(gulp.dest('./docs/assets'));
 });
 
 gulp.task('fa-fonts', function() {
   return gulp.src('./node_modules/font-awesome/fonts/**.*')
-    .pipe(gulp.dest('./dist/static/fonts'));
+    .pipe(gulp.dest('./docs/static/fonts'));
 });
 
 gulp.task('watch', function() {
@@ -136,7 +130,7 @@ gulp.task('watch', function() {
 gulp.task('connect', function() {
   connect.server({
     port: '8888',
-    root: 'dist'
+    root: 'docs'
   });
 });
 
@@ -147,14 +141,21 @@ gulp.task('test', function (done) {
   }, done).start();
 });
 
-gulp.task('deploy', ['build:prod'], function() {
-  return gulp.src('./dist/**/*.*')
-    .pipe(file('CNAME', 'dropchop.io'))
-    .pipe(ghPages());
+gulp.task('cname', function() {
+  return gulp.src('./CNAME')
+    .pipe(gulp.dest('./docs/CNAME'));
 });
 
-gulp.task('vendor', ['js_vendor', 'css_vendor', 'mapbox_assets', 'fa-fonts']);
-gulp.task('js', ['lint', 'js_dropchop']);
-gulp.task('build', ['js', 'html', 'sass', 'assets']);
-gulp.task('build:prod', ['vendor', 'build']);
+gulp.task('build', [
+  'js',
+  'vendor',
+  'html',
+  'sass',
+  'css_vendor',
+  'mapbox_assets',
+  'fa-fonts',
+  'assets',
+  'cname',
+]);
+
 gulp.task('default', ['build', 'connect', 'watch']);

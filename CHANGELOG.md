@@ -1,3 +1,11 @@
+### 0.3.0
+
+* Update Mapbox basemaps to modern static tiles API [docs](https://docs.mapbox.com/help/troubleshooting/migrate-legacy-static-tiles-api/)
+* Simplify gulpfile.js for quick building
+* Remove gh-pages branch and serve dropchop.io from the /docs folder
+* Remove .codeship directory
+* Update INSTALLATION.md
+
 ### 0.2.4
 
 * Add `turf-sample` function/module

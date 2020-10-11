@@ -1,0 +1,594 @@
+.dropchop-menu-left {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 41px;
+  background: #e5e5e5; }
+  .dropchop-menu-left .menu-action-break {
+    height: 15px;
+    background: transparent; }
+  .dropchop-menu-left .menu-action {
+    position: relative;
+    padding: 13px 0;
+    width: 40px;
+    text-align: center;
+    font-size: 1em;
+    border: none;
+    margin: 0 1px 1px 0;
+    background-color: white;
+    color: #999;
+    box-sizing: content-box; }
+    .dropchop-menu-left .menu-action:hover {
+      background: #f55ad2;
+      color: white;
+      cursor: pointer; }
+      .dropchop-menu-left .menu-action:hover:after, .dropchop-menu-left .menu-action:hover:before {
+        z-index: 12;
+        position: absolute;
+        left: 10px; }
+      .dropchop-menu-left .menu-action:hover:after {
+        content: " ";
+        top: 16px;
+        left: 130%;
+        margin-left: -6px;
+        border-top: 6px solid transparent;
+        border-right: 6px solid #333;
+        border-bottom: 6px solid transparent; }
+      .dropchop-menu-left .menu-action:hover:before {
+        content: attr(data-tooltip);
+        text-transform: uppercase;
+        top: 7px;
+        left: 130%;
+        padding: 5px 10px;
+        line-height: 19px;
+        height: 20px;
+        width: auto;
+        white-space: nowrap;
+        font-size: 0.65em;
+        letter-spacing: 0.1em;
+        background: #333;
+        color: #f6f6f6; }
+    .dropchop-menu-left .menu-action.dropchop-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      background: #fbbaec;
+      color: white; }
+      .dropchop-menu-left .menu-action.dropchop-info:hover {
+        background: #f22ac5; }
+    .dropchop-menu-left .menu-action.menu-import {
+      background: #69dd76;
+      color: white; }
+    .dropchop-menu-left .menu-action.menu-collapse .menu-collapse-inner {
+      display: none;
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
+      z-index: 10; }
+      .dropchop-menu-left .menu-action.menu-collapse .menu-collapse-inner .menu-action {
+        margin: 0;
+        border-top: 1px solid #e5e5e5; }
+        .dropchop-menu-left .menu-action.menu-collapse .menu-collapse-inner .menu-action:first-child {
+          border: none; }
+    .dropchop-menu-left .menu-action.menu-collapse:hover {
+      background: #c0c0c0; }
+      .dropchop-menu-left .menu-action.menu-collapse:hover:before, .dropchop-menu-left .menu-action.menu-collapse:hover:after {
+        content: "";
+        background: transparent;
+        border: none;
+        visibility: hidden;
+        display: none; }
+      .dropchop-menu-left .menu-action.menu-collapse:hover .menu-collapse-inner {
+        display: block;
+        position: absolute;
+        left: 40px;
+        top: 0; }
+
+.sprite {
+  background-size: 100%;
+  background-image: url(/assets/dc-sprite.png);
+  background-repeat: no-repeat; }
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min--moz-device-pixel-ratio: 1.5), only screen and (min-resolution: 240dpi) {
+  .sprite {
+    background-image: url(/assets/dc-sprite@2x.png); } }
+
+.sprite-layer-line {
+  background-position: 0px 0px; }
+
+.sprite-layer-polygon {
+  background-position: 0px -14px; }
+
+.sprite-layer-point {
+  background-position: 0px -28px; }
+
+.sprite-layer-featurecollection {
+  background-position: 0px -42px; }
+
+.sprite-layer-geom {
+  background-position: 0px -56px; }
+
+body {
+  padding: 0;
+  margin: 0;
+  background: #c0c0c0;
+  font-family: "Helvetica Neue", arial, sans-serif;
+  overflow: hidden; }
+  body.dragging {
+    opacity: 0.8; }
+    body.dragging .layer-help {
+      border: 1px solid #333; }
+
+.hidden {
+  visibility: hidden; }
+
+@-webkit-keyframes rotating {
+  from {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  to {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg); } }
+
+@keyframes rotating {
+  from {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  to {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg); } }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+  font-family: "Inconsolata", monospace; }
+
+p {
+  margin: 0;
+  padding: 0; }
+
+a {
+  color: #279aff;
+  text-decoration: none; }
+  a:hover {
+    text-decoration: underline; }
+
+input,
+label,
+.dropchop-btn {
+  font-family: "Inconsolata", monospace; }
+
+.dropchop-btn,
+a.dropchop-btn {
+  text-decoration: none;
+  border: none;
+  padding: 0.5em 1em;
+  font-size: 1em;
+  cursor: pointer; }
+  .dropchop-btn.dropchop-btn-green,
+  a.dropchop-btn.dropchop-btn-green {
+    background: #69dd76;
+    color: white; }
+    .dropchop-btn.dropchop-btn-green:hover,
+    a.dropchop-btn.dropchop-btn-green:hover {
+      background: #40d451; }
+  .dropchop-btn.dropchop-btn-blue,
+  a.dropchop-btn.dropchop-btn-blue {
+    background: #279aff;
+    color: white; }
+    .dropchop-btn.dropchop-btn-blue:hover,
+    a.dropchop-btn.dropchop-btn-blue:hover {
+      background: #0082f3; }
+  .dropchop-btn.dropchop-btn-cancel,
+  a.dropchop-btn.dropchop-btn-cancel {
+    background: transparent;
+    color: red; }
+    .dropchop-btn.dropchop-btn-cancel:hover,
+    a.dropchop-btn.dropchop-btn-cancel:hover {
+      background: #f6f6f6; }
+
+#dropchop {
+  position: relative;
+  height: 100%;
+  width: 100%; }
+
+.layerlist {
+  position: absolute;
+  left: 41px;
+  top: 0;
+  bottom: 0;
+  background: #fff;
+  margin: 0;
+  padding: 0;
+  width: 280px;
+  list-style-type: none;
+  overflow-y: scroll;
+  -webkit-transform: translate3d(0, 0, 0);
+  z-index: 1;
+  overflow: visible; }
+  .layerlist .layer-help {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    color: #999;
+    font-size: 0.9em;
+    border: 1px dashed #c0c0c0; }
+  .layerlist .layer-toggleAll {
+    background: #f6f6f6;
+    padding: 7px 10px;
+    font-size: 0.8em;
+    font-weight: 900;
+    color: #999;
+    border-bottom: 1px solid #e5e5e5;
+    display: none; }
+    .layerlist .layer-toggleAll input {
+      margin-right: 6px; }
+  .layerlist *::selection {
+    background: transparent; }
+  .layerlist .context-menu {
+    min-width: 250px;
+    position: fixed;
+    z-index: 2;
+    background: #fdfdfd;
+    border: 1px solid #bbb;
+    border-radius: 2px;
+    box-shadow: 0 0 4px -1px rgba(0, 0, 0, 0.4);
+    color: #333; }
+    .layerlist .context-menu ul {
+      list-style: none;
+      padding: 0; }
+      .layerlist .context-menu ul li {
+        display: block;
+        font-size: 0.85em;
+        border-bottom: 1px solid #ccc;
+        text-transform: lowercase;
+        cursor: pointer; }
+        .layerlist .context-menu ul li .description {
+          padding: 8px 10px;
+          display: table-cell;
+          vertical-align: middle; }
+        .layerlist .context-menu ul li .icon {
+          background-color: #f1f1f1;
+          color: #777;
+          text-align: center;
+          width: 30px;
+          padding: 6px 0;
+          border-right: 1px solid #ddd;
+          display: table-cell;
+          vertical-align: middle; }
+        .layerlist .context-menu ul li.title {
+          text-transform: lowercase;
+          padding: 2px 5px;
+          color: #666;
+          background-color: #f6f6f6;
+          border-bottom: 1px solid #dedede; }
+          .layerlist .context-menu ul li.title:hover {
+            cursor: default;
+            color: #666;
+            background-color: #f6f6f6; }
+        .layerlist .context-menu ul li:last-child {
+          border-bottom: none; }
+        .layerlist .context-menu ul li:hover {
+          background-color: #333;
+          color: #f6f6f6; }
+          .layerlist .context-menu ul li:hover .icon {
+            color: #fff;
+            background-color: #f55ad2;
+            border-right: 1px solid #919191; }
+        .layerlist .context-menu ul li.operation-inactive {
+          color: #aaa;
+          text-decoration: line-through;
+          cursor: default; }
+          .layerlist .context-menu ul li.operation-inactive:hover {
+            background-color: inherit; }
+          .layerlist .context-menu ul li.operation-inactive .icon {
+            color: #ddd;
+            background-color: #f1f1f1;
+            border-right: 1px solid #ddd; }
+
+.layer-element {
+  position: relative;
+  cursor: pointer; }
+  .layer-element .layer-toggle {
+    float: left;
+    margin-right: 5px;
+    position: absolute;
+    top: 8px;
+    left: 9px; }
+  .layer-element .layer-name {
+    display: block;
+    padding: 8px 10px 8px 51px;
+    font-size: 0.85em;
+    color: #333;
+    font-weight: 800;
+    word-wrap: break-word; }
+    .layer-element .layer-name.layer-new {
+      background: #ffffcc; }
+    .layer-element .layer-name:hover {
+      background: #f6f6f6; }
+    .layer-element .layer-name.selected {
+      background: #333;
+      color: #f6f6f6; }
+      .layer-element .layer-name.selected:hover {
+        background: #444; }
+  .layer-element .layer-type-image {
+    float: left;
+    position: absolute;
+    top: 9px;
+    left: 30px;
+    width: 14px;
+    height: 15px;
+    opacity: 0.7; }
+  .layer-element .layer-action {
+    border: none;
+    background: #f6f6f6;
+    position: absolute;
+    top: 6px;
+    padding: 5px 6px;
+    text-align: center;
+    display: none;
+    border-radius: 50%;
+    cursor: pointer; }
+  .layer-element .layer-dropdown {
+    right: 4px;
+    color: #279aff; }
+    .layer-element .layer-dropdown:hover {
+      background: #279aff;
+      color: white; }
+  .layer-element:hover .layer-dropdown {
+    display: block; }
+
+.map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 521px; }
+
+.operations-geo {
+  position: absolute;
+  top: 0;
+  left: 321px;
+  bottom: 0;
+  background: white;
+  border-left: 1px solid #e5e5e5;
+  border-right: 1px solid #e5e5e5;
+  overflow-y: scroll; }
+
+.operation {
+  border: none;
+  -webkit-transform: translate3d(0, 0, 0); }
+  .operation.operation-geo {
+    padding: 1em;
+    display: block;
+    width: 200px;
+    font-size: 0.9em;
+    background: white;
+    text-align: left;
+    border-bottom: 1px solid #f6f6f6; }
+    .operation.operation-geo h4 {
+      text-transform: capitalize; }
+    .operation.operation-geo p {
+      font-size: 0.8em; }
+  .operation:hover {
+    background: #f6f6f6;
+    cursor: pointer; }
+  .operation.operation-inactive, .operation:disabled {
+    opacity: 0.5;
+    text-decoration: line-through; }
+    .operation.operation-inactive:hover, .operation:disabled:hover {
+      background: transparent;
+      cursor: default; }
+
+.dropchop-form {
+  position: absolute;
+  z-index: 1000;
+  top: 20px;
+  width: 400px;
+  left: 50%;
+  margin-left: -200px;
+  background: white;
+  padding: 10px;
+  box-shadow: 0 0 6px 0px rgba(0, 0, 0, 0.6);
+  border-radius: 3px; }
+  .dropchop-form .dropchop-form-description {
+    font-size: 0.9em;
+    color: #999;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 0.5em 0;
+    margin-bottom: 0.8em; }
+  .dropchop-form .dropchop-form-submit,
+  .dropchop-form .dropchop-form-cancel {
+    float: right;
+    margin-left: 10px; }
+
+.dropchop-form-parameter {
+  margin-bottom: 1em; }
+  .dropchop-form-parameter .dropchop-form-parameter-label {
+    display: block;
+    color: #555;
+    font-size: 1.1em;
+    text-transform: uppercase;
+    font-weight: 900; }
+    .dropchop-form-parameter .dropchop-form-parameter-label .sub-label {
+      display: block;
+      text-transform: none;
+      font-size: 0.9em;
+      font-weight: 300;
+      margin: 3px;
+      color: #777;
+      font-family: "Helvetica Neue", arial, sans-serif;
+      float: left; }
+  .dropchop-form-parameter input,
+  .dropchop-form-parameter select {
+    display: block;
+    width: 100%;
+    padding: 0.5em;
+    font-size: 0.9em; }
+  .dropchop-form-parameter input[type="radio"] {
+    width: auto;
+    float: left; }
+  .dropchop-form-parameter .dropchop-form-parameter-description {
+    font-size: 0.8em;
+    text-transform: none;
+    font-weight: 100;
+    clear: both; }
+
+body.dropchop-loading #dropchop {
+  opacity: 0.5; }
+
+.dropchop-loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 35px;
+  height: 35px;
+  margin-left: -15px;
+  margin-top: -15px;
+  text-align: center;
+  vertical-align: middle;
+  -webkit-animation: rotating .8s linear infinite;
+  -moz-animation: rotating .8s linear infinite;
+  -ms-animation: rotating .8s linear infinite;
+  -o-animation: rotating .8s linear infinite;
+  animation: rotating .8s linear infinite;
+  padding: 10px;
+  border-radius: 50%;
+  background: white; }
+  .dropchop-loader:before {
+    font-family: 'FontAwesome';
+    content: "\f01e";
+    font-size: 35px;
+    color: #000; }
+  .dropchop-loader.loader-complete {
+    -webkit-animation: none;
+    -moz-animation: none;
+    -ms-animation: none;
+    -o-animation: none;
+    animation: none; }
+    .dropchop-loader.loader-complete:before {
+      content: "\f00c";
+      color: #69dd76; }
+
+.dropchop-popup {
+  min-width: 200px;
+  max-height: 400px; }
+  .dropchop-popup .leaflet-popup-content {
+    padding: 5px;
+    padding-top: 5px !important; }
+
+.dropchop-table {
+  width: 100%;
+  font-size: 12px;
+  border-collapse: collapse; }
+  .dropchop-table th, .dropchop-table td {
+    padding: 5px; }
+  .dropchop-table th {
+    text-align: left;
+    font-family: "Inconsolata", monospace; }
+  .dropchop-table td {
+    border: 1px solid #e5e5e5; }
+
+.dropchop-attr-table {
+  position: absolute;
+  max-height: 50%;
+  bottom: 0;
+  right: 0;
+  left: 522px;
+  z-index: 1000;
+  overflow: scroll; }
+  .dropchop-attr-table table {
+    font-size: 0.8em;
+    width: 100%;
+    background: white;
+    border-collapse: collapse; }
+    .dropchop-attr-table table tr:hover {
+      background: #f6f6f6; }
+    .dropchop-attr-table table tr.attr-row-selected {
+      background: #333; }
+      .dropchop-attr-table table tr.attr-row-selected td {
+        color: #f6f6f6; }
+    .dropchop-attr-table table th {
+      min-width: 100px;
+      text-align: left;
+      font-family: "Inconsolata", monospace; }
+      .dropchop-attr-table table th:first-child {
+        max-width: 30px; }
+    .dropchop-attr-table table th, .dropchop-attr-table table td {
+      border: 1px solid #e5e5e5;
+      padding: 5px; }
+    .dropchop-attr-table table .attr-count-th {
+      width: 30px; }
+    .dropchop-attr-table table .attr-count {
+      font-color: #999;
+      font-weight: 900;
+      font-family: "Inconsolata", monospace; }
+
+.attr-action-container {
+  position: fixed;
+  top: 50%;
+  margin-top: -25px;
+  right: 0; }
+
+.attr-action {
+  display: inline-block;
+  background: transparent;
+  border-width: 1px;
+  border-style: solid;
+  padding: 5px;
+  height: 25px;
+  cursor: pointer;
+  opacity: 0.8; }
+  .attr-action:hover {
+    opacity: 1; }
+  .attr-action.attr-action-close {
+    border: white;
+    color: #333;
+    background: white;
+    font-weight: 900; }
+  .attr-action.attr-action-remove {
+    color: white;
+    border-color: #ff8983;
+    background-color: #ff8983; }
+
+.notification {
+  float: right;
+  position: relative;
+  z-index: 10;
+  clear: both;
+  padding: 12px 15px;
+  font-size: 0.85em;
+  margin: 5px 5px 0 0;
+  color: white; }
+  .notification.success {
+    background: #69dd76; }
+  .notification.error {
+    background: #ff8983; }
+  .notification.info {
+    background: #279aff; }
+  .notification .notification-close {
+    background: transparent;
+    border: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: white; }
+    .notification .notification-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+      cursor: pointer; }

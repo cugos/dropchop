@@ -35,7 +35,7 @@ var dropchop = (function(dc) {
       "Mapbox Outdoors": L.mapbox.styleLayer('mapbox://styles/mapbox/outdoors-v11'),
       "Mapbox Light": L.mapbox.styleLayer('mapbox://styles/mapbox/light-v10'),
       "Mapbox Dark": L.mapbox.styleLayer('mapbox://styles/mapbox/dark-v10'),
-      "Mapbox Satellite Streets": L.mapbox.styleLayer('mapbox://styles/mapbox/satellite-streets-v11'),
+      "Mapbox Satellite": L.mapbox.styleLayer('mapbox://styles/mapbox/satellite-streets-v11'),
     };
 
     baseLayers['Mapbox Streets'].addTo(dc.map.m);

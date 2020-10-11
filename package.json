@@ -12,6 +12,7 @@
   "main": "src/dropchop.js",
   "scripts": {
     "start": "gulp",
+    "build": "gulp build",
     "test": "gulp test"
   },
   "dependencies": {

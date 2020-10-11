@@ -201,15 +201,6 @@ This is likely only necessary for Features and not Bugs, but varies on a case-by
 
 We use a lot of animated screen captures when describing features and bugs in pull requests or documentation. On Windows and OSX, some of us use [LICEcap](http://www.cockos.com/licecap/) to create these screen capture GIFs.
 
-
 ## Deployment
 
-We are using codeship.io to deploy Dropchop to the `gh-pages` branch of this repository. Since everything is happening on the front-end of this project (no server-side stuff) we can use Github pages to host all of the static assets. Take a look at the [`.codeship`](https://github.com/cugos/dropchop/tree/master/.codeship) directory that breaks down how we test, setup, and deploy the project using a temporary server linked to our Github account.
-
-[![Codeship Status for cugos/dropchop](https://codeship.com/projects/5371c9b0-02a9-0133-3603-2eafb47e949a/status?branch=master)](https://codeship.com/projects/88973)
-
-The image above should be green, which signifies that the tests and deployment have passed and executed properly on codeship.io's end.
-
-### How do I get codeship to work?
-
-The really neat thing about codeship is that it runs on every pull request, no matter what. What we've done is set it up that when someone merges a branch into `master` codeship detects this and runs automatically. Pushing to `master` leads to a direct push to the `gh-pages` branch without you needing to do a thing.
+dropchop.io is served directly from GitHub, specifically in the /docs directory. To update the deployed website run `npm run build` and commit any changes directly to the master branch.
