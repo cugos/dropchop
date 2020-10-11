@@ -143,7 +143,7 @@ gulp.task('test', function (done) {
 
 gulp.task('cname', function() {
   return gulp.src('./CNAME')
-    .pipe(gulp.dest('./docs/CNAME'));
+    .pipe(gulp.dest('./docs/'));
 });
 
 gulp.task('build', [
