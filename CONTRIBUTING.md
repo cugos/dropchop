@@ -11,7 +11,6 @@
   * [For Loops](CONTRIBUTING.md#for-loops)
 * [Documentation](CONTRIBUTING.md#documentation)
 * [Deployment](CONTRIBUTING.md#deployment)
-  * [How do I get codeship to work?](CONTRIBUTING.md#how-do-i-get-codeship-to-work)
 
 ## Introduction
 
