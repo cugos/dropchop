@@ -31,11 +31,11 @@ var dropchop = (function(dc) {
     }).addTo(dc.map.m);
 
     var baseLayers = {
-      "Mapbox Streets": L.mapbox.tileLayer('mapbox.streets'),
-      "Mapbox Outdoors": L.mapbox.tileLayer('mapbox.outdoors'),
-      "Mapbox Light": L.mapbox.tileLayer('mapbox.light'),
-      "Mapbox Dark": L.mapbox.tileLayer('mapbox.dark'),
-      "Mapbox Satellite": L.mapbox.tileLayer('mapbox.satellite'),
+      "Mapbox Streets": L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11'),
+      "Mapbox Outdoors": L.mapbox.styleLayer('mapbox://styles/mapbox/outdoors-v11'),
+      "Mapbox Light": L.mapbox.styleLayer('mapbox://styles/mapbox/light-v10'),
+      "Mapbox Dark": L.mapbox.styleLayer('mapbox://styles/mapbox/dark-v10'),
+      "Mapbox Satellite Streets": L.mapbox.styleLayer('mapbox://styles/mapbox/satellite-streets-v11'),
     };
 
     baseLayers['Mapbox Streets'].addTo(dc.map.m);
