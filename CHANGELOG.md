@@ -1,4 +1,4 @@
-### 0.3.0
+### 0.3.0 (October 11th 2020)
 
 * Update Mapbox basemaps to modern static tiles API [docs](https://docs.mapbox.com/help/troubleshooting/migrate-legacy-static-tiles-api/)
 * Simplify gulpfile.js for quick building
