@@ -59,7 +59,7 @@
     "gulp-sass": "^2.0.4",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-uglify": "^3.0.2",
-    "karma": "^0.13.9",
+    "karma": "^6.3.14",
     "karma-chai": "^0.1.0",
     "karma-mocha": "^0.2.0",
     "karma-mocha-reporter": "^1.1.1",
