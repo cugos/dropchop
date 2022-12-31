@@ -45,7 +45,7 @@
     "turf-within": "^3.0.12"
   },
   "devDependencies": {
-    "babelify": "^7.3.0",
+    "babelify": "^10.0.0",
     "browserify": "^13.1.0",
     "chai": "^3.2.0",
     "gulp": "^3.9.1",
